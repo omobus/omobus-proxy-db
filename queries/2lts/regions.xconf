@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<regions templ="%region_id%;%descr%;%country_id%;">
+  <![CDATA[
+select region_id, descr, country_id from regions
+    where hidden = 0
+order by 1
+  ]]>
+</regions>

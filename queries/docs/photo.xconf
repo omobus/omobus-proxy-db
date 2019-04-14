@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<photo>
+<check_user>
+  <![CDATA[
+select user_id as user_id_sys from users 
+    where lower(user_id)=lower('%ErpId%') /*%user_id%*/
+  ]]>
+</check_user>
+<check_exist>
+  <![CDATA[
+select count(*) from h_photo 
+    where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
+  ]]>
+</check_exist>
+<create>
+  <![CDATA[
+select * from doc_id()
+  ]]>
+</create>
+<write_body>
+  <![CDATA[
+insert into h_photo(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, imei, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id,  account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, placement_id, brand_id, photo_type_id, photo_param_ids, photo, rev_cookie)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', '%placement_id%', NIL('%brand_id%'), NIL('%photo_type_id%'), string_to_array(NIL('%photo_param_ids%'),','), $1:blob, NIL('%rev_cookie%'))
+  ]]>
+</write_body>
+<close>
+  <![CDATA[
+do $$
+declare
+    f_date date_t default left('%fix_dt%',10);
+begin
+-- **** photo --> j_docs
+    insert into j_docs(doc_id, doc_no, dev_id, dev_login, imei, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
+	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
+
+-- **** photo --> j_revokations
+    if( (select count(*) from h_revoke where rev_cookie='%rev_cookie%') > 0 and (select count(*) from j_revocations where rev_cookie='%rev_cookie%') = 0 ) then
+	insert into j_revocations(doc_id, doc_code, rev_cookie)
+	    values('%doc_id_sys%', 'h_photo', '%rev_cookie%');
+    end if;
+
+-- **** photo --> thumbnail_stream
+    insert into thumbnail_stream(photo)
+	select photo from h_photo where doc_id='%doc_id_sys%';
+
+-- **** photo --> content_stream
+    perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
+    perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+    perform content_add('tech_photos', '%user_id_sys%', f_date, f_date);
+    perform content_add('stat_photos', '', "monthDate_First"(f_date)::date_t, "monthDate_Last"(f_date)::date_t);
+end;
+$$;
+  ]]>
+</close>
+</photo>

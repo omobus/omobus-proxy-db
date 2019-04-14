@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<stat_confirmations type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select
+    h.doc_id, 
+    h.user_id, u.descr u_name, 
+    h.fix_dt, 
+    h.inserted_ts, 
+    h.account_id, a.code a_code, a.descr a_name, a.address, 
+    reg.descr region, 
+    c.descr city, 
+    a.rc_id, r.descr rc, r.ka_code,
+    p.descr poten,
+    a.chan_id, ch.descr chan,
+    t.target_id, t.subject, t.body, t.b_date, t.e_date, 
+    tt.descr target_type, 
+    h.confirm_id, f.descr confirm, 
+    h.doc_note, 
+    array_to_string(h.photos,',') photos, 
+    u.executivehead_id head_id, ex.descr head_name,
+    t.author_id, case when z.descr is null then t.author_id else z.descr end author_name,
+    t.updated_ts
+from h_confirmation h
+    left join accounts a on a.account_id = h.account_id
+    left join potentials p on a.poten_id = p.poten_id
+    left join channels ch on a.chan_id = ch.chan_id
+    left join retail_chains r on a.rc_id = r.rc_id
+    left join regions reg on a.region_id = reg.region_id
+    left join cities c on a.city_id = c.city_id
+    left join targets t on t.target_id = h.target_id
+    left join target_types tt on tt.target_type_id = t.target_type_id
+    left join confirmation_types f on f.confirm_id = h.confirm_id
+    left join users u on u.user_id = h.user_id
+    left join users ex on ex.user_id = u.executivehead_id
+    left join users z on z.user_id = t.author_id
+where '%b_date%'<=left(h.fix_dt, 10) and left(h.fix_dt, 10)<='%e_date%'
+order by h.inserted_ts desc, u.descr
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+require('rtlib').main("confirmations", true, function(r, n, a) r[n] = std.contains({'photos'}, n) and std.split(a, ',') or a; end)
+  ]]>
+    </generator>
+</stat_confirmations>

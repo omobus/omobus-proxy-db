@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tech_quests type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select 
+    h.doc_id, h.fix_dt, h.inserted_ts, 
+    h.account_id, a.code a_code, a.descr a_name, a.address, 
+    n.descr qname, 
+    quest_path(null, r.qname_id, r.pid) qpath,
+    r.descr qrow, 
+    t.value
+from t_quest t
+    left join h_quest h on h.doc_id = t.doc_id
+    left join accounts a on a.account_id = h.account_id
+    left join quest_names n on n.qname_id = t.qname_id
+    left join quest_rows r on r.qname_id = t.qname_id and r.qrow_id = t.qrow_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt, r.row_no, r.descr
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+require('rtlib').main("tech_quests", true)
+  ]]>
+    </generator>
+</tech_quests>

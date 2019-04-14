@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<reclamations templ="%doc_id%;%fix_dt%;%distr_id%;%user_id%;%account_id%;%return_date%;%doc_note%;%rows%;%prod_id%;%row_no%;%reclamation_type_id%;%pack_id%;%pack%;%qty%;%unit_price%;%amount%;%weight%;%volume%;">
+  <![CDATA[
+select h.doc_id, h.fix_dt, h.user_id, h.account_id, h.distr_id, h.return_date, h.doc_note, h.rows, t.prod_id, t.row_no, t.reclamation_type_id, t.pack_id, t.pack, t.qty, t.unit_price, t.amount, t.weight, t.volume from h_reclamation h
+    left join t_reclamation t on h.doc_id = t.doc_id
+where (current_timestamp - inserted_ts) < "LTS_aging"()
+order by h.doc_id, t.row_no
+  ]]>
+</reclamations>

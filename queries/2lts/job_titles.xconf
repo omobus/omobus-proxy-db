@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<job_titles templ="%job_title_id%;%descr%;">
+  <![CDATA[
+select job_title_id, descr from job_titles
+    where hidden = 0
+order by 1
+  ]]>
+</job_titles>

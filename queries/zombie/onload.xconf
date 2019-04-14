@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<onload>
+  <![CDATA[
+select 
+    case 
+	when hidden<>0 then 'permanent_lock' 
+	when pause>20 or (pause is null and (current_date-inserted_ts::date)>10) then 'temporary_lock' 
+	else 'unlock' 
+    end content_code, 
+    * 
+from (
+    select user_id, descr, array_to_string(evaddrs,',') rcpt_to, hidden, inserted_ts,
+	(select current_date-max(fix_date)::date from sysstats where user_id=u.user_id and fix_date <= current_date::date_t) pause 
+    from users u
+) x
+  ]]>
+</onload>

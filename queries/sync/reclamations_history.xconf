@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<reclamations_history templ="%doc_id%;%erp_id%;%user_id%;%account_id%;%doc_no%;%fix_dt%;%amount%;%erp_no%;%erp_dt%;%erp_amount%;%status%;%color%;%bgcolor%;%extra_info%;" empty="no">
+  <![CDATA[
+select
+    h.doc_id, e.erp_id, h.user_id, h.account_id, h.doc_no, h.fix_dt, h.amount, e.erp_no, e.erp_dt, e.amount erp_amount, e.status,
+    case when round(e.amount, 0) != round(h.amount, 0) then "paramInteger"('reclamations_history:alert:color') else null end color,
+    case when round(e.amount, 0) != round(h.amount, 0) then "paramInteger"('reclamations_history:alert:bgcolor') else null end bgcolor,
+    h.doc_note extra_info
+from h_reclamation h
+    left join (select distinct on(doc_id) * from erp_docs where doc_type in ('reclamation')
+        order by doc_id, erp_dt desc) e on e.doc_id = h.doc_id
+where left(fix_dt, 10) >= (current_date + "paramInteger"('reclamations_history:offset'))::date_t
+order by doc_id, erp_dt desc
+  ]]>
+</reclamations_history>

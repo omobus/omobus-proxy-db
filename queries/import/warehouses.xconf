@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<warehouses templ="%distr_id%;%wareh_id%;%descr%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update warehouses set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update warehouses set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from warehouses
+    where wareh_id='%wareh_id%' and distr_id='%distr_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update warehouses set descr=trim(both from '%descr%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where wareh_id='%wareh_id%' and distr_id='%distr_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into warehouses (distr_id, wareh_id, descr, hidden)
+    values ('%distr_id%', '%wareh_id%', trim(both from '%descr%'), 0)
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</warehouses>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<user_activity>
+<check_user>
+  <![CDATA[
+select user_id as user_id_sys from users 
+    where lower(user_id)=lower('%ErpId%') /*%user_id%*/
+  ]]>
+</check_user>
+<check_exist>
+  <![CDATA[
+select count(*) from a_user_activity 
+    where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
+  ]]>
+</check_exist>
+<create>
+  <![CDATA[
+select * from act_id()
+  ]]>
+</create>
+<write_body>
+  <![CDATA[
+insert into a_user_activity(act_id, inserted_node, dev_pack, dev_id, dev_login, imei, user_id, fix_dt, state, w_cookie, c_cookie, a_cookie, satellite_dt, latitude, longitude, activity_type_id, account_id, route_date, employee_id)
+    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%state%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', '%satellite_dt%', %latitude%, %longitude%, '%activity_type_id%', '%account_id%', NIL('%route_date%'), NIL('%employee_id%'))
+  ]]>
+</write_body>
+<close>
+  <![CDATA[
+do $$
+declare
+    f_date date_t default left('%fix_dt%',10);
+    f_time time_t default substring('%fix_dt%', 12, 5);
+    x_date date_t;
+    x bool_t default 0;
+begin
+-- **** user_activity --> j_acts
+    insert into j_acts(act_id, dev_id, dev_login, imei, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+
+-- **** user_activity --> j_user_activities
+    if( (select count(*) from j_user_activities where user_id='%user_id_sys%' and account_id='%account_id%' and activity_type_id='%activity_type_id%' and w_cookie='%w_cookie%' and a_cookie='%a_cookie%') > 0 ) then
+	if( '%state%' = 'begin' ) then
+	    update j_user_activities set fix_date=f_date, b_dt='%fix_dt%', b_la=%latitude%, b_lo=%longitude%, b_sat_dt='%satellite_dt%'
+		where user_id='%user_id_sys%' and account_id='%account_id%' and activity_type_id='%activity_type_id%' and w_cookie='%w_cookie%' and a_cookie='%a_cookie%';
+	else
+	    update j_user_activities set e_dt='%fix_dt%', e_la=%latitude%, e_lo=%longitude%, e_sat_dt='%satellite_dt%'
+		where user_id='%user_id_sys%' and account_id='%account_id%' and activity_type_id='%activity_type_id%' and w_cookie='%w_cookie%' and a_cookie='%a_cookie%';
+	end if;
+    else
+	if( '%state%' = 'begin' ) then
+	    insert into j_user_activities (user_id, account_id, w_cookie, c_cookie, a_cookie, activity_type_id, fix_date, route_date, employee_id, b_dt, b_la, b_lo, b_sat_dt, inserted_ts)
+		values('%user_id_sys%', '%account_id%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', '%activity_type_id%', f_date, NIL('%route_date%'), NIL('%employee_id%'), '%fix_dt%', %latitude%, %longitude%, '%satellite_dt%', current_timestamp);
+	else
+	    insert into j_user_activities (user_id, account_id, w_cookie, c_cookie, a_cookie, activity_type_id, route_date, employee_id, e_dt, e_la, e_lo, e_sat_dt, inserted_ts)
+		values('%user_id_sys%', '%account_id%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', '%activity_type_id%', NIL('%route_date%'), NIL('%employee_id%'), '%fix_dt%', %latitude%, %longitude%, '%satellite_dt%', current_timestamp);
+	end if;
+    end if;
+
+-- **** user_activity --> j_cancellations
+    if( '%route_date%' != '' and (select hidden from j_cancellations where user_id = '%user_id_sys%' and route_date = '%route_date%') = 0 ) then
+	update j_cancellations set hidden = 1, updated_ts = current_timestamp
+	    where user_id = '%user_id_sys%' and route_date = '%route_date%';
+	x := 1;
+    end if;
+
+-- **** user_activities --> sysstats
+    perform sysstat_add('%user_id_sys%', f_date, f_time);
+
+-- **** user_activity --> content_stream
+    perform content_add('tech', '', f_date, f_date);
+    perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
+    perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+    perform content_add('route_compliance', '', f_date, f_date);
+    if( '%route_date%' <> '' ) then
+	perform content_add('tech_route', '%user_id_sys%', '%route_date%', '%route_date%');
+	perform content_add('route_compliance', '', '%route_date%', '%route_date%');
+    end if;
+    if( '%state%' = 'end' ) then
+	select fix_date from j_user_activities
+	    where user_id='%user_id_sys%' and account_id='%account_id%' and activity_type_id='%activity_type_id%' and w_cookie='%w_cookie%' and a_cookie='%a_cookie%'
+	into x_date;
+	if( x_date <> f_date ) then
+	    perform content_add('tech', '', x_date, x_date);
+	    perform content_add('tech_route', '%user_id_sys%', x_date, x_date);
+	    perform content_add('route_compliance', '', x_date, x_date);
+	end if;
+    end if;
+    if( '%employee_id%' <> '' ) then
+	perform content_add('joint_routes', '', "monthDate_First"(f_date)::date_t, "monthDate_Last"(f_date)::date_t);
+    end if;
+
+-- **** user_activity --> mail_stream
+    if( x = 1 ) then
+	perform evmail_add('%user_id_sys%','canceling/caption:revoke','canceling/body:autorevoke',2::smallint /*high*/,array['route_date',"L"('%route_date%'::date)]);
+    end if;
+end;
+$$;
+  ]]>
+</close>
+</user_activity>

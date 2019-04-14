@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<photos_history templ="%account_id%;%fix_dt%;%placement%;%brand%;%photo_type%;%photo_params%;%note%;%photo%;" empty="no">
+  <![CDATA[
+select
+    h.account_id, 
+    h.fix_dt,
+    p.descr placement, 
+    b.descr brand, 
+    z.descr photo_type,
+    array_to_string((select array_agg(descr::text) from photo_params where photo_param_id = any(photo_param_ids)), '!') photo_params,
+    h.doc_note note, 
+    coalesce(t."thumb800",h.photo) photo
+from (
+    select account_id, max(left(fix_dt,10)) fix_date from h_photo
+	where left(fix_dt, 10)>=(current_date+"paramInteger"('photos_history:offset'))::date_t 
+    group by account_id
+) x
+    left join h_photo h on x.account_id = h.account_id and x.fix_date = left(h.fix_dt,10)
+    left join placements p on p.placement_id = h.placement_id
+    left join brands b on b.brand_id = h.brand_id
+    left join photo_types z on z.photo_type_id = h.photo_type_id
+    left join j_revocations r on r.doc_id = h.doc_id
+    left join thumbnail_stream t on t.photo = h.photo
+where r.doc_id is null
+order by h.account_id, left(h.fix_dt,10) desc, h.fix_dt
+  ]]>
+</photos_history>

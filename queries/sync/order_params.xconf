@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<order_params templ="%distr_id%;%order_param_id%;%descr%;" empty="no">
+  <![CDATA[
+select distr_id, order_param_id, descr from order_params
+    where hidden = 0
+order by distr_id, descr
+  ]]>
+</order_params>

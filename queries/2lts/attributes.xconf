@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<attributes templ="%attr_id%;%descr%;">
+  <![CDATA[
+select attr_id, descr from attributes
+    order by 1
+  ]]>
+</attributes>

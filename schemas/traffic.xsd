@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="datetime_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="[0-9]{4}\-[0-9]{2}\-[0-9]{2}( |T){1}[0-9]{2}:[0-9]{2}:[0-9]{2}" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="traffic">
+	<xs:complexType>
+	    <xs:attribute name="vstamp" use="required" type="xs:string" />
+	    <xs:attribute name="dev_pack" use="required" type="xs:integer" />
+	    <xs:attribute name="dev_id" use="required" type="xs:string" />
+	    <xs:attribute name="imei" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="user_id" use="required" type="xs:string" />
+	    <xs:attribute name="fix_dt" use="required" type="datetime_t" />
+	    <xs:attribute name="satellite_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
+	    <xs:attribute name="latitude" use="optional" type="xs:decimal" default="0.0" />
+	    <xs:attribute name="longitude" use="optional" type="xs:decimal" default="0.0" />
+	    <xs:attribute name="mobile_rx_bytes" use="required" type="xs:integer" />
+	    <xs:attribute name="mobile_tx_bytes" use="required" type="xs:integer" />
+	    <xs:attribute name="total_rx_bytes" use="required" type="xs:integer" />
+	    <xs:attribute name="total_tx_bytes" use="required" type="xs:integer" />
+	    <xs:attribute name="omobus_rx_bytes" use="required" type="xs:integer" />
+	    <xs:attribute name="omobus_tx_bytes" use="required" type="xs:integer" />
+	    <xs:attribute name="duration" use="required" type="xs:integer" />
+	</xs:complexType>
+    </xs:element>
+</xs:schema>

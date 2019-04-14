@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<confirmations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%target_id%;%confirm_id%;%doc_note%;%photo0%;%photo1%;%photo2%;%photo3%;">
+  <![CDATA[
+select doc_id, fix_dt, user_id, account_id, target_id, confirm_id, doc_note, photos[1] photo0, photos[2] photo1, photos[3] photo2, photos[4] photo3 from h_confirmation
+    where (current_timestamp - inserted_ts) < "LTS_aging"()
+order by 1
+  ]]>
+</confirmations>

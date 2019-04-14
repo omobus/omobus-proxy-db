@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<user_locations templ="%act_id%;%row_no%;%user_id%;%fix_date%;%latitude%;%longitude%;%fix_dt%;%satellite_dt%;%accuracy%;%altitude%;%bearing%;%speed%;%seconds%;%provider%;%satellites%;">
+  <![CDATA[
+select act_id, -1 row_no, user_id, left(fix_dt,10) fix_date, latitude, longitude, fix_dt, satellite_dt, accuracy, altitude, bearing, speed, seconds, provider, satellites from a_gps_pos
+    where (current_timestamp - inserted_ts) < "LTS_aging"() and latitude <> 0.0 and longitude <> 0.0
+	union
+select act_id, row_no, user_id, left(fix_dt,10) fix_date, latitude, longitude, fix_dt, satellite_dt, accuracy, altitude, bearing, speed, seconds, provider, satellites from a_gps_trace
+    where (current_timestamp - inserted_ts) < "LTS_aging"() and latitude <> 0.0 and longitude <> 0.0
+order by 1, 2
+  ]]>
+</user_locations>

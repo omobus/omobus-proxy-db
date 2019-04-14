@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<canceling_types templ="%canceling_type_id%;%descr%;" empty="no">
+  <![CDATA[ 
+select canceling_type_id, descr from canceling_types
+    where hidden = 0
+order by descr
+  ]]>
+</canceling_types>

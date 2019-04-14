@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ratings_history templ="%fix_date%;%employee_id%;%rating_criteria_id%;%score%;%note%;%latest%;" empty="no">
+  <![CDATA[ 
+select employee_id user_id, fix_date, employee_id, rating_criteria_id, score, array_to_string(note,'<br/>') note, latest from (
+    select fix_date, employee_id, rating_criteria_id, round(avg(score), 2) score, array_agg(trim(note)::text) note, min(latest) latest from (
+	select fix_date, employee_id, rating_criteria_id, score, note, "_isRecentData" latest from dyn_ratings
+	    where score is not null and fix_date < current_date::date_t
+	order by fix_dt
+    ) x group by fix_date, employee_id, rating_criteria_id
+) z order by employee_id, rating_criteria_id, fix_date desc
+  ]]>
+</ratings_history>

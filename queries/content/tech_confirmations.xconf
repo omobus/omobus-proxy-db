@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tech_confirmations type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select
+    h.doc_id, h.fix_dt, h.inserted_ts, h.account_id, a.code a_code, a.descr a_name, a.address, t.target_id, t.subject, t.body, t.b_date, t.e_date, 
+    tt.descr target_type, f.descr confirm, doc_note, array_to_string(h.photos,',') photos
+from h_confirmation h
+    left join accounts a on a.account_id = h.account_id
+    left join targets t on t.target_id = h.target_id
+    left join target_types tt on tt.target_type_id = t.target_type_id
+    left join confirmation_types f on f.confirm_id = h.confirm_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+require('rtlib').main("tech_confirmations", false, function(r, n, a) r[n] = n == "photos" and require('stdlib').split(a, ',') or a; end)
+  ]]>
+    </generator>
+</tech_confirmations>

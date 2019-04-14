@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tech_presentations type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select
+    h.doc_id, h.fix_dt, h.inserted_ts, 
+    h.account_id, a.code a_code, a.descr a_name, a.address, 
+    h.participants,
+    m.descr tm, 
+    case when m.brand_ids is null or cardinality(m.brand_ids) = 1 then b.descr else
+	(select array_to_string(array_agg(descr::text),', ') from brands where brand_id=any(m.brand_ids)) end brand,
+    h.doc_note, h.blob_id
+from (
+    select doc_id, fix_dt, inserted_ts, account_id, participants, unnest(tm_ids) tm_id, doc_note, photo::varchar blob_id from h_presentation
+	where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+) h
+    left join training_materials m on m.tm_id = h.tm_id
+    left join brands b on cardinality(m.brand_ids) = 1 and b.brand_id = m.brand_ids[1]
+    left join accounts a on a.account_id = h.account_id
+order by h.fix_dt, h.doc_id, b.row_no, b.descr, m.descr
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+require('rtlib').main("tech_presentations", false, function(r, n, a)
+	if std.contains({'participants'}, n) then
+	    r[n] = tonumber(a)
+	else
+	    r[n] = a
+	end
+    end)
+  ]]>
+    </generator>
+</tech_presentations>

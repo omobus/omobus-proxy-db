@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<comment_types templ="%comment_type_id%;%descr%;%min_note_length%;%photo_needed%;%row_no%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update comment_types set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update comment_types set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from comment_types 
+    where comment_type_id = '%comment_type_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update comment_types set descr=trim(both from '%descr%'), min_note_length=NIL(%min_note_length%), photo_needed=NIL(%photo_needed%), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where comment_type_id = '%comment_type_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into comment_types (comment_type_id, descr, min_note_length, photo_needed, row_no, hidden, db_ids)
+    values ('%comment_type_id%', trim(both from '%descr%'), NIL(%min_note_length%), NIL(%photo_needed%), NIL(%row_no%), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</comment_types>

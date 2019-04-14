@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel 
+    module="kern_evmail" 
+    smtp.host="127.0.0.1"
+    smtp.tls="yes"
+    smtp.user="noreply"
+    smtp.pwd="0"
+    smtp.from="OMOBUS &lt;noreply@zdev.omobus.net&gt;"
+    smtp.msgid="&lt;%ev_id%@zdev.omobus.net&gt;"
+    threads="2"
+    >
+<xi:include href="../queries/evmail/onload.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/evmail/onsuccess.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/evmail/onerror.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/evmail/trig_after.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</kernel>

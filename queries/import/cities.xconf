@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cities templ="%city_id%;%pid%;%ftype%;%descr%;%country_id%;%population%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where (s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%') or "paramUID"('accounts:city_id') = 'auto'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update cities set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update cities set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from cities
+    where city_id = '%city_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update cities set pid=NIL('%pid%'), ftype=0%ftype%, descr=trim(both from '%descr%'), country_id=NIL('%country_id%'), population=NIL(%population%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where city_id = '%city_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into cities (pid, city_id, ftype, descr, country_id, population, hidden, db_ids)
+    values (NIL('%pid%'), '%city_id%', 0%ftype%, trim(both from '%descr%'), NIL('%country_id%'), NIL(%population%), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</cities>

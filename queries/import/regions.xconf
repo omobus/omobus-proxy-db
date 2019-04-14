@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<regions templ="%region_id%;%descr%;%country_id%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update regions set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update regions set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from regions
+    where region_id = '%region_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update regions set descr=trim(both from '%descr%'), country_id=NIL('%country_id%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where region_id = '%region_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into regions (region_id, descr, country_id, hidden, db_ids)
+    values ('%region_id%', trim(both from '%descr%'), NIL('%country_id%'), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</regions>

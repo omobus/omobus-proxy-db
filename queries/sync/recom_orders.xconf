@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<recom_orders templ="%account_id%;%prod_id%;%pack_id%;%qty%;%stock_wf%;" empty="no">
+  <![CDATA[
+select x.account_id, x.prod_id, x.pack_id, x.qty, x.stock_wf from recom_orders x
+    left join products p on p.prod_id=x.prod_id
+order by 1, p.descr
+  ]]>
+</recom_orders>

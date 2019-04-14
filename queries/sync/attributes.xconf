@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<attributes templ="%attr_id%;%descr%;" empty="no">
+  <![CDATA[
+select attr_id, descr from attributes
+    where hidden = 0
+order by descr
+  ]]>
+</attributes>

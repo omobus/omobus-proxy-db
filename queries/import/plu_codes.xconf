@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plu_codes templ="%account_id%;%prod_id%;%plu_code%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from plu_codes
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update plu_codes set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from plu_codes
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[
+insert into plu_codes (account_id, prod_id, plu_code, db_ids)
+    values ('%account_id%', '%prod_id%', '%plu_code%', array['%ErpCode%'])
+on conflict do nothing
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</plu_codes>

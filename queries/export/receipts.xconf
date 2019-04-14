@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<receipts templ="%doc_id%;%fix_dt%;%doc_no%;%user_id%;%dev_login%;%account_id%;%distr_id%;%receipt_type_id%;%doc_note%;%amount%;">
+  <![CDATA[
+select
+    doc_id, fix_dt, doc_no, user_id, dev_login, account_id, distr_id, doc_note, amount, receipt_type_id
+from h_receipt h
+where inserted_ts::date >= current_date - 5
+    and (select count(*) from j_docs where doc_id=h.doc_id and (ttd is null or ttd='delivered')) > 0
+order by doc_id
+  ]]>
+</receipts>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sales templ="%account_id%;%amount_c%;%amount_r%;" empty="no">
+  <![CDATA[
+select account_id, sum(amount_c) amount_c, sum(amount_r) amount_r from sales_history
+    group by account_id
+order by 1
+  ]]>
+</sales>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel module="kern_content" threads="1">
+<xi:include href="../queries/celltower/onload.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/celltower/onsuccess.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<content>
+<xi:include href="../queries/celltower/yandex.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/celltower/mls.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/celltower/ocid.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</content>
+<libs>
+<xi:include href="../queries/celltower/slaxml.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/celltower/slaxdom.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</libs>
+</kernel>

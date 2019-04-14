@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<permitted_returns templ="%distr_id%;%account_id%;%prod_id%;%pack_id%;%price%;%locked%;%max_qty%;" empty="no">
+  <![CDATA[
+select distr_id, account_id, prod_id, pack_id, price, locked, max_qty from permitted_returns
+    order by 1, 2, 3
+  ]]>
+</permitted_returns>

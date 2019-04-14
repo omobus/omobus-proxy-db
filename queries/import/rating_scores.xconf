@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rating_scores templ="%rating_score_id%;%descr%;%score%;%wf%;%row_no%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update rating_scores set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update rating_scores set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from rating_scores 
+    where rating_score_id = '%rating_score_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update rating_scores set descr=trim(both from '%descr%'), score=0%score%, wf=0%wf%, row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where rating_score_id = '%rating_score_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into rating_scores (rating_score_id, descr, score, wf, row_no, hidden, db_ids)
+    values ('%rating_score_id%', trim(both from '%descr%'), 0%score%, 0%wf%, NIL(%row_no%), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</rating_scores>

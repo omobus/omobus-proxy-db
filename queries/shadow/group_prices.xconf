@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<group_prices templ="%group_price_id%;%prod_id%;%pack_id%;%price%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//shadow/%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from shadow.group_prices 
+    where distr_id='%ErpCode%'
+  ]]>
+</begin>
+<insert>
+  <![CDATA[ 
+insert into shadow.group_prices (distr_id, group_price_id, prod_id, pack_id, price)
+    values ('%ErpCode%', '%group_price_id%', '%prod_id%', '%pack_id%', %price%)
+on conflict do nothing
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+delete from group_prices where distr_id='%ErpCode%';
+insert into group_prices(distr_id, group_price_id, prod_id, pack_id, price, db_ids)
+    select x.distr_id, x.group_price_id, coalesce(pack.f_id,z.pack_id,'x'), pack.f_id, price, array['$shadow'] from shadow.group_prices x
+	left join symlinks prod on prod.obj_code='product' and prod.distr_id=x.distr_id and prod.t_id=x.prod_id
+	left join symlinks pack on pack.obj_code='pack' and pack.distr_id=x.distr_id and pack.t_id=x.pack_id
+	left join packs z on z.prod_id=prod.f_id and z.pack=1
+    where x.distr_id='%ErpCode%' and prod.f_id is not null;
+
+select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+  ]]>
+</end>
+</group_prices>

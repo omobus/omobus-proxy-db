@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<accounts templ="%account_id%;%pid%;%ftype%;%code%;%descr%;%address%;%chan_id%;%poten_id%;%rc_id%;%region_id%;%city_id%;%latitude%;%longitude%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update accounts set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and approved=1 and db_ids @> (array['%ErpCode%'])::uids_t;
+update accounts set hidden=1, db_ids=null
+    where hidden=0 and approved=1 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from accounts 
+    where account_id = '%account_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update accounts set pid=NIL('%pid%'), code=trim(both from '%code%'), ftype=0%ftype%, descr=trim(both from '%descr%'), address=trim(both from '%address%'), rc_id=NIL('%rc_id%'), chan_id=NIL('%chan_id%'), poten_id=NIL('%poten_id%'), region_id=NIL('%region_id%'), city_id=case when "paramUID"('accounts:city_id') = 'auto' then city_id else NIL('%city_id%') end, approved=1, hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where account_id = '%account_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into accounts(pid, account_id, code, ftype, descr, address, rc_id, chan_id, poten_id, region_id, city_id, latitude, longitude, approved, hidden, db_ids)
+    values(NIL('%pid%'), '%account_id%', trim(both from '%code%'), 0%ftype%, trim(both from '%descr%'), trim(both from '%address%'), NIL('%rc_id%'), NIL('%chan_id%'), NIL('%poten_id%'), NIL('%region_id%'), case when "paramUID"('accounts:city_id') = 'auto' then null else NIL('%city_id%') end, NIL(%latitude%), NIL(%longitude%), 1, 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+/* recalculates targets.rows via internal trigger */
+update targets set rows=null where (region_ids is not null or city_ids is not null or rc_ids is not null or chan_ids is not null or poten_ids is not null) and e_date >= current_date::date_t and hidden=0;
+/* unlocks deleted accounts: */
+update j_deletions set hidden = 1 where account_id in (select account_id from accounts where hidden = 1 and locked = 1) and hidden = 0;
+update accounts set locked = 0 where hidden = 1 and locked = 1;
+/* set flag for refreshing [ownerless] attribute: */
+insert into ".sesparams" values('%uid%#ownerless') on conflict do nothing;
+
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</accounts>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tech_presences type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select 
+    h.doc_id, h.fix_dt, h.inserted_ts, h.account_id, a.code a_code, a.descr a_name, a.address, p.code p_code, p.descr prod, t.facing, t.stock/*, t.scratch*/
+from t_presence t
+    left join h_presence h on h.doc_id = t.doc_id
+    left join accounts a on a.account_id = h.account_id
+    left join products p on p.prod_id = t.prod_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt, p.descr
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+require('rtlib').main("tech_presences", true, function(r, n, a) r[n] = require('stdlib').contains({'facing','stock'}, n) and tonumber(a) or a; end)
+  ]]>
+    </generator>
+</tech_presences>

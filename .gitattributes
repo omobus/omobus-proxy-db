@@ -1,0 +1,10 @@
+*.sql -crlf
+*.sh -crlf
+*.xsd -crlf
+*.xconf -crlf
+*.default -crlf
+AUTHORS -crlf
+ChangeLog -crlf
+COPYRIGHT -crlf
+README -crlf
+.git* -crlf

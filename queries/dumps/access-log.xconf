@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<access-log templ="%ses_id%,%ses_ip%,%login%,%user_id%,%u_name%,%b_dt%,%e_dt%,%su%,%closed%" empty="no">
+  <![CDATA[
+select
+    s.ses_id,
+    s.ses_ip,
+    lower(s.u_name) "login",
+    u.user_id, 
+    quote_csv_string(u.descr) u_name, 
+    s.inserted_ts::datetime_t b_dt, 
+    s.access_ts::datetime_t e_dt, 
+    case when s.u_id is null then 1 else 0 end su,
+    s.closed
+from console.sessions s
+    left join users u on u.user_id=s.u_id
+order by s.inserted_ts desc
+  ]]>
+</access-log>

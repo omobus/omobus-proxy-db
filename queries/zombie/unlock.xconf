@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<unlock>
+    <generator>
+  <![CDATA[
+local function set(s, f, t) return s:replace(string.format("$(%s)", f), t ~= nil and t or ''); end
+local count, uid, role, f = 0, "", "", false
+
+require("core").for_each_u(_user_id, function(ses, dn, attrs)
+    if count == 0 then
+-- ** unlock active user: **
+	if attrs.syncErpId == nil and (attrs.FTPStatus == "disabled" or attrs.mailStatus == "disabled" or attrs.exchangeStatus == "disabled" or attrs.dumpsStatus == "disabled" or attrs.consoleStatus == "disabled") then
+	    local ar = {'='}
+	    if attrs.FTPStatus == "disabled" then
+		ar.FTPStatus="enabled"
+	    end
+	    if attrs.mailStatus == "disabled" then
+		ar.mailStatus="enabled"
+	    end
+	    if attrs.exchangeStatus == "disabled" then
+		ar.exchangeStatus="enabled"
+	    end
+	    if attrs.dumpsStatus == "disabled" then
+		ar.dumpsStatus="enabled"
+	    end
+	    if attrs.consoleStatus == "disabled" then
+		ar.consoleStatus="enabled"
+	    end
+	    ses:modify(dn, ar)
+	    log_msg(string.format("UID=%s, ErpId=%s has been unlocked", attrs.uid, attrs.ErpId))
+	    f = true
+	end
+	uid = attrs.uid
+	role = attrs.groupName
+    else
+-- ** remove duplicate ErpId link: **
+	local ar = {'=', ErpId="-"}
+	if attrs.FTPStatus == "enabled" then
+	    ar.FTPStatus="disabled"
+	end
+	if attrs.mailStatus == "enabled" then
+	    ar.mailStatus="disabled"
+	end
+	if attrs.exchangeStatus == "enabled" then
+	    ar.exchangeStatus="disabled"
+	end
+	if attrs.dumpsStatus == "enabled" then
+	    ar.dumpsStatus="disabled"
+	end
+	if attrs.consoleStatus == "enabled" then
+	    ar.consoleStatus="disabled"
+	end
+	ses:modify(dn, ar)
+	log_msg(string.format("UID=%s removed duplicate ErpId link", attrs.uid))
+    end
+
+    count = count + 1
+end)
+
+set_param(_content, "dev_login", uid)
+set_param(_content, "role", role)
+set_param(_content, "msg_cap", f and _caption or "", false)
+set_param(_content, "msg_body", f and set(_body,"dev_login",uid) or "", false)
+set_param(_content, "msg_content", f and "text/plain" or "", false)
+  ]]>
+    </generator>
+    <!-- Localized resources (L7d) -->
+    <templates> 
+        <caption>Разблокировка учетной записи</caption>
+        <body>Ваша учетная запись OMOBUS ($(dev_login)) разблокирована. Данные для полноценной работы будут подготовлены в рамках ближайшей процедуры генерации справочных данных.</body>
+    </templates>
+</unlock>

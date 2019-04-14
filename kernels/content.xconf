@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel module="kern_content" threads="3">
+<xi:include href="../queries/content/onload.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/onsuccess.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<content>
+<xi:include href="../queries/content/a_list.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/joint_routes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/route_compliance.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_advt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_audits.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_comments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_confirmations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_photos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_presentations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_quests.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_shelfs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_testings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_trainings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/targets_compliance.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_advt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_audits.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_checkups.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_comments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_confirmations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_extras.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_oos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_photos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_presences.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_presentations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_quests.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_ratings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_route.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_shelfs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_testings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/tech_trainings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</content>
+<libs>
+<xi:include href="../queries/content/libs/stdlib.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/libs/rtlib.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</libs>
+</kernel>

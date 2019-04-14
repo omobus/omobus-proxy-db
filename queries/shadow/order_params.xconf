@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<order_params templ="%order_param_id%;%descr%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//shadow/%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update order_params set hidden=1, db_ids=null
+    where distr_id='%ErpCode%' and hidden=0
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from order_params
+    where order_param_id = '%order_param_id%' and distr_id='%ErpCode%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update order_params set descr=trim(both from '%descr%'), hidden=0, db_ids=array_append(db_ids, array['$shadow'])
+    where order_param_id = '%order_param_id%' and distr_id='%ErpCode%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into order_params (distr_id, order_param_id, descr, hidden, db_ids)
+    descrs ('%ErpCode%', '%order_param_id%', trim(both from '%descr%'), 0, array['$shadow'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</order_params>

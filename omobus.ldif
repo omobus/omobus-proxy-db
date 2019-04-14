@@ -1,0 +1,521 @@
+version: 1
+
+dn: dc=omobus,dc=local
+objectClass: dcObject
+objectClass: top
+objectClass: organization
+dc: omobus
+o: local
+
+dn: ou=data,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: data
+description:: 0KHQv9C40YHQvtC6INGC0L7Rh9C10Log0L7QsdC80LXQvdCwINC00LDQvdC90Y
+ vQvNC4
+
+dn: ou=temp,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: temp
+
+dn: ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: users
+description:: 0KHQv9C40YHQvtC6INC/0L7Qu9GM0LfQvtCy0LDRgtC10LvQtdC5INC80L7Qsd
+ C40LvRjNC90YvRhSDRg9GB0YLRgNC+0LnRgdGC0LI=
+
+dn: ou=services,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: services
+description:: 0J/QsNGA0LDQvNC10YLRgNGLINC00LXQvNC+0L3QvtCyINGB0LXRgNCy0LXRgN
+ CwLg==
+
+dn: ou=system-users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: system-users
+description:: 0KHQuNGB0YLQtdC80L3Ri9C1INGD0YfQtdGC0L3Ri9C1INC30LDQv9C40YHQuA
+ ==
+
+dn: ou=lts,ou=data,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: lts
+description:: 0KHQv9C40YHQvtC6INCy0YvRhdGA0YPQt9C+0Log0LIgTFRTINGF0YDQsNC90L
+ jQu9C40YnQsCAob21vYnVzLWx0cy1kYik=
+
+dn: ou=core,ou=data,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: core
+description:: 0KHQv9C40YHQvtC6INGC0L7Rh9C10Log0L/RgNC40LXQvNCwINC+0LHQvdC+0L
+ LQu9C10L3QuNC5INC00LDQvdC90YvRhSDQtNC70Y8gb21vYnVzLXByb3h5LWRiLg==
+
+dn: ou=distributors,ou=data,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: distributors
+description:: 0KHQv9C40YHQvtC6INC/0L7QtNC60LvRjtGH0LXQvdC90YvRhSDQtNC40YHRgt
+ GA0LjQsdGD0YLQvtGA0L7Qsg==
+
+dn: uid=lts1,ou=lts,ou=data,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusMaintainPoint
+cn:: TWFpbiBMVFMgc3RvcmFnZSA=
+gidNumber: 905
+homeDirectory: /var/ftp/data/LTS
+uid: lts1
+uidNumber: 902
+ErpCode: CODE-ERP-00
+exchangeStatus: enabled
+FTPStatus: enabled
+userPassword:: MA==
+
+dn: uid=point0,ou=core,ou=data,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusMaintainPoint
+cn:: 0KLQvtGH0LrQsCDQvtCx0L3QvtCy0LvQtdC90LjQuSDihJYw
+gidNumber: 905
+homeDirectory: /var/ftp/data/core/0
+uid: point0
+uidNumber: 902
+ErpCode: 0
+exchangeStatus: enabled
+FTPStatus: enabled
+userPassword:: MA==
+
+dn: uid=point1,ou=core,ou=data,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusMaintainPoint
+cn:: 0KLQvtGH0LrQsCDQvtCx0L3QvtCy0LvQtdC90LjQuSDihJYx
+gidNumber: 905
+homeDirectory: /var/ftp/data/core/1
+uid: point1
+uidNumber: 902
+ErpCode: CODE-ERP-01
+exchangeStatus: disabled
+FTPStatus: enabled
+userPassword:: MQ==
+
+dn: uid=d1,ou=distributors,ou=data,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusMaintainPoint
+cn:: 0JTQuNGB0YLRgNC40LHRg9GC0L7RgDE=
+gidNumber: 905
+homeDirectory: /var/ftp/distributors/1
+uid: d1
+uidNumber: 902
+ErpCode: 0
+exchangeStatus: enabled
+FTPStatus: enabled
+syncEncoding: utf-8
+userPassword:: MA==
+
+dn: uid=d2,ou=distributors,ou=data,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusMaintainPoint
+cn:: 0JTQuNGB0YLRgNC40LHRg9GC0L7RgDE=
+gidNumber: 905
+homeDirectory: /var/ftp/distributors/2
+uid: d2
+uidNumber: 902
+ErpCode: CODE-ERP-01
+exchangeStatus: enabled
+FTPStatus: enabled
+groupName: agent
+userPassword:: MA==
+
+dn: uid=manuf@d3,ou=distributors,ou=data,dc=omobus,dc=local
+objectClass: omobusMaintainPoint
+objectClass: top
+objectClass: omobusAccount
+cn:: 0JTQmNGB0YLRgNC40LHRjNGO0YLQvtGAIDM=
+uid: manuf@d3
+userPassword:: MA==
+ErpCode: d3
+exchangeStatus: enabled
+groupName: gateway
+
+dn: ou=mr,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: mr
+description: Medical representative
+
+dn: ou=sr,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: sr
+description: Sales representative
+
+dn: ou=sv,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: sv
+description: Supervisors
+
+dn: ou=asm,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: asm
+description: Area Sales (or InStore) managers
+
+dn: ou=ise,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: ise
+description: InStore executive
+
+dn: ou=kam,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: kam
+description: Key account managers
+
+dn: ou=ksr,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: ksr
+description: Key account Sales representative
+
+dn: ou=tme,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: tme
+description: Trade marketing executive
+
+dn: ou=_dev,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: _dev
+description: Developers & Demonstrations
+
+dn: ou=merch,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: merch
+description: Merchandisers
+
+dn: ou=admins,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: admins
+
+dn: ou=guests,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: guests
+
+dn: ou=analitics,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: analitics
+
+dn: uid=xz_mr_1,ou=mr,ou=users,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusUser
+objectClass: omobusMail
+cn: MR:1
+gidNumber: 905
+homeDirectory: /var/ftp/users/mr/xz_mr_1
+mailStatus: enabled
+uid: xz_mr_1
+uidNumber: 902
+consoleStatus: enabled
+ErpId: mr01
+exchangeStatus: enabled
+FTPStatus: enabled
+groupName: mr
+userPassword:: MQ==
+
+dn: uid=xz_sr_1,ou=sr,ou=users,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusUser
+objectClass: omobusMail
+cn: SR:1
+gidNumber: 905
+homeDirectory: /var/ftp/users/sr/xz_sr_1
+mailStatus: enabled
+uid: xz_sr_1
+uidNumber: 902
+consoleStatus: enabled
+ErpId: sr01
+exchangeStatus: disabled
+FTPStatus: enabled
+groupName: sr
+orderUnavailableProducts: yes
+userPassword:: MQ==
+
+dn: uid=xz_sv_1,ou=sv,ou=users,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusUser
+objectClass: omobusMail
+cn: SV:1
+gidNumber: 905
+homeDirectory: /var/ftp/users/sv/xz_sv_1
+mailStatus: enabled
+uid: xz_sv_1
+uidNumber: 902
+consoleStatus: enabled
+ErpId: sv01
+exchangeStatus: disabled
+FTPStatus: enabled
+groupName: sv
+userPassword:: MQ==
+
+dn: uid=xz_asm_1,ou=asm,ou=users,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusUser
+objectClass: omobusMail
+cn: ASM:1
+gidNumber: 905
+homeDirectory: /var/ftp/users/asm/xz_asm_1
+mailStatus: enabled
+uid: xz_asm_1
+uidNumber: 902
+consoleStatus: enabled
+dumpsStatus: enabled
+ErpId: asm01
+exchangeStatus: enabled
+FTPStatus: enabled
+groupName: asm
+userPassword:: MQ==
+
+dn: uid=xz_ise_1,ou=ise,ou=users,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusUser
+objectClass: omobusMail
+cn: ISE:1
+gidNumber: 905
+homeDirectory: /var/ftp/users/ise/xz_ise_1
+mailStatus: enabled
+uid: xz_ise_1
+uidNumber: 902
+consoleStatus: enabled
+ErpId: ise01
+exchangeStatus: disabled
+FTPStatus: enabled
+groupName: ise
+userPassword:: MQ==
+
+dn: uid=xz_kam_1,ou=kam,ou=users,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusUser
+objectClass: omobusMail
+cn: KAM:1
+gidNumber: 905
+homeDirectory: /var/ftp/users/kam/xz_kam_1
+mailStatus: enabled
+uid: xz_kam_1
+uidNumber: 902
+consoleStatus: enabled
+ErpId: kam01
+exchangeStatus: enabled
+FTPStatus: enabled
+groupName: kam
+userPassword:: MQ==
+
+dn: uid=xz_ksr_1,ou=ksr,ou=users,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusUser
+objectClass: omobusMail
+cn: KSR:1
+gidNumber: 905
+homeDirectory: /var/ftp/users/ksr/xz_ksr_1
+mailStatus: disabled
+uid: xz_ksr_1
+uidNumber: 902
+consoleStatus: disabled
+ErpId: ksr01
+exchangeStatus: disabled
+FTPStatus: disabled
+groupName: ksr
+userPassword:: MQ==
+
+dn: uid=xz_tme_1,ou=tme,ou=users,dc=omobus,dc=local
+objectClass: omobusUser
+objectClass: PureFTPdUser
+objectClass: account
+objectClass: top
+objectClass: posixAccount
+cn: TM:1
+gidNumber: 905
+homeDirectory: /var/ftp/users/tme/xz_tme_1
+uid: xz_tme_1
+uidNumber: 902
+consoleStatus: enabled
+ErpId: tme01
+groupName: tme
+userPassword:: MQ==
+
+dn: uid=dev9,ou=_dev,ou=users,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusUser
+objectClass: omobusMail
+cn: Dev/9
+gidNumber: 905
+homeDirectory: /var/ftp/users/_test/dev9
+mailStatus: enabled
+uid: dev9
+uidNumber: 902
+consoleStatus: enabled
+ErpId: dev9
+exchangeStatus: enabled
+FTPStatus: enabled
+groupName: sr
+syncErpId: sr01
+userPassword:: MA==
+
+dn: uid=xz_m_1,ou=merch,ou=users,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusUser
+objectClass: omobusMail
+cn: Merch:1
+gidNumber: 905
+homeDirectory: /var/ftp/users/merch/xz_m_1
+mailStatus: enabled
+uid: xz_m_1
+uidNumber: 902
+consoleStatus: enabled
+dumpsStatus: enabled
+ErpId: m01
+exchangeStatus: enabled
+FTPStatus: enabled
+groupName: merch
+userPassword:: MQ==
+
+dn: uid=john_doe,ou=admins,ou=users,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: omobusUser
+objectClass: account
+objectClass: PureFTPdUser
+cn:: 0JTQttC+0L0g0JTQvg==
+gidNumber: 905
+homeDirectory: /var/ftp/analitics/john_doe
+uid: john_doe
+uidNumber: 902
+consoleStatus: enabled
+dumpsStatus: enabled
+FTPStatus: enabled
+groupName: admins
+userPassword:: MA==
+
+dn: uid=exim,ou=services,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+cn: SMTP daemon
+gidNumber: 905
+homeDirectory: /var/lib/omobus.d
+uid: exim
+uidNumber: 902
+userPassword:: e1NTSEF9WkVQcktyL3FaNXVKUk50ZmtDU0w4eGdLdUx1ZnBiQk8rdEZnNmc9P
+ Q==
+
+dn: uid=dovecot,ou=services,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+cn: POP3 daemon
+gidNumber: 905
+homeDirectory: /var/lib/omobus.d
+uid: dovecot
+uidNumber: 902
+userPassword:: e1NTSEF9WkVQcktyL3FaNXVKUk50ZmtDU0w4eGdLdUx1ZnBiQk8rdEZnNmc9P
+ Q==
+
+dn: uid=omobusd,ou=services,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+cn: OMOBUS daemon
+gidNumber: 905
+homeDirectory: /var/lib/omobus.d
+uid: omobusd
+uidNumber: 902
+userPassword:: e1NTSEF9dkhOUmxBbkdYZEs2U1lZNjlWY2kwWlpDaUgwMEw3MVpKYlduQkE9P
+ Q==
+
+dn: uid=pure-ftpd,ou=services,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+cn: FTP daemon
+gidNumber: 905
+homeDirectory: /var/lib/omobus.d
+uid: pure-ftpd
+uidNumber: 902
+userPassword:: e1NTSEF9T2ZUZlJ2RkpDaEFTcTlLZzJueGhhb1JNaGlSbWo1b0hhNHBUNWc9P
+ Q==
+
+dn: uid=omobus-scgid,ou=services,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+cn: OMOBUS scgi daemon
+gidNumber: 905
+homeDirectory: /var/lib/omobus-scgi.d
+uid: omobus-scgid
+uidNumber: 902
+userPassword:: e1NTSEF9dkhOUmxBbkdYZEs2U1lZNjlWY2kwWlpDaUgwMEw3MVpKYlduQkE9P
+ Q==
+
+dn: uid=noreply,ou=system-users,dc=omobus,dc=local
+objectClass: account
+objectClass: top
+objectClass: posixAccount
+objectClass: omobusMail
+cn: Mailbox for sending notifications
+gidNumber: 905
+homeDirectory: /var/lib/omobus.d
+mailStatus: enabled
+uid: noreply
+uidNumber: 902
+userPassword:: MA==
+

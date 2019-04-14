@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dyn_reviews templ="%fix_date%;%employee_id%;%sla%;%assessment%;%note0%;%note1%;%note2%;%fix_dt%;%user_id%;">
+  <![CDATA[
+select fix_date, employee_id, sla, assessment, note0, note1, note2, fix_dt, user_id from dyn_reviews
+    where (current_timestamp - updated_ts) < "LTS_aging"()
+order by 1, 2
+  ]]>
+</dyn_reviews>

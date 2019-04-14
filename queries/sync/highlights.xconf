@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<highlights templ="%account_id%;%prod_id%;%color%;%bgcolor%;%remark%;" empty="no">
+  <![CDATA[ 
+select account_id, prod_id, color, bgcolor, remark from highlights
+    order by 1, 2
+  ]]>
+</highlights>

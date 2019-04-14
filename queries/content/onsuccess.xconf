@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<onsuccess>
+<!-- existing blob unlinks at the gc service -->
+  <![CDATA[
+update content_stream set content_ts=current_timestamp, content_type='%content_type%', content_compress='%compress%', content_blob=$1:blob, rows=%rows%
+    where content_code = '%content_code%' and user_id = '%user_id%' and b_date = '%b_date%' and e_date = '%e_date%';
+  ]]>
+</onsuccess>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel 
+    module="kern_sync" 
+    ldap.uri="ldap://127.0.0.1:389" 
+    ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
+    ldap.bind_pw="0"
+    ldap.base="ou=users,dc=omobus,dc=local" 
+    ldap.filter="(&amp;(objectClass=PureFTPdUser)(objectClass=omobusUser)(FTPStatus=enabled)(dumpsStatus=enabled))" 
+    Xldap.tls="yes"
+    ftp.host="127.0.0.1"
+    ftp.port="21021"
+    ftp.path="dumps/"
+    ftp.connect_timeout="10"
+    ftp.recv_timeout="5"
+    ftp.send_timeout="5"
+    ftp.epsv="yes"
+    ftp.tls="yes"
+    ftp.ccc="no"
+    ftp.cdc="no"
+    pack.type="csv.gz"
+    pack.level="4"
+    pack.encoding="utf-8"
+    cache="dumps/"
+    diff="yes"
+    threads="2"
+    >
+<queries>
+<xi:include href="../queries/dumps/access-log.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/action-log.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/advt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/audits.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/checkups.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/confirmations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/contacts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/equipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/locstate-log.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/Out-of-Stock.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/presences.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/presentations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/profile.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/quests.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/routes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/Share-of-Shelf.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/testings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/trainings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+
+<!-- **** FILTERS: BEGIN **** -->
+<my_habitat>
+    <![CDATA[
+select user_id, account_id from j_user_activities
+    union
+select user_id, account_id from my_accounts
+    union
+select distinct user_id, account_id from my_routes
+    union
+select r.user_id, a.account_id from my_regions r left join accounts a on r.region_id=a.region_id
+    union
+select c.user_id, a.account_id from (select user_id, expand_cities(city_id) city_id from my_cities) c, accounts a where c.city_id=a.city_id
+    union
+select r.user_id, a.account_id from my_retail_chains r, accounts a where r.rc_id=a.rc_id and (r.region_id='' or r.region_id=a.region_id)
+    union
+select user_id, guid fid from j_additions where hidden = 0
+order by 1, 2
+    ]]>
+</my_habitat>
+<users>
+  <![CDATA[
+select unnest(array['admins','analitics']) person_id, null pid, user_id from users
+    union
+select x.role preson_id, case when u.pids is null then null else unnest(u.pids) end pid, u.user_id from (select distinct role from users where hidden=0 and role is not null and role <> '') x 
+    left join users u on u.hidden=0
+order by user_id
+  ]]>
+</users>
+<!-- **** FILTERS: END **** -->
+</queries>
+<pack strict="yes" Xtrace="yes" comments="no">
+    <users personalize="groupName" hierarchy="user_id" root="ErpId" empty="yes" group="user_id" bruteforce="no">
+	<access-log key="user_id" strict="yes" />
+	<action-log key="user_id" strict="yes" />
+	<locstate-log key="user_id" strict="yes" />
+	<my_habitat key="user_id" strict="yes">
+	    <advt key="account_id" strict="yes" />
+	    <audits key="account_id" strict="yes" />
+	    <checkups key="account_id" strict="yes" />
+	    <confirmations key="account_id" strict="yes" />
+	    <contacts key="account_id" strict="yes" />
+	    <equipments key="account_id" strict="yes" />
+	    <Out-of-Stock key="account_id" strict="yes" />
+	    <orders key="account_id" strict="yes" />
+	    <presences key="account_id" strict="yes" />
+	    <presentations key="account_id" strict="yes" />
+	    <prices key="account_id" strict="yes" />
+	    <profile key="account_id" strict="yes" />
+	    <quests key="account_id" strict="yes" />
+	    <reclamations key="account_id" strict="yes" />
+	    <Share-of-Shelf key="account_id" strict="yes" />
+	    <stocks key="account_id" strict="yes" />
+	    <testings key="account_id" strict="yes" />
+	    <trainings key="account_id" strict="yes" />
+	</my_habitat>
+	<routes key="user_id" strict="yes" />
+    </users>
+</pack>
+</kernel>

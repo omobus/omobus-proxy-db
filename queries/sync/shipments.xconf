@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shipments templ="%distr_id%;%account_id%;%d_date%;" empty="no">
+  <![CDATA[ 
+select distr_id, account_id, d_date from shipments
+    where (current_date - 1)::date_t <= d_date and d_date <= (current_date + 15)::date_t
+order by 1, 2, 3
+  ]]>
+</shipments>

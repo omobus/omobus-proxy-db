@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<target>
+<check_user>
+  <![CDATA[
+select user_id as user_id_sys from users 
+    where lower(user_id)=lower('%ErpId%') /*%user_id%*/
+  ]]>
+</check_user>
+<check_exist>
+  <![CDATA[
+select count(*) from h_target 
+    where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
+  ]]>
+</check_exist>
+<create>
+  <![CDATA[
+select * from doc_id()
+  ]]>
+</create>
+<write_body>
+  <![CDATA[
+insert into h_target(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, imei, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, subject, b_date, e_date, target_type_id, myself, urgent, photo)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', '%subject%', '%b_date%', '%e_date%', '%target_type_id%', "toBoolean"('%myself%'), "toBoolean"('%urgent%'), $1:blob)
+  ]]>
+</write_body>
+<close>
+  <![CDATA[
+do $$
+declare
+    f_date date_t default left('%fix_dt%',10);
+    u_name descr_t;
+    u_lang lang_t;
+    a_name descr_t;
+    a_address address_t;
+    t_name descr_t;
+    x_id uid_t;
+    x_lang lang_t;
+    ar uids_t;
+begin
+    select descr, lang_id from users where user_id='%user_id_sys%'
+	into u_name, u_lang;
+    select lower(descr) from activity_types where activity_type_id='%activity_type_id%'
+	into t_name;
+    select descr, address from accounts where account_id = '%account_id%' 
+	into a_name, a_address;
+
+-- **** target --> j_docs
+    insert into j_docs(doc_id, doc_no, dev_id, dev_login, imei, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
+	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
+
+-- **** target --> thumbnail_stream
+    insert into thumbnail_stream(photo)
+	select photo from h_target where doc_id='%doc_id_sys%' and photo is not null;
+
+-- **** target --> content_stream
+    perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
+    perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+    perform content_add('tech_targets', '%user_id_sys%', f_date, f_date);
+    perform content_add('targets_compliance', '', '', '');
+
+-- **** target --> targets
+    insert into targets(target_id, target_type_id, b_date, e_date, subject, body, image, author_id, myself, account_ids, "immutable")
+	select doc_id, target_type_id, b_date, e_date, subject, case when myself = 1 then doc_note else "L10n_format_a"(u_lang,'targets','','new',array['activity_type',t_name,'fix_date',"L"(f_date),'body',doc_note,'u_name',u_name],doc_note) end, photo, user_id, myself, string_to_array(account_id,','), 1 from h_target where doc_id='%doc_id_sys%';
+
+-- **** target --> urgent_activities, mail_stream
+    if( '%urgent%' = 'yes' ) then
+	if( '%myself%' = 'yes' ) then
+	    perform urgent_add('%user_id_sys%', '%account_id%', '7', '%b_date%', '%user_id_sys%', '%doc_note%');
+	else
+	    for x_id, x_lang in select user_id, lang_id from users where user_id<>'%user_id_sys%' and user_id in (
+		select distinct user_id from my_routes where account_id='%account_id%' and p_date>=(current_date-1)::date_t
+		    union
+		select distinct user_id from my_accounts where account_id='%account_id%'
+	    ) and hidden=0
+	    loop
+		if( select urgent_add(x_id, '%account_id%', '7', '%b_date%', '%user_id_sys%', "L10n_format_a"(x_lang,'urgent','','%doc_code_sys%',array['fix_date',"L"(f_date),'u_name',u_name])) > 0 ) then
+		    ar := array_append(ar, x_id::varchar);
+		end if;
+
+		perform evmail_add(x_id,'target/caption','target/body',case when '%urgent%' = 'yes' then 2::smallint /*high*/ else 3::smallint /*normal*/ end,array[
+		    'subject',trim('%subject%'),'body',trim('%doc_note%'),
+		    'u_name',u_name,
+		    'a_name',a_name,'address',a_address,
+		    'fix_dt',"L"('%fix_dt%'::datetime_t),
+		    'b_date',"L"('%b_date%'::date_t),'e_date',"L"('%e_date%'::date_t)]);
+	    end loop;
+	    if( ar is not null ) then
+		insert into reminders(reminder_id, subject, body, b_date, e_date, author_id, user_ids)
+		    values('%doc_id_sys%', (select upper(descr) from activity_types where activity_type_id='7'), "L10n_format_a"(u_lang,'reminder','','%doc_code_sys%',array['u_name',u_name,'fix_date',"L"(f_date),'a_name',a_name,'address',a_address]), '%b_date%', '%b_date%'::date + 1, '%user_id_sys%', ar);
+	    end if;
+	end if;
+    end if;
+end;
+$$;
+  ]]>
+</close>
+</target>

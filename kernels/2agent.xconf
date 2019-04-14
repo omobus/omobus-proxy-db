@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel 
+    module="kern_sync" 
+    ldap.uri="ldap://127.0.0.1:389" 
+    ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
+    ldap.bind_pw="0"
+    ldap.base="ou=distributors,ou=data,dc=omobus,dc=local"
+    ldap.filter="(&amp;(objectClass=omobusMaintainPoint)(exchangeStatus=enabled))"
+    Xldap.filter="(&amp;(objectClass=PureFTPdUser)(objectClass=omobusMaintainPoint)(FTPStatus=enabled)(exchangeStatus=enabled))"
+    Xldap.tls="yes"
+    ftp.host="gateway.omobus.net"
+    Xftp.host="127.0.0.1"
+    ftp.port="21021"
+    ftp.path="docs/"
+    ftp.connect_timeout="30"
+    ftp.recv_timeout="15"
+    ftp.send_timeout="15"
+    ftp.epsv="true"
+    ftp.tls="yes"
+    ftp.ccc="no"
+    ftp.cdc="no"
+    pack.type="txt.bz2"
+    pack.level="9"
+    cache="2agent/"
+    diff="yes"
+    >
+<queries>
+<xi:include href="../queries/2agent/delivery_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2agent/orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2agent/order_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2agent/payment_methods.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2agent/receipt_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2agent/receipts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2agent/reclamation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2agent/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2agent/symlinks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</queries>
+<pack>
+    <delivery_types />
+    <order_types />
+    <orders personalize="ErpCode" />
+    <payment_methods />
+    <receipt_types />
+    <receipts personalize="ErpCode" />
+    <reclamation_types />
+    <reclamations personalize="ErpCode" />
+    <symlinks personalize="ErpCode" />
+</pack>
+</kernel>

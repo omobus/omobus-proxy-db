@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<order_params templ="%distr_id%;%order_param_id%;%descr%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update order_params set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update order_params set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from order_params 
+    where distr_id = '%distr_id%' and order_param_id = '%order_param_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update order_params set descr='%descr%', hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where distr_id = '%distr_id%' and order_param_id = '%order_param_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into order_params (distr_id, order_param_id, descr, hidden, db_ids)
+    values ('%distr_id%', '%order_param_id%', '%descr%', 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</order_params>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sales_history templ="%account_id%;%prod_id%;%s_date%;%amount_c%;%pack_c_id%;%qty_c%;%amount_r%;%pack_r_id%;%qty_r%;%extra_info%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+prepare ".plan.sales"(varchar, varchar, varchar, numeric, varchar, numeric, numeric, varchar, numeric, varchar) as 
+    insert into sales_history (account_id, prod_id, s_date, amount_c, pack_c_id, qty_c, amount_r, pack_r_id, qty_r, extra_info, db_ids)
+	values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, array['%ErpCode%'])
+    on conflict do nothing;
+
+delete from sales_history
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update sales_history set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from sales_history
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[
+execute ".plan.sales"('%account_id%', '%prod_id%', '%s_date%', NIL(%amount_c%), NIL('%pack_c_id%'), NIL(%qty_c%), NIL(%amount_r%), NIL('%pack_r_id%'), NIL(%qty_r%), NIL('%extra_info%'))
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+deallocate prepare salesplan;
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+  ]]>
+</end>
+</sales_history>

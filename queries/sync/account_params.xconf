@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<account_params templ="%distr_id%;%account_id%;%group_price_id%;%payment_method_id%;%payment_delay%;%wareh_ids%;" empty="no">
+  <![CDATA[
+select distr_id, account_id, group_price_id, payment_method_id, payment_delay, array_to_string(wareh_ids,',') wareh_ids from account_params
+    order by distr_id, account_id
+  ]]>
+</account_params>

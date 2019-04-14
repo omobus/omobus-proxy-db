@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<reminders templ="%reminder_id%;%b_date%;%e_date%;%subject%;%body%;" empty="no">
+  <![CDATA[
+select reminder_id, subject, body, b_date, e_date from reminders
+    where hidden = 0 and b_date<=current_date::date_t and current_date::date_t<=e_date
+order by e_date, b_date, reminder_id
+  ]]>
+</reminders>

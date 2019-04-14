@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wareh_stocks templ="%wareh_id%;%prod_id%;%qty%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//shadow/%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from shadow.wareh_stocks 
+    where distr_id='%ErpCode%'
+  ]]>
+</begin>
+<insert>
+  <![CDATA[ 
+insert into shadow.wareh_stocks (distr_id, wareh_id, prod_id, qty)
+    values ('%ErpCode%', '%wareh_id%', '%prod_id%', %qty%)
+on conflict do nothing
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+delete from wareh_stocks where distr_id='%ErpCode%';
+insert into wareh_stocks(distr_id, wareh_id, prod_id, qty, db_ids)
+    select x.distr_id, x.wareh_id, l.f_id, x.qty, array['$shadow'] from shadow.wareh_stocks x, symlinks l
+	where x.distr_id='%ErpCode%' and l.obj_code='product' and l.distr_id='%ErpCode%' and l.distr_id=x.distr_id and l.t_id=x.prod_id;
+
+select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+  ]]>
+</end>
+</wareh_stocks>

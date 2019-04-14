@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gps_state>
+<check_user>
+  <![CDATA[
+select user_id as user_id_sys from users 
+    where lower(user_id)=lower('%ErpId%') /*%user_id%*/
+  ]]>
+</check_user>
+<check_exist>
+  <![CDATA[
+select count(*) from a_gps_state 
+    where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
+  ]]>
+</check_exist>
+<create>
+  <![CDATA[
+select * from act_id()
+  ]]>
+</create>
+<write_body>
+  <![CDATA[
+insert into a_gps_state (act_id, inserted_node, dev_pack, dev_id, dev_login, imei, user_id, fix_dt, state, msg, provider)
+    values ('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%state%', '%msg%', '%provider%')
+  ]]>
+</write_body>
+<close>
+  <![CDATA[
+do $$
+declare
+    f_date date_t default left('%fix_dt%',10);
+    f_time time_t default substring('%fix_dt%', 12, 5);
+    xz bool_t default 0;
+begin
+-- **** gps_state --> j_acts
+    insert into j_acts(act_id, dev_id, dev_login, imei, user_id, fix_dt, inserted_node, dev_pack, act_code)
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+
+-- **** gps_pos --> sysstats
+    perform sysstat_add('%user_id_sys%', f_date, f_time);
+
+    if( '%state%' = 'off' and '%msg%' = '' ) then
+	update sysstats set gps_violations = gps_violations + 1
+	    where user_id='%user_id_sys%' and fix_date=f_date;
+	xz := 1;
+    end if;
+
+-- **** gps_state --> content_stream
+    perform content_add('tech', '', f_date, f_date);
+    perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
+    perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+    if( xz = 1 ) then
+	perform content_add('route_compliance', '', f_date, f_date);
+    end if;
+
+-- **** gps_state --> mail_stream
+    if( xz = 1 and current_date = f_date::date and (select gps_violations from sysstats where user_id='%user_id_sys%' and fix_date=f_date) = 1 and (select "rules:gps_off" from users where user_id='%user_id_sys%') = 0 ) then
+	perform evmail_add('%user_id_sys%','gps_off/caption','gps_off/body',2::smallint /*high*/,array['fix_dt',"L"('%fix_dt%'::datetime_t)]);
+
+	/*** send GPS violation alart to the executive head email ***/
+	perform evmail_add(my_executivehead('%user_id_sys%'),'gps_violation/caption','gps_violation/body',1::smallint /*highest*/,array[
+	    'fix_dt',"L"('%fix_dt%'::datetime_t),'dev_login','%user_id%','u_name',(select descr from users where user_id='%user_id_sys%')]);
+    end if;
+end;
+$$;
+  ]]>
+</close>
+</gps_state>

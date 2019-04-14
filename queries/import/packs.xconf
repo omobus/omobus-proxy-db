@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packs templ="%pack_id%;%prod_id%;%descr%;%pack%;%weight%;%volume%;%precision%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update packs set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update packs set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from packs 
+    where pack_id = '%pack_id%' and prod_id = '%prod_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update packs set descr=trim(both from '%descr%'), pack=%pack%, weight=0%weight%, volume=0%volume%, precision=0%precision%, hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where pack_id = '%pack_id%' and prod_id = '%prod_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[ 
+insert into packs (pack_id, prod_id, descr, pack, weight, volume, precision, hidden, db_ids)
+    values ('%pack_id%', '%prod_id%', trim(both from '%descr%'), %pack%, 0%weight%, 0%volume%, 0%precision%, 0, array['%ErpCode%'])
+  ]]> 
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</packs>

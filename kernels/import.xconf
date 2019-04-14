@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel 
+    module="kern_import" 
+    ldap.uri="ldap://127.0.0.1:389" 
+    ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
+    ldap.bind_pw="0"
+    ldap.base="ou=core,ou=data,dc=omobus,dc=local"
+    ldap.filter="(&amp;(objectClass=PureFTPdUser)(objectClass=omobusMaintainPoint)(FTPStatus=enabled)(exchangeStatus=enabled))"
+    Xldap.tls="yes"
+    ftp.host="127.0.0.1"
+    ftp.port="21021"
+    ftp.path="data/"
+    ftp.connect_timeout="10"
+    ftp.recv_timeout="5"
+    ftp.send_timeout="5"
+    ftp.epsv="true"
+    ftp.tls="yes"
+    ftp.ccc="no"
+    ftp.cdc="no"
+    Xpack.encoding="windows-1251"
+    Xpack.delim="|"
+    pack.gc="4"
+    cache="import/"
+    >
+<xi:include href="../queries/import/trig_before.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/trig_blob.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/TTD.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/account_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/account_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/addition_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/agencies.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/agreements.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/attributes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/audit_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/audit_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/blacklist.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/brands.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/canceling_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/categories.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/channels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/cities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/comment_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/contacts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/debts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/delivery_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/departments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/discard_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/discounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/distributors.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/equipment_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/equipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/erp_docs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/erp_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/floating_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/group_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/highlights.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/job_titles.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/kinds.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/manufacturers.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/matrices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/mutuals_history_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/mutuals_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/mutuals.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/my_accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/my_cities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/my_regions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/my_retail_chains.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/my_routes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/oos_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/order_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/order_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/ownership_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/packs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/payment_methods.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/pending_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/permitted_returns.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/photo_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/photo_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/placements.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/plu_codes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/pmlist.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/potentials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/rating_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/rating_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/rdd.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/receipt_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/reclamation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/recom_orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/recom_retail_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/recom_shares.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/refunds_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/refunds.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/regions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/restrictions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/retail_chains.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/sales_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/shelf_lifes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/shipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/std_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/symlinks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/testing_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/testing_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/unsched_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/users.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/vf_accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/vf_names.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/vf_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/warehouses.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/wareh_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/trig_after.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</kernel>

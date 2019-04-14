@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel 
+    module="kern_sync" 
+    ldap.uri="ldap://127.0.0.1:389" 
+    ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
+    ldap.bind_pw="0"
+    ldap.base="ou=core,ou=data,dc=omobus,dc=local"
+    ldap.filter="(&amp;(objectClass=PureFTPdUser)(objectClass=omobusMaintainPoint)(FTPStatus=enabled)(exchangeStatus=enabled))"
+    Xldap.tls="yes"
+    ftp.host="127.0.0.1"
+    ftp.port="21021"
+    ftp.path="docs/"
+    ftp.connect_timeout="10"
+    ftp.recv_timeout="5"
+    ftp.send_timeout="5"
+    ftp.epsv="true"
+    ftp.tls="yes"
+    ftp.ccc="no"
+    ftp.cdc="no"
+    pack.type="txt.gz"
+    pack.level="9"
+    cache="export/"
+    diff="yes"
+    >
+<queries>
+<xi:include href="../queries/export/activity_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/receipts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/target_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+
+<!-- **** FILTERS: BEGIN **** -->
+<distributors>
+    <![CDATA[
+select distr_id, unnest(db_ids) person_id from distributors
+    /*where "self" = 1*/
+order by 1, 2
+    ]]>
+</distributors>
+</queries>
+<pack>
+    <activity_types />
+    <target_types />
+    <distributors personalize='ErpCode'>
+	<orders key="distr_id" />
+	<receipts key="distr_id" />
+	<reclamations key="distr_id" />
+    </distributors>
+</pack>
+</kernel>

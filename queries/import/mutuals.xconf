@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mutuals templ="%distr_id%;%account_id%;%mutual%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+prepare ".plan.mutuals"(varchar, varchar, numeric) as
+    insert into mutuals(distr_id, account_id, mutual, db_ids)
+	values ($1, $2, $3, array['%ErpCode%'])
+    on conflict do nothing;
+
+delete from mutuals
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update mutuals set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from mutuals
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[ 
+execute ".plan.mutuals"('%distr_id%', '%account_id%', %mutual%)
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</mutuals>

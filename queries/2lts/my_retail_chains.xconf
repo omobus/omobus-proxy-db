@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<my_retail_chains templ="%user_id%;%rc_id%;%region_id%;">
+  <![CDATA[
+select user_id, rc_id, region_id from my_retail_chains
+    order by 1, 2
+  ]]>
+</my_retail_chains>

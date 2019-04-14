@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<activity_types templ="%activity_type_id%;%descr%;%note%;%docs_needed%;%pos_needed%;%exec_limit%;%selectable%;%joint%;%strict%;">
+  <![CDATA[ 
+select case when roles is null then null else unnest(roles) end person_id, activity_type_id, descr, note, docs_needed, pos_needed, exec_limit, selectable, joint, strict from activity_types
+    where hidden = 0 
+order by row_no, descr
+  ]]>
+</activity_types>

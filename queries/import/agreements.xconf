@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<agreements templ="%account_id%;%placement_id%;%posm_id%;%b_date%;%e_date%;%strict%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from agreements
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update agreements set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from agreements
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select sum(x) exist from (
+    select count(*) x from agreements
+	where account_id='%account_id%' and placement_id='%placement_id%' and posm_id='%posm_id%' and b_date='%b_date'
+union
+    select case when '%e_date%' < current_date::date_t then 1 else 0 end x
+) q
+  ]]>
+</check_exist>
+<insert>
+  <![CDATA[
+insert into agreements(account_id, placement_id, posm_id, b_date, e_date, "strict", db_ids)
+    values('%account_id%', '%placement_id%', '%posm_id%', '%b_date%', '%e_date%', case when '%strict%'='1' then 1 else 0 end, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+  ]]>
+</end>
+</agreements>

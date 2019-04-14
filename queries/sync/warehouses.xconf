@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<warehouses templ="%distr_id%;%wareh_id%;%descr%;" empty="no">
+  <![CDATA[ 
+select distr_id, wareh_id, descr from warehouses
+    where hidden = 0
+order by descr
+  ]]>
+</warehouses>

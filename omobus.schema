@@ -1,0 +1,133 @@
+# This file is a part of the omobusd project.
+# Copyright (c) 2006 - 2017 ak-obs, Ltd. <info@omobus.ru>.
+# Author: Igor Artemov <i_artemov@ak-obs.ru>.
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.200 NAME 'ErpId'
+	DESC 'OMOBUS: ERP ID'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.202 NAME 'beginWorkingTime'
+	DESC 'OMOBUS: the beginning of the working day (format: HH:MM)'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.203 NAME 'endWorkingTime'
+	DESC 'OMOBUS: the end of the working day (format: HH:MM)'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.204 NAME 'IMEI'
+	DESC 'OMOBUS: device IMEI code'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.205 NAME 'orderUnavailableProducts'
+	DESC 'OMOBUS: shown unavailable products in the order document (format: yes|no)'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.207 NAME 'syncErpId'
+	DESC 'OMOBUS: impersonation'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.208 NAME 'terminalList'
+	DESC 'OMOBUS: loaded terminals'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.209 NAME 'serviceList' 
+	DESC 'OMOBUS: loaded services'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.210 NAME 'transportServers' 
+	DESC 'OMOBUS: addition servers'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.211 NAME 'syncEncoding'
+	DESC 'OMOBUS: package data encoding'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.212 NAME 'groupName' 
+	DESC 'OMOBUS: role code'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.214 NAME 'importEncoding'
+	DESC 'OMOBUS: packets encoding (import)'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.215 NAME 'exchangeStatus'
+	DESC 'OMOBUS: disable or enable packet exchange (disabled|enabled)'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.216 NAME 'distributor'
+	DESC 'OMOBUS: filtering data by distributor ID (omobus-proxy-db row is distr_id)'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.217 NAME 'agency'
+	DESC 'OMOBUS: filtering data by agency ID (omobus-proxy-db row is agency_id)'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.218 NAME 'syncPackage'
+	DESC 'OMOBUS: package type (txt|gz|bz2)'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.219 NAME 'consoleStatus'
+	DESC 'OMOBUS: disable or enable access to the web-console (disabled|enabled)'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.220 NAME 'dumpsStatus'
+	DESC 'OMOBUS: disable or enable data dumps (disabled|enabled)'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE )
+
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.300 NAME 'ErpCode'
+	DESC 'OMOBUS: ERP code'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.400 NAME 'mailStatus'
+	DESC 'OMOBUS: disable or enable mailbox (disabled|enabled)'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.401 NAME 'mailGroup'
+	DESC 'OMOBUS: mailbox alias'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+
+objectclass ( 1.3.6.1.4.1.33158.11.2.1 NAME 'omobusUser' 
+	SUP top AUXILIARY
+	MAY ( ErpId $ syncErpId $ syncEncoding $ syncPackage $ groupName $ exchangeStatus $ consoleStatus $ dumpsStatus $
+	      IMEI $ beginWorkingTime $ endWorkingTime $ 
+	      transportServers $ terminalList $ serviceList $ orderUnavailableProducts $
+	      distributor $ agency
+	    ) )
+
+objectclass ( 1.3.6.1.4.1.33158.11.2.2 NAME 'omobusMaintainPoint' 
+	SUP top AUXILIARY
+	MAY ( ErpCode $ importEncoding $ syncEncoding $ syncPackage $ exchangeStatus $ groupName ) )
+
+objectclass ( 1.3.6.1.4.1.33158.11.2.3 NAME 'omobusMail' 
+	SUP top AUXILIARY
+	MUST ( mailStatus )
+	MAY ( mailGroup ) )
+
+objectclass ( 1.3.6.1.4.1.33158.11.2.4 NAME 'omobusAccount' 
+	SUP top STRUCTURAL
+	MUST ( cn $ uid $ userPassword )
+	MAY ( description ) )

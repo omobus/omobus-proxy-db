@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel module="kern_content" threads="4">
+<xi:include href="../queries/zombie/onload.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/zombie/onsuccess.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/zombie/trig_after.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<content>
+<xi:include href="../queries/zombie/permanent_lock.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/zombie/temporary_lock.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/zombie/unlock.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</content>
+<libs>
+    <core>
+  <![CDATA[
+local M = {}
+
+local LDAP_URI 		= "ldap://127.0.0.1:389"
+local LDAP_BIND_DN 	= "uid=omobusd,ou=services,dc=omobus,dc=local"
+local LDAP_BIND_PW 	= "0"
+local LDAP_BASE 	= "ou=users,dc=omobus,dc=local"
+local LDAP_FILTER 	= "(&(objectClass=omobusUser)(|(exchangeStatus=enabled)(exchangeStatus=disabled)(dumpsStatus=enabled)(dumpsStatus=disabled)(consoleStatus=enabled)(consoleStatus=disabled))(ErpId=%1))"
+local LDAP_ATTRS 	= {"uid", "ErpId", "groupName", "FTPStatus", "mailStatus", "exchangeStatus", "dumpsStatus", "consoleStatus", "syncErpId"}
+
+
+function M.for_each_u(erpid, cb)
+    assert(erpid ~= '-', "invalid ErpId.")
+    local ses, dn, attrs
+    ses = assert(ldap.open_simple(LDAP_URI, LDAP_BIND_DN, LDAP_BIND_PW))
+    for dn, attrs in ses:search({base = LDAP_BASE, scope = "subtree", filter = LDAP_FILTER:replace("%1", erpid), attrs = LDAP_ATTRS}) do
+	cb(ses, dn, attrs)
+    end
+    ses:close()
+end
+
+return M
+  ]]>
+    </core>
+</libs>
+</kernel>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dyn_prices templ="%fix_date%;%account_id%;%prod_id%;%price%;%promo%;%rrp%;%fix_dt%;%user_id%;">
+  <![CDATA[
+select fix_date, account_id, prod_id, price, promo, rrp, fix_dt, user_id from dyn_prices
+    where (current_timestamp - updated_ts) < "LTS_aging"()
+order by 1, 2, 3
+  ]]>
+</dyn_prices>

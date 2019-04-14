@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<users templ="%pid%;%user_id%;%descr%;%dep_ids%;%role%;">
+  <![CDATA[ 
+select case when pids is null then null else unnest(pids) end pid, user_id, descr, array_to_string(dep_ids,',') dep_ids, role from users
+    where hidden=0 and descr <>''
+order by descr
+  ]]>
+</users>

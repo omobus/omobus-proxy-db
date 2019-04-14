@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<route_compliance type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<R>
+  <![CDATA[
+select 
+    "paramInteger"('rules:min_duration') min_duration,
+    "paramInteger"('rules:max_duration') max_duration,
+    "paramInteger"('rules:max_distance') max_distance,
+    "paramUID"('rules:wd_begin')::time_t wd_begin,
+    "paramUID"('rules:wd_end')::time_t wd_end,
+    "paramInteger"('rules:power') power
+  ]]>
+	</R>
+	<L>
+  <![CDATA[
+select 
+    u.descr u_name, u.user_id, u.dev_login, u.area, r.scheduled, r.closed, r.canceled, r.other, 
+    (select count(*) from (select account_id from h_pending where user_id=u.user_id and /*left(fix_dt,10)*/route_date='%b_date%' group by account_id) px) pending, 
+    (select count(*) from (select account_id from h_discard where user_id=u.user_id and /*left(fix_dt,10)*/route_date='%b_date%' group by account_id) dx) discarded, 
+    r1.rd_begin, r1.rd_end, r1.rd_duration, r1.duration, r1.warn_min_duration, r1.warn_max_duration, r1.warn_max_distance, r.canceling_note,
+    w0.fix_dt wd_begin, case when w0.fix_dt>w1.fix_dt then null else w1.fix_dt end wd_end, 
+    case when w0.fix_dt>w1.fix_dt then null else to_char((w1.fix_dt)::timestamp-(w0.fix_dt)::timestamp, 'HH24:MI') end wd_duration,
+    case when r.closed > 0 or r.other > 0 then mileage(u.user_id, '%b_date%', substring(r1.rd_begin, 12, 5), substring(r1.rd_end, 12, 5)) else null end mileage,
+    case when s.packets is not null and (s.packets).count > 0 then 1 else 0 end alive, s.gps_violations, s.tm_violations, e.user_id head_id, e.descr head_name,
+    /* power: */
+    case when (s.packets).count>0 then
+	(select battery_life from a_power 
+	    where user_id=u.user_id and left(fix_dt, 10)='%b_date%' and substring(fix_dt, 12, 5) < coalesce(u."rules:wd_begin", "paramUID"('rules:wd_begin')::time_t)
+	    order by fix_dt desc limit 1)
+	else null end power_begin,
+    case when (s.packets).count>0 then
+	(select battery_life from a_power 
+	    where user_id=u.user_id and left(fix_dt, 10)='%b_date%' and substring(fix_dt, 12, 5) > coalesce(u."rules:wd_end", "paramUID"('rules:wd_end')::time_t)
+	    order by fix_dt limit 1) 
+	else null end power_end,
+    case when (s.packets).count>0 then
+	(select count(*) from a_power 
+	    where user_id=u.user_id and left(fix_dt, 10)='%b_date%' and state='on' 
+		and substring(fix_dt, 12, 5) >= coalesce(u."rules:wd_begin", "paramUID"('rules:wd_begin')::time_t) 
+		and substring(fix_dt, 12, 5) < coalesce(u."rules:wd_end", "paramUID"('rules:wd_end')::time_t))
+	else null end chargings,
+    /* personal rules: */
+    u."rules:wd_begin", u."rules:wd_end"
+from users u
+    left join users e on e.user_id=u.executivehead_id/*(select my_executivehead(u.user_id))*/
+    left join sysstats s on s.fix_date='%b_date%' and s.user_id=u.user_id
+    left join (
+	select user_id, min(fix_dt) fix_dt from a_user_work where left(fix_dt, 10) = '%b_date%' and state='begin' group by user_id
+    ) w0 on u.user_id = w0.user_id
+    left join (
+	select user_id, max(fix_dt) fix_dt from a_user_work where left(fix_dt, 10) = '%b_date%' and state='end' group by user_id
+    ) w1 on u.user_id = w1.user_id
+/* routes & pendings activities: */
+    left join (
+	select user_id, count(route) scheduled, count(route*closed) closed, count(route*canceled) canceled, count(closed)-count(route*closed) other,
+	    min(canceling_note) canceling_note
+	from (
+	    select user_id, route_date, route, closed, canceled, b_dt, e_dt,
+		case canceled when 1 then
+		    case when c.canceling_type_id is null then '-'
+			else c.descr end || case when r.canceling_note is null or r.canceling_note='' then '' else ' (' || r.canceling_note || ')' end
+		else
+		    null
+		end canceling_note
+	    from user_routes(null, '%b_date%', '%b_date%', 1::bool_t) r
+		left join activity_types t on t.activity_type_id = r.activity_type_id
+		left join canceling_types c on c.canceling_type_id = r.canceling_type_id
+		left join accounts a on a.account_id = r.account_id
+	    where strict = 1
+	) r
+	    group by user_id
+    ) r on r.user_id=u.user_id
+/* only current day activities: */
+    left join (
+	select user_id, min(b_dt) rd_begin, max(e_dt) rd_end, to_char(max(e_dt)::timestamp-min(b_dt)::timestamp, 'HH24:MI') rd_duration,
+	    to_char(sum(duration), 'HH24:MI') duration, sum(warn_min_duration) warn_min_duration, sum(warn_max_duration) warn_max_duration,
+	    sum(warn_max_distance) warn_max_distance
+	from (
+	    select user_id, route_date, b_dt, e_dt, e_dt::timestamp - b_dt::timestamp duration,
+		case when datediff(r.b_dt, r.e_dt) < "paramInteger"('rules:min_duration') then 1 else 0 end warn_min_duration,
+		case when datediff(r.b_dt, r.e_dt) > "paramInteger"('rules:max_duration') then 1 else 0 end warn_max_duration,
+		case when distance(a.latitude, a.longitude, r.latitude, r.longitude) > "paramInteger"('rules:max_distance') or
+		    distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) > "paramInteger"('rules:max_distance')
+		then 1 else 0 end warn_max_distance
+	    from user_routes(null, '%b_date%', '%b_date%', 1::bool_t) r
+		left join activity_types t on t.activity_type_id = r.activity_type_id
+		left join canceling_types c on c.canceling_type_id = r.canceling_type_id
+		left join accounts a on a.account_id = r.account_id
+	    where (closed is null or closed = 0 or (closed = 1 and '%b_date%' = e_dt::date_t)) and strict = 1
+	) r
+	    group by user_id
+    ) r1 on r1.user_id=u.user_id
+
+where u.hidden=0 and (u.role not in ('sv','ise','kam','asm','tme') or (u.role in ('sv','ise','kam','asm','tme') and r.user_id is not null))
+order by u.descr, u.user_id
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+local rt = require('rtlib')
+local tb = {}
+
+tb.code = "route_compliance"
+tb.user_id = _user_id
+tb.data_ts = _data_ts
+tb.b_date = _b_date
+tb.e_date = _e_date
+tb.rules = { duration = {}, distance = {}, wd = {} }
+tb.rows = rt.rows(_L, false, function(r, n, a)
+	if r.violations == nil then
+	    r.violations = {}
+	end
+	if r.power == nil then
+	    r.power = {}
+	end
+	if r.rules == nil then
+	    r.rules = { wd = {} }
+	end
+	if n == "gps_violations" then
+	    r.violations["gps"] = tonumber(a)
+	elseif n == "tm_violations" then
+	    r.violations["tm"] = tonumber(a)
+	elseif std.contains({'distr_ids'}, n) then 
+	    r[n] = std.split(a, ',')
+	elseif n == "power_begin" then
+	    r.power["begin"] = tonumber(a)
+	elseif n == "power_end" then
+	    r.power["end"] = tonumber(a)
+	elseif n == "chargings" then
+	    r.power["chargings"] = tonumber(a)
+	elseif n == "alive" then
+	    r[n] = tonumber(a)
+	elseif n == "rules:wd_begin" then
+	    r.rules.wd["begin"] = a
+	elseif n == "rules:wd_end" then
+	    r.rules.wd["end"] = a
+	elseif std.contains({'scheduled','closed','canceled','other','pending','discarded'}, n) then 
+	    r[n] = tonumber(a)
+	else
+	    r[n] = a
+	end
+    end)
+
+tb.rules.duration["min"] = tonumber(rowset_value(_R, 0, rowset_colid(_R, "min_duration")));
+tb.rules.duration["max"] = tonumber(rowset_value(_R, 0, rowset_colid(_R, "max_duration")));
+tb.rules.distance["max"] = tonumber(rowset_value(_R, 0, rowset_colid(_R, "max_distance")));
+tb.rules.wd["begin"] = rowset_value(_R, 0, rowset_colid(_R, "wd_begin"));
+tb.rules.wd["end"] = rowset_value(_R, 0, rowset_colid(_R, "wd_end"));
+tb.rules.power = tonumber(rowset_value(_R, 0, rowset_colid(_R, "power")));
+
+set_param(_content, "rows", rowset_rows(_L))
+write_stream(_content, json.encode(tb))
+  ]]>
+    </generator>
+</route_compliance>

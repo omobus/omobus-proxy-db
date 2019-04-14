@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<onsuccess>
+  <![CDATA[
+update geocode_stream set latitude=%x-latitude%, longitude=%x-longitude%, content_ts=current_timestamp, "x-address"=NIL('%x-address%'), "x-country"=NIL('%x-country%'), "x-region"=NIL('%x-region%'), "x-area"=NIL('%x-area%'), "x-city"=NIL('%x-city%'), "x-street"=NIL('%x-street%'), "x-house"=NIL('%x-house%')
+    where account_id='%account_id%' and reverse=%reverse%
+  ]]>
+</onsuccess>

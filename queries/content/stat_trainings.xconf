@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<stat_trainings type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select
+    h.doc_id, 
+    h.user_id, u.descr u_name, u.dev_login, 
+    h.fix_dt, 
+    h.inserted_ts, 
+    h.account_id, a.code a_code, a.descr a_name, a.address, 
+    reg.descr region, 
+    c.descr city, 
+    a.rc_id, r.descr rc, r.ka_code,
+    p.descr poten,
+    a.chan_id, ch.descr chan,
+    h.training_type_id, t.descr training_type,
+    h.tm_id, m.descr tm,
+    array_to_string(m.brand_ids,',') brand_id, case when m.brand_ids is null or cardinality(m.brand_ids) = 1 then b.descr else
+	(select array_to_string(array_agg(descr::text),', ') from brands where brand_id=any(m.brand_ids)) end brand,
+    z.contact_id, z.name, z.surname, z.patronymic,
+    z.job_title_id, j.descr job_title,
+    h.doc_note, 
+    u.executivehead_id head_id, ex.descr head_name
+from (
+    select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, tm_id, unnest(contact_ids) contact_id, doc_note from (
+	select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, unnest(tm_ids) tm_id, contact_ids, doc_note from h_training
+	    where '%b_date%'<=left(fix_dt, 10) and left(fix_dt, 10)<='%e_date%'
+    ) xz
+) h
+    left join training_types t on t.training_type_id = h.training_type_id
+    left join accounts a on a.account_id = h.account_id
+    left join potentials p on a.poten_id = p.poten_id
+    left join channels ch on a.chan_id = ch.chan_id
+    left join retail_chains r on a.rc_id = r.rc_id
+    left join regions reg on a.region_id = reg.region_id
+    left join cities c on a.city_id = c.city_id
+    left join training_materials m on m.tm_id = h.tm_id
+    left join brands b on cardinality(m.brand_ids) = 1 and b.brand_id = m.brand_ids[1]
+    left join contacts z on z.contact_id = h.contact_id
+    left join job_titles j on j.job_title_id = z.job_title_id
+    left join users u on u.user_id = h.user_id
+    left join users ex on ex.user_id = u.executivehead_id
+order by h.inserted_ts desc, u.descr, h.doc_id, b.row_no, b.descr, m.descr
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+require('rtlib').main("trainings", true)
+  ]]>
+    </generator>
+</stat_trainings>

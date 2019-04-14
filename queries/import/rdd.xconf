@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdd templ="%distr_id%;%obj_code%;%r_date%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update rdd set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update rdd set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from rdd 
+    where distr_id='%distr_id%' and obj_code='%obj_code%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update rdd set r_date=trim(both from '%r_date%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where distr_id='%distr_id%' and obj_code='%obj_code%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into rdd (distr_id, obj_code, r_date, hidden, db_ids)
+    r_dates ('%distr_id%', '%obj_code%', trim(both from '%r_date%'), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</rdd>

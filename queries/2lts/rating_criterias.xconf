@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rating_criterias templ="%rating_criteria_id%;%descr%;%row_no%;">
+  <![CDATA[
+select rating_criteria_id, descr, row_no from rating_criterias
+    where hidden = 0
+order by 1
+  ]]>
+</rating_criterias>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wish_types templ="%wish_type_id%;%descr%;" empty="no">
+  <![CDATA[ 
+select wish_type_id, descr from wish_types
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</wish_types>

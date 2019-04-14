@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<presentations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%participants%;%tm_ids%;%doc_note%;%photo%;">
+  <![CDATA[
+select doc_id, fix_dt, user_id, account_id, participants, array_to_string(tm_ids,',') tm_ids, doc_note, photo from h_presentation
+    where (current_timestamp - inserted_ts) < "LTS_aging"()
+order by 1
+  ]]>
+</presentations>

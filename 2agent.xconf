@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<omobusd timeout="90" semaphore="2agent">
+    <xi:include href="connections/proxy-db.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+    <xi:include href="transactions/read.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+    <xi:include href="kernels/2agent.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</omobusd>

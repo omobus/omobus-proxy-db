@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<photo_params templ="%photo_param_id%;%descr%;%placement_ids%;" empty="no">
+  <![CDATA[ 
+select photo_param_id, descr, array_to_string(placement_ids,',') placement_ids from photo_params
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</photo_params>

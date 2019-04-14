@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<stat_advt type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select
+    x.user_id, u.descr u_name, u.dev_login,
+    x.fix_dt,
+    x.inserted_ts,
+    x.account_id, a.code a_code, a.descr a_name, a.address,
+    reg.descr region,
+    c.descr city,
+    a.rc_id, r.descr rc, r.ka_code,
+    p.descr poten,
+    a.chan_id, ch.descr chan,
+    x.placement_id, n.descr placement,
+    x.posm_id, m.descr posm,
+    array_to_string(m.brand_ids,',') brand_id, case when m.brand_ids is null or cardinality(m.brand_ids) = 1 then b.descr else
+	(select array_to_string(array_agg(descr::text),', ') from brands where brand_id=any(m.brand_ids)) end brand,
+    x.qty, x.scratch,
+    u.executivehead_id head_id, ex.descr head_name
+from dyn_advt x
+    left join placements n on n.placement_id = x.placement_id
+    left join pos_materials m on m.posm_id = x.posm_id
+    left join brands b on cardinality(m.brand_ids) = 1 and b.brand_id = m.brand_ids[1]
+    left join accounts a on a.account_id = x.account_id
+    left join potentials p on a.poten_id = p.poten_id
+    left join channels ch on a.chan_id = ch.chan_id
+    left join retail_chains r on a.rc_id = r.rc_id
+    left join regions reg on a.region_id = reg.region_id
+    left join cities c on a.city_id = c.city_id
+    left join users u on u.user_id = x.user_id
+    left join users ex on ex.user_id = u.executivehead_id
+where '%b_date%'<=x.fix_date and x.fix_date<='%e_date%'
+order by x.inserted_ts desc, u.descr, x.doc_id, n.row_no, n.descr, m.descr
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+local rt = require('rtlib')
+
+rt.main("advt", true, function(r, n, a)
+    if std.contains({'qty'}, n) then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+  ]]>
+    </generator>
+</stat_advt>

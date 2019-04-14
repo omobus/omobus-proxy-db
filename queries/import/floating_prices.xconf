@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<floating_prices templ="%distr_id%;%account_id%;%prod_id%;%pack_id%;%price%;%b_date%;%e_date%;%promo%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from floating_prices
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update floating_prices set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from floating_prices
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select case when '%e_date%' < current_date::date_t then 1 else 0 end exist
+  ]]>
+</check_exist>
+<insert>
+  <![CDATA[
+insert into floating_prices (distr_id, account_id, prod_id, pack_id, price, b_date, e_date, promo, db_ids)
+    values ('%distr_id%', '%account_id%', '%prod_id%', '%pack_id%', %price%, '%b_date%', '%e_date%', NIL(%promo%), array['%ErpCode%'])
+on conflict do nothing
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</floating_prices>

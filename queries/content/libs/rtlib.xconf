@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rtlib>
+  <![CDATA[
+local std = require('stdlib')
+
+local M = {}
+
+local function _data(r, n, a)
+    r[n] = a
+end
+
+function M.rows(q, rid, func)
+    local tb = {}
+    local rows, cols, r, n, a, crc
+
+    rows = rowset_rows(q)
+    cols = rowset_cols(q)
+
+    if rows > 0 and cols > 0 then
+	for i = 0, rows-1 do
+	    if rid then
+		crc = hash.crc64()
+	    end
+	    r = {}
+	    r.row_no = i + 1
+	    for j = 0, cols-1 do
+		n = rowset_colname(q, j)
+		a = rowset_value(q, i, j)
+		if a ~= nil then
+		    if func == nil then
+			_data(r, n, a)
+		    else
+			func(r, n, a)
+		    end
+		    if rid then
+			crc:calc(a)
+		    end
+		end
+	    end
+	    if rid then
+		r.row_id = crc:get()
+	    end
+	    table.insert(tb, r)
+	end
+    end
+
+    return tb
+end
+
+function M.idx(q, name, func)
+    local tb = {}
+    local rows, cols, r, n, a
+
+    rows = rowset_rows(q)
+    cols = rowset_cols(q)
+
+    if rows > 0 and cols > 0 then
+	for i = 0, rows-1 do
+	    a = rowset_value(q, i, rowset_colid(q, name))
+	    if a ~= nil then
+		tb[a] = {}
+		r = tb[a]
+		for j = 0, cols-1 do
+		    n = rowset_colname(q, j)
+		    a = rowset_value(q, i, j)
+		    if a ~= nil and n ~= name then
+			if func == nil then
+			    _data(r, n, a)
+			else
+			    func(r, n, a)
+			end
+		    end
+		end
+	    end
+	end
+    end
+
+    return tb
+end
+
+function M.groups(q, name, func)
+    local tb = {}
+    local rows, cols, r, n, a, ar
+
+    rows = rowset_rows(q)
+    cols = rowset_cols(q)
+
+    if rows > 0 and cols > 0 then
+	for i = 0, rows-1 do
+	    a = rowset_value(q, i, rowset_colid(q, name))
+	    if a ~= nil then
+		if tb[a] == nil then
+		    tb[a] = {}
+		end
+		ar = tb[a]
+		r = {}
+		for j = 0, cols-1 do
+		    n = rowset_colname(q, j)
+		    a = rowset_value(q, i, j)
+		    if a ~= nil and n ~= name then
+			if func == nil then
+			    _data(r, n, a)
+			else
+			    func(r, n, a)
+			end
+		    end
+		end
+		table.insert(ar, r)
+	    end
+	end
+    end
+
+    return tb
+end
+
+function M.foreach(q, func)
+    local rows, cols
+
+    rows = rowset_rows(q)
+    cols = rowset_cols(q)
+
+    if func ~= nil and rows > 0 and cols > 0 then
+	for i = 0, rows-1 do
+	    func(q, i, cols)
+	end
+    end
+
+    return tb
+end
+
+function M.main(code, rid, func)
+    local tb = {}
+
+    tb.code = code
+    tb.user_id = _user_id
+    tb.data_ts = _data_ts
+    tb.b_date = _b_date
+    tb.e_date = _e_date
+    tb.rows = M.rows(_L, rid, func)
+
+    set_param(_content, "rows", rowset_rows(_L))
+    write_stream(_content, json.encode(tb))
+end
+
+return M
+  ]]>
+</rtlib>

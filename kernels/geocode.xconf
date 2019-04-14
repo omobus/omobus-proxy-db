@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel module="kern_content" threads="1">
+<xi:include href="../queries/geocode/onload.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/geocode/onsuccess.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<content>
+<xi:include href="../queries/geocode/yandex.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/geocode/yandex-reverse.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</content>
+</kernel>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage 
+    module="stor_pgsql" 
+    server="hostaddr=127.0.0.1 port=5432"
+    storage="omobus-proxy-db"
+    user="omobus"
+    password="omobus"
+    trace="yes"
+    />

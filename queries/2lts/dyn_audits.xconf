@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dyn_audits templ="%fix_date%;%account_id%;%categ_id%;%audit_criteria_id%;%audit_score_id%;%criteria_wf%;%score_wf%;%score%;%note%;%wf%;%sla%;%photo0%;%photo1%;%photo2%;%photo3%;%fix_dt%;%user_id%;">
+  <![CDATA[
+select fix_date, account_id, categ_id, audit_criteria_id, audit_score_id, criteria_wf, score_wf, score, note, wf, sla, photos[1] photo0, photos[2] photo1, photos[3] photo2, photos[4] photo3, fix_dt, user_id from dyn_audits
+    where (current_timestamp - updated_ts) < "LTS_aging"()
+order by 1, 2, 3, 4
+  ]]>
+</dyn_audits>

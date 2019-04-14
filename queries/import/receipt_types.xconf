@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<receipt_types templ="%receipt_type_id%;%descr%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update receipt_types set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update receipt_types set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from receipt_types 
+    where receipt_type_id = '%receipt_type_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update receipt_types set descr=trim(both from '%descr%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where receipt_type_id = '%receipt_type_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into receipt_types (receipt_type_id, descr, hidden, db_ids)
+    values ('%receipt_type_id%', trim(both from '%descr%'), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</receipt_types>

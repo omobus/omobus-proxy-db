@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<accounts templ="%account_id%;%code%;%descr%;%address%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//shadow/%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update shadow.accounts set hidden=1
+    where distr_id='%ErpCode%' and hidden=0
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from shadow.accounts 
+    where account_id = '%account_id%' and distr_id='%ErpCode%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update shadow.accounts set code=trim(both from '%code%'), descr=trim(both from '%descr%'), address=trim(both from '%address%'), hidden=0
+    where account_id = '%account_id%' and distr_id='%ErpCode%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into shadow.accounts (distr_id, account_id, code, descr, address, hidden)
+    values ('%ErpCode%', '%account_id%', trim(both from '%code%'), trim(both from '%descr%'), trim(both from '%address%'), 0)
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</accounts>

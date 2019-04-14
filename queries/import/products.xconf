@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<products templ="%prod_id%;%pid%;%ftype%;%code%;%descr%;%kind_id%;%brand_id%;%categ_id%;%shelf_life_id%;%art%;%obsolete%;%novelty%;%promo%;%barcodes%;%image%;%country_ids%;%row_no%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update products set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update products set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from products 
+    where prod_id = '%prod_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update products set pid=NIL('%pid%'), ftype=0%ftype%, code=NIL(trim(both from '%code%')), art=NIL(trim(both from '%art%')), descr=trim(both from '%descr%'), shelf_life_id=NIL('%shelf_life_id%'), kind_id=NIL('%kind_id%'), brand_id=NIL('%brand_id%'), categ_id=NIL('%categ_id%'), obsolete=0%obsolete%, novelty=0%novelty%, promo=0%promo%, barcodes=ean13_in(string_to_array(NIL('%barcodes%'),',')), country_ids=string_to_array(NIL('%country_ids%'),','), image=resolve_blob_stream('//%uid%/%image%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where prod_id = '%prod_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[ 
+insert into products (pid, prod_id, ftype, code, art, descr, kind_id, shelf_life_id, brand_id, categ_id, obsolete, novelty, promo, barcodes, country_ids, image, row_no, hidden, db_ids)
+    values(NIL('%pid%'), '%prod_id%', %ftype%, NIL(trim(both from '%code%')), NIL(trim(both from '%art%')), trim(both from '%descr%'), NIL('%kind_id%'), NIL('%shelf_life_id%'), NIL('%brand_id%'), NIL('%categ_id%'), 0%obsolete%, 0%novelty%, 0%promo%, ean13_in(string_to_array(NIL('%barcodes%'),',')), string_to_array(NIL('%country_ids%'),','), resolve_blob_stream('//%uid%/%image%'), NIL(%row_no%), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</products>

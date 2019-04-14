@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel 
+    module="kern_docs" 
+    ldap.uri="ldap://127.0.0.1:389" 
+    ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
+    ldap.bind_pw="0"
+    ldap.base="ou=users,dc=omobus,dc=local" 
+    ldap.filter="(&amp;(objectClass=PureFTPdUser)(objectClass=omobusUser)(FTPStatus=enabled)(exchangeStatus=enabled))" 
+    Xldap.tls="yes"
+    ftp.host="127.0.0.1"
+    ftp.port="21021"
+    ftp.path="docs/"
+    ftp.connect_timeout="10"
+    ftp.recv_timeout="5"
+    ftp.send_timeout="5"
+    ftp.epsv="yes"
+    ftp.tls="yes"
+    ftp.ccc="no"
+    ftp.cdc="no"
+    pack.limit="500"
+    pack.gc="7"
+    cache="docs/"
+    >
+<xi:include href="../queries/docs/addition.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/adjustment.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/advt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/audit.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/canceling.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/checkup.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/comment.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/conference.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/confirmation.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/contact.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/deletion.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/discard.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/dismiss.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/equipment.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/extra.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/location.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/oos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/order.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/pending.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/photo.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/presence.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/presentation.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/price.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/profile.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/pt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/quest.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/rating.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/receipt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/reclamation.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/review.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/revoke.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/shelf.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/stock.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/target.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/testing.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/training.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/unsched.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/wish.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</kernel>

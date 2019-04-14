@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<receipt_types templ="%receipt_type_id%;%descr%;">
+  <![CDATA[ 
+select receipt_type_id, descr from receipt_types
+    where hidden = 0
+order by receipt_type_id
+  ]]>
+</receipt_types>

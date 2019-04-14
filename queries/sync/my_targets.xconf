@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<my_targets templ="%account_id%;%target_id%;" empty="no">
+  <![CDATA[ 
+select t.user_id person_id, t.dep_id, t.account_id, t.target_id from (
+    select dep_id, target_id, target_type_id, case myself when 1 then author_id else null end user_id,
+	expand_accounts(account_ids, region_ids, city_ids, rc_ids, chan_ids, poten_ids) account_id from targets
+    where hidden = 0 and b_date<=current_date::date_t and current_date::date_t<=e_date
+) t
+    left join (select h.doc_id, h.user_id, h.account_id, h.target_id, unnest(c.target_type_ids) target_type_id from h_confirmation h left join confirmation_types c on h.confirm_id=c.confirm_id
+	where c.accomplished=1) c on c.target_id = t.target_id and (t.user_id is null or t.user_id='' or c.user_id=t.user_id) and c.account_id=t.account_id and
+	    c.target_type_id=t.target_type_id
+where c.doc_id is null
+order by t.user_id, t.account_id, t.target_id
+  ]]> 
+</my_targets>

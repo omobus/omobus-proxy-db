@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<products templ="%prod_id%;%pid%;%ftype%;%code%;%descr%;%kind_id%;%brand_id%;%categ_id%;%shelf_life_id%;%art%;%obsolete%;%novelty%;%promo%;%barcodes%;">
+  <![CDATA[
+select prod_id, pid, ftype, code, descr, art, kind_id, brand_id, categ_id, shelf_life_id, obsolete, novelty, promo, array_to_string(ean13_out(barcodes),',') barcodes from products
+    where hidden = 0
+order by 1
+  ]]>
+</products>

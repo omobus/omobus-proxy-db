@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<oos_types templ="%oos_type_id%;%descr%;%row_no%;">
+  <![CDATA[
+select oos_type_id, descr, row_no from oos_types
+    where hidden = 0
+order by 1
+  ]]>
+</oos_types>

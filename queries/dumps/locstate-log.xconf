@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<locstate-log templ="%user_id%,%u_name%,%fix_dt%,%provider%,%state%,%msg%" empty="no">
+  <![CDATA[
+select
+    quote_csv_string(x.user_id) user_id,
+    quote_csv_string(u.descr) u_name,
+    x.fix_dt,
+    x.provider,
+    x.state,
+    quote_csv_string(x.msg) msg
+from a_gps_state x
+    left join users u on u.user_id = x.user_id
+where ("paramUID"('dumps:depth') is null or left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t)
+order by x.fix_dt desc, x.user_id
+  ]]>
+</locstate-log>

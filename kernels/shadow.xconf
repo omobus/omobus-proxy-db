@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel
+    module="kern_import"
+    ldap.uri="ldap://127.0.0.1:389"
+    ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
+    ldap.bind_pw="0"
+    ldap.base="ou=distributors,ou=data,dc=omobus,dc=local"
+    ldap.filter="(&amp;(objectClass=omobusMaintainPoint)(exchangeStatus=enabled))"
+    Xldap.tls="yes"
+    ftp.host="gateway.omobus.net"
+    ftp.port="21021"
+    ftp.path="data/"
+    ftp.connect_timeout="30"
+    ftp.recv_timeout="15"
+    ftp.send_timeout="15"
+    ftp.epsv="true"
+    ftp.tls="yes"
+    ftp.ccc="no"
+    ftp.cdc="no"
+    Xpack.encoding="utf-8"
+    Xpack.delim=";"
+    pack.gc="4"
+    cache="shadow/"
+    >
+<xi:include href="../queries/import/trig_before.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/TTD.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/account_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/account_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/blacklist.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/debts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/discounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/erp_docs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/erp_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/floating_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/group_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/mutuals_history_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/mutuals_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/mutuals.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/order_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/packs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/permitted_returns.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/rdd.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/restrictions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/sales_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/std_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/shipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/symlinks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/users.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/warehouses.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/shadow/wareh_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/trig_after.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<</kernel>

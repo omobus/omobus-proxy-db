@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<training_types templ="%training_type_id%;%descr%;%personal%;%row_no%;">
+  <![CDATA[
+select training_type_id, descr, personal, row_no from training_types
+    where hidden = 0
+order by 1
+  ]]>
+</training_types>

@@ -1,0 +1,1228 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tech_route type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<my_accounts>
+  <![CDATA[
+select q.account_id, a.code a_code, q.route, a.descr, a.address, a.latitude, a.longitude, c.descr chan, p.descr poten, a.cash_register from (
+    select account_id, max(route) route from (
+	select account_id, null route from my_accounts where user_id='%user_id%'
+	    union
+	select account_id, 1 route from my_routes where user_id='%user_id%' and p_date='%b_date%' /*%e_date%*/
+	    union
+	select account_id, null route from j_user_activities where user_id='%user_id%' and /*left(b_dt,10)*/fix_date='%b_date%' /*%e_date%*/
+    ) z group by account_id
+) q
+    left join accounts a on a.account_id = q.account_id
+    left join potentials p on p.poten_id = a.poten_id 
+    left join channels c on c.chan_id = a.chan_id
+  ]]>
+	</my_accounts>
+	<trace>
+  <![CDATA[
+select 0 control_point, fix_dt, satellite_dt, latitude, longitude, accuracy from a_gps_trace
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/ and (latitude <> 0 or longitude <> 0)
+union
+select 1 control_point, fix_dt, satellite_dt, latitude, longitude, accuracy from a_gps_pos
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/ and (latitude <> 0 or longitude <> 0)
+order by fix_dt
+  ]]>
+	</trace>
+	<route>
+  <![CDATA[
+select
+    r.user_id, r.route, r.closed, r.canceled, r.account_id, r.a_cookie, r.row_no sched_no,
+    r.activity_type_id, t.descr activity_type, t.strict,
+    r.b_dt, r.e_dt, datediff(r.b_dt, r.e_dt) duration,
+    r.latitude, r.longitude, distance(a.latitude, a.longitude, r.latitude, r.longitude) dist,
+    r.latitude_e, r.longitude_e, distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) dist_e,
+    c.descr chan, p.descr poten,
+    x.descr canceling_type, r.canceling_note,
+    r.zstatus, r.znote,
+    r.guid
+from user_routes('%user_id%', '%b_date%', '%e_date%', 1::bool_t) r
+    left join accounts a on a.account_id = r.account_id
+    left join potentials p on p.poten_id = a.poten_id 
+    left join channels c on c.chan_id = a.chan_id
+    left join activity_types t on r.activity_type_id = t.activity_type_id
+    left join canceling_types x on x.canceling_type_id = r.canceling_type_id
+order by r.b_dt, r.row_no
+  ]]>
+	</route>
+	<distance_traveled>
+  <![CDATA[
+select mileage('%user_id%', '%b_date%') dist
+  ]]>
+	</distance_traveled>
+	<additions>
+  <![CDATA[
+select 
+    h.fix_dt, h.created_dt, h.created_gps_la latitude, h.created_gps_lo longitude, h.doc_id, h.account, h.address, h.legal_address, h.number, h.doc_note, 
+    t.descr addition_type, c.descr chan, guid a_code, array_to_string(h.photos,'|') photos,
+    (select array_to_string(array_agg(descr::varchar),'|') from attributes where attr_id = any (h.attr_ids)) attrs
+from h_addition h
+    left join addition_types t on t.addition_type_id = h.addition_type_id
+    left join channels c on c.chan_id = h.chan_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
+order by h.fix_dt
+  ]]>
+	</additions>
+	<deletions>
+  <![CDATA[
+select fix_dt, doc_id, doc_no, account_id, a_cookie, doc_note, photo::varchar blob_id from h_deletion
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+order by fix_dt
+  ]]>
+	</deletions>
+	<discards>
+  <![CDATA[
+select 
+    x.fix_dt, x.doc_id, x.account_id, t.descr "type", x.doc_note 
+from h_discard x
+    left join discard_types t on t.discard_type_id = x.discard_type_id
+where x.user_id='%user_id%' and /*left(x.fix_dt,10)*/x.route_date='%b_date%' /*%e_date%*/
+order by fix_dt
+  ]]>
+	</discards>
+	<pendings>
+  <![CDATA[
+select 
+    x.fix_dt, x.doc_id, x.account_id, t.descr "type", x.doc_note 
+from h_pending x
+    left join pending_types t on t.pending_type_id = x.pending_type_id
+where x.user_id='%user_id%' and /*left(x.fix_dt,10)*/x.route_date='%b_date%' /*%e_date%*/
+order by fix_dt
+  ]]>
+	</pendings>
+	<unsched>
+  <![CDATA[
+select 
+    x.fix_dt, x.created_dt, x.created_gps_la latitude, x.created_gps_lo longitude, x.doc_id, t.descr "type", x.doc_note 
+from h_unsched x
+    left join unsched_types t on t.unsched_type_id = x.unsched_type_id
+where x.user_id='%user_id%' and left(x.fix_dt, 10)='%b_date%' /*%e_date%*/
+order by x.fix_dt
+  ]]>
+	</unsched>
+	<reviews>
+  <![CDATA[
+select
+    fix_dt, created_dt, created_gps_la latitude, created_gps_lo longitude, doc_id, employee_id, round(100*sla,1) sla, round(assessment,1) assessment, note0, note1, note2
+from h_review
+where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+order by fix_dt
+  ]]>
+	</reviews>
+	<joints>
+  <![CDATA[
+select 
+    x.fix_dt, x.latitude, x.longitude, x.act_id, x.state, x.employee_id, u.descr e_name
+from a_user_joint x
+    left join users u on u.user_id=x.employee_id
+where x.user_id='%user_id%' and left(x.fix_dt, 10)='%b_date%' /*%e_date%*/
+order by x.fix_dt
+  ]]>
+	</joints>
+	<advt_L0>
+  <![CDATA[
+select 
+    doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration
+from h_advt
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by fix_dt
+  ]]>
+	</advt_L0>
+	<advt_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, p.descr posm, g.descr placement, t.qty, t.scratch from (
+	select doc_id, row_no, placement_id, posm_id, qty, scratch from t_advt where doc_id in (
+	    select doc_id from h_advt where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join placements g on g.placement_id = t.placement_id
+    left join pos_materials p on p.posm_id = t.posm_id
+order by t.doc_id, t.row_no
+  ]]>
+	</advt_L1>
+	<audits_L0>
+  <![CDATA[
+select 
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, x.descr categ, 
+    round(100*h.sla,1) sla, array_to_string(h.photos,',') photos 
+from h_audit h
+    left join categories x on x.categ_id = h.categ_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
+order by h.fix_dt, x.row_no, x.descr
+  ]]>
+	</audits_L0>
+	<audits_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, x.descr, t.score, t.note from (
+	select doc_id, row_no, audit_criteria_id, score, note from t_audit where doc_id in (
+	    select doc_id from h_audit where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t, audit_criterias x
+where x.audit_criteria_id = t.audit_criteria_id
+order by t.doc_id, t.row_no, x.descr
+  ]]>
+	</audits_L1>
+	<checkups_L0>
+  <![CDATA[
+select doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration from h_checkup
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by fix_dt
+  ]]>
+	</checkups_L0>
+	<checkups_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, g.descr placement, t.exist from (
+	select doc_id, row_no, placement_id, prod_id, exist from t_checkup where doc_id in (
+	    select doc_id from h_checkup where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join placements g on g.placement_id = t.placement_id
+    left join products p on p.prod_id = t.prod_id
+order by t.doc_id, t.row_no
+  ]]>
+	</checkups_L1>
+	<comments>
+  <![CDATA[
+select
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, t.descr comment_type, 
+    doc_note, h.photo::varchar blob_id
+from h_comment h
+    left join comment_types t on t.comment_type_id = h.comment_type_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt
+  ]]>
+	</comments>
+	<confirmations>
+  <![CDATA[
+select
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, x.target_id, x.subject, 
+    x.body, x.b_date, x.e_date, t.descr target_type, f.descr confirm, h.doc_note, array_to_string(h.photos,',') photos
+from h_confirmation h
+    left join targets x on x.target_id = h.target_id
+    left join target_types t on t.target_type_id = x.target_type_id
+    left join confirmation_types f on f.confirm_id = h.confirm_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt
+  ]]>
+	</confirmations>
+	<extras_L0>
+  <![CDATA[
+select
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, x.descr placement, 
+    round(100*h.soe,1) soe
+from h_extra h
+    left join placements x on x.placement_id = h.placement_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
+order by h.fix_dt, x.row_no, x.descr
+  ]]>
+	</extras_L0>
+	<extras_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, x.descr, t.qty from (
+	select doc_id, row_no, manuf_id, qty from t_extra where doc_id in (
+	    select doc_id from h_extra where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t 
+    left join manufacturers x on x.manuf_id = t.manuf_id
+order by t.doc_id, t.row_no, x.descr
+  ]]>
+	</extras_L1>
+	<oos_L0>
+  <![CDATA[
+select doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration from h_oos
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by fix_dt
+  ]]>
+	</oos_L0>
+	<oos_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, x.descr oos_type, t.note from (
+	select doc_id, row_no, prod_id, oos_type_id, note from t_oos where doc_id in (
+	    select doc_id from h_oos where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join oos_types x on x.oos_type_id = t.oos_type_id
+    left join products p on p.prod_id = t.prod_id
+order by t.doc_id, t.row_no
+  ]]>
+	</oos_L1>
+	<orders_L0>
+  <![CDATA[
+select 
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, h.delivery_date, 
+    x.descr order_type, h.amount
+from h_order h
+    left join order_types x on x.order_type_id = h.order_type_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt
+  ]]>
+	</orders_L0>
+	<orders_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.unit_price, t.qty, t.discount, t.amount, x.descr pack_name from (
+	select doc_id, row_no, prod_id, pack_id, unit_price, qty, discount, amount from t_order where doc_id in (
+	    select doc_id from h_order where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join packs x on x.prod_id = t.prod_id and x.pack_id = t.pack_id
+    left join products p on p.prod_id = t.prod_id
+order by t.doc_id, t.row_no
+  ]]>
+	</orders_L1>
+	<photos>
+  <![CDATA[
+select
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, 
+    g.descr placement, 
+    b.descr brand, 
+    t.descr photo_type, 
+    h.doc_note, 
+    h.photo::varchar blob_id,
+    array_to_string((select array_agg(replace(descr,'|',' ')) from photo_params where photo_param_id=any(h.photo_param_ids)),'|') photo_params,
+    case when rev.doc_id is null then null else 1 end revoked
+from h_photo h
+    left join placements g on g.placement_id = h.placement_id
+    left join brands b on b.brand_id = h.brand_id
+    left join photo_types t on t.photo_type_id = h.photo_type_id
+    left join j_revocations rev on rev.doc_id = h.doc_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt
+  ]]>
+	</photos>
+	<presences_L0>
+  <![CDATA[
+select doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration from h_presence
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by fix_dt
+  ]]>
+	</presences_L0>
+	<presences_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.facing, t.stock, t.scratch from (
+	select doc_id, row_no, prod_id, facing, stock, null scratch from t_presence where doc_id in (
+	    select doc_id from h_presence where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join products p on p.prod_id = t.prod_id
+order by t.doc_id, t.row_no
+  ]]>
+	</presences_L1>
+	<presentations>
+  <![CDATA[
+select
+    doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration, participants, doc_note, 
+    photo::varchar blob_id, (select string_agg(descr,'|') from training_materials where tm_id = any(tm_ids)) tms
+from h_presentation
+where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by fix_dt, doc_id
+  ]]>
+	</presentations>
+	<prices_L0>
+  <![CDATA[
+select doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration from h_price
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by fix_dt
+  ]]>
+	</prices_L0>
+	<prices_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.price, t.promo, t.rrp, t.scratch from (
+	select doc_id, row_no, prod_id, price, promo, rrp, scratch from t_price where doc_id in (
+	    select doc_id from h_price where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join products p on p.prod_id = t.prod_id
+order by t.doc_id, t.row_no
+  ]]>
+	</prices_L1>
+	<quests_L0>
+  <![CDATA[
+select doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration from h_quest
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by fix_dt
+  ]]>
+	</quests_L0>
+	<quests_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, n.descr qname, quest_path(null, r.qname_id, r.pid) qpath, r.descr qrow, t.value from (
+	select doc_id, row_no, qname_id, qrow_id, "value" from t_quest where doc_id in (
+	    select doc_id from h_quest where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join quest_names n on n.qname_id = t.qname_id
+    left join quest_rows r on r.qname_id = t.qname_id and r.qrow_id = t.qrow_id
+order by t.doc_id, t.row_no
+  ]]>
+	</quests_L1>
+	<ratings_L0>
+  <![CDATA[
+select
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, e.descr e_name, 
+    round(100*h.sla,1) sla, round(h.assessment,2) assessment
+from h_rating h
+    left join users e on e.user_id = h.employee_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
+order by h.fix_dt, h.doc_id
+  ]]>
+	</ratings_L0>
+	<ratings_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, x.descr, t.score, t.note from (
+	select doc_id, row_no, rating_criteria_id, score, note from t_rating where doc_id in (
+	    select doc_id from h_rating where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join rating_criterias x on x.rating_criteria_id = t.rating_criteria_id
+order by t.doc_id, t.row_no, x.descr
+  ]]>
+	</ratings_L1>
+	<reclamations_L0>
+  <![CDATA[
+select doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration, return_date, amount from h_reclamation
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by fix_dt
+  ]]>
+	</reclamations_L0>
+	<reclamations_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.unit_price, t.qty, t.amount, x.descr pack_name, z.descr reclamation_type from (
+	select doc_id, row_no, prod_id, pack_id, unit_price, qty, amount, reclamation_type_id from t_reclamation where doc_id in (
+	    select doc_id from h_reclamation where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join reclamation_types z on z.reclamation_type_id = t.reclamation_type_id
+    left join packs x on x.prod_id = t.prod_id and x.pack_id = t.pack_id
+    left join products p on p.prod_id = t.prod_id
+order by t.doc_id, t.row_no
+  ]]>
+	</reclamations_L1>
+	<shelfs_L0>
+  <![CDATA[
+select
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, x.descr categ, 
+    round(100*h.sos_target,0) sos_target, round(100*h.soa_target,0) soa_target, round(100*h.sos,1) sos, round(100*h.soa,1) soa, 
+    array_to_string(h.photos,',') photos
+from h_shelf h
+    left join categories x on x.categ_id = h.categ_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
+order by h.fix_dt, x.row_no, x.descr
+  ]]>
+	</shelfs_L0>
+	<shelfs_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, x.descr, t.facing, t.assortment from (
+	select doc_id, row_no, brand_id, facing, assortment from t_shelf where doc_id in (
+	    select doc_id from h_shelf where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join brands x on x.brand_id = t.brand_id
+order by t.doc_id, t.row_no, x.descr
+  ]]>
+	</shelfs_L1>
+	<stocks_L0>
+  <![CDATA[
+select doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration from h_stock
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by fix_dt
+  ]]>
+	</stocks_L0>
+	<stocks_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.stock, t.scratch from (
+	select doc_id, row_no, prod_id, qty stock, null scratch from t_stock where doc_id in (
+	    select doc_id from h_stock where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join products p on p.prod_id = t.prod_id
+order by t.doc_id, t.row_no
+  ]]>
+	</stocks_L1>
+	<targets>
+  <![CDATA[
+select
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, h.subject, 
+    h.b_date, h.e_date, t.descr target_type, doc_note, h.photo::varchar blob_id
+from h_target h
+    left join target_types t on t.target_type_id = h.target_type_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt
+  ]]>
+	</targets>
+	<testings_L0>
+  <![CDATA[
+select
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, 
+    c.name, c.surname, c.patronymic, round(100*h.sla,1) sla, j.descr job_title
+from h_testing h
+    left join contacts c on c.contact_id = h.contact_id
+    left join job_titles j on j.job_title_id = c.job_title_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
+order by h.fix_dt, h.doc_id
+  ]]>
+	</testings_L0>
+	<testings_L1>
+  <![CDATA[
+select t.doc_id, t.row_no, x.descr, t.score, t.note from (
+	select doc_id, row_no, testing_criteria_id, score, note from t_testing where doc_id in (
+	    select doc_id from h_testing where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+	)
+    ) t
+    left join testing_criterias x on x.testing_criteria_id = t.testing_criteria_id
+order by t.doc_id, t.row_no, x.descr
+  ]]>
+	</testings_L1>
+	<trainings_L0>
+  <![CDATA[
+select 
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, t.descr training_type, 
+    (select string_agg(descr,'|') from training_materials where tm_id = any(tm_ids)) tms, h.doc_note
+from h_training h
+    left join training_types t on t.training_type_id = h.training_type_id
+where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by fix_dt, doc_id
+  ]]>
+	</trainings_L0>
+	<trainings_L1>
+  <![CDATA[
+select h.doc_id, c.name, c.surname, c.patronymic from (
+    select doc_id, unnest(contact_ids) contact_id from h_training
+	where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
+) h
+    left join contacts c on c.contact_id = h.contact_id
+order by h.doc_id, c.surname, c.name, c.patronymic
+  ]]>
+	</trainings_L1>
+	<wishes>
+  <![CDATA[
+select 
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, t.descr wish_type, h.doc_note
+from h_wish h
+    left join wish_types t on t.wish_type_id = h.wish_type_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
+order by h.fix_dt, h.doc_id
+  ]]>
+	</wishes>
+
+<!-- system statistics: -->
+	<stats>
+  <![CDATA[
+select 
+    u.dev_login, u.descr u_name, u.area, u.email, u.mobile, ex.descr head_name, a.descr agency,
+    (select array_to_string(array_agg(descr::text),'|') from distributors where distr_id = any(u.distr_ids)) distributors,
+    (select array_to_string(array_agg(descr::text),'|') from departments where dep_id = any(u.dep_ids)) departments,
+    (s.packets).count packets_count,
+    (s.packets).fix_time packets_time,
+    s.gps_violations,
+    s.tm_violations,
+    case when (s.packets).count > 0 then (select battery_life from a_power
+	where user_id=u.user_id and left(fix_dt, 10)='%b_date%' and substring(fix_dt, 12, 5) < coalesce(u."rules:wd_begin", "paramUID"('rules:wd_begin')::time_t)
+	order by fix_dt desc limit 1) else null end power_begin,
+    case when (s.packets).count > 0 then (select battery_life from a_power
+	where user_id=u.user_id and left(fix_dt, 10)='%b_date%' and substring(fix_dt, 12, 5) > coalesce(u."rules:wd_end", "paramUID"('rules:wd_end')::time_t)
+	order by fix_dt limit 1) else null end power_end,
+    case when (s.packets).count > 0 then (select count(*) from a_power
+	where user_id=u.user_id and left(fix_dt, 10)='%b_date%' and state='on'
+	    and substring(fix_dt, 12, 5) >= coalesce(u."rules:wd_begin", "paramUID"('rules:wd_begin')::time_t)
+	    and substring(fix_dt, 12, 5) < coalesce(u."rules:wd_end", "paramUID"('rules:wd_end')::time_t)) else null end chargings,
+    case when (s.packets).count > 0 then (select count(*) from a_power
+	where user_id=u.user_id and left(fix_dt, 10)='%b_date%' and power_save=1
+	    and substring(fix_dt, 12, 5) >= coalesce(u."rules:wd_begin", "paramUID"('rules:wd_begin')::time_t)
+	    and substring(fix_dt, 12, 5) < coalesce(u."rules:wd_end", "paramUID"('rules:wd_end')::time_t)) else null end power_save,
+    coalesce(u."rules:wd_begin", "paramUID"('rules:wd_begin')::time_t) "rules:wd_begin", 
+    coalesce(u."rules:wd_end", "paramUID"('rules:wd_end')::time_t) "rules:wd_end",
+    "paramInteger"('rules:power') "rules:power",
+    "paramInteger"('rules:min_duration') "rules:min_duration",
+    "paramInteger"('rules:max_duration') "rules:max_duration",
+    "paramInteger"('rules:max_distance') "rules:max_distance",
+    w0.fix_dt wd_begin,
+    case when w0.fix_dt > w1.fix_dt then null else w1.fix_dt end wd_end
+from users u
+    left join agencies a on a.agency_id = u.agency_id
+    left join users ex on ex.user_id = u.executivehead_id
+    left join sysstats s on s.fix_date='%b_date%' and s.user_id=u.user_id
+    left join (
+	select user_id,  min(fix_dt) fix_dt from a_user_work where user_id='%user_id%' and left(fix_dt, 10) = '%b_date%' and state='begin' group by user_id
+    ) w0 on u.user_id = w0.user_id
+    left join (
+	select user_id,  max(fix_dt) fix_dt from a_user_work where user_id='%user_id%' and left(fix_dt, 10) = '%b_date%' and state='end' group by user_id
+    ) w1 on u.user_id = w1.user_id
+where u.user_id='%user_id%'
+  ]]>
+	</stats>
+	<traffics>
+  <![CDATA[
+select act_id, fix_dt, mobile_rx_bytes, mobile_tx_bytes, total_rx_bytes, total_tx_bytes, omobus_rx_bytes, omobus_tx_bytes from a_traffic
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+order by fix_dt
+  ]]>
+	</traffics>
+	<exchanges>
+  <![CDATA[
+select act_id, mode, fix_dt, status, packets, corrupted from a_exchange
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+  ]]>
+	</exchanges>
+	<user_documents>
+  <![CDATA[
+select
+    d.account_id, d.doc_type, d.doc_no, j.doc_id, d.duration
+from a_user_document d
+    left join j_docs j on j.user_id=d.user_id and j.doc_no=d.doc_no and j.dev_id=d.dev_id and j.fix_dt=d.fix_dt
+where d.user_id='%user_id%' and left(d.fix_dt, 10)='%b_date%' /*%e_date%*/
+order by d.fix_dt, d.doc_no, j.doc_id
+  ]]>
+	</user_documents>
+	<dev_ids>
+  <![CDATA[
+select dev_id from j_acts where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/ group by dev_id
+  ]]>
+	</dev_ids>
+    </queries>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+local rt = require('rtlib')
+local tb, idx = {}, {}
+local ptr
+
+function distance_traveled()
+    local dist, rows, cols = 0, rowset_rows(_distance_traveled), rowset_cols(_distance_traveled)
+    if rows > 0 and cols > 0 then dist = tonumber(rowset_value(_distance_traveled, 0, 0, "0")) end
+    return dist
+end
+
+tb.code = "tech_route"
+tb.user_id = _user_id
+tb.data_ts = _data_ts
+tb.date = _b_date
+tb.route = rt.rows(_route, true, function(r, n, a)
+    if std.contains({'duration','dist','dist_e','strict','route','closed','canceled','sched_no'}, n) then
+	r[n] = tonumber(a);
+    elseif std.contains({'latitude','longitude','latitude_e','longitude_e'}, n) then
+	local pos = tonumber(a)
+	if pos ~= 0 then r[n] = pos; end
+    else
+	r[n] = a;
+    end
+end)
+tb.additions = rt.rows(_additions, true, function(r, n, a) 
+    if std.contains({'photos','attrs'}, n) then
+	r[n] = std.split(a, '|');
+    elseif std.contains({'latitude','longitude'}, n) then
+	local pos = tonumber(a)
+	if pos ~= 0 then r[n] = pos; end
+    else
+	r[n] = a;
+    end
+end)
+tb.deletions = rt.idx(_deletions, "account_id")
+tb.discards = rt.idx(_discards, "account_id")
+tb.pendings = rt.idx(_pendings, "account_id")
+tb.unsched = rt.rows(_unsched, true, function(r, n, a)
+    if std.contains({'latitude','longitude'}, n) then
+	local pos = tonumber(a)
+	if pos ~= 0 then r[n] = pos; end
+    else
+	r[n] = a;
+    end
+end)
+tb.reviews = rt.rows(_reviews, true, function(r, n, a) 
+    if std.contains({'latitude','longitude'}, n) then
+	local pos = tonumber(a)
+	if pos ~= 0 then r[n] = pos; end
+    else
+	r[n] = a;
+    end
+end)
+tb.joints = rt.rows(_joints, true, function(r, n, a) 
+    if std.contains({'latitude','longitude'}, n) then
+	local pos = tonumber(a)
+	if pos ~= 0 then r[n] = pos; end
+    else
+	r[n] = a;
+    end
+end)
+tb.trace = rt.rows(_trace, false, function(r, n, a) 
+    if std.contains({'latitude','longitude'}, n) then
+	r[n] = tonumber(a)
+    else
+	r[n] = a;
+    end
+end)
+tb.my_accounts = rt.idx(_my_accounts, "account_id", function(r, n, a) 
+    if std.contains({'latitude','longitude'}, n) then
+	local pos = tonumber(a)
+	if pos ~= 0 then r[n] = pos; end
+    elseif std.contains({'cash_register'}, n) then
+	r[n] = tonumber(a)
+    else
+	r[n] = a;
+    end
+end)
+tb.distance_traveled = distance_traveled()
+
+if tb.trace ~= nil and #tb.trace > 0 then
+    local v = tb.trace[#tb.trace]
+    tb.map = {latitude = v.latitude, longitude = v.longitude}
+end
+if tb.map == nil and tb.my_accounts ~= nil then
+    for k, v in pairs(tb.my_accounts) do
+	if v.latitude ~= nil and v.longitude ~= nil and v.latitude ~= 0 and v.longitude ~= 0 then
+	    tb.map = {latitude = v.latitude, longitude = v.longitude}
+	    break
+	end
+    end
+end
+
+idx = {}; tb.advt = rt.groups(_advt_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.rows = {}; idx[a] = r.rows; r[n] = a
+    elseif n == 'duration' then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_advt_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','qty'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+idx = {}; tb.audits = rt.groups(_audits_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.criterias = {}; idx[a] = r.criterias; r[n] = a
+    elseif std.contains({'duration','sla'}, n) then
+	r[n] = tonumber(a)
+    elseif n == "photos" then
+	r[n] = std.split(a, ',')
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_audits_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','score'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+idx = {}; tb.checkups = rt.groups(_checkups_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.rows = {}; idx[a] = r.rows; r[n] = a
+    elseif n == 'duration' then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_checkups_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','exist'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+tb.comments = rt.groups(_comments, "account_id", function(r, n, a) r[n] = n == "duration" and tonumber(a) or a; end)
+tb.confirmations = rt.groups(_confirmations, "account_id", function(r, n, a) 
+    if n == 'duration' then
+	r[n] = tonumber(a)
+    elseif n == "photos" then
+	r[n] = std.split(a, ',')
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_extras_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','qty'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+idx = {}; tb.oos = rt.groups(_oos_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.rows = {}; idx[a] = r.rows; r[n] = a
+    elseif n == 'duration' then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_oos_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+idx = {}; tb.orders = rt.groups(_orders_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.rows = {}; idx[a] = r.rows; r[n] = a
+    elseif std.contains({'duration','amount'}, n) then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_orders_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','unit_price','qty','discount','amount'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+tb.photos = rt.groups(_photos, "account_id", function(r, n, a) 
+    if n == "photo_params" then
+	r[n] = std.split(a, '|')
+    elseif std.contains({'duration','revoked'}, n) then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+idx = {}; tb.presences = rt.groups(_presences_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.rows = {}; idx[a] = r.rows; r[n] = a
+    elseif n == 'duration' then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_presences_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','facing','stock'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+tb.presentations = rt.groups(_presentations, "account_id", function(r, n, a) 
+    if n == "tms" then
+	r[n] = std.split(a, '|')
+    elseif n == 'duration' then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+idx = {}; tb.prices = rt.groups(_prices_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.rows = {}; idx[a] = r.rows; r[n] = a
+    elseif n == 'duration' then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_prices_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','price','promo','rrp'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+idx = {}; tb.quests = rt.groups(_quests_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.rows = {}; idx[a] = r.rows; r[n] = a
+    elseif n == 'duration' then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_quests_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+idx = {}; tb.ratings = rt.groups(_ratings_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.criterias = {}; idx[a] = r.criterias; r[n] = a
+    elseif std.contains({'duration','sla','assessment'}, n) then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_ratings_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','score'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+idx = {}; tb.reclamations = rt.groups(_reclamations_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.rows = {}; idx[a] = r.rows; r[n] = a
+    elseif std.contains({'duration','amount'}, n) then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_reclamations_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','unit_price','qty','amount'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+idx = {}; tb.shelfs = rt.groups(_shelfs_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.brands = {}; idx[a] = r.brands; r[n] = a
+    elseif n == "photos" then
+	r[n] = std.split(a, ',')
+    elseif std.contains({'duration','sos_target','soa_target','sos','soa'}, n) then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_shelfs_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','facing','assortment'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+idx = {}; tb.stocks = rt.groups(_stocks_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.rows = {}; idx[a] = r.rows; r[n] = a
+    elseif n == 'duration' then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_stocks_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','stock'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+tb.targets = rt.groups(_targets, "account_id", function(r, n, a) r[n] = n == "duration" and tonumber(a) or a; end)
+idx = {}; tb.testings = rt.groups(_testings_L0, "account_id", function(r, n, a)
+    if n == "doc_id" then
+	r.criterias = {}; idx[a] = r.criterias; r[n] = a
+    elseif std.contains({'duration','sla'}, n) then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_testings_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		if std.contains({'row_no','score'}, n) then
+		    x[n] = tonumber(a)
+		else
+		    x[n] = a
+		end
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+idx = {}; tb.trainings = rt.groups(_trainings_L0, "account_id", function(r, n, a) 
+    if n == "doc_id" then
+	r.contacts = {}; idx[a] = r.contacts; r[n] = a
+    elseif n == 'duration' then
+	r[n] = tonumber(a)
+    elseif n == "tms" then
+	r[n] = std.split(a, '|')
+    else
+	r[n] = a
+    end
+end)
+rt.foreach(_trainings_L1, function(q, i, cols)
+    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
+    if r ~= nil then
+	local x = {}
+	for j = 0, cols-1 do
+	    local n = rowset_colname(q, j)
+	    local a = rowset_value(q, i, j)
+	    if a ~= nil and n ~= "doc_id" then
+		x[n] = a
+	    end
+	end
+	table.insert(r, x)
+    end
+end)
+tb.wishes = rt.groups(_wishes, "account_id", function(r, n, a) r[n] = n == "duration" and tonumber(a) or a; end)
+
+if rowset_rows(_stats) > 0 then
+    tb.dev_login = rowset_value(_stats, 0, rowset_colid(_stats, "dev_login"))
+    tb.u_name = rowset_value(_stats, 0, rowset_colid(_stats, "u_name"))
+    tb.area = rowset_value(_stats, 0, rowset_colid(_stats, "area"))
+    tb.email = rowset_value(_stats, 0, rowset_colid(_stats, "email"))
+    tb.mobile = rowset_value(_stats, 0, rowset_colid(_stats, "mobile"))
+    tb.head_name = rowset_value(_stats, 0, rowset_colid(_stats, "head_name"))
+    tb.agency = rowset_value(_stats, 0, rowset_colid(_stats, "agency"))
+    tb.departments = rowset_value(_stats, 0, rowset_colid(_stats, "departments"))
+    if tb.departments ~= nil then
+	tb.departments = std.split(tb.departments, '|')
+    end
+    tb.distributors = rowset_value(_stats, 0, rowset_colid(_stats, "distributors"))
+    if tb.distributors ~= nil then
+	tb.distributors = std.split(tb.distributors, '|')
+    end
+    tb.packets = {}
+    tb.packets.count = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "packets_count")))
+    tb.packets.time = rowset_value(_stats, 0, rowset_colid(_stats, "packets_time"))
+    tb.rules = {}
+    tb.rules.distance = {}
+    tb.rules.distance.max = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "rules:max_distance")))
+    tb.rules.duration = {}
+    tb.rules.duration.min = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "rules:min_duration")))
+    tb.rules.duration.max = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "rules:max_duration")))
+    tb.rules.wd = {}
+    tb.rules.wd.b = rowset_value(_stats, 0, rowset_colid(_stats, "rules:wd_begin"))
+    tb.rules.wd.e = rowset_value(_stats, 0, rowset_colid(_stats, "rules:wd_end"))
+    tb.rules.power = rowset_value(_stats, 0, rowset_colid(_stats, "rules:power"))
+    tb.violations = {}
+    tb.violations.gps_off = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "gps_violations")))
+    tb.violations.tm_changed = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "tm_violations")))
+    tb.power = {}
+    tb.power.b = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "power_begin")))
+    tb.power.e = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "power_end")))
+    tb.power.chargings = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "chargings")))
+    tb.power.power_save = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "power_save")))
+    tb.wd = {}
+    tb.wd.b = rowset_value(_stats, 0, rowset_colid(_stats, "wd_begin"))
+    tb.wd.e = rowset_value(_stats, 0, rowset_colid(_stats, "wd_end"))
+end
+if rowset_rows(_traffics) > 0 then
+    tb.traffics = {}
+    tb.traffics.mobile_rx_bytes = 0
+    tb.traffics.mobile_tx_bytes = 0
+    tb.traffics.total_rx_bytes = 0
+    tb.traffics.total_tx_bytes = 0
+    tb.traffics.omobus_rx_bytes = 0 
+    tb.traffics.omobus_tx_bytes = 0
+    tb.traffics.L = rt.rows(_traffics, false, function(r, n, a)
+	if std.contains({'mobile_rx_bytes','mobile_tx_bytes','total_rx_bytes','total_tx_bytes','omobus_rx_bytes','omobus_tx_bytes'}, n) then
+	    r[n] = tonumber(a)
+	    tb.traffics[n] = tb.traffics[n] + r[n]
+	else
+	    r[n] = a
+	end
+    end)
+end
+if rowset_rows(_exchanges) > 0 then
+    tb.exchanges = {}
+    tb.exchanges.docs = {}
+    tb.exchanges.docs.success = 0
+    tb.exchanges.docs.failed = 0
+    tb.exchanges.docs.packets = 0
+    tb.exchanges.docs.corrupted = 0
+    tb.exchanges.sync = {}
+    tb.exchanges.sync.success = 0
+    tb.exchanges.sync.failed = 0
+    tb.exchanges.sync.packets = 0
+    tb.exchanges.sync.corrupted = 0
+    tb.exchanges.upd = {}
+    tb.exchanges.upd.success = 0
+    tb.exchanges.upd.failed = 0
+    tb.exchanges.upd.packets = 0
+    tb.exchanges.upd.corrupted = 0
+    tb.exchanges.L = rt.rows(_exchanges, false, function(r, n, a) 
+	if n == 'mode' then
+	    r[n] = a
+	    ptr = tb.exchanges[a]
+	elseif n == 'status' then
+	    r[n] = a
+	    ptr[a] = ptr[a] + 1
+	elseif std.contains({'packets','corrupted'}, n) then
+	    r[n] = tonumber(a)
+	    ptr[n] = ptr[n] + r[n]
+	else
+	    r[n] = a
+	end
+    end)
+end
+tb.user_documents = rt.rows(_user_documents, false, function(r, n, a) r[n] = std.contains({'duration'}, n) and tonumber(a) or a; end)
+tb.dev_ids = {}; rt.foreach(_dev_ids, function(q, i, cols)
+    local x = rowset_value(q, i, rowset_colid(q, "dev_id"))
+    if x ~= nil then
+	table.insert(tb.dev_ids, x)
+    end
+end)
+
+if tb.route ~= nil and #tb.route > 0 then
+    tb.rd = {}
+    for i, v in ipairs(tb.route) do
+	if v.strict == 1 and v.closed == 1 and v.b_dt ~= nil and tb.date == v.b_dt:sub(1,10) and v.e_dt ~= nil and tb.date == v.e_dt:sub(1,10) then
+	    if tb.rd.b == nil then
+		tb.rd.b = v.b_dt
+	    end
+	    if tb.rd.indoor == nil then
+		tb.rd.indoor = 0
+	    end
+	    tb.rd.e = v.e_dt
+	    tb.rd.indoor = tb.rd.indoor + v.duration
+	end
+    end
+end
+
+
+set_param(_content, "rows", rowset_rows(_route) + rowset_rows(_additions) + rowset_rows(_unsched))
+write_stream(_content, json.encode(tb))
+  ]]>
+    </generator>
+</tech_route>

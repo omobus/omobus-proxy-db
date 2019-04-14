@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dyn_shelfs templ="%fix_date%;%account_id%;%categ_id%;%brand_id%;%facing%;%assortment%;%sos%;%soa%;%photo0%;%photo1%;%photo2%;%photo3%;%sos_target%;%soa_target%;%fix_dt%;%user_id%;">
+  <![CDATA[
+select fix_date, account_id, categ_id, brand_id, facing, assortment, sos_target, soa_target, sos, soa, photos[1] photo0, photos[2] photo1, photos[3] photo2, photos[4] photo3, fix_dt, user_id from dyn_shelfs
+    where (current_timestamp - updated_ts) < "LTS_aging"()
+order by 1, 2, 3, 4
+  ]]>
+</dyn_shelfs>

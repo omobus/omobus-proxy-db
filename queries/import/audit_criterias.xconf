@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<audit_criterias templ="%audit_criteria_id%;%descr%;%wf%;%mandatory%;%extra_info%;%row_no%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update audit_criterias set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update audit_criterias set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from audit_criterias 
+    where audit_criteria_id = '%audit_criteria_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update audit_criterias set descr=trim(both from '%descr%'), wf=%wf%, mandatory=0%mandatory%, extra_info=NIL(trim(both from '%extra_info%')), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where audit_criteria_id = '%audit_criteria_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into audit_criterias (audit_criteria_id, descr, wf, mandatory, extra_info, row_no, hidden, db_ids)
+    values ('%audit_criteria_id%', trim(both from '%descr%'), %wf%, 0%mandatory%, NIL(trim(both from '%extra_info%')), NIL(%row_no%), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</audit_criterias>

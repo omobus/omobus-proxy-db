@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<trig_after>
+  <![CDATA[ 
+/* point: %uid%, %ErpCode% */
+do $$
+declare
+    count int;
+    x int;
+begin
+    select content_add(content_code, user_id, b_date, e_date) from ".content" into x;
+    GET DIAGNOSTICS count = ROW_COUNT;
+    if( count > 0 ) then
+	raise notice '[content_stream] % row(s) require updating (point: %uid%, erp: %ErpCode%).', count;
+    end if;
+end;
+$$;
+  ]]>
+</trig_after>

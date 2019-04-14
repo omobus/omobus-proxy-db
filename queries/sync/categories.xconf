@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories templ="%categ_id%;%descr%;%brand_ids%;%wf%;" empty="no">
+  <![CDATA[ 
+select categ_id, descr, array_to_string(brand_ids,',') brand_ids, wf from categories
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</categories>

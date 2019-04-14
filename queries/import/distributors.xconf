@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<distributors templ="%distr_id%;%pid%;%descr%;%country_id%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update distributors set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update distributors set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from distributors
+    where distr_id = '%distr_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update distributors set descr=trim(both from '%descr%'), pid=NIL('%pid%'), country_id=NIL('%country_id%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where distr_id = '%distr_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into distributors (distr_id, descr, pid, country_id, hidden, db_ids)
+    values ('%distr_id%', trim(both from '%descr%'), NIL('%pid%'), NIL('%country_id%'), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</distributors>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<refunds templ="%account_id%;%percentage%;%attention%;" empty="no">
+  <![CDATA[
+select account_id, percentage, attention from refunds
+    order by 1
+  ]]>
+</refunds>

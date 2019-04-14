@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tech type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select 
+    u.user_id, u.descr u_name, u.user_id code, u.dev_login, u.area, u.distr_ids, u.dep_ids,
+    exch_sync_success_total, exch_sync_success_time,
+    exch_docs_success_total, exch_docs_success_time, 
+    pos_exist, pos_time, pos_empty,
+    wd_begin::time_t, wd_end::time_t, case when (wd_end - wd_begin) > (time '0:0:1' - time '0:0:1') then (wd_end - wd_begin)::time_t else '' end wd_duration,
+    acts_total, acts_v, 
+    docs_total, docs_time, 
+    pause, 
+    case when pause=0 and pos_exist>0 then mileage(u.user_id, '%b_date%') else null end dist
+from users u
+    left join (select user_id, count(act_id) exch_sync_success_total, substring(max(fix_dt), 12, 5)::time_t exch_sync_success_time from a_exchange
+	    where left(fix_dt, 10) = '%b_date%' and mode = 'sync' and status = 'success' group by user_id
+	) x on u.user_id = x.user_id
+    left join (select user_id, count(act_id) exch_docs_success_total, substring(max(fix_dt), 12, 5)::time_t exch_docs_success_time from a_exchange
+	    where left(fix_dt, 10) = '%b_date%' and mode = 'docs' and status = 'success' group by user_id
+	) d on u.user_id = d.user_id
+    left join (select user_id, count(act_id) pos_exist, substring(max(fix_dt), 12, 5)::time_t pos_time from a_gps_pos p
+	    where left(fix_dt, 10) = '%b_date%' and (latitude<>0 or longitude<>0) group by user_id
+	) g on u.user_id = g.user_id
+    left join (select user_id, count(act_id) pos_empty from a_gps_pos p
+	    where left(fix_dt, 10) = '%b_date%' and (latitude=0 and longitude=0) group by user_id
+	) m on u.user_id = m.user_id
+    left join (select user_id, substring(min(fix_dt), 12, 5)::time wd_begin from a_user_work
+	    where left(fix_dt, 10) = '%b_date%' and state='begin' group by user_id
+	) w on u.user_id = w.user_id
+    left join (select user_id, substring(max(fix_dt), 12, 5)::time wd_end from a_user_work
+	    where left(fix_dt, 10) = '%b_date%' and state='end' group by user_id
+	) o on u.user_id = o.user_id
+    left join (select user_id, count(*) acts_total from j_user_activities where fix_date = '%b_date%' group by user_id
+	) c on u.user_id = c.user_id
+    left join (select user_id, count(*) acts_v from j_user_activities j, activity_types t where j.fix_date = '%b_date%' and j.activity_type_id = t.activity_type_id and t.strict = 1 group by user_id
+	) v on u.user_id = v.user_id
+    left join (select user_id, count(*) docs_total, substring(max(fix_dt), 12, 5)::time_t docs_time from a_user_document
+	    where left(fix_dt,10) = '%b_date%' group by user_id
+	) dt on u.user_id = dt.user_id
+    left join (select user_id, '%b_date%'::date - fix_date::date pause from (
+		select user_id, max(fix_date) fix_date from sysstats where fix_date <= '%b_date%' group by user_id
+	    ) q where fix_date <= '%b_date%' and '%b_date%' <= (current_date + 1)::date_t
+	) p on u.user_id = p.user_id
+where u.hidden = 0 or u.user_id in (select user_id from sysstats where fix_date = '%b_date%')
+order by u.descr
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+require('rtlib').main("tech", true, function(r, n, a)
+	if std.contains({'distr_ids','dep_ids'}, n) then
+	    r[n] = std.split(a, ',')
+	else
+	    r[n] = a;
+	end
+    end)
+  ]]>
+    </generator>
+</tech>

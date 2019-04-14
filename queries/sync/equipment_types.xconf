@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<equipment_types templ="%equipment_type_id%;%descr%;" empty="no">
+  <![CDATA[ 
+select equipment_type_id, descr from equipment_types
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</equipment_types>

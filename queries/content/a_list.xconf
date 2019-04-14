@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<a_list type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select
+    j.user_id, j.act_code, j.dev_pack, j.dev_id, j.dev_login, j.fix_dt, cast(j.inserted_ts as datetime_t) inserted_ts,
+    case when j.satellite_dt = '0000-00-00 00:00:00' then null else j.satellite_dt end satellite_dt,
+    case when j.latitude = 0 then null else j.latitude end latitude,
+    case when j.longitude = 0 then null else j.longitude end longitude,
+    case act_code 
+	when 'a_account' then
+	    (select format('%s %s (%s)', status, "name", "type") from a_account where j.act_id=act_id)
+	when 'a_airplane' then
+	    (select state from a_airplane where j.act_id=act_id)
+	when 'a_bluetooth' then
+	    (select state from a_bluetooth where j.act_id=act_id)
+	when 'a_device' then
+	    (select os_name || ' ' || os_version || case when su is null then '' else ' *** ROOTED ***' end || ', ' || 
+		manufacturer || ' ' || model || /*', IMEI: ' || imei || ', IMEI/SV: ' || imeisv ||*/ ', SIM: ' || sim_state || 
+		' [' || spn || ' ' || phone_number || '], uptime: ' || round(uptime/60000, 0) || ' min., CPU ABI''s: ' || 
+		case when cpu_abis is null then '-' else cpu_abis end || ', CPU cores: ' || cpu_cores || ', Heap: ' || 
+		round(heap_size/1048576.0, 2) || ' MiB., GPS: ' || case gps when 1 then 'yes' else '*** N/A ***' end || 
+		', Screen: ' || screen_inches || '", ' || screen_height || 'X' || screen_width || ' (' || screen_density || 
+		' dpi), small width: ' || round(160*least(screen_width,screen_height)/screen_density,1) || ' dp.'
+	    from a_device where j.act_id=act_id)
+	when 'a_exchange' then
+	    (select status || ' (' || mode || ':' || packets || (case when corrupted is null or corrupted=0 then '' else ('; corrupted: ' || corrupted) end) || ')' || 
+		    case when msg is null or msg = '' then '' else ' [' || msg || ']' end
+		from a_exchange where j.act_id=act_id)
+	when 'a_heap' then
+	    (select 'Heap: ' || pid || ' (' || image_name || ') [VM max=' || round(vm_max/1048576.0, 2) || ' MiB, allocated=' || 
+		round(vm_allocated/1048576.0, 2) || ' MiB, free=' || round(vm_free/1048576.0, 2)|| ' MiB], [native heapsize=' || 
+		round(native_heapsize/1048576.0, 2) || ' MiB, allocated=' || round(native_allocated/1048576.0, 2) || ' MiB, free=' || 
+		round(native_free/1048576.0, 2) || ' MiB] ' || case when msg is null then '' else msg end 
+	    from a_heap where j.act_id=act_id)
+	when 'a_gps_pos' then
+	    (select 'GPS control point' || case when latitude = 0 and longitude = 0 then ' is empty' else (': provider=' || 
+		case when provider is null then '-' else provider end || ', accuracy=' || accuracy || ', outdate (sec.)=' || 
+		seconds || ', satellites=' || case when satellites is null then '-' else satellites::varchar end) end 
+	    from a_gps_pos where j.act_id=act_id)
+	when 'a_gps_state' then
+	    (select 'state:' || state || ', provider:' || provider || case when msg is null or msg = '' then '' else ' [' || msg || ']' end
+		from a_gps_state where j.act_id=act_id)
+	when 'a_gsm_pos' then
+	    (select 'gsm control point: mcc=' || mcc || ' mnc=' ||mnc || ' cid=' || cid || ' lac=' || lac || ' ta=' || ta || 
+		' asu=' || asu || ' rxlev=' || rxlev
+	    from a_gsm_pos where j.act_id=act_id)
+	when 'a_lifecycle' then
+	    (select case when facility='os' then format('%s system (reason: %s)', state, coalesce(extra,'-'))
+		when facility='process' and extra is not null then format('%s process %s (pid: %s): %s', state, name, pid, replace(extra,' at ', '<br/>at '))
+		when facility='process' then format('%s process %s (pid: %s)', state, name, pid)
+		else format('%s %s %s at %s (pid: %s)', state, facility, name, coalesce(extra,'-'), pid)
+	     end from a_lifecycle where j.act_id=act_id)
+	when 'a_network' then
+	    (select state || case when msg is null or msg = '' then '' else ' [' || msg || ']' end || case when background = 1 then ' //background' else '' end
+		from a_network where j.act_id=act_id)
+	when 'a_package' then
+	    (select format('%s %s (enabled: %s, name: [%s], system: %s, debuggable: %s)', 
+			status, package, case when enabled=1 then 'yes' else 'no' end, coalesce("name",'-'), 
+			case when system=1 then 'yes' when system=0 then 'no' else '-' end,
+			case when debuggable=1 then 'yes' when debuggable=0 then 'no' else '-' end)
+		from a_package where j.act_id=act_id)
+	when 'a_power' then
+	    (select state || ' (' || case when battery_life=255 then '-' else (battery_life||'%') end || case when voltage>0 then (', '||voltage||' V') else '' end || 
+		    case when temperature>0 then (', '||temperature||' °C') else '' end || case when tech is not null and tech<>'' then (', '||tech) else '' end || ')' || 
+		    case when action is not null and action<>'' then (', '||action) else '' end ||
+		    case when power_save=1 then ', *** POWER SAVE ***' else '' end ||
+		    case when usb=1 then ', *** USB ***' else '' end ||
+		    case when idle=1 then ', *** IDLE ***' else '' end
+		from a_power where j.act_id=act_id)
+	when 'a_sms' then
+	    (select 'SMS ' || case when sender is null then '[*]' else sender end || ' -> ' || case when receiver is null then '[*]' else receiver end || 
+		    ': ' || case when msg is null then '(empty message)' else msg end
+		from a_sms where j.act_id=act_id)
+	when 'a_statfs' then
+	    (select path || ' available: ' || round(available_bytes/1048576.0, 2) || ' MiB, total: ' || round(total_bytes/1048576.0, 2) || ' MiB'
+		from a_statfs where j.act_id=act_id)
+	when 'a_time' then
+	    (select status || ': ' || msg from a_time where j.act_id=act_id)
+	when 'a_traffic' then
+	    (select '(' || duration || ' sec.) Total: RX:' || round(total_rx_bytes/1048576.0, 2) || ' MiB TX:' || round(total_tx_bytes/1048576.0, 2) || 
+		' MiB, [Mobile: RX:' || round(mobile_rx_bytes/1048576.0, 2) || ' MiB TX:' || round(mobile_tx_bytes/1048576.0, 2) || 
+		' MiB], [OMOBUS: RX:' || round(omobus_rx_bytes/1048576.0, 2) || ' MiB TX:' || round(omobus_tx_bytes/1048576.0, 2) || ' MiB]' 
+	    from a_traffic where j.act_id=act_id)
+	when 'a_wifi' then
+	    (select state from a_wifi where j.act_id=act_id)
+
+	when 'a_user_work' then
+	    (select 'work: ' || state || ' [' || w_cookie || ']' from a_user_work where j.act_id=act_id)
+	when 'a_user_joint' then
+	    (select 'joint route: ' || state || ' [' || w_cookie || ':' || c_cookie || '], employee_id:' || employee_id
+		from a_user_joint where j.act_id=act_id)
+	when 'a_user_activity' then
+	    (select 'activity_type_id: ' || activity_type_id || ', state: ' || state || ' [' || w_cookie || ':' || a_cookie || ']' || 
+		case when route_date is null or route_date = '' then '' else ' route date: ' || route_date end ||
+		case when employee_id is null or employee_id = '' then '' else ' employee_id: ' || employee_id end
+	    from a_user_activity where j.act_id=act_id)
+	when 'a_user_document' then
+	    (select doc_type || '; doc_no: ' || d.doc_no || ', duration: ' || d.duration || ' sec.' || 
+		case when employee_id is null or employee_id = '' then '' else ', employee_id: ' || employee_id end ||
+		coalesce((select format(', doc_id: %s (%s)', doc_id, inserted_ts) from j_docs where user_id=d.user_id and doc_no=d.doc_no and dev_id=d.dev_id and fix_dt=d.fix_dt limit 1),
+		    ' *** N/T ***')
+		from a_user_document d where j.act_id=act_id)
+	when 'a_user_report' then
+	    (select doc_type || '; duration: ' || duration || ' sec.' || case when employee_id is null or employee_id = '' then '' else ', employee_id: ' || employee_id end 
+		from a_user_report where j.act_id=act_id)
+
+	when 'a_applog' then
+	    (select 
+		case when status in ('bind','unbind') then 
+		    format('%s %s (name: %s)', status, package, coalesce(name,'-'))
+		else 
+		    format('%s %s (name: %s) -> facility: %s, state: %s, cookie: %s, extra: %s', status, package, coalesce(name,'-'), facility, coalesce(state,'-'), 
+			coalesce(cookie,'-'), coalesce(extra,'-'))
+		end
+	    from a_applog where j.act_id=act_id)
+
+	else
+	    '*** N/D ***' 
+	end descr
+from j_acts j
+    where j.user_id='%user_id%' and left(j.fix_dt, 10)='%b_date%' /*%e_date%*/
+order by fix_dt desc, dev_pack desc
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+require('rtlib').main("a_list", true)
+  ]]>
+    </generator>
+</a_list>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<planograms templ="%pl_id%;%descr%;%rc_id%;%chan_ids%;%image%;%delim%;" empty="no">
+  <![CDATA[ 
+select 
+    0 _xz, 
+    null fid, 
+    format('[%s]', brand_id) pl_id, 
+    null pid, 
+    1 ftype, 
+    descr, 
+    null rc_id, 
+    null chan_ids, 
+    null::blob_t image, 
+    1 delim, 
+    null country_id, 
+    null dep_id 
+from brands
+where hidden = 0 and brand_id in (select brand_ids[1] from planograms where hidden = 0 and brand_ids is not null and cardinality(brand_ids) = 1)
+	union
+select 
+    1 _xz, 
+    null fid, 
+    '[multi]' pl_id, 
+    null pid, 
+    1 ftype, 
+    'multi-brand' descr, 
+    null rc_id, 
+    null chan_ids, 
+    null::blob_t image, 
+    1 delim, null country_id, 
+    null dep_id
+	union
+select
+    2 _xz, 
+    pl_id fid, pl_id, 
+    case when f = 0 then null when brand_ids is null or cardinality(brand_ids) <> 1 then '[multi]' else format('[%s]', brand_ids[1]) end pid, 
+    0 ftype,
+    descr, 
+    rc_id, 
+    array_to_string(chan_ids,',') chan_ids, 
+    image, 0 delim, 
+    country_id, 
+    dep_id
+from planograms, (select count(*) f from planograms where hidden = 0 and brand_ids is not null and cardinality(brand_ids) = 1) a
+    where hidden = 0
+order by _xz, descr
+  ]]>
+</planograms>

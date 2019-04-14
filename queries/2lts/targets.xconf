@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<targets templ="%target_id%;%target_type_id%;%subject%;%body%;%b_date%;%e_date%;%image%;%author_id%;%myself%;%hidden%;%attrs%;">
+  <![CDATA[
+select target_id, target_type_id, subject, body, b_date, e_date, image, author_id, myself, hidden, attrs from targets
+    where (current_timestamp - updated_ts) < "LTS_aging"()
+order by 1
+  ]]>
+</targets>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wish>
+<check_user>
+  <![CDATA[
+select user_id as user_id_sys from users 
+    where lower(user_id)=lower('%ErpId%') /*%user_id%*/
+  ]]>
+</check_user>
+<check_exist>
+  <![CDATA[
+select count(*) from h_wish 
+    where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
+  ]]>
+</check_exist>
+<create>
+  <![CDATA[
+select * from doc_id()
+  ]]>
+</create>
+<write_body>
+  <![CDATA[
+insert into h_wish(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, imei, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, wish_type_id)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%fix_dt%', NIL('%doc_note%'), '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', NIL('%wish_type_id%'))
+  ]]>
+</write_body>
+<close>
+  <![CDATA[
+do $$
+declare
+    f_date date_t default left('%fix_dt%',10);
+    x bool_t default 0;
+    rcpt_to emails_t;
+    u_name descr_t;
+    u_lang lang_t;
+    a_name descr_t;
+    a_address descr_t;
+begin
+-- **** wish --> j_docs
+    insert into j_docs(doc_id, doc_no, dev_id, dev_login, imei, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
+	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
+
+-- **** wish --> j_wishes
+    if( (select count(*) from j_wishes where account_id='%account_id%') = 0 ) then
+	insert into j_wishes (account_id, user_id, fix_dt, note, wish_type_id)
+	    select account_id, user_id, fix_dt, doc_note, wish_type_id from h_wish where doc_id = '%doc_id_sys%';
+	x := 1;
+    elsif( (select count(*) from j_wishes where account_id='%account_id%' and hidden=0 and validated=1) > 0 ) then
+	raise notice 'adding account to the route already validated: user_id=%user_id_sys%, account_id=%account_id%.';
+    else
+	delete from j_wishes where account_id='%account_id%';
+	insert into j_wishes (account_id, user_id, fix_dt, note, wish_type_id)
+	    select account_id, user_id, fix_dt, doc_note, wish_type_id from h_wish where doc_id = '%doc_id_sys%';
+	x := 1;
+    end if;
+
+-- **** wish --> mail_stream
+    if( x = 1 ) then
+	select descr from users where user_id='%user_id_sys%' into u_name;
+	select descr, address from accounts where account_id='%account_id%' into a_name, a_address;
+
+	for rcpt_to, u_lang in select evaddrs, lang_id from users where user_id<>'%user_id_sys%' and user_id in (
+		select pids[1] from users where user_id='%user_id_sys%' and pids[1] is not null
+		    union
+		select executivehead_id from users where user_id='%user_id_sys%' and executivehead_id is not null
+	    ) and hidden=0 and evaddrs is not null and array_length(evaddrs, 1) > 0
+	loop
+	    perform evmail_add(rcpt_to, u_lang, 'wish/caption:new', 'wish/body:notice', 3::smallint /*normal*/,array[
+		'u_name',u_name,
+		'fix_dt',"L"('%fix_dt%'::datetime_t),
+		'a_name',a_name,'address',a_address
+	    ]);
+	end loop;
+    end if;
+
+-- **** wish --> content_stream
+    perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
+    perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+end;
+$$;
+  ]]>
+</close>
+</wish>

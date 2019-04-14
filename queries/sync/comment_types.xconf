@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<comment_types templ="%comment_type_id%;%descr%;%min_note_length%;%photo_needed%;" empty="no">
+  <![CDATA[ 
+select comment_type_id, descr, min_note_length, photo_needed from comment_types
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</comment_types>

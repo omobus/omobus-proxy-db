@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<yandex>
+    <generator>
+  <![CDATA[
+local SLAXML = require 'slaxdom'
+
+local req = "GET /cellid_location/?cellid=$(cid)&operatorid=$(mnc)&countrycode=$(mcc)&lac=$(lac) HTTP/1.1\r\nHost: $(hostname)\r\nUser-Agent: omobusd\r\nConnection: close\r\n\r\n"
+local hostname = "mobile.maps.yandex.net"
+local port = 443
+local connect_timeout = 10
+local params = {rcvtimeo = 30, sndtimeo = 15}
+local tlsconfig = { noverifycert = true, noverifyname = true, ciphers = "compat", ca_file = "/etc/ssl/certs/Certum_Root_CA.pem" }
+
+local function strrepl(s, f, t)
+    return s:replace(string.format("$(%s)", f), t)
+end
+
+local function build_request()
+    local a
+    req = strrepl(req, "hostname", hostname)
+    req = strrepl(req, "mcc", _mcc)
+    req = strrepl(req, "mnc", _mnc)
+    req = strrepl(req, "cid", _cid)
+    req = strrepl(req, "lac", _lac)
+    return req
+end
+
+local function set_NIL()
+    set_param(_content, "latitude", "null")
+    set_param(_content, "longitude", "null")
+    set_param(_content, "content_ts", "null")
+    set_param(_content, "changeable", "null")
+end
+
+local function main()
+    local sockfd, resp, step, xml, tb, obj, code, more
+
+    sockfd = assert(sock.connect(hostname, port, connect_timeout, params))
+    assert(sockfd:start_tls(tlsconfig))
+    assert(sockfd:send(build_request()))
+    resp = assert(sockfd:recv())
+
+    step = 0
+    resp:gsub("([^\r\n]+)", function(c)
+	if step == 0 then
+	    -- *** HTTP/1.1 200 OK
+	    local protocol
+	    c:gsub("(%w+)/(%d+).(%d+)([ ]+)(%d+)([ ]+)(%w*)", function(arg0,arg1,arg2,arg3,arg4,arg5,arg6)
+		protocol = arg0; code = arg4
+	    end)
+	    assert(protocol, string.format("unknown response from the %s:%d", hostname, port))
+	    assert(protocol == "HTTP", string.format("the %s:%d does not support HTTP format", hostname, port))
+	    assert(code == "200" or code == "400" or code == "404", string.format("%s from the %s:%d; mcc=%s, mnc=%s, cid=%s, lac=%s", 
+		c, hostname, port, _mcc, _mnc, _cid, _lac))
+	elseif c:sub(1, 12) == "Content-Type" then
+	    -- *** Content-Type: text/xml; charset=utf-8
+	    local charset, type
+	    c:gsub("([%w-%w]+):([ ]+)(%w+)/(%w+);([ ]+)(%w+)=([%w-%w]+)", function(arg0,arg1,arg2,arg3,arg4,arg5,arg6)
+		type = arg3; charset = arg6
+	    end)
+	    assert(type == 'xml', string.format("supported only xml responses; the %s:%d returns %s data", hostname, port, type))
+	    assert(charset == 'utf-8', string.format("supported only utf-8 responses; the %s:%d returns %s data", hostname, port, charset))
+	elseif c:sub(1, 17) == "Transfer-Encoding" and c:sub(19):ltrim(" ") == "chunked" then
+	    assert(false, string.format("unable to get chunked response from the %s:%d; mcc=%s, mnc=%s, cid=%s, lac=%s", 
+		hostname, port, _mcc, _mnc, _cid, _lac))
+	elseif c:sub(1, 14) == "Content-Length" then
+	    more = true
+	end
+	step = step + 1
+    end)
+
+    if more then
+	resp = assert(sockfd:recv())
+    end
+
+    sockfd:stop_tls()
+    sockfd:close()
+
+    if code == "200" then
+	xml = ""
+	if more then
+	    xml = resp
+	else
+	    resp:sub(resp:find("\r\n\r\n", 1, true) + 4):gsub("([^\r\n]+)", function(c)
+		xml = xml .. c
+	    end)
+	end
+
+	tb = SLAXML:dom(xml)
+
+	if tb ~= nil and tb.root.name == "location" and #tb.root.el >= 1 and tb.root.el[1].name == "coordinates" then
+	    obj = tb.root.el[1].attr
+	    if obj["latitude"] ~= nil and obj["longitude"] ~= nil then
+		set_param(_content, "latitude", obj.latitude)
+		set_param(_content, "longitude", obj.longitude)
+		set_param(_content, "content_ts", "current_timestamp")
+		set_param(_content, "changeable", "0")
+	    else
+		log_msg(string.format("response from the %s:%d doesn't contain [latitude] or [longitude] attributes; mcc=%s, mnc=%s, cid=%s, lac=%s", 
+		    hostname, port, _mcc, _mnc, _cid, _lac))
+		set_NIL()
+	    end
+	else
+	    log_msg(string.format("unknown xml response from the %s:%d; mcc=%s, mnc=%s, cid=%s, lac=%s", 
+		hostname, port, _mcc, _mnc, _cid, _lac))
+	    set_NIL()
+	end
+    else
+	log_msg(string.format("[ynadex] response code is [%s] from the %s:%d; mcc=%s, mnc=%s, cid=%s, lac=%s",
+	    code, hostname, port, _mcc, _mnc, _cid, _lac))
+	set_NIL()
+    end
+end
+
+main()
+-- ** The end **
+  ]]>
+    </generator>
+</yandex>

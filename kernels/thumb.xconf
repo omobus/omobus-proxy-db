@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel module="kern_thumb" threads="2" height="180" quality="95">
+<get>
+  <![CDATA[
+select photo::uid_t blob_id, photo from thumbnail_stream 
+    where thumb is null and thumb_height is null
+limit 10000
+  ]]>
+</get>
+<set>
+  <![CDATA[
+update thumbnail_stream set thumb=$1:blob, thumb_width=%thumb_width%, thumb_height=%thumb_height%
+    where photo=%blob_id%
+  ]]>
+</set>
+</kernel>

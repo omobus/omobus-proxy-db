@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pending_types templ="%pending_type_id%;%descr%;">
+  <![CDATA[
+select pending_type_id, descr from pending_types
+    where hidden = 0
+order by 1
+  ]]>
+</pending_types>

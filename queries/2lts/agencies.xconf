@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<agencies templ="%agency_id%;%descr%;">
+  <![CDATA[
+select agency_id, descr from agencies
+    where hidden = 0
+order by 1
+  ]]>
+</agencies>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<training_materials templ="%tm_id%;%descr%;%blob%;%content_type%;" empty="no">
+  <![CDATA[ 
+select tm_id, descr, blob, content_type, dep_id, country_id from training_materials
+    where hidden = 0
+order by descr
+  ]]>
+</training_materials>

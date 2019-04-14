@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addition_types templ="%addition_type_id%;%descr%;" empty="no">
+  <![CDATA[ 
+select addition_type_id, descr from addition_types
+    where hidden = 0
+order by descr
+  ]]>
+</addition_types>

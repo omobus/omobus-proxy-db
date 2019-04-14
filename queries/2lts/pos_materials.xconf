@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pos_materials templ="%posm_id%;%descr%;%brand_ids%;%placement_ids%;">
+  <![CDATA[
+select posm_id, descr, array_to_string(brand_ids,',') brand_ids, array_to_string(placement_ids,',') placement_ids from pos_materials
+    where hidden = 0
+order by 1
+  ]]>
+</pos_materials>

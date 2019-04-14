@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<onload>
+  <![CDATA[
+/* actual content: */
+select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_stream s, "content_stream.ghost" d
+    where s.user_id=d.user_id and s.b_date=d.b_date and s.e_date=d.e_date and s.content_code=d.content_code 
+	and (s.content_ts is null or (s.content_ts is not null and d.data_ts >= s.content_ts))
+	and (s.b_date = current_date::date_t or s.b_date = (current_date+1)::date_t or s.b_date <> s.e_date)
+
+union
+/* monthly reports: */
+select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_stream s, "content_stream.ghost" d
+    where s.user_id=d.user_id and s.b_date=d.b_date and s.e_date=d.e_date and s.content_code=d.content_code 
+	and (s.content_ts is null or (s.content_ts is not null and d.data_ts >= s.content_ts))
+	and s.user_id = ''
+	and s.b_date <> ''
+	and not s.content_code in ('tech','route_compliance')
+
+union
+/* analitics reports: */
+select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_stream s, "content_stream.ghost" d
+    where s.user_id=d.user_id and s.b_date=d.b_date and s.e_date=d.e_date and s.content_code=d.content_code 
+	and (s.content_ts is null or (s.content_ts is not null and d.data_ts >= s.content_ts))
+	and s.user_id = ''
+	and s.b_date = ''
+	and not s.content_code in ('tech','route_compliance')
+
+union
+/* obsolete content: */
+select content_code, user_id, b_date, e_date, data_ts from (
+    select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_stream s, "content_stream.ghost" d
+	where s.user_id=d.user_id and s.b_date=d.b_date and s.e_date=d.e_date and s.content_code=d.content_code 
+	    and (s.content_ts is null or (s.content_ts is not null and d.data_ts >= s.content_ts))
+	    and s.b_date < current_date::date_t 
+	    and not s.content_code in ('tech','route_compliance')
+	    and s.user_id <> ''
+    order by s.e_date desc, d.data_ts
+    limit 200
+) x0
+union
+select content_code, user_id, b_date, e_date, data_ts from (
+    select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_stream s, "content_stream.ghost" d
+	where s.user_id=d.user_id and s.b_date=d.b_date and s.e_date=d.e_date and s.content_code=d.content_code 
+	    and (s.content_ts is null or (s.content_ts is not null and d.data_ts >= s.content_ts))
+	    and s.b_date < current_date::date_t 
+	    and s.content_code in ('tech','route_compliance')
+    order by s.e_date desc, d.data_ts desc
+    limit 3
+) x1
+
+/* future content: */
+union
+select content_code, user_id, b_date, e_date, data_ts from (
+    select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_stream s, "content_stream.ghost" d
+	where s.user_id=d.user_id and s.b_date=d.b_date and s.e_date=d.e_date and s.content_code=d.content_code 
+	    and (s.content_ts is null or (s.content_ts is not null and d.data_ts >= s.content_ts))
+	    and s.b_date > (current_date+1)::date_t
+	    and s.content_code in ('tech','tech_route')
+    order by s.e_date, d.data_ts
+    limit 200
+) x2
+  ]]>
+</onload>

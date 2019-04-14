@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<account_params templ="%account_id%;%group_price_id%;%payment_delay%;%payment_method_id%;%wareh_ids%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//shadow/%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from shadow.account_params 
+    where distr_id='%ErpCode%'
+  ]]>
+</begin>
+<insert>
+  <![CDATA[
+insert into shadow.account_params (distr_id, account_id, group_price_id, payment_method_id, payment_delay, wareh_ids)
+    values ('%ErpCode%', '%account_id%', NIL('%group_price_id%'), NIL('%payment_method_id%'), NIL(%payment_delay%), string_to_array(NIL('%wareh_ids%'),','))
+on conflict do nothing
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+delete from account_params where distr_id='%ErpCode%';
+insert into account_params(distr_id, account_id, group_price_id, payment_method_id, payment_delay, wareh_ids, db_ids)
+    select x.distr_id, l.f_id, x.group_price_id, x.payment_method_id, x.payment_delay, x.wareh_ids, array['$shadow'] from shadow.account_params x, symlinks l
+	where x.distr_id='%ErpCode%' and l.obj_code='account' and l.distr_id='%ErpCode%' and l.distr_id = x.distr_id and l.t_id=x.account_id;
+
+select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+  ]]>
+</end>
+</account_params>

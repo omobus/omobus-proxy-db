@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<contacts templ="%contact_id%;%account_id%;%name%;%surname%;%patronymic%;%job_title_id%;%phone%;%mobile%;%email%;%locked%;%extra_info%;%author_id%;">
+  <![CDATA[
+select contact_id, account_id, name, patronymic, surname, job_title_id, phone, mobile, email, locked, extra_info, author_id from contacts
+    where hidden = 0
+order by 1, 2
+  ]]>
+</contacts>

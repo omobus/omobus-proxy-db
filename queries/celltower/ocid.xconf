@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ocid>
+    <queries>
+	<L>
+  <![CDATA[
+select latitude, longitude, changeable from ".OCID" where mcc=%mcc% and mnc=%mnc% and cid=%cid% and lac=%lac% limit 1
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+local rows = rowset_rows(_L)
+
+if rows >= 1 then
+    set_param(_content, "latitude", rowset_value(_L, 0, rowset_colid(_L, "latitude")))
+    set_param(_content, "longitude", rowset_value(_L, 0, rowset_colid(_L, "longitude")))
+    set_param(_content, "content_ts", "current_timestamp")
+    set_param(_content, "changeable", rowset_value(_L, 0, rowset_colid(_L, "changeable")))
+else
+    set_param(_content, "latitude", "null")
+    set_param(_content, "longitude", "null")
+    set_param(_content, "content_ts", "null")
+    set_param(_content, "changeable", "null")
+end
+  ]]>
+    </generator>
+</ocid>

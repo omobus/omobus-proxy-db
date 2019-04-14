@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<blacklist templ="%distr_id%;%account_id%;%prod_id%;%locked%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from blacklist
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update blacklist set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from blacklist
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[
+insert into blacklist (distr_id, account_id, prod_id, locked, db_ids)
+    values ('%distr_id%', '%account_id%', '%prod_id%', NIL(%locked%), array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</blacklist>

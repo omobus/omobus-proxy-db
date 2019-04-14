@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gsm_pos>
+<check_user>
+  <![CDATA[
+select user_id as user_id_sys from users 
+    where lower(user_id)=lower('%ErpId%') /*%user_id%*/
+  ]]>
+</check_user>
+<check_exist>
+  <![CDATA[
+select count(*) from a_gsm_pos 
+    where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
+  ]]>
+</check_exist>
+<create>
+  <![CDATA[
+select * from act_id()
+  ]]>
+</create>
+<write_body>
+  <![CDATA[ 
+insert into a_gsm_pos(act_id, inserted_node, dev_pack, dev_id, dev_login, imei, user_id, fix_dt, satellite_dt, latitude, longitude, mcc, mnc, cid, lac, tA, asu, rxlev, radio, accuracy, speed, altitude, bearing)
+    values ('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', '%latitude%', '%longitude%', %mcc%, %mnc%, %cid%, %lac%, %tA%, %asu%, %rxlev%, '%radio%', %accuracy%, %speed%, %altitude%, %bearing%)
+  ]]>
+</write_body>
+<write_row>
+  <![CDATA[
+insert into a_gsm_trace(act_id, row_no, inserted_node, dev_pack, dev_id, dev_login, imei, user_id, fix_dt, satellite_dt, latitude, longitude, mcc, mnc, cid, lac, tA, asu, rxlev, radio, accuracy, speed, altitude, bearing)
+    values ('%doc_id_sys%', %trace_no%, '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', '%latitude%', '%longitude%', %mcc%, %mnc%, %cid%, %lac%, %tA%, %asu%, %rxlev%, '%radio%', %accuracy%, %speed%, %altitude%, %bearing%)
+  ]]>
+</write_row>
+<close>
+  <![CDATA[
+do $$
+declare
+    f_date date_t default left('%fix_dt%',10);
+    f_time time_t default substring('%fix_dt%', 12, 5);
+    x_mcc int32_t;
+    x_mnc int32_t;
+    x_cid int32_t;
+    x_lac int32_t;
+begin
+-- **** gsm_pos --> j_acts
+    insert into j_acts(act_id, dev_id, dev_login, imei, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+
+-- **** gsm_pos --> sysstats
+    perform sysstat_add('%user_id_sys%', f_date, f_time);
+
+-- **** gsm_pos --> content_stream
+    perform content_add('tech', '', f_date, f_date);
+    perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
+    perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+
+-- **** gsm_pos/trace --> celltower_stream
+    for x_mcc, x_mnc, x_cid, x_lac in
+	select distinct mcc, mnc, cid, lac from (
+	    select mcc, mnc, cid, lac from a_gsm_pos where act_id='%doc_id_sys%' and not (latitude=0 and longitude=0)
+		union
+	    select mcc, mnc, cid, lac from a_gsm_pos where act_id='%doc_id_sys%' and not (latitude=0 and longitude=0)
+	) z
+    loop
+	if( (select inserted_ts from celltower_stream where mcc=x_mcc and mnc=x_mnc and cid=x_cid and lac=x_lac) is null ) then
+	    insert into celltower_stream(mcc, mnc, cid, lac) values(x_mcc, x_mnc, x_cid, x_lac);
+	    raise notice 'added new cell tower: mcc=%, mnc=%, cid=%, lac=%.', x_mcc, x_mnc, x_cid, x_lac;
+	end if;
+    end loop;
+end;
+$$;
+  ]]>
+</close>
+</gsm_pos>

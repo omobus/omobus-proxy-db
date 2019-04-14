@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<products templ="%pid%;%prod_id%;%ftype%;%code%;%art%;%descr%;%brand_id%;%categ_id%;%shelf_life_id%;%novelty%;%promo%;%obsolete%;%barcodes%;%image%;">
+  <![CDATA[ 
+select case when ftype=0 then prod_id else null end fid, null lang_id,
+    pid, prod_id, descr, ftype, code, art, brand_id, categ_id, shelf_life_id, novelty, promo, obsolete, image, array_to_string(ean13_out(barcodes),',') barcodes, row_no
+from products
+where hidden = 0
+
+/* Localized products*/ union
+
+select case when ftype=0 then prod_id else null end fid, i.lang_id,
+    p.pid, p.prod_id, i.str descr, p.ftype, p.code, p.art, p.brand_id, p.categ_id, p.shelf_life_id, p.novelty, p.promo, p.obsolete, p.image, array_to_string(ean13_out(p.barcodes),',') barcodes, p.row_no
+from "L10n" i, products p 
+where i.obj_code='product' and i.obj_id=p.prod_id and i.obj_attr='descr' and p.hidden=0
+
+order by ftype desc, lang_id nulls last, row_no, descr
+  ]]>
+</products>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<audit_scores templ="%audit_score_id%;%descr%;%score%;%row_no%;">
+  <![CDATA[
+select audit_score_id, descr, row_no, score from audit_scores
+    where hidden = 0
+order by 1
+  ]]>
+</audit_scores>

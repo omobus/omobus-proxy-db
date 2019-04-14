@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plu_codes templ="%account_id%;%prod_id%;%plu_code%;" empty="no">
+  <![CDATA[ 
+select account_id, prod_id, plu_code from plu_codes
+    order by 1, 2
+  ]]>
+</plu_codes>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<users templ="%user_id%;%pids%;%descr%;%role%;%country_ids%;%dep_ids%;%distr_ids%;%agency_id%;%mobile%;%email%;%area%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update users set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update users set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from users
+    where user_id = '%user_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update users set pids=string_to_array(NIL('%pids%'),','), descr=trim(both from '%descr%'), country_ids=string_to_array(NIL('%country_ids%','RU'),','), dep_ids=string_to_array(NIL('%dep_ids%'),','), distr_ids=string_to_array(NIL('%distr_ids%'),','), agency_id=NIL('%agency_id%'), mobile=NIL('%mobile%'), email=NIL('%email%'), area=NIL('%area%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where user_id = '%user_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into users(user_id, pids, descr, role, country_ids, dep_ids, distr_ids, agency_id, mobile, email, area, hidden, db_ids)
+    values('%user_id%', string_to_array(NIL('%pids%'),','), trim(both from '%descr%'), NIL('%role%'), string_to_array(NIL('%country_ids%','RU'),','), string_to_array(NIL('%dep_ids%'),','), string_to_array(NIL('%distr_ids%'),','), NIL('%agency_id%'), NIL('%mobile%'), NIL('%email%'), NIL('%area%'), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+delete from users where trim(user_id)='' and hidden = 0;
+update users set pids=array_remove(pids, user_id::varchar) where pids is not null and pids @> array[user_id::varchar] and hidden = 0; /* fixed invalid hiererchy */
+update users set pids=null where array_length(pids, 1) is null or array_length(pids, 1) = 0 and hidden = 0;
+update users set executivehead_id=my_executivehead(user_id) where hidden = 0;
+
+insert into ".content"(content_code, user_id, b_date, e_date) values('tech', '', current_date::date_t, current_date::date_t)
+    on conflict do nothing;
+
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+  ]]>
+</end>
+</users>

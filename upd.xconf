@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<omobusd semaphore="upd" timeout="600">
+    <xi:include href="connections/null.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+    <xi:include href="transactions/read.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+    <xi:include href="kernels/upd.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</omobusd>

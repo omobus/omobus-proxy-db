@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<canceling>
+<check_user>
+  <![CDATA[
+select user_id as user_id_sys from users 
+    where lower(user_id)=lower('%ErpId%') /*%user_id%*/
+  ]]>
+</check_user>
+<check_exist>
+  <![CDATA[
+select count(*) from h_canceling 
+    where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
+  ]]>
+</check_exist>
+<create>
+  <![CDATA[
+select * from doc_id()
+  ]]>
+</create>
+<write_body>
+  <![CDATA[
+insert into h_canceling(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, imei, fix_dt, doc_note, user_id, w_cookie, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, canceling_type_id, b_date, e_date)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', NIL('%canceling_type_id%'), '%b_date%', '%e_date%')
+  ]]>
+</write_body>
+<close>
+  <![CDATA[
+do $$
+declare
+    f_date date_t default left('%fix_dt%',10);
+    r date_t;
+    rcpt_to emails_t;
+    u_name descr_t;
+    u_lang lang_t;
+    t_name descr_t;
+begin
+-- **** canceling --> j_docs
+    insert into j_docs(doc_id, doc_no, dev_id, dev_login, imei, user_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, inserted_node, dev_pack, doc_code)
+	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
+
+-- **** canceling --> j_cancellations
+    for i in 0..('%e_date%'::date-'%b_date%'::date) loop
+	r = ('%b_date%'::date+i)::date_t;
+	if( (select count(*) from j_cancellations where user_id = '%user_id_sys%' and route_date = r) > 0 ) then
+	    update j_cancellations set canceling_type_id = NIL('%canceling_type_id%'), note = '%doc_note%', updated_ts = current_timestamp
+		where user_id = '%user_id_sys%' and route_date = r;
+	else
+	    insert into j_cancellations(user_id, route_date, canceling_type_id, note, hidden)
+		values('%user_id_sys%', r, NIL('%canceling_type_id%'), '%doc_note%', 0);
+	    if( (select count(*) from j_user_activities where user_id = '%user_id_sys%' and route_date = r) > 0 ) then
+		/* revokes cancellation: */
+		update j_cancellations set hidden=1 
+		    where user_id = '%user_id_sys%' and route_date = r;
+		/* sends notification: */
+		perform evmail_add('%user_id_sys%','canceling/caption:revoke','canceling/body:autorevoke',2::smallint /*high*/,array['route_date',"L"(r)]);
+	    end if;
+	end if;
+	perform content_add('tech_route', '%user_id_sys%', r, r);
+	perform content_add('route_compliance', '', r, r);
+    end loop;
+
+-- **** canceling --> content_stream
+    perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
+    perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+
+-- **** canceling --> mail_stream
+    select descr from users where user_id='%user_id_sys%' into u_name;
+    select descr from canceling_types where canceling_type_id=NIL('%canceling_type_id%') into t_name;
+
+    for rcpt_to, u_lang in select evaddrs, lang_id from users where user_id<>'%user_id_sys%' and user_id in (
+	    select pids[1] from users where user_id='%user_id_sys%' and pids[1] is not null
+		union
+	    select executivehead_id from users where user_id='%user_id_sys%' and executivehead_id is not null
+        ) and hidden=0 and evaddrs is not null and array_length(evaddrs, 1) > 0
+    loop
+        perform evmail_add(rcpt_to, u_lang, 'canceling/caption:new', 'canceling/body:notice', 3::smallint /*normal*/, array[
+	    'u_name',u_name,
+	    'fix_dt',"L"('%fix_dt%'::datetime_t),
+	    'b_date',"L"('%b_date%'::date_t),'e_date',"L"('%e_date%'::date_t),
+	    'canceling_type',t_name,'doc_note',NIL('%doc_note%')
+	    ]);
+    end loop;
+end;
+$$;
+  ]]>
+</close>
+</canceling>

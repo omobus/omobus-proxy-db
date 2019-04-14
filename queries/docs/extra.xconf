@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<extra>
+<check_user>
+  <![CDATA[
+select user_id as user_id_sys from users 
+    where lower(user_id)=lower('%ErpId%') /*%user_id%*/
+  ]]>
+</check_user>
+<check_exist>
+  <![CDATA[
+select count(*) from h_extra 
+    where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
+  ]]>
+</check_exist>
+<create>
+  <![CDATA[
+select * from doc_id()
+  ]]>
+</create>
+<write_body>
+  <![CDATA[ 
+insert into h_extra(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, imei, fix_dt, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, rows, placement_id, soe)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%',  %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', %rows%, '%placement_id%', %soe%)
+  ]]>
+</write_body>
+<write_row>
+  <![CDATA[
+insert into t_extra(doc_id, row_no, manuf_id, qty)
+    values('%doc_id_sys%', %row_no%, '%manuf_id%', %qty%)
+  ]]>
+</write_row>
+<close>
+  <![CDATA[
+do $$
+declare
+    f_date date_t default left('%fix_dt%',10);
+    x datetime_t;
+begin
+-- **** extra --> j_docs
+    insert into j_docs(doc_id, doc_no, dev_id, dev_login, imei, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
+	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
+
+-- **** extra --> content_stream
+    perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
+    perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+    perform content_add('tech_extras', '%user_id_sys%', f_date, f_date);
+
+-- **** extra --> dyn_extras
+    select fix_dt from dyn_extras where account_id = '%account_id%' and fix_date = f_date and placement_id = '%placement_id%' order by fix_dt desc limit 1
+	into x;
+    if( x is null or '%fix_dt%' > x) then
+	/* removes obsolete entires */
+	delete from dyn_extras where account_id = '%account_id%' and fix_date = f_date and placement_id = '%placement_id%';
+	/* recompiles data */
+	insert into dyn_extras(fix_date, account_id, placement_id, manuf_id, qty, soe, fix_dt, user_id, doc_id)
+	    select f_date, h.account_id, h.placement_id, t.manuf_id, t.qty, h.soe, h.fix_dt, h.user_id, h.doc_id from h_extra h
+		left join t_extra t on t.doc_id=h.doc_id
+	    where h.doc_id='%doc_id_sys%';
+
+	if( f_date >= (select max(fix_dt::date_t) from h_extra where account_id='%account_id%' and placement_id = '%placement_id%' group by account_id) ) then
+	    update dyn_extras set "_isRecentData" = null where account_id='%account_id%' /*and placement_id = '%placement_id%'*/ and "_isRecentData" = 1;
+	    update dyn_extras set "_isRecentData" = 1 where account_id='%account_id%' and fix_date=f_date /*and placement_id = '%placement_id%'*/;
+	end if;
+    end if;
+end;
+$$;
+  ]]>
+</close>
+</extra>

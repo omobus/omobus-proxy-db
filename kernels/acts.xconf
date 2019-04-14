@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel 
+    module="kern_docs" 
+    ldap.uri="ldap://127.0.0.1:389" 
+    ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
+    ldap.bind_pw="0"
+    ldap.base="ou=users,dc=omobus,dc=local" 
+    ldap.filter="(&amp;(objectClass=PureFTPdUser)(objectClass=omobusUser)(FTPStatus=enabled)(|(exchangeStatus=enabled)(exchangeStatus=disabled)))" 
+    Xldap.tls="yes"
+    ftp.host="127.0.0.1"
+    ftp.port="21021"
+    ftp.path="acts/"
+    ftp.connect_timeout="10"
+    ftp.recv_timeout="5"
+    ftp.send_timeout="5"
+    ftp.epsv="yes"
+    ftp.tls="yes"
+    ftp.ccc="no"
+    ftp.cdc="no"
+    pack.limit="5000"
+    pack.gc="7"
+    cache="acts/"
+    >
+<xi:include href="../queries/acts/account.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/airplane.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/applog.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/bluetooth.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/device.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/exchange.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/gps_pos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/gps_state.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/gsm_pos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/heap.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/lifecycle.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/network.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/package.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/power.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/sms.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/statfs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/time.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/traffic.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/user_activity.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/user_document.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/user_joint.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/user_report.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/user_work.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/wifi.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</kernel>

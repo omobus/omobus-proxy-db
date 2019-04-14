@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel 
+    module="kern_sync" 
+    ldap.uri="ldap://127.0.0.1:389" 
+    ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
+    ldap.bind_pw="0"
+    ldap.base="ou=users,dc=omobus,dc=local" 
+    ldap.filter="(&amp;(objectClass=PureFTPdUser)(objectClass=omobusUser)(FTPStatus=enabled)(exchangeStatus=enabled))" 
+    Xldap.tls="yes"
+    ftp.host="127.0.0.1"
+    ftp.port="21021"
+    ftp.path="sync/"
+    ftp.connect_timeout="10"
+    ftp.recv_timeout="5"
+    ftp.send_timeout="5"
+    ftp.epsv="yes"
+    ftp.tls="yes"
+    ftp.ccc="no"
+    ftp.cdc="no"
+    pack.type="txt.gz"
+    pack.level="9"
+    pack.encoding="utf-8"
+    cache="sync/"
+    diff="yes"
+    threads="2"
+    >
+<queries>
+<xi:include href="../queries/sync/account_kpi.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/account_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/account_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/activity_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/addition_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/advt_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/agreements.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/attributes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> 
+<xi:include href="../queries/sync/audit_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/audit_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/blacklist.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/brands.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/canceling_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/categories.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/channels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/checkup_defaults.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/comment_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/confirmation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/contacts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/cycle_dates.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/debts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/delivery_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/departments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/discard_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/discounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/distributors.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/equipment_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/equipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/floating_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/group_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/highlights.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/info_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/job_titles.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/manufacturers.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/matrices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/mutuals.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/mutuals_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/mutuals_history_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/my_accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/my_kpi.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/my_routes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/my_targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/oos_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/oos_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/order_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/order_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/orders_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/orders_history_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/ownership_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/packs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/payment_methods.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/pending_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/permitted_returns.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/photo_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/photo_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/photos_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/placements.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/planograms.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/plu_codes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/pmlist.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/pos_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/potentials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/presences_defaults.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/prices_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/quest_names.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/quest_rows.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/quests_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/rating_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/rating_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/ratings_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/rdd.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/receipt_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/reclamation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/reclamations_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/reclamations_history_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/recom_orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/recom_retail_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/recom_shares.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/refunds.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/refunds_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/reminders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/restrictions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/retail_chains.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/route_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/route_history_extra.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/sales.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/sales_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/shelf_lifes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/shipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/std_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/stocks_defaults.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/support.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/target_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/testing_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/testing_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/testings_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/training_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/training_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/trainings_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/unsched_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/users.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/vf_accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/vf_names.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/vf_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/warehouses.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/wareh_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/wish_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+
+<!-- **** SYSSTEM: BEGIN **** -->
+<zztop templ="%timestamp%;%timestamp:utc%;">
+    <![CDATA[
+select date_trunc('second', current_timestamp) "timestamp", date_trunc('second', current_timestamp at time zone 'UTC') "timestamp:utc"
+    ]]>
+</zztop>
+<!-- **** SYSTEM: END **** -->
+
+<!-- **** FILTERS: BEGIN **** -->
+<L10n>
+    <![CDATA[
+select user_id person_id, lang_id from users
+    where hidden = 0
+order by 1, 2
+    ]]>
+</L10n>
+<my_countries>
+    <![CDATA[
+select user_id person_id, unnest(country_ids) country_id from users
+    where hidden = 0 and country_ids is not null and cardinality(country_ids) > 0
+union
+select u.user_id person_id, c.country_id from users u, countries c
+    where u.hidden = 0 and c.hidden = 0 and u.country_ids is null
+order by 1, 2
+    ]]>
+</my_countries>
+<my_departments>
+    <![CDATA[
+select user_id person_id, unnest(dep_ids) dep_id from users
+    where hidden = 0 and dep_ids is not null and cardinality(dep_ids) > 0
+union
+select u.user_id person_id, d.dep_id from users u, departments d
+    where u.hidden = 0 and d.hidden = 0 and u.dep_ids is null
+order by 1, 2
+    ]]>
+</my_departments>
+<my_distributors>
+    <![CDATA[
+select user_id person_id, unnest(distr_ids) distr_id from users
+    where hidden = 0
+order by 1, 2
+    ]]>
+</my_distributors>
+<!--
+<my_dbs>
+    <![CDATA[
+select user_id person_id, unnest(db_ids) db_id from users
+    where hidden = 0
+order by 1, 2
+    ]]>
+</my_dbs>
+-->
+<!--
+<my_habitat>
+    <![CDATA[
+select user_id, account_id fid from j_user_activities where fix_date >= (current_date + "paramInteger"('route_history:offset:left'))::date_t
+    union
+select user_id, account_id fid from my_accounts
+    union
+select distinct user_id, account_id fid from my_routes where p_date >= (current_date + "paramInteger"('route_history:offset:left'))::date_t
+    union
+select r.user_id, a.account_id fid from my_regions r, accounts a where r.region_id=a.region_id and a.hidden=0
+    union
+select c.user_id, a.account_id fid from (select user_id, expand_cities(city_id) city_id from my_cities) c, accounts a where c.city_id=a.city_id and a.hidden=0
+    union
+select r.user_id, a.account_id fid from my_retail_chains r, accounts a where r.rc_id=a.rc_id and (r.region_id='' or r.region_id=a.region_id) and a.hidden=0
+    union
+select user_id, guid fid from j_additions where hidden = 0
+order by 1, 2
+    ]]>
+</my_habitat>
+-->
+<my_info_materials>
+    <![CDATA[
+select unnest(chan_ids) chan_id, infom_id from info_materials where chan_ids is not null and hidden=0
+    union
+select null chan_id, infom_id from info_materials where chan_ids is null and hidden=0
+order by 1, 2
+    ]]>
+</my_info_materials>
+<my_planograms>
+    <![CDATA[
+select unnest(chan_ids) chan_id, pl_id fid from planograms where chan_ids is not null and hidden=0
+    union
+select null chan_id, pl_id fid from planograms where chan_ids is null and hidden=0
+order by 1, 2
+    ]]>
+</my_planograms>
+<my_pos_materials>
+    <![CDATA[
+select unnest(chan_ids) chan_id, posm_id fid from pos_materials where chan_ids is not null and hidden=0
+    union
+select null chan_id, posm_id fid from pos_materials where chan_ids is null and hidden=0
+order by 1, 2
+    ]]>
+</my_pos_materials>
+<!--
+<my_productsL0>
+     <![CDATA[
+select unnest(db_ids) db_id, prod_id fid from products where db_ids is not null and hidden=0
+    order by 1, 2
+    ]]>
+</my_productsL0>
+-->
+<my_productsL1>
+    <![CDATA[
+select unnest(country_ids) country_id, prod_id fid from products where country_ids is not null and hidden=0
+    union
+select null country_id, prod_id fid from products where country_ids is null and hidden=0
+order by 1, 2
+    ]]>
+</my_productsL1>
+<my_reminders>
+  <![CDATA[
+select r.user_id person_id, r.reminder_id from (select unnest(user_ids) user_id, reminder_id, permanent from reminders) r
+    where r.permanent = 1  or (r.permanent = 0 and (select count(*) from h_dismiss h where h.user_id=r.user_id and h.reminder_id=r.reminder_id) = 0)
+order by r.user_id, r.reminder_id
+  ]]>
+</my_reminders>
+<!--
+<my_vfs>
+    <![CDATA[
+select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hidden=0
+    order by 1, 2
+    ]]>
+</my_vfs>
+-->
+<!-- **** FILTERS: END **** -->
+</queries>
+<pack Xstrict="yes" Xtrace="yes">
+    <activity_types personalize="groupName" />
+    <addition_types />
+    <attributes />
+    <audit_criterias />
+    <audit_scores />
+    <canceling_types />
+    <channels />
+    <comment_types />
+    <confirmation_types />
+    <delivery_types />
+    <discard_types />
+    <equipment_types />
+    <job_titles />
+    <manufacturers />
+    <oos_types />
+    <order_types />
+    <ownership_types />
+    <receipt_types />
+    <payment_methods />
+    <pending_types />
+    <photo_params />
+    <photo_types />
+    <placements />
+    <potentials />
+    <rating_criterias hierarchy="rating_criteria_id" role="asm,ise,sv" />
+    <rating_scores role="asm,ise,sv" />
+    <reclamation_types />
+    <shelf_lifes />
+    <testing_criterias hierarchy="testing_criteria_id" />
+    <testing_scores />
+    <target_types />
+    <training_types />
+    <unsched_types />
+    <wish_types />
+    <L10n personalize="ErpId">
+	<accounts key="lang_id" group="account_id" collapse="no" />
+	<cycle_dates key="lang_id" />
+	<products key="lang_id" group="prod_id" collapse="no" />
+	<route_history_extra key="lang_id" />
+    </L10n>
+    <my_accounts personalize="ErpId" />
+    <my_countries personalize="ErpId">
+	<info_materials key="country_id" />
+	<my_productsL1 key="country_id">
+	    <products key="fid" />
+	</my_productsL1>
+	<planograms key="country_id" />
+	<pos_materials key="country_id" />
+	<support key="country_id" />
+	<training_materials key="country_id" />
+    </my_countries>
+    <my_departments personalize="ErpId">
+	<brands key="dep_id" />
+	<departments key="dep_id" />
+	<info_materials key="dep_id" />
+	<planograms key="dep_id" />
+	<pos_materials key="dep_id" />
+	<targets key="dep_id" />
+	<training_materials key="dep_id" />
+	<training_types key="dep_id" />
+    </my_departments>
+<!--
+    <my_dbs personalize="ErpId">
+	<my_productsL0 key="db_id">
+	    <products key="fid" />
+	</my_productsL0>
+	<my_vfs key="db_id">
+	    <vf_names key="vf_id" strict="yes" />
+	</my_vfs>
+    </my_dbs>
+-->
+    <my_distributors personalize="ErpId">
+	<distributors key="distr_id" strict="yes" />
+    </my_distributors>
+    <my_reminders personalize="ErpId">
+	<reminders key="reminder_id" strict="yes" />
+    </my_reminders>
+    <my_routes personalize="ErpId" group="g_id" collapse="yes" />
+    <my_kpi personalize="ErpId" />
+    <my_targets personalize="ErpId" />
+    <distributors index="distr_id">
+	<account_params key="distr_id" strict="yes" />
+	<account_prices key="distr_id" strict="yes" />
+	<blacklist key="distr_id" strict="yes" />
+	<debts key="distr_id" strict="yes" />
+	<discounts key="distr_id" strict="yes" />
+	<floating_prices key="distr_id" strict="yes" />
+	<group_prices key="distr_id" strict="yes" />
+	<my_distributors key="distr_id" strict="yes" />
+	<mutuals key="distr_id" strict="yes" />
+	<mutuals_history key="distr_id" strict="yes" />
+	<mutuals_history_products key="distr_id" strict="yes" />
+	<order_params key="distr_id" strict="yes" />
+	<permitted_returns key="distr_id" strict="yes" />
+	<rdd key="distr_id" />
+	<restrictions key="distr_id" strict="yes" />
+	<shipments key="distr_id" strict="yes" />
+	<std_prices key="distr_id" strict="yes" />
+	<support key="distr_id" />
+	<wareh_stocks key="distr_id" strict="yes" />
+	<warehouses key="distr_id" strict="yes">
+	    <wareh_stocks key="wareh_id" strict="yes" />
+	</warehouses>
+    </distributors>
+    <users hierarchy="user_id" root="ErpId" group="user_id" bruteforce="yes" index="user_id">
+<!--
+	<my_habitat key="user_id">
+	    <accounts key="fid" />
+	</my_habitat>
+-->
+	<orders_history key="user_id" strict="yes" />
+	<ratings_history key="user_id" strict="yes" role="asm,ise,sv" />
+	<reclamations_history key="user_id" strict="yes" />
+	<route_history key="user_id" strict="yes">
+	    <route_history_extra key="a_cookie" strict="yes" />
+	</route_history>
+    </users>
+    <accounts hierarchy="account_id" index="account_id">
+	<account_kpi key="account_id" />
+	<account_params key="account_id" strict="yes">
+	    <group_prices key="group_price_id" strict="yes" />
+	</account_params>
+	<account_prices key="account_id" strict="yes" />
+	<advt_history key="account_id" strict="yes" />
+	<agreements key="account_id" strict="yes" />
+	<blacklist key="account_id" />
+	<checkup_defaults key="account_id" strict="yes" />
+	<contacts key="account_id">
+	    <testings_history key="contact_id" strict="yes" />
+	</contacts>
+	<debts key="account_id" strict="yes" />
+	<discounts key="account_id" />
+	<equipments key="account_id" strict="yes" />
+	<floating_prices key="account_id" strict="yes" />
+	<matrices key="account_id" />
+	<my_accounts key="account_id" strict="yes" />
+	<my_info_materials key="chan_id">
+	    <info_materials key="infom_id" />
+	</my_info_materials>
+	<my_planograms key="chan_id">
+	    <planograms key="fid" />
+	</my_planograms>
+	<my_pos_materials key="chan_id">
+	    <pos_materials key="fid" />
+	</my_pos_materials>
+	<my_routes key="account_id" strict="yes" />
+	<my_targets key="account_id">
+	    <targets key="target_id" />
+	</my_targets>
+	<mutuals key="account_id" strict="yes" />
+	<mutuals_history key="account_id" strict="yes">
+	    <mutuals_history_products key="doc_id" strict="yes" />
+	</mutuals_history>
+	<orders_history key="account_id" strict="yes" />
+	<oos_history key="account_id" strict="yes" />
+	<permitted_returns key="account_id" strict="yes" />
+	<photos_history role="asm,ise,kam,sv,tme" key="account_id" strict="yes" />
+	<plu_codes key="account_id" strict="yes" />
+	<pmlist key="account_id" />
+	<presences_defaults key="account_id" />
+	<prices_history key="account_id" strict="yes" />
+	<quests_history key="account_id" strict="yes" />
+	<reclamations_history key="account_id" strict="yes" />
+	<recom_orders key="account_id" />
+	<recom_retail_prices key="account_id" />
+	<recom_shares key="account_id" />
+	<refunds key="account_id" strict="yes" />
+	<refunds_products key="account_id" strict="yes" />
+	<restrictions key="account_id" />
+	<retail_chains key="rc_id">
+	    <info_materials key="rc_id" />
+	    <planograms key="rc_id" />
+	</retail_chains>
+	<route_history key="account_id" />
+	<route_history_extra key="account_id" />
+	<sales key="account_id" strict="yes" />
+	<sales_history key="account_id" strict="yes" />
+	<shipments key="account_id" strict="yes" />
+	<stocks_defaults key="account_id" />
+	<trainings_history key="account_id" strict="yes" />
+	<vf_accounts key="account_id" />
+    </accounts>
+    <brands>
+	<photos_history key="brand_id" strict="yes" />
+	<products key="brand_id" />
+    </brands>
+    <categories>
+	<recom_shares key="categ_id" strict="yes" />
+    </categories>
+    <products hierarchy="prod_id" index="prod_id" >
+	<account_prices key="prod_id" strict="yes" />
+	<checkup_defaults key="prod_id" strict="yes" />
+	<blacklist key="prod_id" />
+	<discounts key="prod_id" />
+	<floating_prices key="prod_id" strict="yes" />
+	<group_prices key="prod_id" strict="yes" />
+	<highlights key="prod_id" />
+	<matrices key="prod_id" strict="yes" />
+	<mutuals_history_products key="prod_id" strict="yes" />
+	<oos_history key="prod_id" strict="yes" />
+	<permitted_returns key="prod_id" strict="yes" />
+	<packs key="prod_id" strict="yes" />
+	<plu_codes key="prod_id" strict="yes" />
+	<pmlist key="prod_id" strict="yes" />
+	<presences_defaults key="prod_id" />
+	<prices_history key="prod_id" strict="yes" />
+	<recom_orders key="prod_id" strict="yes" />
+	<recom_retail_prices key="prod_id" strict="yes" />
+	<refunds_products key="prod_id" strict="yes" />
+	<restrictions key="prod_id" strict="yes" />
+	<sales_history key="prod_id" strict="yes" />
+	<std_prices key="prod_id" strict="yes" />
+	<stocks_defaults key="prod_id" />
+	<vf_products key="prod_id" strict="yes" />
+	<wareh_stocks key="prod_id" strict="yes" />
+    </products>
+    <planograms hierarchy="pl_id" />
+    <pos_materials hierarchy="posm_id">
+	<advt_history key="posm_id" strict="yes" />
+	<agreements key="posm_id" strict="yes" />
+    </pos_materials>
+    <quest_names>
+	<quests_history key="qname_id" Xstrict="yes" />
+    </quest_names>
+    <quest_rows hierarchy="qrow_id">
+	<quests_history key="qrow_id" strict="yes" />
+    </quest_rows>
+    <vf_names>
+	<vf_accounts key="vf_id" strict="yes" />
+	<vf_products key="vf_id" strict="yes" />
+    </vf_names>
+    <orders_history>
+	<orders_history_products key="doc_id" strict="yes" />
+	<!--<orders_history_products key="erp_id" />-->
+    </orders_history>
+    <reclamations_history>
+	<reclamations_history_products key="doc_id" strict="yes" />
+	<!--<reclamations_history_products key="erp_id" />-->
+    </reclamations_history>
+    <zztop />
+</pack>
+</kernel>

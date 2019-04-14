@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tech_comments type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select 
+    h.doc_id, h.fix_dt, h.inserted_ts, h.account_id, a.code a_code, a.descr a_name, a.address, t.descr comment_type, doc_note, h.photo::varchar blob_id
+from h_comment h
+    left join accounts a on a.account_id = h.account_id
+    left join comment_types t on t.comment_type_id = h.comment_type_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+require('rtlib').main("tech_comments", false)
+  ]]>
+    </generator>
+</tech_comments>

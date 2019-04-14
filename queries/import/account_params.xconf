@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<account_params templ="%distr_id%;%account_id%;%group_price_id%;%payment_delay%;%payment_method_id%;%wareh_ids%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from account_params
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update account_params set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from account_params 
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[
+insert into account_params (distr_id, account_id, group_price_id, payment_method_id, payment_delay, wareh_ids, db_ids)
+    values ('%distr_id%', '%account_id%', '%group_price_id%', NIL('%payment_method_id%'), NIL(%payment_delay%), string_to_array(NIL('%wareh_ids%'),','), array['%ErpCode%'])
+on conflict do nothing
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</account_params>

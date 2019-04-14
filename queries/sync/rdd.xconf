@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdd templ="%distr_id%;%obj_code%;%r_date%;" empty="no">
+  <![CDATA[
+select distr_id, obj_code, r_date from rdd
+    where hidden = 0
+order by distr_id, obj_code
+  ]]> 
+</rdd>

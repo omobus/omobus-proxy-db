@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dummy>
+<!--
+local xx = require('dummy')
+xx.echo('TEST')
+  -->
+  <![CDATA[
+local M = {}
+function M.echo(msg) print(msg) end
+return M
+  ]]>
+</dummy>

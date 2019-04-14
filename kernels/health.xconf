@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel
+    module="kern_import"
+    ldap.uri="ldap://127.0.0.1:389"
+    ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
+    ldap.bind_pw="0"
+    ldap.base="ou=lts,ou=data,dc=omobus,dc=local"
+    ldap.filter="(&amp;(objectClass=PureFTPdUser)(objectClass=omobusMaintainPoint)(FTPStatus=enabled)(exchangeStatus=enabled))"
+    Xldap.tls="yes"
+    ftp.host="127.0.0.1"
+    ftp.port="21021"
+    ftp.path="health/"
+    ftp.connect_timeout="10"
+    ftp.recv_timeout="5"
+    ftp.send_timeout="5"
+    ftp.epsv="true"
+    ftp.tls="no"
+    ftp.ccc="no"
+    ftp.cdc="no"
+    Xpack.encoding="windows-1251"
+    Xpack.delim="|"
+    pack.gc="4"
+    cache="health/"
+    >
+<_timestamp templ="%timestamp%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//health/%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<check_exist>
+  <![CDATA[
+select count(*) from health_stream
+    where db_id = '%ErpCode%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update health_stream set health='%timestamp%'
+    where db_id = '%ErpCode%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into health_stream (db_id, health)
+    values ('%ErpCode%', '%timestamp%')
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//health/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</_timestamp>
+</kernel>

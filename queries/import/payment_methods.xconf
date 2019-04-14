@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<payment_methods templ="%payment_method_id%;%descr%;%encashment%;%row_no%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update payment_methods set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update payment_methods set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from payment_methods 
+    where payment_method_id = '%payment_method_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update payment_methods set descr=trim(both from '%descr%'), encashment=NIL(%encashment%), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where payment_method_id = '%payment_method_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into payment_methods (payment_method_id, descr, encashment, row_no, hidden, db_ids)
+    values ('%payment_method_id%', trim(both from '%descr%'), NIL(%encashment%), NIL(%row_no%), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</payment_methods>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<refunds templ="%account_id%;%percentage%;%attention%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from refunds
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update refunds set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from refunds
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[
+insert into refunds (account_id, percentage, attention, db_ids)
+    values ('%account_id%', 0%percentage%, NIL(%attention%), array['%ErpCode%'])
+on conflict do nothing
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</refunds>

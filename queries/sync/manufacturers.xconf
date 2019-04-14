@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manufacturers templ="%manuf_id%;%descr%;%competitor%;" empty="no">
+  <![CDATA[ 
+select manuf_id, descr, competitor from manufacturers
+    where hidden = 0
+order by competitor nulls first, row_no, descr
+  ]]>
+</manufacturers>

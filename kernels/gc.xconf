@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel module="kern_tasks">
+<gc ontimeout="no" onsemaphore="yes">
+  <![CDATA[
+do $$
+declare
+    gc_date date_t = ("monthDate_First"(current_date - "paramInteger"('gc:keep_alive'::uid_t)))::date_t;
+    unapproved_date date_t = (current_date - 14)::date_t;
+    i uid_t;
+    f int;
+    c int;
+begin
+    delete from console.sessions where inserted_ts::date_t < gc_date;
+    delete from console.requests where inserted_ts::date_t < gc_date;
+
+    delete from account_kpi where updated_ts::date_t < gc_date;
+    for i in select cycle_id from route_cycles where b_date < gc_date loop
+	delete from routes where cycle_id = i;
+	delete from route_cycles where cycle_id = i;
+    end loop;
+    delete from my_routes where p_date < gc_date;
+    delete from routemv where greatest(f_date, t_date) < gc_date;
+    delete from sysstats where fix_date < gc_date;
+    delete from targets where e_date < gc_date;
+    GET DIAGNOSTICS f = ROW_COUNT;
+    delete from tickets where inserted_ts::date_t < gc_date;
+
+    delete from j_acts where left(fix_dt,10) < gc_date;
+    delete from j_additions where left(fix_dt,10) < gc_date;
+    delete from j_cancellations where route_date < gc_date;
+    delete from j_deletions where left(fix_dt,10) < gc_date and hidden = 1;
+    delete from j_discards where left(fix_dt,10) < gc_date;
+    delete from j_docs where left(fix_dt,10) < gc_date;
+    delete from j_user_activities where b_dt < gc_date;
+    delete from j_user_joints where b_dt < gc_date;
+    delete from j_user_works where b_dt < gc_date;
+    delete from j_wishes where left(fix_dt,10) < gc_date;
+
+/*!*/delete from j_presences where left(fix_dt,10) < gc_date;
+/*!*/delete from j_stocks where left(fix_dt,10) < gc_date;
+
+    delete from dyn_advt where fix_date < gc_date;
+    delete from dyn_audits where fix_date < gc_date;
+    delete from dyn_checkups where fix_date < gc_date;
+    delete from dyn_extras where fix_date < gc_date;
+    delete from dyn_oos where fix_date < gc_date;
+    delete from dyn_presences where fix_date < gc_date;
+    delete from dyn_prices where fix_date < gc_date;
+    delete from dyn_quests where fix_date < gc_date;
+    delete from dyn_ratings where fix_date < gc_date;
+    delete from dyn_reviews where fix_date < gc_date;
+    delete from dyn_shelfs where fix_date < gc_date;
+    delete from dyn_stocks where fix_date < gc_date;
+    delete from dyn_testings where fix_date < gc_date;
+
+    delete from a_airplane where left(fix_dt,10) < gc_date;
+    delete from a_bluetooth where left(fix_dt,10) < gc_date;
+    delete from a_device where left(fix_dt,10) < gc_date;
+    delete from a_exchange where left(fix_dt,10) < gc_date;
+    delete from a_gps_pos where left(fix_dt,10) < gc_date;
+    delete from a_gps_trace where left(fix_dt,10) < gc_date;
+    delete from a_gps_state where left(fix_dt,10) < gc_date;
+    delete from a_gsm_pos where left(fix_dt,10) < gc_date;
+    delete from a_gsm_trace where left(fix_dt,10) < gc_date;
+    delete from a_heap where left(fix_dt,10) < gc_date;
+    delete from a_heap_trace where left(fix_dt,10) < gc_date;
+    delete from a_lifecycle where left(fix_dt,10) < gc_date;
+    delete from a_network where left(fix_dt,10) < gc_date;
+    delete from a_power where left(fix_dt,10) < gc_date;
+    delete from a_sms where left(fix_dt,10) < gc_date;
+    delete from a_statfs where left(fix_dt,10) < gc_date;
+    delete from a_time where left(fix_dt,10) < gc_date;
+    delete from a_traffic where left(fix_dt,10) < gc_date;
+    delete from a_user_activity where left(fix_dt,10) < gc_date;
+    delete from a_user_document where left(fix_dt,10) < gc_date;
+    delete from a_user_joint where left(fix_dt,10) < gc_date;
+    delete from a_user_report where left(fix_dt,10) < gc_date;
+    delete from a_user_work where left(fix_dt,10) < gc_date;
+    delete from a_wifi where left(fix_dt,10) < gc_date;
+
+    delete from h_addition where left(fix_dt,10) < gc_date;
+    for i in select doc_id from h_adjustment where left(fix_dt,10) < gc_date loop
+	delete from t_adjustment where doc_id = i;
+	delete from h_adjustment where doc_id = i;
+    end loop;
+    for i in select doc_id from h_advt where left(fix_dt,10) < gc_date loop
+	delete from t_advt where doc_id = i;
+	delete from h_advt where doc_id = i;
+    end loop;
+    for i in select doc_id from h_audit where left(fix_dt,10) < gc_date loop
+	delete from t_audit where doc_id = i;
+	delete from h_audit where doc_id = i;
+    end loop;
+    delete from h_canceling where left(fix_dt,10) < gc_date;
+    for i in select doc_id from h_checkup where left(fix_dt,10) < gc_date loop
+	delete from t_checkup where doc_id = i;
+	delete from h_checkup where doc_id = i;
+    end loop;
+    delete from h_comment where left(fix_dt,10) < gc_date;
+    delete from h_conference where left(fix_dt,10) < gc_date;
+    delete from h_confirmation where left(fix_dt,10) < gc_date and target_id not in (select target_id from targets);
+    delete from h_contact where left(fix_dt,10) < gc_date;
+    delete from h_deletion where left(fix_dt,10) < gc_date;
+    delete from h_discard where left(fix_dt,10) < gc_date;
+    delete from h_dismiss where left(fix_dt,10) < gc_date;
+    delete from h_equipment where left(fix_dt,10) < gc_date;
+    for i in select doc_id from h_extra where left(fix_dt,10) < gc_date loop
+	delete from t_extra where doc_id = i;
+	delete from h_extra where doc_id = i;
+    end loop;
+    delete from h_location where left(fix_dt,10) < gc_date;
+    for i in select doc_id from h_oos where left(fix_dt,10) < gc_date loop
+	delete from t_oos where doc_id = i;
+	delete from h_oos where doc_id = i;
+    end loop;
+    for i in select doc_id from h_order where left(fix_dt,10) < gc_date loop
+	delete from t_order where doc_id = i;
+	delete from h_order where doc_id = i;
+	delete from erp_docs where doc_id = i;
+	delete from erp_products where doc_id = i;
+    end loop;
+    delete from h_pending where left(fix_dt,10) < gc_date;
+    delete from h_photo where left(fix_dt,10) < gc_date;
+    for i in select doc_id from h_presence where left(fix_dt,10) < gc_date loop
+	delete from t_presence where doc_id = i;
+	delete from h_presence where doc_id = i;
+    end loop;
+    delete from h_presentation where left(fix_dt,10) < gc_date;
+    for i in select doc_id from h_price where left(fix_dt,10) < gc_date loop
+	delete from t_price where doc_id = i;
+	delete from h_price where doc_id = i;
+    end loop;
+    delete from h_profile where left(fix_dt,10) < gc_date;
+    delete from h_pt where left(fix_dt,10) < gc_date;
+    for i in select doc_id from h_quest where left(fix_dt,10) < gc_date loop
+	delete from t_quest where doc_id = i;
+	delete from h_quest where doc_id = i;
+    end loop;
+    for i in select doc_id from h_rating where left(fix_dt,10) < gc_date loop
+	delete from t_rating where doc_id = i;
+	delete from h_rating where doc_id = i;
+    end loop;
+    delete from h_receipt where left(fix_dt,10) < gc_date;
+    for i in select doc_id from h_reclamation where left(fix_dt,10) < gc_date loop
+	delete from t_reclamation where doc_id = i;
+	delete from h_reclamation where doc_id = i;
+	delete from erp_docs where doc_id = i;
+	delete from erp_products where doc_id = i;
+    end loop;
+    delete from h_review where left(fix_dt,10) < gc_date;
+    for i in select doc_id from h_shelf where left(fix_dt,10) < gc_date loop
+	delete from t_shelf where doc_id = i;
+	delete from h_shelf where doc_id = i;
+    end loop;
+    for i in select doc_id from h_stock where left(fix_dt,10) < gc_date loop
+	delete from t_stock where doc_id = i;
+	delete from h_stock where doc_id = i;
+    end loop;
+    delete from h_target where left(fix_dt,10) < gc_date;
+    for i in select doc_id from h_testing where left(fix_dt,10) < gc_date loop
+	delete from t_testing where doc_id = i;
+	delete from h_testing where doc_id = i;
+    end loop;
+    delete from h_training where left(fix_dt,10) < gc_date;
+    delete from h_unsched where left(fix_dt,10) < gc_date;
+    delete from h_wish where left(fix_dt,10) < gc_date;
+
+    delete from mail_stream where inserted_ts::date_t < gc_date;
+    delete from pt_stream where inserted_ts::date_t < gc_date;
+    delete from thumbnail_stream where inserted_ts::date_t < gc_date and photo in (select orphanTHUMB());
+
+    delete from content_stream where e_date < gc_date and e_date != '';
+    delete from "content_stream.ghost" where e_date < gc_date and e_date != '';
+    if( f > 0 ) then
+	perform content_add('targets_compliance', '', '', '');
+    end if;
+
+    raise notice 'deleted rows before %.', gc_date;
+
+    update accounts set hidden = 1
+	where hidden = 0 and approved = 0 and inserted_ts::date_t < unapproved_date;
+    GET DIAGNOSTICS c = ROW_COUNT;
+    if( c > 0 ) then
+	raise notice 'deleted % unapproved accounts that created before %.', c, unapproved_date;
+    end if;
+
+    delete from celltower_stream
+	where (content_ts is null or inserted_ts > content_ts) and (latitude is null or longitude is null) and (inserted_ts::date < current_date - 1) and source is not null;
+    GET DIAGNOSTICS c = ROW_COUNT;
+    if( c > 0 ) then
+	raise notice 'deleted % undefined celltower measures with empty location.', c;
+    end if;
+
+    delete from celltower_stream
+	where inserted_ts::date < current_date - 360;
+    GET DIAGNOSTICS c = ROW_COUNT;
+    if( c > 0 ) then
+	raise notice 'deleted % obsolete celltower measures that created before %.', c, (current_date - 360)::date_t;
+    end if;
+end;
+$$;
+  ]]>
+</gc>
+</kernel>

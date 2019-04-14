@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TTD templ="%doc_id%;%ttd_dt%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<check_exist>
+  <![CDATA[
+select count(*) from j_docs 
+    where doc_id='%doc_id%' and ttd is not null
+  ]]>
+</check_exist>
+<insert>
+  <![CDATA[
+do $$
+declare
+    u_id uid_t;
+    d_no uid_t;
+    d_code uid_t;
+    f_date date_t;
+begin
+    select doc_no, doc_code, left(fix_dt,10), user_id from j_docs where doc_id='%doc_id%' 
+	into d_no, d_code, f_date, u_id;
+
+    if( d_no is null or d_code is null or f_date is null or u_id is null ) then
+	raise notice 'TTD: unknown doc_id=%doc_id%';
+	return;
+    end if;
+
+-- **** TTD -> j_docs
+    update j_docs set ttd = 'delivered'
+	where doc_id='%doc_id%';
+
+-- *** TTD -> content_stream, mail_stream
+    if( d_code = 'h_order' ) then
+	insert into ".content"(content_code, user_id, b_date, e_date)
+	    values('stat_orders', '', "monthDate_First"(f_date)::date_t, "monthDate_Last"(f_date)::date_t)
+	on conflict do nothing;
+	perform evmail_add(u_id,'TTD/caption:order','TTD/body:delivered',3::smallint /*normal*/,array['doc_no','%doc_id%']);
+    elsif( d_code = 'h_reclamation' ) then
+	insert into ".content"(content_code, user_id, b_date, e_date)
+	    values('stat_reclamations', '', "monthDate_First"(f_date)::date_t, "monthDate_Last"(f_date)::date_t)
+	on conflict do nothing;
+	perform evmail_add(u_id,'TTD/caption:reclamation','TTD/body:delivered',3::smallint /*normal*/,array['doc_no','%doc_id%']);
+    end if;
+end;
+$$
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</TTD>

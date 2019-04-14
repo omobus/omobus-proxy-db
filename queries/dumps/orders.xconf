@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<orders templ="%user_id%,%u_name%,%department%,%year%,%month%,%fix_date%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%amount%,%rows%,%weight%,%volume%,%note%,%order_type%,%distributor%,%warehouse%,%delivery_date%,%delivery_note%,%payment_method%,%payment_delay%,%bonus%,%order_param_ids%,%delivery_type%,%encashment%,%head_name%,%fix_dt%" empty="no">
+  <![CDATA[
+select
+    h.user_id,
+    quote_csv_string(u.descr) u_name, 
+    quote_csv_string(i.descr) department,
+    left(h.fix_dt, 4) "year", 
+    substring(h.fix_dt, 6, 2) "month", 
+    left(h.fix_dt, 10) fix_date,
+    quote_csv_string(a.account_id) account_id,
+    quote_csv_string(a.code) a_code,
+    quote_csv_string(a.descr) a_name, 
+    quote_csv_string(a.address) address, 
+    quote_csv_string(rc.descr) retail_chain, 
+    quote_csv_string(rc.ka_code) ka_code,
+    quote_csv_string(o.descr) a_category, 
+    quote_csv_string(n.descr) channel, 
+    quote_csv_string(r.descr) region, 
+    quote_csv_string(c.descr) city,
+    h.amount,
+    h.rows,
+    h.weight,
+    h.volume,
+    quote_csv_string(h.doc_note) note,
+    quote_csv_string(t.descr) order_type,
+    quote_csv_string(d.descr) distributor,
+    quote_csv_string(w.descr) warehouse,
+    h.delivery_date,
+    quote_csv_string(delivery_note) delivery_note,
+    quote_csv_string(w.descr) payment_method,
+    h.payment_delay,
+    h.bonus,
+    h.order_param_ids,
+    quote_csv_string(dt.descr) delivery_type,
+    h.encashment,
+    quote_csv_string(e.descr) head_name,
+    h.fix_dt
+from h_order h
+    left join order_types t on t.order_type_id = h.order_type_id
+    left join payment_methods m on m.payment_method_id = h.payment_method_id
+    left join delivery_types dt on dt.delivery_type_id = h.delivery_type_id
+    left join distributors d on d.distr_id = h.distr_id
+    left join warehouses w on w.wareh_id = h.wareh_id
+    left join users u on u.user_id = h.user_id
+    left join departments i on u.dep_ids is not null and cardinality(u.dep_ids) = 1 and i.dep_id = u.dep_ids[1]
+    left join users e on e.user_id = u.executivehead_id
+    left join accounts a on a.account_id = h.account_id
+    left join channels n on n.chan_id = a.chan_id
+    left join potentials o on o.poten_id = a.poten_id
+    left join retail_chains rc on a.rc_id = rc.rc_id
+    left join regions r on a.region_id = r.region_id
+    left join cities c on a.city_id = c.city_id
+order by h.fix_dt desc, u.descr, a.descr, a.address, h.fix_dt
+  ]]>
+</orders>

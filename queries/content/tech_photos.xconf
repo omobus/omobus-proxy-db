@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tech_photos type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select 
+    h.doc_id, h.fix_dt, h.inserted_ts, 
+    h.account_id, a.code a_code, a.descr a_name, a.address, 
+    rc.descr rc, 
+    c.descr chan, 
+    p.descr poten, 
+    g.descr placement, 
+    b.descr brand, 
+    t.descr photo_type, 
+    h.doc_note, 
+    h.photo::varchar blob_id,
+    array_to_string((select array_agg(replace(descr,'|',' ')) from photo_params where photo_param_id=any(h.photo_param_ids)),'|') photo_params,
+    case when rev.doc_id is null then null else 1 end revoked
+from h_photo h
+    left join accounts a on a.account_id = h.account_id
+    left join potentials p on p.poten_id = a.poten_id
+    left join channels c on c.chan_id = a.chan_id
+    left join retail_chains rc on rc.rc_id = a.rc_id
+    left join placements g on g.placement_id = h.placement_id
+    left join brands b on b.brand_id = h.brand_id
+    left join photo_types t on t.photo_type_id = h.photo_type_id
+    left join j_revocations rev on rev.doc_id = h.doc_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+local rt = require('rtlib')
+
+rt.main("tech_photos", false, function(r, n, a)
+    if n == 'revoked' then
+	r[n] = tonumber(a)
+    elseif n == 'photo_params' then
+	n = std.split(a, '|')
+    else
+	r[n] = a
+    end
+end)
+  ]]>
+    </generator>
+</tech_photos>

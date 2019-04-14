@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mutuals_history templ="%distr_id%;%account_id%;%erp_id%;%erp_no%;%erp_dt%;%amount%;%incoming%;%unpaid%;%extra_info%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+prepare ".plan.mutuals_history"(varchar, varchar, varchar, varchar, varchar, numeric, integer, numeric, integer, varchar) as
+    insert into mutuals_history(distr_id, account_id, erp_id, erp_no, erp_dt, amount, incoming, unpaid, color, bgcolor, extra_info, db_ids)
+	values ($1, $2, $3, $4, $5, $6, $7, $8, $9, null, $10, array['%ErpCode%'])
+    on conflict do nothing;
+
+delete from mutuals_history
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update mutuals_history set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from mutuals_history
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[ 
+execute ".plan.mutuals_history"('%distr_id%', '%account_id%', '%erp_id%', '%erp_no%', '%erp_dt%', %amount%, %incoming%, NIL(%unpaid%), case %incoming% when 1 then null/*610825*/ else 10686223 end, NIL('%extra_info%'))
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</mutuals_history>

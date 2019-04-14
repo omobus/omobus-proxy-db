@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+<conferences templ="%doc_id%;%fix_dt%;%user_id%;%doc_note%;%title%;%b_date%;%e_date%;%ctheme_ids%;%participants%;%expenses%;%speakers%;%venue%;%address%;">
+  <![CDATA[
+select doc_id, fix_dt, user_id, doc_note, title, b_date, e_date, ctheme_ids, participants, expenses, speakers, venue, address from h_conference
+    where (current_timestamp - inserted_ts) < "LTS_aging"()
+order by 1
+  ]]>
+</conferences>
+-->

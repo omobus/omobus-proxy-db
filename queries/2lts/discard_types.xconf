@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discard_types templ="%discard_type_id%;%descr%;">
+  <![CDATA[
+select discard_type_id, descr from discard_types
+    where hidden = 0
+order by 1
+  ]]>
+</discard_types>

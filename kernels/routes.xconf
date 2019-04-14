@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel module="kern_tasks">
+<cycles ontimeout="yes" onsemaphore="yes">
+  <![CDATA[
+do $$
+declare
+    open_depth int default 7;
+    close_depth int default 1;
+    c_id uid_t;
+    n_id uid_t;
+    x bool_t;
+    b date;
+    e date;
+    n int32_t;
+    weeks int;
+    a_id uid_t;
+    u_id uid_t;
+    ar_days smallint[];
+    ar_weeks smallint[];
+    i int;
+    j int;
+    p date_t;
+    tmp uid_t;
+begin
+    select cycle_id, b_date::date, e_date::date, cycle_no, closed, ceil((e_date::date - b_date::date)::float/7) 
+	from route_cycles where hidden = 0 order by b_date desc limit 1
+    into c_id, b, e, n, x, weeks;
+
+    if( c_id is null ) then
+	return;
+    end if;
+
+    if( close_depth >= (b - current_date) and x = 0 ) then
+	update route_cycles set closed = 1 
+	    where cycle_id = c_id and closed = 0;
+
+	raise notice 'cycles: cycle_id=[%] has been closed (cycle_no = %/%).', 
+	    c_id, n, extract(year from b);
+
+-- create my_accounts:
+	delete from my_accounts
+	    where db_ids = (array['$routes'])::uids_t;
+	update my_accounts set db_ids=array_remove(db_ids,'$routes')
+	    where db_ids @> (array['$routes'])::uids_t;
+	delete from my_accounts
+	    where (db_ids is null or cardinality(db_ids)=0);
+	insert into my_accounts(user_id, account_id, db_ids)
+	    select distinct r.user_id, r.account_id, array['$routes'] from routes r, accounts a
+		where r.cycle_id=c_id and r.hidden = 0 and r.account_id = a.account_id and a.hidden = 0;
+	raise notice 'cycles: created my_accounts using routes (cycle_id = %, cycle_no = %/%).', 
+	    c_id, n, extract(year from b);
+
+-- create my_routes:
+	delete from my_routes 
+	    where p_date >= (case when b >= (current_date + 1) then b else (current_date + 1) end)::date_t
+		and db_ids = (array['$routes'])::uids_t;
+	update my_routes set db_ids=array_remove(db_ids,'$routes')
+	    where p_date >= (case when b >= (current_date + 1) then b else (current_date + 1) end)::date_t
+		and db_ids @> (array['$routes'])::uids_t;
+	delete from my_routes
+	    where p_date >= (case when b >= (current_date + 1) then b else (current_date + 1) end)::date_t
+		and (db_ids is null or cardinality(db_ids)=0);
+
+	for u_id, a_id, ar_weeks, ar_days in 
+	    select r.user_id, r.account_id, r.weeks, r.days from routes r, accounts a 
+		where r.cycle_id=c_id and r.hidden = 0 and r.account_id = a.account_id and a.hidden = 0
+	loop
+	    for i in 1..array_length(ar_weeks, 1)
+	    loop
+		if( ar_weeks[i] = 1 ) then
+		    for j in 1..array_length(ar_days, 1)
+		    loop
+			if( ar_days[j] = 1 ) then
+			    p := b + (j-1) + 7*(i-1);
+			    if( p::date >= (current_date + 1) ) then
+				insert into my_routes(user_id, account_id, p_date, activity_type_id, db_ids)
+				    values(u_id, a_id, p, '0', array['$routes']);
+			    end if;
+			end if;
+		    end loop;
+		end if;
+	    end loop;
+	end loop;
+
+	for p in select generate_series::date_t from generate_series(current_date + 1, (select max(p_date)::date from my_routes), '1 day')
+	loop
+	    for u_id in
+		select distinct user_id from my_routes where p_date = p
+		    union
+		select distinct user_id from content_stream where b_date = p and e_date = p and content_code='tech_route'
+	    loop
+		perform content_add('tech_route', u_id, p, p);
+	    end loop;
+	    perform content_add('tech', '', p, p);
+	    raise notice 'cycles: refreshed content_stream tech/route reports at %.', p;
+	end loop;
+
+	raise notice 'cycles: created my_routes using routes (cycle_id = %, cycle_no = %/%).', 
+	    c_id, n, extract(year from b);
+    end if; 
+
+-- clone routes:
+    if( open_depth >= (e - current_date) ) then
+	n := case when extract(year from b) = extract(year from (e + 1)) then (n + 1) else 1 end; 
+	b := e + 1;
+	e := b + weeks*7 - 1;
+
+	insert into route_cycles(b_date, e_date, cycle_no) 
+	    values(b, e, n) 
+	returning cycle_id 
+	into n_id;
+
+	insert into routes(user_id, cycle_id, account_id, days, weeks, author_id)
+	    select r.user_id, n_id, r.account_id, r.days, r.weeks, r.author_id
+		from routes r, accounts a
+	    where r.cycle_id=c_id and r.hidden=0 and r.account_id = a.account_id and a.hidden = 0;
+
+	raise notice 'cycles: cycle_id=[%] has been opened (b_date = %, e_date = %, cycle_no = %/%).', 
+	    n_id, b, e, n, extract(year from b);
+    end if; 
+
+    update route_cycles set closed = 1 where closed = 0 and current_date >= b_date::date; 
+end;
+$$
+  ]]>
+</cycles>
+</kernel>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<onload>
+  <![CDATA[ 
+select cast(ev_id as varchar(16)) ev_id, array_to_string(rcpt_to,',') rcpt_to, mail_from, cap, msg, priority, content, return_receipt, attachment, filename from mail_stream
+    where sent_ts is null and step < 60
+  ]]>
+</onload>

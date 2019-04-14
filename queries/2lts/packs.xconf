@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packs templ="%pack_id%;%prod_id%;%descr%;%pack%;%weight%;%volume%;%precision%;">
+  <![CDATA[
+select pack_id, prod_id, descr, pack, weight, volume, precision from packs
+    where hidden = 0
+order by 1
+  ]]>
+</packs>

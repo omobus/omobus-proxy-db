@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<onload>
+  <![CDATA[
+/* first of all, try yandex web-service: */
+select 'yandex' content_code, mcc, mnc, cid, lac from celltower_stream 
+    where (content_ts is null or inserted_ts > content_ts) /*and (latitude is null or longitude is null)*/ and source is null
+/* if yandex doesn't return cell tower location, try OpenCellID data: */ union
+select 'ocid' content_code, mcc, mnc, cid, lac from celltower_stream 
+    where (content_ts is null or inserted_ts > content_ts) /*and (latitude is null or longitude is null)*/ and source='yandex'
+/* if OpenCellID doesn't return cell tower location, try Mozilla Location Service data: */ union
+select 'mls' content_code, mcc, mnc, cid, lac from celltower_stream 
+    where (content_ts is null or inserted_ts > content_ts) /*and (latitude is null or longitude is null)*/ and source='ocid'
+/* max rows: */ limit 10;
+  ]]>
+</onload>

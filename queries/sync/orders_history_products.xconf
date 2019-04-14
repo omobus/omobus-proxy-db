@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<orders_history_products templ="%doc_id%;%erp_id%;%prod_id%;%pack_id%;%qty%;%discount%;%amount%;%erp_pack_id%;%erp_qty%;%erp_discount%;%erp_amount%;" empty="no">
+  <![CDATA[
+select
+    o.doc_id, o.erp_id, t.prod_id, t.pack_id, t.qty, t.discount, t.amount, e.pack_id erp_pack_id, e.qty erp_qty, e.discount erp_discount, e.amount erp_amount, t.row_no
+from (
+    select h.doc_id, e.erp_id from h_order h left join erp_docs e on e.doc_id=h.doc_id and e.doc_type in ('order','contract')
+	where left(h.fix_dt, 10)::date >= current_date + "paramInteger"('orders_history:offset')
+) o
+    left join t_order t on t.doc_id=o.doc_id
+    left join erp_products e on e.doc_id=o.doc_id and e.erp_id=o.erp_id and t.prod_id=e.prod_id
+
+/* *** */ union
+
+select
+    o.doc_id, o.erp_id, e.prod_id, null pack_id, null qty, null discount, null amount, e.pack_id erp_pack_id, e.qty erp_qty, e.discount erp_discount, e.amount erp_amount, -1 row_no
+from (
+    select h.doc_id, e.erp_id from h_order h left join erp_docs e on e.doc_id=h.doc_id and e.doc_type in ('order','contract')
+	where left(h.fix_dt, 10)::date >= current_date + "paramInteger"('orders_history:offset')
+) o
+    left join erp_products e on e.doc_id=o.doc_id and e.erp_id=o.erp_id
+    left join t_order t on t.doc_id=o.doc_id and e.prod_id=t.prod_id
+where o.erp_id is not null and t.prod_id is null
+
+order by 1, 2, row_no
+  ]]>
+</orders_history_products>

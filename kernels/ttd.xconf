@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel 
+    module="kern_import" 
+    ldap.uri="ldap://127.0.0.1:389" 
+    ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
+    ldap.bind_pw="0"
+    ldap.base="ou=distributors,dc=omobus,dc=local"
+    ldap.filter="(&amp;(objectClass=PureFTPdUser)(objectClass=omobusMaintainPoint)(FTPStatus=enabled)(exchangeStatus=enabled)(!(groupName=agent))(!(groupName=zero)))"
+    Xldap.tls="yes"
+    ftp.host="127.0.0.1"
+    ftp.port="21021"
+    ftp.path="o2d/"
+    ftp.connect_timeout="10"
+    ftp.recv_timeout="5"
+    ftp.send_timeout="5"
+    ftp.epsv="true"
+    Xpack.encoding="windows-1251"
+    Xpack.delim="|"
+    pack.gc="1"
+    cache="ttd/"
+    >
+<xi:include href="../queries/ttd/orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/ttd/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</kernel>

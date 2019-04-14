@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<restrictions templ="%distr_id%;%account_id%;%prod_id%;%pack_id%;%min%;%max%;%quantum%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from restrictions
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update restrictions set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from restrictions
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[
+insert into restrictions (distr_id, account_id, prod_id, pack_id, min_qty, max_qty, quantum, db_ids)
+    values ('%distr_id%', '%account_id%', '%prod_id%', '%pack_id%', NIL(%min%), NIL(%max%), NIL(%quantum%), array['%ErpCode%'])
+on conflict do nothing
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</restrictions>

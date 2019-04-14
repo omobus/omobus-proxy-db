@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<job_titles templ="%job_title_id%;%descr%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update job_titles set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update job_titles set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from job_titles 
+    where job_title_id = '%job_title_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update job_titles set descr=trim(both from '%descr%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where job_title_id = '%job_title_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into job_titles (job_title_id, descr, hidden, db_ids)
+    values ('%job_title_id%', trim(both from '%descr%'), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</job_titles>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<trig_before>
+  <![CDATA[
+/* point: %uid%, %ErpCode% */
+create temporary table if not exists ".content"(
+    user_id uid_t not null,
+    b_date date_t not null,
+    e_date date_t not null,
+    content_code code_t not null,
+    primary key (user_id, b_date, e_date, content_code)
+);
+  ]]>
+</trig_before>

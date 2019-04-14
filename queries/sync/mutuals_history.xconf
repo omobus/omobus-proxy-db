@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mutuals_history templ="%distr_id%;%account_id%;%erp_id%;%erp_no%;%erp_dt%;%amount%;%incoming%;%unpaid%;%color%;%bgcolor%;%extra_info%;" empty="no">
+  <![CDATA[
+select distr_id, account_id, erp_id, erp_no, erp_dt, amount, incoming, unpaid, color, bgcolor, extra_info from mutuals_history
+    order by 1, 2, 5 desc
+  ]]>
+</mutuals_history>

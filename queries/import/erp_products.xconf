@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<erp_products templ="%doc_id%;%erp_id%;%prod_id%;%pack_id%;%qty%;%discount%;%amount%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<check_exist>
+  <![CDATA[
+select count(*) from erp_products
+    where doc_id='%doc_id%' and erp_id='%erp_id%' and prod_id='%prod_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update erp_products set pack_id='%pack_id%', qty=%qty%, discount=%discount%, amount=%amount%
+    where doc_id='%doc_id%' and erp_id='%erp_id%' and prod_id='%prod_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into erp_products (doc_id, erp_id, prod_id, pack_id, qty, discount, amount, db_ids)
+    values ('%doc_id%', '%erp_id%', '%prod_id%', '%pack_id%', %qty%, %discount%, %amount%, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</erp_products>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<order_types templ="%order_type_id%;%descr%;" empty="no">
+  <![CDATA[ 
+select order_type_id, descr from order_types
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</order_types>

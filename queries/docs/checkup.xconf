@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<checkup>
+<check_user>
+  <![CDATA[
+select user_id as user_id_sys from users 
+    where lower(user_id)=lower('%ErpId%') /*%user_id%*/
+  ]]>
+</check_user>
+<check_exist>
+  <![CDATA[
+select count(*) from h_checkup 
+    where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
+  ]]>
+</check_exist>
+<create>
+  <![CDATA[
+select * from doc_id()
+  ]]>
+</create>
+<write_body>
+  <![CDATA[ 
+insert into h_checkup(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, imei, fix_dt, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, rows)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%',  %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', %rows%)
+  ]]>
+</write_body>
+<write_row>
+  <![CDATA[ 
+insert into t_checkup(doc_id, row_no, placement_id, prod_id, exist)
+    values('%doc_id_sys%', %row_no%, '%placement_id%', '%prod_id%', %exist%)
+  ]]>
+</write_row>
+<close>
+  <![CDATA[
+do $$
+declare
+    f_date date_t default left('%fix_dt%',10);
+    p_id uid_t;
+    g_id uid_t;
+    u_id uid_t;
+    d_id uid_t;
+    n datetime_t;
+    e int32_t;
+begin
+-- **** checkup --> j_docs
+    insert into j_docs(doc_id, doc_no, dev_id, dev_login, imei, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
+	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
+
+-- **** checkup --> content_stream
+    perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
+    perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+    perform content_add('tech_checkups', '%user_id_sys%', f_date, f_date);
+
+-- **** checkup --> dyn_checkups, j_checkups
+    /* removes obsolete entires */
+    delete from dyn_checkups where account_id = '%account_id%' and fix_date = f_date;
+    /* recompiles data */
+    for p_id, g_id, n, u_id, d_id, e in
+	select t.prod_id, t.placement_id, h.fix_dt, h.user_id, h.doc_id, t.exist from t_checkup t left join h_checkup h on t.doc_id = h.doc_id
+	    where h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
+	order by h.fix_dt
+    loop
+	if( (select count(*) from dyn_checkups where account_id='%account_id%' and prod_id=p_id and placement_id=g_id and fix_date=f_date) = 0 ) then
+	    insert into dyn_checkups(fix_date, account_id, prod_id, placement_id, exist, fix_dt, user_id, doc_id)
+		values(f_date, '%account_id%', p_id, g_id, e, n, u_id, d_id);
+        else
+	    update dyn_checkups set exist = e, fix_dt = n, user_id = u_id, doc_id = d_id, updated_ts = current_timestamp
+		where account_id = '%account_id%' and prod_id = p_id and placement_id = g_id and fix_date = f_date;
+	end if;
+    end loop;
+
+    if( f_date >= (select max(fix_dt::date_t) from h_checkup where account_id='%account_id%' group by account_id) ) then
+	update dyn_checkups set "_isRecentData" = null where account_id='%account_id%' and prod_id in (
+	    select distinct prod_id from dyn_checkups where account_id='%account_id%' and fix_date=f_date
+		union /* removes user department products: */
+	    select prod_id from products where brand_id in (
+		select brand_id from (select dep_ids from users where user_id='%user_id_sys%') u
+		    left join brands b on u.dep_ids is null or array_length(u.dep_ids,1) is null or b.dep_id is null or b.dep_id='' or b.dep_id=any(u.dep_ids)
+	    )
+	) and "_isRecentData" = 1;
+	update dyn_checkups set "_isRecentData" = 1 where account_id='%account_id%' and fix_date=f_date;
+    end if;
+end;
+$$;
+  ]]>
+</close>
+</checkup>

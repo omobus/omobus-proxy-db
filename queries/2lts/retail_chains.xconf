@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<retail_chains templ="%rc_id%;%pid%;%descr%;%ka_code%;%country_id%;">
+  <![CDATA[
+select rc_id, pid, descr, ka_code, country_id from retail_chains
+    where hidden = 0
+order by 1
+  ]]>
+</retail_chains>

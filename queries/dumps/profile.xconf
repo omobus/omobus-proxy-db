@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<profile templ="%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%cash_register%,%latitude%,%longitude%,%attr_ids%,%locked%,%approved%,%extra_info%,%inserted_ts%,%updated_ts%" empty="no">
+  <![CDATA[
+select
+    quote_csv_string(a.account_id) account_id,
+    quote_csv_string(a.code) a_code,
+    quote_csv_string(a.descr) a_name,
+    quote_csv_string(a.address) address,
+    quote_csv_string(rc.descr) retail_chain,
+    quote_csv_string(rc.ka_code) ka_code,
+    quote_csv_string(o.descr) a_category,
+    quote_csv_string(n.descr) channel,
+    quote_csv_string(r.descr) region,
+    quote_csv_string(c.descr) city,
+    a.cash_register,
+    a.latitude,
+    a.longitude,
+    quote_csv_string((select array_to_string(array_agg(descr::varchar),' $ ') from attributes where attr_id = any(a.attr_ids))) attr_ids,
+    a.locked,
+    a.approved,
+    quote_csv_string(a.extra_info) extra_info,
+    a.inserted_ts,
+    a.updated_ts
+from accounts a
+    left join channels n on n.chan_id = a.chan_id
+    left join potentials o on o.poten_id = a.poten_id
+    left join regions r on r.region_id = a.region_id
+    left join cities c on c.city_id = a.city_id
+    left join retail_chains rc on rc.rc_id = a.rc_id
+where a.hidden=0
+order by a.descr, a.address, a.account_id
+  ]]>
+</profile>

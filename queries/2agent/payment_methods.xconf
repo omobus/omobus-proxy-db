@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<payment_methods templ="%payment_method_id%;%descr%;">
+  <![CDATA[ 
+select payment_method_id, descr from payment_methods
+    where hidden = 0
+order by payment_method_id
+  ]]>
+</payment_methods>

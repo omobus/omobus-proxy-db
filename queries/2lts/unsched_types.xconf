@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unsched_types templ="%unsched_type_id%;%descr%;%row_no%;">
+  <![CDATA[
+select unsched_type_id, descr, row_no from unsched_types
+    where hidden = 0
+order by 1
+  ]]>
+</unsched_types>

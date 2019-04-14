@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<recom_retail_prices templ="%account_id%;%prod_id%;%rrp%;" empty="no">
+  <![CDATA[
+select account_id, prod_id, rrp from recom_retail_prices
+    order by 1, 2
+  ]]>
+</recom_retail_prices>

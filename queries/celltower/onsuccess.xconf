@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<onsuccess>
+  <![CDATA[
+update celltower_stream set latitude=%latitude%, longitude=%longitude%, content_ts=%content_ts%, source='%content_code%', changeable=%changeable%
+    where mcc=%mcc% and mnc=%mnc% and cid=%cid% and lac=%lac%
+  ]]>
+</onsuccess>

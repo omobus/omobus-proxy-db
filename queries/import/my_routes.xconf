@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<my_routes templ="%user_id%;%account_id%;%p_date%;%duration%;%row_no%;%activity_type_id%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from my_routes
+    where p_date > current_date::date_t and db_ids = (array['%ErpCode%'])::uids_t;
+update my_routes set db_ids=array_remove(db_ids,'%ErpCode%')
+    where p_date > current_date::date_t and db_ids @> (array['%ErpCode%'])::uids_t;
+delete from my_routes
+    where p_date > current_date::date_t and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select sum(x) exist from (
+    select count(*) x from my_routes
+	where user_id = '%user_id%' and p_date = '%p_date%' and account_id = '%account_id%'
+union
+    select case when '%p_date%' <= current_date::date_t then 1 else 0 end x
+) q
+  ]]>
+</check_exist>
+<insert>
+  <![CDATA[
+insert into my_routes (user_id, p_date, account_id, activity_type_id, duration, row_no, db_ids)
+    values ('%user_id%', '%p_date%', '%account_id%', NIL('%activity_type_id%','0'), NIL(%duration%), NIL(%row_no%), array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+do $$
+declare
+    c int;
+    u uid_t;
+    x date_t;
+begin
+    delete from my_routes where user_id='';
+    delete from my_routes where account_id='';
+
+    for x in select generate_series::date_t from generate_series(current_date + 1, (select max(p_date)::date from my_routes), '1 day')
+    loop
+	c := 0;
+	for u in
+	    select distinct user_id from my_routes where p_date = x
+		union
+	    select distinct user_id from content_stream where b_date=x and e_date=x and content_code='tech_route'
+	loop
+	    insert into ".content"(content_code, user_id, b_date, e_date)
+		values('tech_route', u, x, x)
+	    on conflict do nothing;
+	    c := c + 1;
+	end loop;
+	if c > 0 then
+	    insert into ".content"(content_code, user_id, b_date, e_date)
+		values('tech', '', x, x)
+	    on conflict do nothing;
+	    raise notice 'Refreshed content_stream tech/route reports: %.', x;
+	end if;
+    end loop;
+
+    /* set flag for refreshing [ownerless] attribute: */
+    insert into ".sesparams" values('%uid%#ownerless') on conflict do nothing;
+
+    perform stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+end;
+$$
+  ]]>
+</end>
+</my_routes>

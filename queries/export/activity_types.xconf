@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<activity_types templ="%activity_type_id%;%descr%;%strict%;">
+  <![CDATA[
+select activity_type_id, descr, strict from activity_types
+    where selectable = 0 and important = 0 and joint = 0 and hidden = 0
+order by 1
+  ]]>
+</activity_types>

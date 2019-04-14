@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<photo_params templ="%photo_param_id%;%descr%;%row_no%;">
+  <![CDATA[
+select photo_param_id, descr, row_no from photo_params
+    where hidden = 0
+order by 1
+  ]]>
+</photo_params>

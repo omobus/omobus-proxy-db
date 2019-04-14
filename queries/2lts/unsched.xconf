@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unsched templ="%doc_id%;%fix_dt%;%user_id%;%unsched_type_id%;%doc_note%;">
+  <![CDATA[
+select doc_id, fix_dt, user_id, unsched_type_id, doc_note from h_unsched
+    where (current_timestamp - inserted_ts) < "LTS_aging"()
+order by 1
+  ]]>
+</unsched>

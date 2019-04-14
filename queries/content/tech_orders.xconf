@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tech_orders type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select
+    h.doc_id, h.fix_dt, h.inserted_ts, h.account_id, a.code a_code, a.descr a_name, a.address, h.delivery_date, h.doc_no, x.descr order_type,
+    p.code p_code, p.descr prod, t.unit_price, t.qty, t.discount, t.amount, z.descr pack_name
+from t_order t
+    left join h_order h on t.doc_id = h.doc_id
+    left join order_types x on x.order_type_id = h.order_type_id
+    left join accounts a on a.account_id = h.account_id
+    left join products p on p.prod_id = t.prod_id
+    left join packs z on z.prod_id = t.prod_id and z.pack_id = t.pack_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+require('rtlib').main("tech_orders", true, function(r, n, a)
+	if std.contains({'unit_price','qty','discount','amount'}, n) then
+	    r[n] = tonumber(a)
+	else
+	    r[n] = a
+	end
+    end)
+  ]]>
+    </generator>
+</tech_orders>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<targets_compliance type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L0>
+  <![CDATA[
+select 
+    x.target_id, t.subject, t.body, t.b_date, t.e_date,
+    t.target_type_id, z.descr target_type,
+    t.author_id, case when u.descr is null then t.author_id else u.descr end author_name,
+    x.account_id, a.code a_code, a.descr a_name, a.address,
+    reg.descr region,
+    c.descr city,
+    a.rc_id, r.descr rc, r.ka_code,
+    p.descr poten,
+    a.chan_id, ch.descr chan,
+    t.image::varchar blob_id,
+    NIL(t.dep_id) dep_id, t.myself,
+    t.hidden,
+    a.hidden a_hidden,
+    t.inserted_ts, t.updated_ts
+from (
+    select target_id, account_id, max(inserted_ts) inserted_ts from (
+	select target_id, expand_accounts(account_ids, region_ids, city_ids, rc_ids, chan_ids, poten_ids) account_id, null::ts_t inserted_ts from targets
+	    union
+	select target_id, account_id, max(inserted_ts) from h_confirmation group by target_id, account_id
+    ) q group by target_id, account_id
+) x
+    left join targets t on x.target_id=t.target_id 
+    left join target_types z on t.target_type_id=z.target_type_id 
+    left join users u on t.author_id=u.user_id 
+    left join accounts a on a.account_id = x.account_id
+    left join potentials p on a.poten_id = p.poten_id
+    left join channels ch on a.chan_id = ch.chan_id
+    left join retail_chains r on a.rc_id = r.rc_id
+    left join regions reg on a.region_id = reg.region_id
+    left join cities c on a.city_id = c.city_id
+where x.inserted_ts is not null or (t.hidden=0 and a.hidden=0)
+order by x.inserted_ts desc nulls last, t.b_date desc, t.e_date, t.subject, a.descr, a.address
+  ]]>
+	</L0>
+	<L1>
+  <![CDATA[
+select
+    h.account_id, h.target_id,
+    h.doc_id,
+    h.user_id performer_id, u.descr performer_name,
+    h.fix_dt,
+    h.confirm_id, f.descr confirm,
+    h.doc_note,
+    array_to_string(h.photos,',') photos,
+    u.executivehead_id head_id, ex.descr head_name
+from h_confirmation h
+    left join confirmation_types f on f.confirm_id = h.confirm_id
+    left join users u on u.user_id = h.user_id
+    left join users ex on ex.user_id = u.executivehead_id
+order by h.fix_dt desc
+  ]]>
+	</L1>
+    </queries>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+
+local tb, idx = {}, {}
+local rows, cols, r, n, a, x
+
+tb.code = "targets_compliance"
+tb.data_ts = _data_ts
+tb.rows = {}
+
+rows = rowset_rows(_L0)
+cols = rowset_cols(_L0)
+
+if rows > 0 and cols > 0 then
+    for i = 0, rows-1 do
+	r = {}
+	r.row_no = i + 1
+	for j = 0, cols-1 do
+	    n = rowset_colname(_L0, j)
+	    a = rowset_value(_L0, i, j)
+	    if a ~= nil then
+		if std.contains({'myself','hidden','a_hidden'}, n) then
+		    r[n] = tonumber(a)
+		else
+		    r[n] = a
+		end
+	    end
+	end
+	r.row_id = r.target_id .. ':' .. r.account_id
+	r.confirmations = {}
+	idx[r.row_id] = r.confirmations
+	table.insert(tb.rows, r)
+    end
+
+    rows = rowset_rows(_L1)
+    cols = rowset_cols(_L1)
+
+    for i = 0, rows-1 do
+	r = idx[rowset_value(_L1, i, rowset_colid(_L1, "target_id")) .. ':' .. rowset_value(_L1, i, rowset_colid(_L1, "account_id"))]
+	if r ~= nil then
+	    x = {}
+	    for j = 0, cols-1 do
+		n = rowset_colname(_L1, j)
+		a = rowset_value(_L1, i, j)
+		if a ~= nil and n ~= "target_id" and n ~= "account_id" then
+		    if std.contains({'photos'}, n) then
+			x[n] = std.split(a, ',')
+		    else
+			x[n] = a
+		    end
+		end
+	    end
+	    table.insert(r, x)
+	end
+    end
+end
+
+set_param(_content, "rows", rowset_rows(_L0))
+write_stream(_content, json.encode(tb))
+  ]]>
+    </generator>
+</targets_compliance>

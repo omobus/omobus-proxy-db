@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<oos_history templ="%fix_date%;%account_id%;%prod_id%;%oos_type%;%note%;%latest%;" empty="no">
+  <![CDATA[ 
+select 
+    d.fix_date, d.account_id, d.prod_id, t.descr oos_type, d.note, d."_isRecentData" latest 
+from dyn_oos d
+    left join oos_types t on t.oos_type_id = d.oos_type_id
+where d.fix_date < current_date::date_t
+order by 2, 3, 1 desc
+  ]]>
+</oos_history>

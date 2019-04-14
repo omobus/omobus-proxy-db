@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<order_types templ="%order_type_id%;%descr%;%row_no%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update order_types set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update order_types set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from order_types 
+    where order_type_id = '%order_type_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update order_types set descr=trim(both from '%descr%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where order_type_id = '%order_type_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into order_types (order_type_id, descr, row_no, hidden, db_ids)
+    values ('%order_type_id%', trim(both from '%descr%'), NIL(%row_no%), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</order_types>

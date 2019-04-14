@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<action-log templ="%user_id%,%u_name%,%fix_dt%,%obj_code%,%obj_type%,%duration%,%rows%,%doc_no%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%" empty="no">
+  <![CDATA[
+select
+    quote_csv_string(x.user_id) user_id,
+    quote_csv_string(u.descr) u_name,
+    x.fix_dt,
+    x.obj_code,
+    x.obj_type,
+    x.duration,
+    x.rows,
+    x.doc_no,
+    quote_csv_string(a.account_id) account_id,
+    quote_csv_string(a.code) a_code,
+    quote_csv_string(a.descr) a_name,
+    quote_csv_string(a.address) address,
+    quote_csv_string(rc.descr) retail_chain,
+    quote_csv_string(rc.ka_code) ka_code,
+    quote_csv_string(o.descr) a_category,
+    quote_csv_string(n.descr) channel,
+    quote_csv_string(r.descr) region,
+    quote_csv_string(c.descr) city,
+    quote_csv_string(t.descr) activity_type
+from (
+    select user_id, fix_dt, 'document' obj_code, doc_type obj_type, duration, rows, doc_no, account_id, activity_type_id from a_user_document
+	where ("paramUID"('dumps:depth') is null or left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t)
+union
+    select user_id, fix_dt, 'report' obj_code, doc_type obj_type, duration, null, null, account_id, activity_type_id from a_user_report
+	where ("paramUID"('dumps:depth') is null or left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t)
+) x
+    left join activity_types t on t.activity_type_id = x.activity_type_id
+    left join users u on u.user_id = x.user_id
+    left join accounts a on a.account_id = x.account_id
+    left join channels n on n.chan_id = a.chan_id
+    left join potentials o on o.poten_id = a.poten_id
+    left join regions r on r.region_id = a.region_id
+    left join cities c on c.city_id = a.city_id
+    left join retail_chains rc on rc.rc_id = a.rc_id
+order by x.fix_dt desc, x.user_id
+  ]]>
+</action-log>

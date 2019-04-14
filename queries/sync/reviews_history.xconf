@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<reviews_history templ="%fix_date%;%employee_id%;%sla%;%note0%;%note1%;%note2%;%latest%;" empty="no">
+  <![CDATA[ 
+select user_id person_id, fix_date, employee_id, sla, note0, note1, note2 "_isRecentData" latest from dyn_reviews
+    where fix_date < current_date::date_t
+order by employee_id, fix_dt desc
+  ]]>
+</reviews_history>

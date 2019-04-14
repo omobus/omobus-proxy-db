@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<recom_retail_prices templ="%account_id%;%prod_id%;%rrp%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from recom_retail_prices
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update recom_retail_prices set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from recom_retail_prices
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[
+insert into recom_retail_prices (account_id, prod_id, rrp, db_ids)
+    values ('%account_id%', '%prod_id%', 0%rrp%, array['%ErpCode%'])
+on conflict do nothing
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</recom_retail_prices>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="datetime_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="[0-9]{4}\-[0-9]{2}\-[0-9]{2}( |T){1}[0-9]{2}:[0-9]{2}:[0-9]{2}" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="uid_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="[^%]*" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="int_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="(|[0-9]*)" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="profile">
+	<xs:complexType>
+	    <xs:attribute name="vstamp" use="required" type="xs:string" />
+	    <xs:attribute name="dev_pack" use="required" type="xs:integer" />
+	    <xs:attribute name="dev_id" use="required" type="xs:string" />
+	    <xs:attribute name="imei" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="fix_dt" use="required" type="datetime_t" />
+	    <xs:attribute name="doc_id" use="required" type="xs:string" />
+	    <xs:attribute name="doc_note" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="user_id" use="required" type="xs:string" />
+	    <xs:attribute name="w_cookie" use="required" type="xs:string" />
+	    <xs:attribute name="a_cookie" use="required" type="xs:string" />
+	    <xs:attribute name="activity_type_id" use="required" type="uid_t" />
+	    <xs:attribute name="account_id" use="required" type="uid_t" />
+	    <xs:attribute name="created_dt" use="required" type="datetime_t" />
+	    <xs:attribute name="created_gps_la" use="optional" type="xs:decimal" default="0.0" />
+	    <xs:attribute name="created_gps_lo" use="optional" type="xs:decimal" default="0.0" />
+	    <xs:attribute name="created_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
+	    <xs:attribute name="closed_dt" use="required" type="datetime_t" />
+	    <xs:attribute name="closed_gps_la" use="optional" type="xs:decimal" default="0.0" />
+	    <xs:attribute name="closed_gps_lo" use="optional" type="xs:decimal" default="0.0" />
+	    <xs:attribute name="closed_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
+	    <xs:attribute name="chan_id" use="optional" type="uid_t" default="" />
+	    <xs:attribute name="poten_id" use="optional" type="uid_t" default="" />
+	    <xs:attribute name="cash_register" use="optional" type="int_t" default="" />
+	    <xs:attribute name="attr_ids" use="optional" type="xs:string" default="" />
+	</xs:complexType>
+    </xs:element>
+</xs:schema>

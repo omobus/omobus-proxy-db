@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<checkup_defaults templ="%account_id%;%placement_id%;%prod_id%;%exist%;" empty="no">
+  <![CDATA[
+select x.account_id, x.placement_id, x.prod_id, x.exist from dyn_checkups x, products p
+    where x."_isRecentData" = 1 and x.prod_id = p.prod_id and (x.exist > 0 or (x.exist = 0 and x.fix_dt::date >= (current_date + (select "paramInteger"('checkups:offset')))))
+order by 1, 2, p.row_no, p.descr
+  ]]>
+</checkup_defaults>

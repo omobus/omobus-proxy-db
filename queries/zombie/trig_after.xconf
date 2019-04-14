@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<trig_after>
+  <![CDATA[
+select content_add('tech', '', current_date::date_t, current_date::date_t);
+  ]]>
+</trig_after>

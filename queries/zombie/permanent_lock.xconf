@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<permanent_lock>
+    <generator>
+  <![CDATA[
+local count, uid, role = 0, "", ""
+
+require("core").for_each_u(_user_id, function(ses, dn, attrs)
+    if count == 0 then
+-- ** permanently lock hidden user: **
+	if attrs.syncErpId == nil and (attrs.FTPStatus == "enabled" or attrs.mailStatus == "enabled" or attrs.exchangeStatus == "enabled" or attrs.dumpsStatus == "enabled" or attrs.consoleStatus == "enabled") then
+	    local ar = {'='}
+	    if attrs.FTPStatus == "enabled" then
+		ar.FTPStatus="disabled"
+	    end
+	    if attrs.mailStatus == "enabled" then
+		ar.mailStatus="disabled"
+	    end
+	    if attrs.exchangeStatus == "enabled" then
+		ar.exchangeStatus="disabled"
+	    end
+	    if attrs.dumpsStatus == "enabled" then
+		ar.dumpsStatus="disabled"
+	    end
+	    if attrs.consoleStatus == "enabled" then
+		ar.consoleStatus="disabled"
+	    end
+	    ses:modify(dn, ar)
+	    log_msg(string.format("UID=%s, ErpId=%s has been permanently locked", attrs.uid, attrs.ErpId))
+	end
+	uid = attrs.uid
+	role = attrs.groupName
+    else
+-- ** remove duplicate ErpId link: **
+	if attrs.syncErpId == nil then
+	    local ar = {'=', ErpId="-"}
+	    if attrs.FTPStatus == "enabled" then
+		ar.FTPStatus="disabled"
+	    end
+	    if attrs.mailStatus == "enabled" then
+		ar.mailStatus="disabled"
+	    end
+	    if attrs.exchangeStatus == "enabled" then
+		ar.exchangeStatus="disabled"
+	    end
+	    if attrs.dumpsStatus == "enabled" then
+		ar.dumpsStatus="disabled"
+	    end
+	    if attrs.consoleStatus == "enabled" then
+		ar.consoleStatus="disabled"
+	    end
+	    ses:modify(dn, ar)
+	    log_msg(string.format("UID=%s removed duplicate ErpId link", attrs.uid))
+	end
+    end
+
+    count = count + 1
+end)
+
+set_param(_content, "dev_login", uid)
+set_param(_content, "role", role)
+set_param(_content, "msg_cap", "", false)
+set_param(_content, "msg_body", "", false)
+set_param(_content, "msg_content", "", false)
+  ]]>
+    </generator>
+</permanent_lock>

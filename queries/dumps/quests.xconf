@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<quests templ="%user_id%,%u_name%,%department%,%year%,%month%,%fix_date%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%quest_name%,%quest_path%,%quest_row%,%result%,%head_name%,%kam%,%fix_dt%" empty="no">
+  <![CDATA[
+select
+    d.user_id,
+    quote_csv_string(u.descr) u_name,
+    quote_csv_string(i.descr) department,
+    left(d.fix_date, 4) "year",
+    substring(d.fix_date, 6, 2) "month",
+    d.fix_date,
+    quote_csv_string(a.account_id) account_id,
+    quote_csv_string(a.code) a_code,
+    quote_csv_string(a.descr) a_name,
+    quote_csv_string(a.address) address,
+    quote_csv_string(rc.descr) retail_chain,
+    quote_csv_string(rc.ka_code) ka_code,
+    quote_csv_string(o.descr) a_category,
+    quote_csv_string(n.descr) channel,
+    quote_csv_string(r.descr) region,
+    quote_csv_string(c.descr) city,
+    quote_csv_string(qn.descr) quest_name,
+    quote_csv_string(quest_path(null, qr.qname_id, qr.pid)) quest_path,
+    quote_csv_string(qr.descr) quest_row,
+    quote_csv_string(d.value) result,
+    quote_csv_string(e.descr) head_name,
+    quote_csv_string(k.kam_name) "KAM",
+    d.fix_dt
+from dyn_quests d
+    left join users u on u.user_id = d.user_id
+    left join departments i on u.dep_ids is not null and cardinality(u.dep_ids) = 1 and i.dep_id = u.dep_ids[1]
+    left join users e on e.user_id = u.executivehead_id
+    left join quest_names qn on qn.qname_id = d.qname_id
+    left join quest_rows qr on qr.qname_id = d.qname_id and qr.qrow_id = d.qrow_id
+    left join accounts a on a.account_id = d.account_id
+    left join channels n on n.chan_id = a.chan_id
+    left join potentials o on o.poten_id = a.poten_id
+    left join regions r on r.region_id = a.region_id
+    left join cities c on c.city_id = a.city_id
+    left join retail_chains rc on rc.rc_id = a.rc_id
+    left join (select x.rc_id, array_to_string(array_agg(u.descr::varchar),', ') kam_name from my_retail_chains x, users u where x.user_id=u.user_id and u.hidden=0 and u.role='kam' group by x.rc_id) k on k.rc_id=rc.rc_id
+where "paramUID"('dumps:depth') is null or d.fix_date >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t
+order by d.fix_date desc, a.descr, a.address, qn.descr, qr.row_no, qr.descr, d.fix_dt
+  ]]>
+</quests>

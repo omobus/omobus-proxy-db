@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shelf_lifes templ="%shelf_life_id%;%descr%;%days%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update shelf_lifes set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and where db_ids @> (array['%ErpCode%'])::uids_t;
+update shelf_lifes set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from shelf_lifes 
+    where shelf_life_id = '%shelf_life_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update shelf_lifes set descr=trim(both from '%descr%'), days=NIL(%days%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where shelf_life_id = '%shelf_life_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into shelf_lifes (shelf_life_id, descr, days, hidden, db_ids)
+    values ('%shelf_life_id%', trim(both from '%descr%'), NIL(%days%), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</shelf_lifes>

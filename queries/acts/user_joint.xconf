@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<user_joint>
+<check_user>
+  <![CDATA[
+select user_id as user_id_sys from users 
+    where lower(user_id)=lower('%ErpId%') /*%user_id%*/
+  ]]>
+</check_user>
+<check_exist>
+  <![CDATA[
+select count(*) from a_user_joint 
+    where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
+  ]]>
+</check_exist>
+<create>
+  <![CDATA[
+select * from act_id()
+  ]]>
+</create>
+<write_body>
+  <![CDATA[
+insert into a_user_joint (act_id, inserted_node, dev_pack, dev_id, dev_login, imei, user_id, fix_dt, state, w_cookie, c_cookie, satellite_dt, latitude, longitude, employee_id)
+    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%state%', '%w_cookie%', '%c_cookie%', '%satellite_dt%', %latitude%, %longitude%, '%employee_id%')
+  ]]>
+</write_body>
+<close>
+  <![CDATA[
+do $$
+declare
+    f_date date_t default left('%fix_dt%',10);
+    f_time time_t default substring('%fix_dt%', 12, 5);
+begin
+-- **** user_joint --> j_acts
+    insert into j_acts(act_id, dev_id, dev_login, imei, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+
+-- **** user_joint --> j_user_joints
+    if( (select count(*) from j_user_joints where user_id='%user_id_sys%' and employee_id='%employee_id%' and w_cookie='%w_cookie%' and c_cookie='%c_cookie%') > 0 ) then
+	if( '%state%' = 'begin' ) then
+	    update j_user_joints set fix_date = f_date, b_dt='%fix_dt%', b_la=%latitude%, b_lo=%longitude%, b_sat_dt='%satellite_dt%'
+		where user_id='%user_id_sys%' and employee_id='%employee_id%' and w_cookie='%w_cookie%' and c_cookie='%c_cookie%';
+	else
+	    update j_user_joints set e_dt='%fix_dt%', e_la=%latitude%, e_lo=%longitude%, e_sat_dt='%satellite_dt%'
+		where user_id='%user_id_sys%' and employee_id='%employee_id%' and w_cookie='%w_cookie%' and c_cookie='%c_cookie%';
+	end if;
+    else
+	if( '%state%' = 'begin' ) then
+	    insert into j_user_joints (user_id, employee_id, w_cookie, c_cookie, fix_date, b_dt, b_la, b_lo, b_sat_dt, inserted_ts)
+		values('%user_id_sys%', '%employee_id%', '%w_cookie%', '%c_cookie%', f_date, '%fix_dt%', %latitude%, %longitude%, '%satellite_dt%', current_timestamp);
+	else
+	    insert into j_user_joints (user_id, employee_id, w_cookie, c_cookie, e_dt, e_la, e_lo, e_sat_dt, inserted_ts)
+		values('%user_id_sys%', '%employee_id%', '%w_cookie%', '%c_cookie%', '%fix_dt%', %latitude%, %longitude%, '%satellite_dt%', current_timestamp);
+	end if;
+    end if;
+
+-- **** user_joint --> sysstats
+    perform sysstat_add('%user_id_sys%', f_date, f_time);
+
+-- **** user_joint --> content_stream
+    perform content_add('tech', '', f_date, f_date);
+    perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
+    perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+end;
+$$;
+  ]]>
+</close>
+</user_joint>

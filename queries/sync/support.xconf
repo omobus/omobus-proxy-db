@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<support templ="%descr%;%phone%;%mobile%;%email%;%working_hours%;" empty="no">
+  <![CDATA[ 
+select country_id, distr_id, descr, phone, mobile, email, working_hours from support
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</support>

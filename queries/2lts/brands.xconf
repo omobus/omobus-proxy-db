@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<brands templ="%brand_id%;%descr%;%manuf_id%;%dep_id%;%row_no%;">
+  <![CDATA[
+select brand_id, descr, manuf_id, dep_id, row_no from brands
+    where hidden = 0
+order by 1
+  ]]>
+</brands>

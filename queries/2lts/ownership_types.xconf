@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ownership_types templ="%ownership_type_id%;%descr%;%row_no%;">
+  <![CDATA[
+select ownership_type_id, descr, row_no from ownership_types
+    where hidden = 0
+order by 1
+  ]]>
+</ownership_types>

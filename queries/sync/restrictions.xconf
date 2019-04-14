@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<restrictions templ="%distr_id%;%account_id%;%prod_id%;%pack_id%;%min_qty%;%max_qty%;%quantum%;" empty="no">
+  <![CDATA[
+select distr_id, account_id, prod_id, pack_id, min_qty, max_qty, quantum from restrictions
+    order by 1, 2, 3
+  ]]>
+</restrictions>

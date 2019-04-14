@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<blacklist templ="%distr_id%;%account_id%;%prod_id%;%locked%;" empty="no">
+  <![CDATA[
+select distr_id, account_id, prod_id, locked from blacklist
+    order by 1, 2, 3
+  ]]>
+</blacklist>

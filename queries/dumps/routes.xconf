@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<routes templ="%user_id%,%u_name%,%u_area%,%department%,%year%,%month%,%week%,%day_of_week%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%route_date%,%fix_date%,%b_time%,%e_time%,%duration%,%distance%,%route%,%closed%,%canceled%,%canceling_type%,%canceling_note%,%discard_type%,%discard_note%,%activity_type%,%strict%,%zstatus%,%znote%,%head_name%" empty="no">
+  <![CDATA[
+select
+    x.user_id,
+    quote_csv_string(u.descr) u_name,
+    quote_csv_string(u.area) u_area,
+    quote_csv_string(i.descr) department,
+    left(coalesce(x.b_dt,x.route_date), 4) "year",
+    substring(coalesce(x.b_dt,x.route_date), 6, 2) "month",
+    (extract(week from coalesce(x.b_dt,x.route_date)::date))::int "week",
+    (extract(dow from coalesce(x.b_dt,x.route_date)::date))::int "day_of_week",
+    quote_csv_string(a.account_id) account_id,
+    quote_csv_string(a.code) a_code,
+    quote_csv_string(a.descr) a_name,
+    quote_csv_string(a.address) address,
+    quote_csv_string(rc.descr) retail_chain,
+    quote_csv_string(rc.ka_code) ka_code,
+    quote_csv_string(p.descr) a_category,
+    quote_csv_string(n.descr) channel,
+    quote_csv_string(r.descr) region,
+    quote_csv_string(c.descr) city,
+    x.route_date,
+    left(x.b_dt,10) fix_date,
+    substring(x.b_dt, 12, 8) b_time,
+    substring(x.e_dt, 12, 8) e_time,
+    /*x.e_dt::timestamp - x.b_dt::timestamp*/datediff(x.b_dt, x.e_dt) duration,
+    distance(a.latitude, a.longitude, x.latitude, x.longitude) distance,
+    coalesce(x.route,0) route,
+    coalesce(x.closed,0) closed,
+    coalesce(x.canceled,0) canceled,
+    coalesce(x.canceled,0) discarded,
+    quote_csv_string(f.descr) canceling_type,
+    quote_csv_string(x.canceling_note) canceling_note,
+    quote_csv_string(d.descr) discard_type,
+    quote_csv_string(x.discard_note) discard_note,
+    quote_csv_string(t.descr) activity_type,
+    t.strict,
+    x.zstatus,
+    quote_csv_string(x.znote) znote,
+    quote_csv_string(e.descr) head_name
+from user_routes(
+	null,
+	"monthDate_First"(current_date - "paramInteger"(case when "paramUID"('dumps:depth') is null then 'gc:keep_alive' else 'dumps:depth' end))::date_t,
+	"monthDate_Last"(current_date)::date_t,
+	0::bool_t
+    ) x
+    left join activity_types t on t.activity_type_id = x.activity_type_id
+    left join canceling_types f on f.canceling_type_id = x.canceling_type_id
+    left join discard_types d on d.discard_type_id = x.discard_type_id
+    left join users u on u.user_id = x.user_id
+    left join departments i on u.dep_ids is not null and cardinality(u.dep_ids) = 1 and i.dep_id = u.dep_ids[1]
+    left join users e on e.user_id = u.executivehead_id
+    left join accounts a on a.account_id = x.account_id
+    left join channels n on n.chan_id = a.chan_id
+    left join potentials p on p.poten_id = a.poten_id
+    left join regions r on r.region_id = a.region_id
+    left join cities c on c.city_id = a.city_id
+    left join retail_chains rc on rc.rc_id = a.rc_id
+order by u.descr, coalesce(x.b_dt,x.route_date)::date desc, left(x.b_dt,10) desc, x.b_dt, x.account_id
+  ]]>
+</routes>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel module="kern_tasks">
+<gcLO ontimeout="yes" onsemaphore="yes">
+  <![CDATA[
+do $$
+declare
+    c int32_t default 0;
+    b blob_t;
+begin
+    for b in select * from orphanLO() limit 500 loop
+    begin
+	perform lo_unlink(b);
+	c := c + 1;
+    exception
+	when undefined_object then
+	raise notice 'unable to unlink % large object.', b;
+    end;
+    end loop;
+
+    if c > 0 then
+	raise notice 'removed % large objects.', c;
+    end if;
+end;
+$$
+  ]]>
+</gcLO>
+</kernel>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories templ="%categ_id%;%descr%;%row_no%;">
+  <![CDATA[
+select categ_id, descr, row_no from categories
+    where hidden = 0
+order by 1
+  ]]>
+</categories>

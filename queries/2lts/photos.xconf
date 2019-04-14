@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<photos templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%placement_id%;%brand_id%;%photo_type_id%;%photo%;%doc_note%;%photo_param_ids%;">
+  <![CDATA[
+select doc_id, fix_dt, user_id, account_id, placement_id, brand_id, photo_type_id, photo, doc_note, array_to_string(photo_param_ids,',') photo_param_ids from h_photo
+    where (current_timestamp - inserted_ts) < "LTS_aging"()
+order by 1
+  ]]>
+</photos>

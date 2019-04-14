@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel 
+    module="kern_blobs"
+    ldap.uri="ldap://127.0.0.1:389" 
+    ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
+    ldap.bind_pw="0"
+    ldap.base="ou=users,dc=omobus,dc=local" 
+    ldap.filter="(&amp;(objectClass=PureFTPdUser)(objectClass=omobusUser)(FTPStatus=enabled)(|(exchangeStatus=enabled)(exchangeStatus=disabled)))" 
+    Xldap.tls="yes"
+    ftp.host="127.0.0.1"
+    ftp.port="21021"
+    ftp.path="upd/"
+    ftp.connect_timeout="10"
+    ftp.recv_timeout="5"
+    ftp.send_timeout="5"
+    ftp.epsv="true"
+    ftp.tls="no"
+    ftp.ccc="yes"
+    ftp.cdc="yes"
+    pack.type="gz"
+    pack.level="1"
+    cache="upd/"
+    diff="yes"
+    >
+<xi:include href="../roles/asm.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../roles/ise.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../roles/kam.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../roles/ksr.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../roles/merch.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../roles/mr.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../roles/sr.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../roles/sv.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../roles/tme.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</kernel>

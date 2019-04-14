@@ -1,0 +1,15 @@
+[Unit]
+Description=OMOBUS server (evmail)
+After=local-fs.target network.target pgsql.service exim.service
+#Requires=pgsql.service exim.service
+
+[Service]
+#Type=forking
+PIDFile=/var/run/omobus.d/omobus-evmail.pid
+ExecStartPre=/bin/mkdir -m 0755 -p /var/run/omobus.d
+ExecStartPre=/bin/chown omobus:omobus /var/run/omobus.d
+ExecStart=/usr/local/sbin/omobusd evmail -x -u omobus -g omobus -p /var/run/omobus.d/omobus-evmail.pid
+ExecStop=/bin/kill -s USR1 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

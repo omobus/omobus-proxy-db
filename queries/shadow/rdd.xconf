@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdd templ="%obj_code%;%r_date%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//shadow/%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update shadow.rdd set hidden=1
+    where distr_id='%ErpCode%' and hidden=0
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from shadow.rdd
+    where obj_code='%obj_code%' and distr_id='%ErpCode%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update shadow.rdd set r_date=trim(both from '%value%'), hidden=0
+    where obj_code='%obj_code%' and distr_id='%ErpCode%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into shadow.rdd (distr_id, obj_code, r_date, hidden)
+    values ('%ErpCode%', '%obj_code%', trim(both from '%value%'), 0)
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+delete from rdd where distr_id='%ErpCode%';
+insert into rdd(distr_id, wareh_id, descr, hidden, inserted_ts, updated_ts, db_ids)
+    select distr_id, wareh_id, descr, hidden, inserted_ts, updated_ts, array['$shadow'] from shadow.rdd where distr_id='%ErpCode%' and obj_code in ('debts:date','mutuals:date');
+
+select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</rdd>
