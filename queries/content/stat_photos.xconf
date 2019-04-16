@@ -49,7 +49,7 @@ rt.main("photos", false, function(r, n, a)
     if n == 'revoked' then
 	r[n] = tonumber(a)
     elseif n == 'photo_params' then
-	n = std.split(a, '|')
+	r[n] = std.split(a, '|')
     else
 	r[n] = a
     end
