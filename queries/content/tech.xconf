@@ -4,7 +4,7 @@
 	<L>
   <![CDATA[
 select 
-    u.user_id, u.descr u_name, u.user_id code, u.dev_login, u.area, u.distr_ids, u.dep_ids,
+    u.user_id, u.descr u_name, u.user_id code, u.dev_login, u.area, 
     exch_sync_success_total, exch_sync_success_time,
     exch_docs_success_total, exch_docs_success_time, 
     pos_exist, pos_time, pos_empty,
@@ -51,13 +51,7 @@ order by u.descr
     <generator>
   <![CDATA[
 local std = require('stdlib')
-require('rtlib').main("tech", true, function(r, n, a)
-	if std.contains({'distr_ids','dep_ids'}, n) then
-	    r[n] = std.split(a, ',')
-	else
-	    r[n] = a;
-	end
-    end)
+require('rtlib').main("tech", true)
   ]]>
     </generator>
 </tech>
