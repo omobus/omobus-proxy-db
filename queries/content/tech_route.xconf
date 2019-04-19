@@ -498,9 +498,10 @@ order by h.doc_id, c.surname, c.name, c.patronymic
 	<wishes>
   <![CDATA[
 select 
-    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, t.descr wish_type, h.doc_note
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, w.descr weeks, d.descr days, h.doc_note
 from h_wish h
-    left join wish_types t on t.wish_type_id = h.wish_type_id
+    left join wish_weeks w on w.wish_week_id = h.wish_week_id
+    left join wish_days d on d.wish_day_id = h.wish_day_id
 where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
 order by h.fix_dt, h.doc_id
   ]]>
