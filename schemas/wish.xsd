@@ -34,7 +34,8 @@
 	    <xs:attribute name="closed_gps_la" use="optional" type="xs:decimal" default="0.0" />
 	    <xs:attribute name="closed_gps_lo" use="optional" type="xs:decimal" default="0.0" />
 	    <xs:attribute name="closed_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
-	    <xs:attribute name="wish_type_id" use="optional" type="uid_t" default="" />
+	    <xs:attribute name="wish_day_id" use="required" type="uid_t" />
+	    <xs:attribute name="wish_week_id" use="required" type="uid_t" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>
