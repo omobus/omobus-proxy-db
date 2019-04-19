@@ -1749,6 +1749,24 @@ delete from training_types;
 insert into training_types(training_type_id, descr, personal) values('0', 'Индивидуальное', 1);
 insert into training_types(training_type_id, descr) values('1', 'Фармкружок');
 
+delete from wish_days;
+insert into wish_days(wish_day_id, descr, days, row_no) values('mon', 'Понедельник', array[1,0,0,0,0,0,0], 1);
+insert into wish_days(wish_day_id, descr, days, row_no) values('tue', 'Вторник', array[0,1,0,0,0,0,0], 2);
+insert into wish_days(wish_day_id, descr, days, row_no) values('wed', 'Среда', array[0,0,1,0,0,0,0], 3);
+insert into wish_days(wish_day_id, descr, days, row_no) values('thu', 'Четверг', array[0,0,0,1,0,0,0], 4);
+insert into wish_days(wish_day_id, descr, days, row_no) values('fri', 'Пятница', array[0,0,0,0,1,0,0], 5);
+insert into wish_days(wish_day_id, descr, days, row_no, hidden) values('sat', 'Суббота', array[0,0,0,0,0,1,0], 6, 1);
+insert into wish_days(wish_day_id, descr, days, row_no, hidden) values('sun', 'Воскресенье', array[0,0,0,0,0,0,1], 0, 1);
+
+delete from wish_weeks;
+insert into wish_weeks(wish_week_id, descr, weeks, row_no) values('0', 'Каждую неделю цикла', array[1,1,1,1], 0);
+insert into wish_weeks(wish_week_id, descr, weeks, row_no) values('1', '1-я и 3-я недели цила', array[1,0,1,0], 1);
+insert into wish_weeks(wish_week_id, descr, weeks, row_no) values('2', '2-я и 4-я недели цила', array[0,1,0,1], 2);
+insert into wish_weeks(wish_week_id, descr, weeks, row_no) values('3', '1-я неделя цила', array[1,0,0,0], 3);
+insert into wish_weeks(wish_week_id, descr, weeks, row_no) values('4', '2-я неделя цила', array[0,1,0,0], 4);
+insert into wish_weeks(wish_week_id, descr, weeks, row_no) values('5', '3-я неделя цила', array[0,0,1,0], 5);
+insert into wish_weeks(wish_week_id, descr, weeks, row_no) values('6', '4-я неделя цила', array[0,0,0,1], 6);
+
 delete from "L10n";
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','1','','Январь');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','2','','Февраль');

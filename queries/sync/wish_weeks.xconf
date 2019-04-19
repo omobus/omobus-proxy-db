@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wish_weeks templ="%wish_week_id%;%descr%;" empty="no">
+  <![CDATA[ 
+select wish_week_id, descr from wish_weeks
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</wish_weeks>
