@@ -5681,6 +5681,7 @@ create trigger trig_geocode after update on geocode_stream for each row
 create table health_stream (
     db_id 		uid_t 		not null primary key,
     health 		ts_t 		not null,
+    alarm 		bool_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null
 );

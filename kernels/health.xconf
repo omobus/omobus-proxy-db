@@ -37,7 +37,7 @@ select count(*) from health_stream
 </check_exist>
 <update>
   <![CDATA[
-update health_stream set health='%timestamp%'
+update health_stream set health = '%timestamp%', alarm = null
     where db_id = '%ErpCode%'
   ]]>
 </update>
