@@ -538,6 +538,7 @@ as $BODY$
 declare
     stack text; fcesig text;
     t_id uid_t;
+    d descr_t;
 begin
     GET DIAGNOSTICS stack = PG_CONTEXT;
     fcesig := substring(stack from 'function console\.(.*?)\(');
@@ -547,16 +548,18 @@ begin
     end if;
 
     t_id := nextval('seq_tickets');
+    select descr from issues where issue_id=i_id into d;
 
     insert into tickets (ticket_id, user_id, issue_id, note, author_id, closed, inserted_ts)
 	values(t_id, u_id, i_id, n, rlogin, c, current_timestamp);
 
-    perform evmail_add(u_id, 'ticket/caption'||case c when 1 then ':closed' else '' end, 'ticket/body'||case c when 1 then ':closed' else '' end, 3::smallint /*normal*/, array[
-	'ticket_id',t_id,'inserted_ts',"L"(current_timestamp),'doc_note',n,'issue',(select descr from issues where issue_id=i_id)]);
+    perform evmail_add(u_id, 'ticket/caption'||case c when 1 then ':closed' else '' end, 'ticket/body'||case c when 1 then ':closed' else '' end, 
+	3::smallint /*normal*/, array['ticket_id',t_id,'inserted_ts',"L"(current_timestamp),'doc_note',n,'issue',d]);
 
     if( c = 0 ) then
-	insert into mail_stream (rcpt_to, cap, msg, priority)
-	    values (string_to_array("paramUID"('srv:bcc'),','), 'Ticket #'||t_id, 'Registered a new unclosed ticket (user_id='||u_id||').', 3 /*normal*/);
+	insert into mail_stream (rcpt_to, cap, msg)
+	    values (string_to_array("paramUID"('srv:bcc'),','), format('OMOBUS: Ticket #%s (user_id: %s)', t_id, u_id), 
+		format(E'Registered a new unclosed ticket #%s (user_id: %s): %s.\r\n%s', t_id, u_id, d, n));
     end if;
 
     insert into console.requests(req_login, req_type, status, attrs)
