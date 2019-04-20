@@ -1,0 +1,15 @@
+[Unit]
+Description=OMOBUS server (observer)
+After=local-fs.target network.target pgsql.service
+#Requires=pgsql.service
+
+[Service]
+#Type=forking
+PIDFile=/var/run/omobus.d/omobus-observer.pid
+ExecStartPre=/bin/mkdir -m 0755 -p /var/run/omobus.d
+ExecStartPre=/bin/chown omobus:omobus /var/run/omobus.d
+ExecStart=/usr/local/sbin/omobusd observer -x -u omobus -g omobus -p /var/run/omobus.d/omobus-observer.pid
+ExecStop=/bin/kill -s USR1 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
