@@ -110,6 +110,21 @@ attributetype ( 1.3.6.1.4.1.33158.11.3.401 NAME 'mailGroup'
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
 
 
+attributetype ( 1.3.6.1.4.1.33158.11.3.410 NAME 'arkStatus'
+	DESC 'OMOBUS: disable or enable access to the LTS data via ark web-service (disabled|enabled)'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.411 NAME 'arkToken'
+	DESC 'OMOBUS: ark web service token'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.412 NAME 'arkAcceptedHost'
+	DESC 'OMOBUS: accepted ark web-service client (IPv4 addresses as a dotted decimal omitting leading zeros or IPv6 addresses as defined in RFC2373)'
+	SUP name )
+
+
 objectclass ( 1.3.6.1.4.1.33158.11.2.1 NAME 'omobusUser' 
 	SUP top AUXILIARY
 	MAY ( ErpId $ syncErpId $ syncEncoding $ syncPackage $ groupName $ exchangeStatus $ consoleStatus $ dumpsStatus $
@@ -124,10 +139,13 @@ objectclass ( 1.3.6.1.4.1.33158.11.2.2 NAME 'omobusMaintainPoint'
 
 objectclass ( 1.3.6.1.4.1.33158.11.2.3 NAME 'omobusMail' 
 	SUP top AUXILIARY
-	MUST ( mailStatus )
-	MAY ( mailGroup ) )
+	MAY ( mailStatus $ mailGroup ) )
 
 objectclass ( 1.3.6.1.4.1.33158.11.2.4 NAME 'omobusAccount' 
 	SUP top STRUCTURAL
 	MUST ( cn $ uid $ userPassword )
 	MAY ( description ) )
+
+objectclass ( 1.3.6.1.4.1.33158.11.2.5 NAME 'omobusArk'
+	SUP top AUXILIARY
+	MAY ( arkStatus $ arkToken $ arkAcceptedHost ) )
