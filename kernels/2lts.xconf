@@ -129,6 +129,7 @@
     <agreements />
     <attributes />
     <audit_criterias />
+    <audit_scores />
     <brands />
     <canceling_types />
     <cancellations />
