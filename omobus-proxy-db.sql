@@ -2263,7 +2263,7 @@ create table targets (
     pid 		uid_t 		null,
     target_type_id 	uid_t 		not null,
     subject 		descr_t 	not null,
-    body 		varchar(2048)	not null,
+    body 		varchar(4096)	not null,
     b_date 		date_t 		not null,
     e_date 		date_t 		not null,
     image 		blob_t 		null, /* image attached to the target */
@@ -6229,7 +6229,7 @@ union
 	left join j_discards d on d.user_id = r.user_id and d.account_id = r.account_id and d.activity_type_id = r.activity_type_id and d.route_date = r.p_date and d.hidden = 0 and d.validated = 1
 	left join j_pending p on p.user_id = r.user_id and p.account_id = r.account_id and p.activity_type_id = r.activity_type_id and p.route_date = r.p_date and p.hidden = 0
 	left join users u on u.user_id = r.user_id
-	left join sysholidays s on s.h_date = r.p_date and u.country_ids is not null and s.country_id = u.country_ids[1]
+	left join sysholidays s on s.h_date = r.p_date and u.country_ids is not null and s.country_id = u.country_ids[1] and s.hidden = 0
     where r.p_date>=f_b_date and r.p_date<=f_e_date and (f_user_id is null or r.user_id=f_user_id)
 $body$ language sql;
 
