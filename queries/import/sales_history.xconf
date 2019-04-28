@@ -28,7 +28,7 @@ execute ".plan.sales"('%account_id%', '%prod_id%', '%s_date%', NIL(%amount_c%), 
 </insert>
 <end>
   <![CDATA[
-deallocate prepare salesplan;
+deallocate prepare ".plan.sales";
 select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
   ]]>
 </end>
