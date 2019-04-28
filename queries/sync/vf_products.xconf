@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vf_products templ="%account_id%;%vf_id%;%prod_id%;" empty="no">
   <![CDATA[
-select account_id, vf_id, prod_id from vf_products
-    order by account_id, vf_id, row_no, prod_id
+select v.account_id, v.vf_id, v.prod_id from vf_products v, products p
+    where v.prod_id=p.prod_id
+order by v.account_id, v.vf_id, v.row_no, p.descr
   ]]>
 </vf_products>
