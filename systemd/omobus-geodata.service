@@ -1,5 +1,5 @@
 [Unit]
-Description=OMOBUS server (geodata)
+Description=[omobusd: geodata] service
 After=local-fs.target network.target pgsql.service
 #Requires=pgsql.service
 

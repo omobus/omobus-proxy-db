@@ -1,5 +1,5 @@
 [Unit]
-Description=OMOBUS server (import)
+Description=[omobusd: import] service
 After=local-fs.target network.target pure-ftpd.service pgsql.service
 #Requires=pure-ftpd.service pgsql.service
 

@@ -1,5 +1,5 @@
 [Unit]
-Description=OMOBUS server (evmail)
+Description=[omobusd: evmail] service
 After=local-fs.target network.target pgsql.service exim.service
 #Requires=pgsql.service exim.service
 

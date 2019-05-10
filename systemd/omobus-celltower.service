@@ -1,5 +1,5 @@
 [Unit]
-Description=OMOBUS server (celltower)
+Description=[omobusd: celltower] service
 After=local-fs.target network.target pgsql.service
 #Requires=pgsql.service
 

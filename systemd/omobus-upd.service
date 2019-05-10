@@ -1,5 +1,5 @@
 [Unit]
-Description=OMOBUS server (upd)
+Description=[omobusd: upd] service
 After=local-fs.target network.target pure-ftpd.service
 #Requires=pure-ftpd.service
 

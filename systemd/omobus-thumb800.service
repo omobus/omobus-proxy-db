@@ -1,5 +1,5 @@
 [Unit]
-Description=OMOBUS server (thumb 800px)
+Description=[omobusd: thumb800] service
 After=local-fs.target network.target pgsql.service
 #Requires=pgsql.service
 

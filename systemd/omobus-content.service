@@ -1,5 +1,5 @@
 [Unit]
-Description=OMOBUS server (content)
+Description=[omobusd: content] service
 After=local-fs.target network.target pgsql.service
 #Requires=pgsql.service
 
