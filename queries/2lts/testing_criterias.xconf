@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<testing_criterias templ="%testing_criteria_id%;%descr%;%row_no%">
+<testing_criterias templ="%testing_criteria_id%;%descr%;%row_no%;">
   <![CDATA[
 select testing_criteria_id, descr, row_no from testing_criterias
     where hidden = 0
