@@ -17,8 +17,8 @@
     ftp.tls="yes"
     ftp.ccc="yes"
     ftp.cdc="yes"
-    pack.type="txt.bz2"
-    pack.level="9"
+    pack.type="txt.gz"
+    pack.level="6"
     cache="2lts/"
     diff="yes"
     >
