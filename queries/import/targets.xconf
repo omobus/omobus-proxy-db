@@ -23,7 +23,7 @@ select count(*) from targets
 <update>
   <![CDATA[
 update targets set target_type_id='%target_type_id%', subject='%subject%', body='%body%', b_date='%b_date%', e_date='%e_date%', dep_id=NIL('%dep_id%'), account_ids=string_to_array(NIL('%account_ids%'),','), rc_ids=string_to_array(NIL('%rc_ids%'),','), chan_ids=string_to_array(NIL('%chan_ids%'),','), poten_ids=string_to_array(NIL('%poten_ids%'),','), region_ids=string_to_array(NIL('%region_ids%'),','), city_ids=string_to_array(NIL('%city_ids%'),','), attrs='%attrs%'::hstore, db_ids=array_append(db_ids,'%ErpCode%'), "_isAlienData"=1, "_isSuppressedData"=0
-    where target_id = '%target_id%' and /* only future tasks: */ b_date >= current_date::date_t;
+    where target_id = '%target_id%' and '%e_date%' >= current_date::date_t;
   ]]>
 </update>
 <insert>
@@ -34,8 +34,10 @@ insert into targets (target_id, target_type_id, subject, body, b_date, e_date, d
 </insert>
 <end>
   <![CDATA[
-update targets set e_date=current_date where "_isAlienData" = 1 and "_isSuppressedData" = 1 and e_date > current_date::date_t and current_date::date_t >= b_date;
+update targets set e_date=current_date where "_isAlienData" = 1 and "_isSuppressedData" = 1 and b_date <= current_date::date_t and current_date::date_t < e_date;
 update targets set hidden=1 where "_isAlienData" = 1 and "_isSuppressedData" = 1 and hidden = 0 and e_date > current_date::date_t and b_date > current_date::date_t;
+
+insert into ".content"(content_code, user_id, b_date, e_date) values('targets_compliance', '', '', '') on conflict do nothing;
 
 select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
   ]]>

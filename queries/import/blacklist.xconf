@@ -20,6 +20,7 @@ delete from blacklist
   <![CDATA[
 insert into blacklist (distr_id, account_id, prod_id, locked, db_ids)
     values ('%distr_id%', '%account_id%', '%prod_id%', NIL(%locked%), array['%ErpCode%'])
+on conflict do nothing
   ]]>
 </insert>
 <end>

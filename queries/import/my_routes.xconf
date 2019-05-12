@@ -43,7 +43,12 @@ begin
     delete from my_routes where user_id='';
     delete from my_routes where account_id='';
 
-    for x in select generate_series::date_t from generate_series(current_date + 1, (select max(p_date)::date from my_routes), '1 day')
+    for x in select generate_series::date_t from generate_series(current_date + 1, (
+	select max(d) from (
+	    select max(p_date)::date d from my_routes
+		union
+	    select max(b_date)::date d from content_stream where content_code='tech_route'
+	) subq), '1 day')
     loop
 	c := 0;
 	for u in
