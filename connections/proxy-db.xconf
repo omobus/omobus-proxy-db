@@ -5,5 +5,5 @@
     storage="omobus-proxy-db"
     user="omobus"
     password="omobus"
-    trace="yes"
+    trace="no"
     />
