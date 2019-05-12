@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <deletions templ="%account_id%;%user_id%;%fix_dt%;%note%;%photo%;%validator_id%;%validated%;%hidden%;">
   <![CDATA[
-select account_id, user_id, fix_dt, note, null photo, validator_id, validated, hidden from j_deletions
-    where (current_timestamp - updated_ts) < "LTS_aging"()
+select 
+    x.account_id, x.user_id, x.fix_dt, x.note, ts.guid photo, x.validator_id, x.validated, x.hidden 
+from j_deletions x
+    left join thumbnail_stream ts on ts.photo = x.photo
+where (current_timestamp - x.updated_ts) < "LTS_aging"()
 order by 1, 2, 3
   ]]>
 </deletions>

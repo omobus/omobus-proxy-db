@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<thumbnails templ="%ref_id%;%photo%;%thumb%;%thumb_width%;%thumb_height%;">
+  <![CDATA[
+select guid ref_id, photo, thumb, thumb_width, thumb_height from thumbnail_stream
+    where (current_timestamp - updated_ts) < "LTS_aging"()
+order by 1
+  ]]>
+</thumbnails>

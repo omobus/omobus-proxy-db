@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dyn_shelfs templ="%fix_date%;%account_id%;%categ_id%;%brand_id%;%facing%;%assortment%;%sos%;%soa%;%photo0%;%photo1%;%photo2%;%photo3%;%sos_target%;%soa_target%;%fix_dt%;%user_id%;">
+<dyn_shelfs templ="%fix_date%;%account_id%;%categ_id%;%brand_id%;%facing%;%assortment%;%sos%;%soa%;%photos%;%sos_target%;%soa_target%;%fix_dt%;%user_id%;">
   <![CDATA[
-select fix_date, account_id, categ_id, brand_id, facing, assortment, sos_target, soa_target, sos, soa, photos[1] photo0, photos[2] photo1, photos[3] photo2, photos[4] photo3, fix_dt, user_id from dyn_shelfs
-    where (current_timestamp - updated_ts) < "LTS_aging"()
+select 
+    x.fix_date, x.account_id, x.categ_id, x.brand_id, x.facing, x.assortment, x.sos_target, x.soa_target, x.sos, x.soa, x.fix_dt, x.user_id,
+    (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(x.photos)) photos
+from dyn_shelfs x
+    where (current_timestamp - x.updated_ts) < "LTS_aging"()
 order by 1, 2, 3, 4
   ]]>
 </dyn_shelfs>

@@ -14,7 +14,7 @@
     ftp.recv_timeout="5"
     ftp.send_timeout="5"
     ftp.epsv="true"
-    ftp.tls="no"
+    ftp.tls="yes"
     ftp.ccc="yes"
     ftp.cdc="yes"
     pack.type="txt.bz2"
@@ -106,6 +106,7 @@
 <xi:include href="../queries/2lts/target_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/testing_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/testing_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/thumbnails.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/training_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/training_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/trainings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -203,6 +204,7 @@
     <target_types />
     <testing_criterias />
     <testing_scores />
+    <thumbnails />
     <training_materials />
     <training_types />
     <trainings />

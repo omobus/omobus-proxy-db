@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <presentations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%participants%;%tm_ids%;%doc_note%;%photo%;">
   <![CDATA[
-select doc_id, fix_dt, user_id, account_id, participants, array_to_string(tm_ids,',') tm_ids, doc_note, photo from h_presentation
-    where (current_timestamp - inserted_ts) < "LTS_aging"()
+select 
+    x.doc_id, x.fix_dt, x.user_id, x.account_id, x.participants, array_to_string(x.tm_ids,',') tm_ids, x.doc_note, ts.guid photo 
+from h_presentation x
+   left join thumbnail_stream ts on ts.photo = x.photo
+where (current_timestamp - x.inserted_ts) < "LTS_aging"()
 order by 1
   ]]>
 </presentations>
