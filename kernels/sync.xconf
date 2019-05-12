@@ -14,7 +14,7 @@
     ftp.recv_timeout="5"
     ftp.send_timeout="5"
     ftp.epsv="yes"
-    ftp.tls="yes"
+    ftp.tls="no"
     ftp.ccc="no"
     ftp.cdc="no"
     pack.type="txt.gz"
