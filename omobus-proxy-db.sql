@@ -5321,7 +5321,7 @@ create trigger trig_updated_ts before update on j_pending for each row execute p
 
 create table j_revocations (
     doc_id 		uid_t 		not null primary key,
-    doc_type 		uid_t 		not null,
+    doc_type 		doctype_t 	not null,
     rev_cookie 		uid_t 		not null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
