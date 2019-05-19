@@ -35,8 +35,8 @@ begin
 
 -- **** photo --> j_revokations
     if( (select count(*) from h_revoke where rev_cookie='%rev_cookie%') > 0 and (select count(*) from j_revocations where rev_cookie='%rev_cookie%') = 0 ) then
-	insert into j_revocations(doc_id, doc_code, rev_cookie)
-	    values('%doc_id_sys%', 'h_photo', '%rev_cookie%');
+	insert into j_revocations(doc_id, doc_type, rev_cookie)
+	    values('%doc_id_sys%', 'photo', '%rev_cookie%');
     end if;
 
 -- **** photo --> thumbnail_stream

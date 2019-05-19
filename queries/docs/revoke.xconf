@@ -37,8 +37,8 @@ begin
     if( (select count(*) from j_revocations where rev_cookie='%rev_cookie%') > 0 ) then
 	raise notice 'duplicate revoke: %', '%rev_cookie%';
     else
-	insert into j_revocations(doc_id, doc_code, rev_cookie)
-	    select doc_id, 'h_photo', rev_cookie from h_photo where rev_cookie is not null and rev_cookie='%rev_cookie%';
+	insert into j_revocations(doc_id, doc_type, rev_cookie)
+	    select doc_id, 'photo', rev_cookie from h_photo where rev_cookie is not null and rev_cookie='%rev_cookie%';
     end if;
 
 -- **** revoke --> content_stream
