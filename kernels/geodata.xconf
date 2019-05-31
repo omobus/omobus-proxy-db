@@ -86,6 +86,7 @@ begin
 		update "content_stream.ghost" set data_ts=current_timestamp where user_id=u_id and content_code='tech_route' and b_date=r_date;
 	    end loop;
 	    c = c + 1;
+	    raise notice '[account_id=%s] location has been reset.', a_id;
 	end if;
     end loop;
     if c > 0 then
