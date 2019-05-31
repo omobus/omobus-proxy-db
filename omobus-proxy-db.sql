@@ -5643,7 +5643,10 @@ begin
 	select latitude, longitude from accounts where account_id=new.account_id
 	    into la, lo;
 	if( la is null or lo is null or la <> new.latitude or lo <> new.longitude ) then
-	    if( "paramUID"('accounts:city_id') = 'auto' ) then
+	    update accounts set latitude=new.latitude, longitude=new.longitude
+		where account_id=new.account_id;
+
+	    if( "paramUID"('accounts:city_id') = 'auto' and new."x-address" is not null ) then
 		/* find city */
 		select city_id from cities x where x.country_id=new."x-country" and trim(lower(x.descr))=trim(lower(new."x-city")) and x.ftype=0 and x.hidden=0
 		    and (trim(lower(new."x-region"))=trim(lower(new."x-city")) or (select count(*) from cities f where f.city_id=x.pid and trim(lower(f.descr))=trim(lower(new."x-region"))) = 1)
@@ -5656,11 +5659,11 @@ begin
 		if( c_id is null ) then
 		    raise notice 'account_id=% => unable to find city_id (x-country=%; x-region=%; x-city=%)', 
 			new.account_id, new."x-country", new."x-region", new."x-city";
+		else
+		    update accounts set city_id=c_id
+			where account_id=new.account_id;
 		end if;
 	    end if;
-
-	    update accounts set latitude=new.latitude, longitude=new.longitude, city_id=c_id
-		where account_id=new.account_id;
 	end if;
     end if;
     return null;
@@ -5675,7 +5678,7 @@ create trigger trig_geocode after insert on h_location for each row
     execute procedure tf_geocode$reverse();
 -- geocode_stream --> accounts
 create trigger trig_geocode after update on geocode_stream for each row
-    when (new.content_ts is not null and new.content_ts > new.inserted_ts and new."x-address" is not null) execute procedure tf_geocode$results();
+    when (new.content_ts is not null and new.content_ts > new.inserted_ts) execute procedure tf_geocode$results();
 
 
 create table health_stream (
@@ -6027,7 +6030,7 @@ begin
 	return next my_id;
     end if;
 
-    for u in select user_id from users where pids @> array[my_id]::uids_t /*and hidden = 0*/
+    for u in select user_id from users where pids @> array[my_id]::uids_t and hidden = 0
     loop
 	return next u; -- return current row of select
 	
