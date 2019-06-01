@@ -8,13 +8,15 @@ declare
     e emails_t = string_to_array("paramUID"('srv:bcc'),',');
     x text = "paramUID"('db:id');
     b uid_t;
+    ts ts_t;
 begin
-    for b in select db_id from health_stream where (alarm is null or alarm = 0) and (current_timestamp - health) > d loop
+    for b, ts in select db_id, health from health_stream where (alarm is null or alarm = 0) and (current_timestamp - health) > d loop
 	insert into mail_stream (rcpt_to, cap, msg, priority)
 	    values (e, format('OMOBUS: LTS storage (%s: %s)', x, b), 
-		'LTS database is out of date by more than 8 hours. It is recommended to check the data loading procedure.', 2 /*high*/);
+		format('LTS database is out of date by more than 8 hours (Last data at %s). It is recommended to check the data loading procedure.', ts),
+		2 /*high*/);
 	update health_stream set alarm = 1 where db_id = b;
-	raise notice 'LTS database is out of date (db_id = %).', b;
+	raise notice 'LTS database is out of date (db_id = %, health = %).', b, ts;
     end loop;
 end;
 $$
