@@ -4,7 +4,7 @@
   <![CDATA[
 select photo::uid_t blob_id, photo from thumbnail_stream 
     where thumb800 is null and thumb800_height is null
-limit 10000
+limit 500
   ]]>
 </get>
 <set>
