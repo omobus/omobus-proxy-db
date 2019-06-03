@@ -518,6 +518,10 @@ select
     (s.packets).fix_time packets_time,
     s.gps_violations,
     s.tm_violations,
+    case when (s.packets).count > 0 then (select count(act_id) from a_gps_pos 
+	where user_id=u.user_id and left(fix_dt, 10)='%b_date%' and (latitude<>0 or longitude<>0)) else null end pos_exist,
+    case when (s.packets).count > 0 then (select count(act_id) from a_gps_pos 
+	where user_id=u.user_id and left(fix_dt, 10)='%b_date%' and (latitude=0 and longitude=0)) else null end pos_empty,
     case when (s.packets).count > 0 then (select battery_life from a_power
 	where user_id=u.user_id and left(fix_dt, 10)='%b_date%' and substring(fix_dt, 12, 5) < coalesce(u."rules:wd_begin", "paramUID"('rules:wd_begin')::time_t)
 	order by fix_dt desc limit 1) else null end power_begin,
@@ -1147,6 +1151,9 @@ if rowset_rows(_stats) > 0 then
     tb.wd = {}
     tb.wd.b = rowset_value(_stats, 0, rowset_colid(_stats, "wd_begin"))
     tb.wd.e = rowset_value(_stats, 0, rowset_colid(_stats, "wd_end"))
+    tb.positions = {}
+    tb.positions.exist = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "pos_exist")))
+    tb.positions.empty = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "pos_empty")))
 end
 if rowset_rows(_traffics) > 0 then
     tb.traffics = {}
