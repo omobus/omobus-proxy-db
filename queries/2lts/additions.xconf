@@ -8,10 +8,6 @@ select
 from j_additions a
     left join geocode_stream g0 on g0.account_id=a.guid and g0.reverse=0
     left join geocode_stream g1 on g1.account_id=a.guid and g1.reverse=1
-    left join thumbnail_stream ts0 on ts0.photo = a.photos[1]
-    left join thumbnail_stream ts1 on ts1.photo = a.photos[2]
-    left join thumbnail_stream ts2 on ts2.photo = a.photos[3]
-    left join thumbnail_stream ts3 on ts3.photo = a.photos[4]
 where (current_timestamp - a.updated_ts) < "LTS_aging"()
 order by 1
   ]]>
