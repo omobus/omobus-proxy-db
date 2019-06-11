@@ -1838,7 +1838,7 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','resolution/caption','Резолюция на заявку #$(ticket_id).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','resolution/body','<html><body>От $(inserted_ts)<br/>$(doc_note)</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/caption','Новая задача: $(subject)');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/body','<html><body>В <b>$(a_name) $(address)</b>, <i>$(fix_dt)</i> была поставлена задача $(subject):<br/><br/>$(body)<br/><br/>Автор: <b>$(u_name)</b>.<br/>Срок действия с <b>$(b_date)</b> по <b>$(e_date)</b>.</body></html>');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/body','<html><body>В рамках выполнения активности $(activity_type), <i>$(fix_dt)</i> была поставлена следующая задача:<br/><br/>$(body)<br/><br/>Автор: <b>$(u_name)</b>.<br/>Срок действия с <b>$(b_date)</b> по <b>$(e_date)</b>.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','ticket/caption','Заявка #$(ticket_id)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','ticket/caption:closed','Заявка #$(ticket_id) (ЗАКРЫТА)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','ticket/body','<html><body>ВНИМАНИЕ. Результаты решения данной проблемы будут высланы отдельным уведомлением (резолюцией).<br/><br/>Зарегистрировано: $(inserted_ts).<br/>Проблема: $(issue).<br/>$(doc_note)</body></html>');
