@@ -66,6 +66,7 @@ notice->lifetime = 5
 location->radius = 2000
 target->calendar->left = 0
 #target->calendar->right = 60
+target->everyone = yes
 target->urgent = yes
 profile->channel = yes
 profile->potential = yes
