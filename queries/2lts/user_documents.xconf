@@ -4,7 +4,7 @@
 select act_id, user_id, w_cookie, left(fix_dt,10) fix_date, doc_type, doc_no, duration, rows, fix_dt, latitude, longitude, satellite_dt, a_cookie, account_id, activity_type_id, employee_id,
     (select doc_id from j_docs j where a.user_id=j.user_id and a.doc_no=j.doc_no and a.dev_id=j.dev_id and a.fix_dt=j.fix_dt limit 1) doc_id
 from a_user_document a
-    where (current_timestamp - inserted_ts) < "LTS_aging"()
+    where "LTS_aging_L"() <= inserted_ts and inserted_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </user_documents>

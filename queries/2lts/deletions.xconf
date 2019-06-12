@@ -5,7 +5,7 @@ select
     x.account_id, x.user_id, x.fix_dt, x.note, ts.guid photo, x.validator_id, x.validated, x.hidden 
 from j_deletions x
     left join thumbnail_stream ts on ts.photo = x.photo
-where (current_timestamp - x.updated_ts) < "LTS_aging"()
+where "LTS_aging_L"() <= x.updated_ts and x.updated_ts <= "LTS_aging_R"()
 order by 1, 2, 3
   ]]>
 </deletions>

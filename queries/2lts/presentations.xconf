@@ -5,7 +5,7 @@ select
     x.doc_id, x.fix_dt, x.user_id, x.account_id, x.participants, array_to_string(x.tm_ids,',') tm_ids, x.doc_note, ts.guid photo 
 from h_presentation x
    left join thumbnail_stream ts on ts.photo = x.photo
-where (current_timestamp - x.inserted_ts) < "LTS_aging"()
+where "LTS_aging_L"() <= x.inserted_ts and x.inserted_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </presentations>

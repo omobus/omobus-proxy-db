@@ -5,7 +5,7 @@ select
     x.doc_id, x.fix_dt, x.user_id, x.account_id, x.target_id, x.confirm_id, x.doc_note, 
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(x.photos)) photos
 from h_confirmation x
-    where (current_timestamp - x.inserted_ts) < "LTS_aging"()
+    where "LTS_aging_L"() <= x.inserted_ts and x.inserted_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </confirmations>

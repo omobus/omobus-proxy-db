@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <_timestamp templ="%timestamp%;">
   <![CDATA[
-select current_timestamp "timestamp"
+select "LTS_aging_R"() "timestamp"
   ]]>
 </_timestamp>

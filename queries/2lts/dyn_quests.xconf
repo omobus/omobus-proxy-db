@@ -2,7 +2,7 @@
 <dyn_quests templ="%fix_date%;%account_id%;%qname_id%;%qrow_id%;%value%;%fix_dt%;%user_id%;">
   <![CDATA[
 select fix_date, account_id, qname_id, qrow_id, value, fix_dt, user_id from dyn_quests
-    where (current_timestamp - updated_ts) < "LTS_aging"()
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2, 3
   ]]>
 </dyn_quests>

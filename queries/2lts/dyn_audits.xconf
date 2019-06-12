@@ -5,7 +5,7 @@ select
     x.fix_date, x.account_id, x.categ_id, x.audit_criteria_id, x.audit_score_id, x.criteria_wf, x.score_wf, x.score, x.note, x.wf, x.sla, x.fix_dt, x.user_id,
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(x.photos)) photos
 from dyn_audits x
-    where (current_timestamp - x.updated_ts) < "LTS_aging"()
+    where "LTS_aging_L"() <= x.updated_ts and x.updated_ts <= "LTS_aging_R"()
 order by 1, 2, 3, 4
   ]]>
 </dyn_audits>

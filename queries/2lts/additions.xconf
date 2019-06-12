@@ -8,7 +8,7 @@ select
 from j_additions a
     left join geocode_stream g0 on g0.account_id=a.guid and g0.reverse=0
     left join geocode_stream g1 on g1.account_id=a.guid and g1.reverse=1
-where (current_timestamp - a.updated_ts) < "LTS_aging"()
+where "LTS_aging_L"() <= a.updated_ts and a.updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </additions>

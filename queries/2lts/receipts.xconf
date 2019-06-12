@@ -2,7 +2,7 @@
 <receipts templ="%doc_id%;%fix_dt%;%distr_id%;%user_id%;%account_id%;%receipt_type_id%;%amount%;%doc_note%;">
   <![CDATA[
 select doc_id, fix_dt, distr_id, user_id, account_id, receipt_type_id, amount, doc_note from h_receipt
-    where (current_timestamp - inserted_ts) < "LTS_aging"()
+    where "LTS_aging_L"() <= inserted_ts and inserted_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </receipts>

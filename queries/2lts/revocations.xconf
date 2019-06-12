@@ -2,7 +2,7 @@
 <revocations templ="%doc_id%;%doc_type%;%hidden%;">
   <![CDATA[
 select doc_id, doc_type, hidden from j_revocations
-    where (current_timestamp - updated_ts) < "LTS_aging"()
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </revocations>

@@ -2,7 +2,7 @@
 <thumbnails templ="%ref_id%;%photo%;%thumb%;%thumb_width%;%thumb_height%;">
   <![CDATA[
 select guid ref_id, photo, thumb, thumb_width, thumb_height from thumbnail_stream
-    where (current_timestamp - updated_ts) < "LTS_aging"()
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </thumbnails>

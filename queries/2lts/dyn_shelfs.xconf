@@ -5,7 +5,7 @@ select
     x.fix_date, x.account_id, x.categ_id, x.brand_id, x.facing, x.assortment, x.sos_target, x.soa_target, x.sos, x.soa, x.fix_dt, x.user_id,
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(x.photos)) photos
 from dyn_shelfs x
-    where (current_timestamp - x.updated_ts) < "LTS_aging"()
+    where "LTS_aging_L"() <= x.updated_ts and x.updated_ts <= "LTS_aging_R"()
 order by 1, 2, 3, 4
   ]]>
 </dyn_shelfs>

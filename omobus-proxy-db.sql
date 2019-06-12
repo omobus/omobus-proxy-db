@@ -5691,7 +5691,18 @@ create table health_stream (
 
 create trigger trig_updated_ts before update on health_stream for each row execute procedure tf_updated_ts();
 
-create or replace function "LTS_aging"() returns interval
+create or replace function "LTS_aging_L"() returns ts_t
+as $body$
+declare
+    x ts_t;
+    a ts_t = current_timestamp;
+begin
+    select min(health) from health_stream into x;
+    return case when x is null then ("monthDate_First"(current_date - "paramInteger"('gc:keep_alive'::uid_t)))::ts_t else x end;
+end;
+$body$ language plpgsql STABLE;
+
+create or replace function "LTS_aging_R"() returns ts_t
 as $body$
 declare
     x ts_t;
@@ -5699,7 +5710,7 @@ declare
     d interval = '48:00:00'::interval;
 begin
     select min(health) from health_stream into x;
-    return case when x is null then d when x > a then d when (a - x) > d then d else a - x end;
+    return case when x is null then ("monthDate_First"(current_date - "paramInteger"('gc:keep_alive'::uid_t)))::ts_t + d when (a - x) > d then x + d else a end;
 end;
 $body$ language plpgsql STABLE;
 
