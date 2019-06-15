@@ -10,9 +10,9 @@ select
     m.descr tm, 
     case when m.brand_ids is null or cardinality(m.brand_ids) = 1 then b.descr else
 	(select array_to_string(array_agg(descr::text),', ') from brands where brand_id=any(m.brand_ids)) end brand,
-    h.doc_note, h.blob_id
+    h.doc_note, h.photos
 from (
-    select doc_id, fix_dt, inserted_ts, account_id, participants, unnest(tm_ids) tm_id, doc_note, photo::varchar blob_id from h_presentation
+    select doc_id, fix_dt, inserted_ts, account_id, participants, unnest(tm_ids) tm_id, doc_note, array_to_string(photos,',') photos from h_presentation
 	where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
 ) h
     left join training_materials m on m.tm_id = h.tm_id
@@ -28,6 +28,8 @@ local std = require('stdlib')
 require('rtlib').main("tech_presentations", false, function(r, n, a)
 	if std.contains({'participants'}, n) then
 	    r[n] = tonumber(a)
+	elseif std.contains({'photos'}, n) then
+	    r[n] = std.split(a, ',')
 	else
 	    r[n] = a
 	end

@@ -314,7 +314,7 @@ order by t.doc_id, t.row_no
   <![CDATA[
 select
     doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration, participants, doc_note, 
-    photo::varchar blob_id, (select string_agg(descr,'|') from training_materials where tm_id = any(tm_ids)) tms
+    array_to_string(photos,',') photos, (select string_agg(descr,'|') from training_materials where tm_id = any(tm_ids)) tms
 from h_presentation
 where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
 order by fix_dt, doc_id
@@ -886,6 +886,8 @@ end)
 tb.presentations = rt.groups(_presentations, "account_id", function(r, n, a) 
     if n == "tms" then
 	r[n] = std.split(a, '|')
+    elseif n == 'photos' then
+	r[n] = std.split(a, ',')
     elseif n == 'duration' then
 	r[n] = tonumber(a)
     else
