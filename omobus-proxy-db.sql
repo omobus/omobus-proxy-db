@@ -4206,7 +4206,8 @@ create table h_presentation (
     activity_type_id 	uid_t 		not null,
     participants 	int32_t 	not null,
     tm_ids 		uids_t 		null,
-    photo		blob_t		null
+    blobs 		int32_t 	not null,
+    photos		blobs_t		null
 );
 
 create index i_fix_date_h_presentation on h_presentation (left(fix_dt,10));
@@ -4215,7 +4216,8 @@ create index i_account_id_h_presentation on h_presentation (account_id);
 create index i_user_id_h_presentation on h_presentation (user_id);
 create index i_exist_h_presentation on h_presentation (user_id, dev_pack, dev_id, fix_dt);
 
-create trigger trig_lock_update before update on h_presentation for each row execute procedure tf_lock_update();
+create trigger trig_lock_update before update on h_presentation for each row 
+    when (not (old.blobs > 0 and (old.photos is null or old.blobs <> array_length(old.photos, 1)))) execute procedure tf_lock_update();
 
 create table h_price (
     doc_id 		uid_t 		not null primary key default doc_id(),
