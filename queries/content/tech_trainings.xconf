@@ -11,10 +11,11 @@ select
     case when m.brand_ids is null or cardinality(m.brand_ids) = 1 then b.descr else
 	(select array_to_string(array_agg(descr::text),', ') from brands where brand_id=any(m.brand_ids)) end brand,
     c.name, c.surname, c.patronymic, 
-    h.doc_note 
+    h.doc_note,
+    h.photos
 from (
-    select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, tm_id, unnest(contact_ids) contact_id, doc_note from (
-	select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, unnest(tm_ids) tm_id, contact_ids, doc_note from h_training
+    select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, tm_id, unnest(contact_ids) contact_id, doc_note, photos from (
+	select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, unnest(tm_ids) tm_id, contact_ids, doc_note, array_to_string(photos,',') photos from h_training
 	    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
     ) z
 ) h
@@ -29,7 +30,8 @@ order by h.fix_dt, h.doc_id, c.surname, c.name, c.patronymic, b.row_no, b.descr,
     </queries>
     <generator>
   <![CDATA[
-require('rtlib').main("tech_trainings", true)
+local std = require('stdlib')
+require('rtlib').main("tech_trainings", true, function(r, n, a) r[n] = std.contains({'photos'}, n) and std.split(a, ',') or a; end)
   ]]>
     </generator>
 </tech_trainings>

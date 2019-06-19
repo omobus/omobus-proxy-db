@@ -21,10 +21,11 @@ select
     z.contact_id, z.name, z.surname, z.patronymic,
     z.job_title_id, j.descr job_title,
     h.doc_note, 
+    h.photos,
     u.executivehead_id head_id, ex.descr head_name
 from (
-    select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, tm_id, unnest(contact_ids) contact_id, doc_note from (
-	select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, unnest(tm_ids) tm_id, contact_ids, doc_note from h_training
+    select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, tm_id, unnest(contact_ids) contact_id, doc_note, photos from (
+	select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, unnest(tm_ids) tm_id, contact_ids, doc_note, array_to_string(photos,',') photos from h_training
 	    where '%b_date%'<=left(fix_dt, 10) and left(fix_dt, 10)<='%e_date%'
     ) xz
 ) h
@@ -47,7 +48,8 @@ order by h.inserted_ts desc, u.descr, h.doc_id, b.row_no, b.descr, m.descr
     </queries>
     <generator>
   <![CDATA[
-require('rtlib').main("trainings", true)
+local std = require('stdlib')
+require('rtlib').main("trainings", true, function(r, n, a) r[n] = std.contains({'photos'}, n) and std.split(a, ',') or a; end)
   ]]>
     </generator>
 </stat_trainings>

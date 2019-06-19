@@ -478,7 +478,7 @@ order by t.doc_id, t.row_no, x.descr
   <![CDATA[
 select 
     h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, t.descr training_type, 
-    (select string_agg(descr,'|') from training_materials where tm_id = any(tm_ids)) tms, h.doc_note
+    (select string_agg(descr,'|') from training_materials where tm_id = any(tm_ids)) tms, h.doc_note, array_to_string(photos,',') photos
 from h_training h
     left join training_types t on t.training_type_id = h.training_type_id
 where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
@@ -1091,7 +1091,9 @@ idx = {}; tb.trainings = rt.groups(_trainings_L0, "account_id", function(r, n, a
 	r.contacts = {}; idx[a] = r.contacts; r[n] = a
     elseif n == 'duration' then
 	r[n] = tonumber(a)
-    elseif n == "tms" then
+    elseif n == 'photos' then
+	r[n] = std.split(a, ',')
+    elseif n == 'tms' then
 	r[n] = std.split(a, '|')
     else
 	r[n] = a
