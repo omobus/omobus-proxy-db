@@ -20,6 +20,17 @@
 
     <xs:element name="training">
 	<xs:complexType>
+	    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+		<xs:element name="blob">
+		    <xs:complexType>
+			<xs:simpleContent>
+			    <xs:extension base="xs:base64Binary">
+				<!-- attributes -->
+			    </xs:extension>
+			</xs:simpleContent>
+		    </xs:complexType>
+		</xs:element>
+	    </xs:sequence>
 	    <xs:attribute name="vstamp" use="required" type="xs:string" />
 	    <xs:attribute name="dev_pack" use="required" type="xs:integer" />
 	    <xs:attribute name="dev_id" use="required" type="xs:string" />
@@ -43,6 +54,7 @@
 	    <xs:attribute name="training_type_id" use="optional" type="uid_t" default="" />
 	    <xs:attribute name="tm_ids" use="required" type="xs:string" />
 	    <xs:attribute name="contact_ids" use="required" type="xs:string" />
+	    <xs:attribute name="blobs" use="required" type="xs:integer" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>

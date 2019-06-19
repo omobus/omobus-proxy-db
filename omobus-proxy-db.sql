@@ -4811,7 +4811,9 @@ create table h_training (
     activity_type_id 	uid_t 		not null,
     training_type_id	uid_t		null,
     contact_ids 	uids_t 		not null,
-    tm_ids 		uids_t 		not null
+    tm_ids 		uids_t 		not null,
+    blobs 		int32_t 	not null,
+    photos		blobs_t		null
 );
 
 create index i_fix_date_h_training on h_training (left(fix_dt,10));
@@ -4820,7 +4822,8 @@ create index i_account_id_h_training on h_training (account_id);
 create index i_user_id_h_training on h_training (user_id);
 create index i_exist_h_training on h_training (user_id, dev_pack, dev_id, fix_dt);
 
-create trigger trig_lock_update before update on h_training for each row execute procedure tf_lock_update();
+create trigger trig_lock_update before update on h_training for each row 
+    when (not (old.blobs > 0 and (old.photos is null or old.blobs <> array_length(old.photos, 1)))) execute procedure tf_lock_update();
 
 create table h_unsched (
     doc_id 		uid_t 		not null primary key default doc_id(),
