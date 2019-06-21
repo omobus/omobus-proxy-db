@@ -2302,6 +2302,8 @@ $body$
 language 'plpgsql';
 
 create index i_db_ids_targets on targets using GIN (db_ids);
+create index i_2lts_targets on targets (updated_ts);
+
 create trigger trig_rows before insert or update on targets for each row execute procedure tf_targets$rows();
 create trigger trig_updated_ts before update on targets for each row execute procedure tf_updated_ts();
 
@@ -2750,6 +2752,7 @@ create index i_user_id_a_gps_pos on a_gps_pos (user_id);
 create index i_fix_date_a_gps_pos on a_gps_pos (left(fix_dt,10));
 create index i_exist_a_gps_pos on a_gps_pos (user_id, dev_pack, dev_id, fix_dt);
 create index i_daily_a_gps_pos on a_gps_pos (user_id, left(fix_dt,10)); /* especially for getting daily data */
+create index i_2lts_a_gps_pos on a_gps_pos (inserted_ts);
 
 create trigger trig_lock_update before update on a_gps_pos for each row execute procedure tf_lock_update();
 
@@ -2780,6 +2783,7 @@ create table a_gps_trace (
 create index i_user_id_a_gps_trace on a_gps_trace (user_id);
 create index i_fix_date_a_gps_trace on a_gps_trace (left(fix_dt,10));
 create index i_daily_a_gps_trace on a_gps_trace (user_id, left(fix_dt,10)); /* especially for getting daily data */
+create index i_2lts_a_gps_trace on a_gps_trace (inserted_ts);
 
 create trigger trig_lock_update before update on a_gps_trace for each row execute procedure tf_lock_update();
 
@@ -3231,6 +3235,7 @@ create index i_account_id_a_user_document on a_user_document (account_id);
 create index i_a_type_id_a_user_document on a_user_document (activity_type_id);
 create index i_employee_id_a_user_document on a_user_document (employee_id);
 create index i_exist_a_user_document on a_user_document (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_a_user_document on a_user_document (inserted_ts);
 
 create trigger trig_lock_update before update on a_user_document for each row execute procedure tf_lock_update();
 
@@ -3289,6 +3294,7 @@ create index i_a_type_id_a_user_report on a_user_report (activity_type_id);
 create index i_fix_date_a_user_report on a_user_report (left(fix_dt,10));
 create index i_employee_id_a_user_report on a_user_document (employee_id);
 create index i_exist_a_user_report on a_user_report (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_a_user_report on a_user_report (inserted_ts);
 
 create trigger trig_lock_update before update on a_user_report for each row execute procedure tf_lock_update();
 
@@ -3612,6 +3618,7 @@ create index i_fix_date_h_comment on h_comment (left(fix_dt,10));
 create index i_doc_no_h_comment on h_comment (doc_no);
 create index i_account_id_h_comment on h_comment (account_id);
 create index i_exist_h_comment on h_comment (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_h_comment on h_comment (inserted_ts);
 
 create trigger trig_lock_update before update on h_comment for each row execute procedure tf_lock_update();
 
@@ -3685,6 +3692,7 @@ create index i_doc_no_h_confirmation on h_confirmation (doc_no);
 create index i_account_id_h_confirmation on h_confirmation (account_id);
 create index i_user_id_h_confirmation on h_confirmation (user_id);
 create index i_exist_h_confirmation on h_confirmation (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_h_confirmation on h_confirmation (inserted_ts);
 
 create trigger trig_lock_update before update on h_confirmation for each row 
     when (not (old.blobs > 0 and (old.photos is null or old.blobs <> array_length(old.photos, 1)))) execute procedure tf_lock_update();
@@ -4056,6 +4064,7 @@ create index i_doc_no_h_order on h_order (doc_no);
 create index i_account_id_h_order on h_order (account_id);
 create index i_user_id_h_order on h_order (user_id);
 create index i_exist_h_order on h_order (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_h_order on h_order (inserted_ts);
 
 create trigger trig_lock_update before update on h_order for each row execute procedure tf_lock_update();
 create trigger trig_lock_update before update on t_order for each row execute procedure tf_lock_update();
@@ -4132,6 +4141,7 @@ create index i_doc_no_h_photo on h_photo (doc_no);
 create index i_account_id_h_photo on h_photo (account_id);
 create index i_user_id_h_photo on h_photo (user_id);
 create index i_exist_h_photo on h_photo (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_h_photo on h_photo (inserted_ts);
 create index i_rev_cookie_h_photo on h_photo (rev_cookie);
 
 create trigger trig_lock_update before update on h_photo for each row execute procedure tf_lock_update();
@@ -4176,6 +4186,7 @@ create index i_doc_no_h_presence on h_presence (doc_no);
 create index i_account_id_h_presence on h_presence (account_id);
 create index i_user_id_h_presence on h_presence (user_id);
 create index i_exist_h_presence on h_presence (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_h_presence on h_presence (inserted_ts);
 
 create trigger trig_lock_update before update on h_presence for each row execute procedure tf_lock_update();
 create trigger trig_lock_update before update on t_presence for each row execute procedure tf_lock_update();
@@ -4469,6 +4480,7 @@ create index i_doc_no_h_receipt on h_receipt (doc_no);
 create index i_account_id_h_receipt on h_receipt (account_id);
 create index i_user_id_h_receipt on h_receipt (user_id);
 create index i_exist_h_receipt on h_receipt (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_h_receipt on h_receipt (inserted_ts);
 
 create trigger trig_lock_update before update on h_receipt for each row execute procedure tf_lock_update();
 
@@ -4524,6 +4536,7 @@ create index i_doc_no_h_reclamation on h_reclamation (doc_no);
 create index i_account_id_h_reclamation on h_reclamation (account_id);
 create index i_user_id_h_reclamation on h_reclamation (user_id);
 create index i_exist_h_reclamation on h_reclamation (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_h_reclamation on h_reclamation (inserted_ts);
 
 create trigger trig_lock_update before update on h_reclamation for each row execute procedure tf_lock_update();
 create trigger trig_lock_update before update on t_reclamation for each row execute procedure tf_lock_update();
@@ -4821,6 +4834,7 @@ create index i_doc_no_h_training on h_training (doc_no);
 create index i_account_id_h_training on h_training (account_id);
 create index i_user_id_h_training on h_training (user_id);
 create index i_exist_h_training on h_training (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_h_training on h_training (inserted_ts);
 
 create trigger trig_lock_update before update on h_training for each row 
     when (not (old.blobs > 0 and (old.photos is null or old.blobs <> array_length(old.photos, 1)))) execute procedure tf_lock_update();
@@ -4853,6 +4867,7 @@ create index i_fix_date_h_unsched on h_unsched (left(fix_dt,10));
 create index i_doc_no_h_unsched on h_unsched (doc_no);
 create index i_user_id_h_unsched on h_unsched (user_id);
 create index i_exist_h_unsched on h_unsched (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_h_unsched on h_unsched (inserted_ts);
 
 create trigger trig_lock_update before update on h_unsched for each row execute procedure tf_lock_update();
 
@@ -4911,6 +4926,8 @@ create table dyn_advt (
     primary key(fix_date, account_id, placement_id, posm_id)
 );
 
+create index i_2lts_dyn_advt on dyn_advt (updated_ts);
+
 create trigger trig_updated_ts before update on dyn_advt for each row execute procedure tf_updated_ts();
 
 create table dyn_audits (
@@ -4935,6 +4952,8 @@ create table dyn_audits (
     primary key(fix_date, account_id, categ_id, audit_criteria_id)
 );
 
+create index i_2lts_dyn_audits on dyn_audits(updated_ts);
+
 create trigger trig_updated_ts before update on dyn_audits for each row execute procedure tf_updated_ts();
 
 create table dyn_checkups (
@@ -4951,6 +4970,8 @@ create table dyn_checkups (
     "_isRecentData"	bool_t 		null,
     primary key(fix_date, account_id, placement_id, prod_id)
 );
+
+create index i_2lts_dyn_checkups on dyn_checkups (updated_ts);
 
 create trigger trig_updated_ts before update on dyn_checkups for each row execute procedure tf_updated_ts();
 
@@ -4987,6 +5008,8 @@ create table dyn_oos (
     primary key(fix_date, account_id, prod_id)
 );
 
+create index i_2lts_dyn_oos on dyn_oos (updated_ts);
+
 create trigger trig_updated_ts before update on dyn_oos for each row execute procedure tf_updated_ts();
 
 create table j_presences (
@@ -5019,6 +5042,8 @@ create table dyn_presences (
     primary key(fix_date, account_id, prod_id)
 );
 
+create index i_2lts_dyn_presences on dyn_presences (updated_ts);
+
 create trigger trig_updated_ts before update on dyn_presences for each row execute procedure tf_updated_ts();
 
 create table dyn_prices (
@@ -5038,6 +5063,8 @@ create table dyn_prices (
     primary key(fix_date, account_id, prod_id)
 );
 
+create index i_2lts_dyn_prices on dyn_prices (updated_ts);
+
 create trigger trig_updated_ts before update on dyn_prices for each row execute procedure tf_updated_ts();
 
 create table dyn_quests (
@@ -5054,6 +5081,8 @@ create table dyn_quests (
     "_isRecentData"	bool_t 		null,
     primary key(fix_date, account_id, qname_id, qrow_id)
 );
+
+create index i_2lts_dyn_quests on dyn_quests (updated_ts);
 
 create trigger trig_updated_ts before update on dyn_quests for each row execute procedure tf_updated_ts();
 
@@ -5076,6 +5105,8 @@ create table dyn_ratings (
     primary key(fix_date, account_id, employee_id, rating_criteria_id)
 );
 
+create index i_2lts_dyn_ratings on dyn_ratings (updated_ts);
+
 create trigger trig_updated_ts before update on dyn_ratings for each row execute procedure tf_updated_ts();
 
 create table dyn_reviews (
@@ -5094,6 +5125,8 @@ create table dyn_reviews (
     "_isRecentData"	bool_t 		null,
     primary key(fix_date, employee_id)
 );
+
+create index i_2lts_dyn_reviews on dyn_reviews (updated_ts);
 
 create trigger trig_updated_ts before update on dyn_reviews for each row execute procedure tf_updated_ts();
 
@@ -5117,6 +5150,8 @@ create table dyn_shelfs (
     "_isRecentData"	bool_t 		null,
     primary key(fix_date, account_id, categ_id, brand_id)
 );
+
+create index i_2lts_dyn_shelfs on dyn_shelfs (updated_ts);
 
 create trigger trig_updated_ts before update on dyn_shelfs for each row execute procedure tf_updated_ts();
 
@@ -5148,6 +5183,8 @@ create table dyn_stocks (
     primary key(fix_date, account_id, prod_id)
 );
 
+create index i_2lts_dyn_stocks on dyn_stocks (updated_ts);
+
 create trigger trig_updated_ts before update on dyn_stocks for each row execute procedure tf_updated_ts();
 
 create table dyn_testings (
@@ -5169,6 +5206,8 @@ create table dyn_testings (
     "_isRecentData"	bool_t 		null,
     primary key(fix_date, contact_id, testing_criteria_id)
 );
+
+create index i_2lts_dyn_testings on dyn_testings (updated_ts);
 
 create trigger trig_updated_ts before update on dyn_testings for each row execute procedure tf_updated_ts();
 
@@ -5247,6 +5286,7 @@ create table j_deletions (
 );
 
 create index i_user_id_j_deletions on j_deletions (user_id);
+create index i_2lts_j_deletions on j_deletions (updated_ts);
 
 create trigger trig_updated_ts before update on j_deletions for each row execute procedure tf_updated_ts();
 
@@ -5265,6 +5305,8 @@ create table j_discards (
     updated_ts		ts_auto_t 	not null,
     primary key(user_id, account_id, activity_type_id, route_date)
 );
+
+create index i_2lts_j_discards on j_discards (updated_ts);
 
 create trigger trig_updated_ts before update on j_discards for each row execute procedure tf_updated_ts();
 
@@ -5333,6 +5375,7 @@ create table j_revocations (
     updated_ts		ts_auto_t 	not null
 );
 
+create index i_2lts_j_revocations on j_revocations (updated_ts);
 create index i_rev_cookie_j_revocations on j_revocations (rev_cookie);
 
 create trigger trig_updated_ts before update on j_revocations for each row execute procedure tf_updated_ts();
@@ -5369,6 +5412,7 @@ create index i_user_id_j_user_activities on j_user_activities (user_id);
 create index i_fix_date_j_user_activities on j_user_activities (fix_date);
 create index i_daily_j_user_activities on j_user_activities (user_id, fix_date); /* especially for getting daily data */
 create index i_guid_j_user_activities on j_user_activities (guid);
+create index i_2lts_j_user_activities on j_user_activities (updated_ts);
 
 create trigger trig_updated_ts before update on j_user_activities for each row execute procedure tf_updated_ts();
 
@@ -5417,6 +5461,7 @@ create table j_user_works (
 create index i_user_id_j_user_works on j_user_works (user_id);
 create index i_fix_date_j_user_works on j_user_works (fix_date);
 create index i_daily_j_user_works on j_user_works (user_id, fix_date); /* especially for getting daily data */
+create index i_2lts_j_user_works on j_user_works (updated_ts);
 
 create trigger trig_updated_ts before update on j_user_works for each row execute procedure tf_updated_ts();
 
@@ -5806,6 +5851,8 @@ create table thumbnail_stream (
 );
 
 create unique index i_guid_thumbnail_stream on thumbnail_stream using btree (guid);
+create index i_2lts_thumbnail_stream on thumbnail_stream (updated_ts);
+
 create trigger trig_updated_ts before update on thumbnail_stream for each row execute procedure tf_updated_ts();
 
 
