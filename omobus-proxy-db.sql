@@ -6297,7 +6297,39 @@ union
 	left join users u on u.user_id = r.user_id
 	left join sysholidays s on s.h_date = r.p_date and u.country_ids is not null and s.country_id = u.country_ids[1] and s.hidden = 0
     where r.p_date>=f_b_date and r.p_date<=f_e_date and (f_user_id is null or r.user_id=f_user_id)
-$body$ language sql;
+union /* orphaned routes: */
+    select
+	j.user_id,
+	j.route_date,
+	null::int32_t row_no,
+	null::bool_t route,
+	1::bool_t closed,
+	null::bool_t canceled,
+	null::bool_t discarded,
+	null::bool_t pending,
+	j.account_id,
+	j.b_dt,
+	j.e_dt,
+	j.b_sat_dt satellite_dt,
+	j.b_la latitude,
+	j.b_lo longitude,
+	j.e_la latitude_e,
+	j.e_lo longitude_e,
+	j.activity_type_id, a_cookie,
+	null::uid_t canceling_type_id,
+	null::note_t canceling_note,
+	null::uid_t discard_type_id,
+	null::note_t discard_note,
+	null::uid_t pending_type_id,
+	null::note_t pending_note,
+	j.zstatus,
+	j.znote,
+	j.guid
+    from j_user_activities j
+	left join my_routes m on m.user_id=j.user_id and m.account_id=j.account_id and m.p_date=j.route_date and m.activity_type_id=j.activity_type_id
+    where (f_user_id is null or j.user_id=f_user_id) and j.route_date>=f_b_date and j.route_date<=f_e_date and
+	j.route_date is not null and j.route_date<>'' and m.p_date is null
+$body$ language sql STABLE;
 
 
 
