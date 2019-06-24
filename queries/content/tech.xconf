@@ -41,7 +41,7 @@ from users u
 		select user_id, max(fix_date) fix_date from sysstats where fix_date <= '%b_date%' group by user_id
 	    ) q where fix_date <= '%b_date%' and '%b_date%' <= (current_date + 1)::date_t
 	) p on u.user_id = p.user_id
-where u.hidden = 0 or u.user_id in (select user_id from sysstats where fix_date = '%b_date%')
+where u.hidden = 0 or u.user_id in (select user_id from sysstats where fix_date = '%b_date%') or u.user_id in (select distinct user_id from my_routes where p_date = '%b_date%')
 order by u.descr
   ]]>
 	</L>
