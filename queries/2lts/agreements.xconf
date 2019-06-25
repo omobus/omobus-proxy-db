@@ -2,7 +2,7 @@
 <agreements templ="%account_id%;%placement_id%;%posm_id%;%b_date%;%e_date%;%strict%;">
   <![CDATA[
 select account_id, placement_id, posm_id, b_date, e_date, strict from agreements
-    where e_date >= current_date::date_t
+    where e_date >= "LTS_aging_L"()::date_t
 order by 1, 2, 3, 4, 5
   ]]>
 </agreements>

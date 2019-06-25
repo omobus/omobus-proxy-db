@@ -2,7 +2,7 @@
 <my_routes templ="%user_id%;%account_id%;%activity_type_id%;%p_date%;%row_no%;%duration%;">
   <![CDATA[
 select user_id, account_id, activity_type_id, p_date, row_no, duration from my_routes
-    where p_date >= current_date::date_t
+    where p_date >= "LTS_aging_L"()::date_t
 order by 1, 2, 3, 4
   ]]>
 </my_routes>
