@@ -5757,7 +5757,7 @@ as $body$
 declare
     x ts_t;
     a ts_t = current_timestamp;
-    d interval = '48:00:00'::interval;
+    d interval = '12:00:00'::interval;
 begin
     select min(health) from health_stream into x;
     return case when x is null then ("monthDate_First"(current_date - "paramInteger"('gc:keep_alive'::uid_t)))::ts_t + d when (a - x) > d then x + d else a end;
