@@ -37,8 +37,23 @@ select count(*) from health_stream
 </check_exist>
 <update>
   <![CDATA[
-update health_stream set health = '%timestamp%', alarm = null
-    where db_id = '%ErpCode%'
+do $$
+declare
+    d interval = '08:00:00'::interval;
+begin
+    if (current_timestamp - '%timestamp%'::timestamp) < d and (select count(*) from health_stream where db_id = '%ErpCode%' and alarm = 1) > 0 then
+	update health_stream set health = '%timestamp%', alarm = null
+	    where db_id = '%ErpCode%';
+	insert into mail_stream (rcpt_to, cap, msg)
+	    values (string_to_array("paramUID"('srv:bcc'),','), format('OMOBUS: LTS storage (%s: %s)', "paramUID"('db:id'), '%ErpCode%'),
+		format('LTS database health has been restored (Last data at %s).', '%timestamp%'));
+	raise notice 'LTS database health has been restored (db_id = %, health = %).', '%ErpCode%', '%timestamp%';
+    else
+	update health_stream set health = '%timestamp%'
+	    where db_id = '%ErpCode%';
+    end if;
+end;
+$$
   ]]>
 </update>
 <insert>
