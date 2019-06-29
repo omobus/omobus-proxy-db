@@ -6083,25 +6083,40 @@ end;
 $body$ language plpgsql;
 
 
-create or replace function my_staff(my_id uid_t, root bool_t) returns setof uid_t
+create or replace function my_staff(my_id uid_t, root bool_t, _ar uids_t) returns setof uid_t
 as $body$
 declare
    u uid_t;
    x uid_t;
 begin
-    if( root > 0 ) then
+    if( root > 0 and (_ar is null or not(my_id = any(_ar))) ) then
+	_ar := array_append(_ar::text[], u::text);
 	return next my_id;
     end if;
 
-    for u in select user_id from users where pids @> array[my_id]::uids_t and hidden = 0
+    for u in select user_id from users where pids @> array[my_id]::uids_t /*and hidden = 0*/
     loop
+	if u = any(_ar) then
+	    --raise notice '% already added to the hierarchy.', u;
+	    exit;
+	end if;
+
+	_ar := array_append(_ar::text[], u::text);
 	return next u; -- return current row of select
 	
-	for x in select my_staff from my_staff(u, 0::bool_t)
+	for x in select my_staff from my_staff(u, 0::bool_t, _ar)
 	loop
 	    return next x; -- return current row of select
 	end loop;
     end loop;
+end;
+$body$ language plpgsql STABLE;
+
+
+create or replace function my_staff(my_id uid_t, root bool_t) returns setof uid_t
+as $body$
+begin
+    return query select my_staff(my_id, root, null::uids_t);
 end;
 $body$ language plpgsql STABLE;
 
