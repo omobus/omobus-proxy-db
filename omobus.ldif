@@ -264,7 +264,7 @@ uid: xz_sr_1
 uidNumber: 902
 consoleStatus: enabled
 ErpId: sr01
-exchangeStatus: disabled
+exchangeStatus: enabled
 FTPStatus: enabled
 groupName: sr
 orderUnavailableProducts: yes
@@ -346,7 +346,7 @@ uid: xz_kam_1
 uidNumber: 902
 consoleStatus: enabled
 ErpId: kam01
-exchangeStatus: enabled
+exchangeStatus: disabled
 FTPStatus: enabled
 groupName: kam
 userPassword:: MQ==
@@ -400,12 +400,11 @@ homeDirectory: /var/ftp/users/_test/dev9
 mailStatus: enabled
 uid: dev9
 uidNumber: 902
-consoleStatus: enabled
 ErpId: dev9
 exchangeStatus: enabled
 FTPStatus: enabled
-groupName: sr
-syncErpId: sr01
+groupName: merch
+syncErpId: m01
 userPassword:: MA==
 
 dn: uid=xz_m_1,ou=merch,ou=users,dc=omobus,dc=local
@@ -452,7 +451,7 @@ objectClass: top
 objectClass: account
 cn: SMTP daemon
 gidNumber: 905
-homeDirectory: /var/lib/omobus.d
+homeDirectory: /dev/null
 uid: exim
 uidNumber: 902
 userPassword:: e1NTSEF9WkVQcktyL3FaNXVKUk50ZmtDU0w4eGdLdUx1ZnBiQk8rdEZnNmc9P
@@ -464,7 +463,7 @@ objectClass: top
 objectClass: account
 cn: POP3 daemon
 gidNumber: 905
-homeDirectory: /var/lib/omobus.d
+homeDirectory: /dev/null
 uid: dovecot
 uidNumber: 902
 userPassword:: e1NTSEF9WkVQcktyL3FaNXVKUk50ZmtDU0w4eGdLdUx1ZnBiQk8rdEZnNmc9P
@@ -482,13 +481,25 @@ uidNumber: 902
 userPassword:: e1NTSEF9dkhOUmxBbkdYZEs2U1lZNjlWY2kwWlpDaUgwMEw3MVpKYlduQkE9P
  Q==
 
+dn: uid=lighttpd,ou=services,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+cn: HTTP daemon
+gidNumber: 905
+homeDirectory: /dev/null
+uid: lighttpd
+uidNumber: 902
+userPassword:: e1NTSEF9WkVQcktyL3FaNXVKUk50ZmtDU0w4eGdLdUx1ZnBiQk8rdEZnNmc9P
+ Q==
+
 dn: uid=pure-ftpd,ou=services,dc=omobus,dc=local
 objectClass: posixAccount
 objectClass: top
 objectClass: account
 cn: FTP daemon
 gidNumber: 905
-homeDirectory: /var/lib/omobus.d
+homeDirectory: /dev/null
 uid: pure-ftpd
 uidNumber: 902
 userPassword:: e1NTSEF9T2ZUZlJ2RkpDaEFTcTlLZzJueGhhb1JNaGlSbWo1b0hhNHBUNWc9P
