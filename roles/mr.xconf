@@ -53,7 +53,7 @@ traffic->wakeup = 60
 traffic->read_timeout = 15
 upd->wakeup = 240
 
-terminals = logo watermark title user gps work route reminders account location kpi targets route_history sales_history stats delim presence price advt photo stock delim target training presentation contact comment deletion canceling conference addition unsched delim products planograms pos_materials training_materials info_materials notice docs sync version
+terminals = logo watermark title user gps work route reminders account location kpi targets route_history sales_history stats delim presence price advt photo stock promo delim target training presentation contact comment deletion wish canceling conference addition unsched delim products planograms pos_materials training_materials info_materials notice docs sync version
 sync->outdated = 8
 work->begin = gpsmon sync upd
 work->end = docs acts mail logs
