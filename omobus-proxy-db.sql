@@ -1056,7 +1056,7 @@ create table audit_scores (
 create index i_db_ids_audit_scores on audit_scores using GIN (db_ids);
 create trigger trig_updated_ts before update on audit_scores for each row execute procedure tf_updated_ts();
 
-/*[deprecated]*/ create table auto_orders /*permited_adjustments*/ (
+/*[deprecated]*/ create table auto_orders /* => permitted_adjustments */ (
     distr_id 		uid_t 		not null,
     erp_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
@@ -1900,6 +1900,22 @@ create table products (
 create index i_brand_id_products on products(brand_id);
 create index i_db_ids_products on products using GIN (db_ids);
 create trigger trig_updated_ts before update on products for each row execute procedure tf_updated_ts();
+
+create table promo_types (
+    promo_type_id 	uid_t 		not null primary key default man_id(),
+    descr 		descr_t 	not null,
+    note_needed 	int32_t 	null,
+    photo_needed 	bool_t 		null,
+    extra_info 		note_t 		null,
+    row_no 		int32_t 	null, -- ordering
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null
+);
+
+create index i_db_ids_comment_types on promo_types using GIN (db_ids);
+create trigger trig_updated_ts before update on promo_types for each row execute procedure tf_updated_ts();
 
 create table potentials (
     poten_id 		uid_t 		not null primary key default man_id(),
@@ -4313,6 +4329,47 @@ create index i_user_id_h_profile on h_profile (user_id);
 create index i_exist_h_profile on h_profile (user_id, dev_pack, dev_id, fix_dt);
 
 create trigger trig_lock_update before update on h_profile for each row execute procedure tf_lock_update();
+
+create table h_promo (
+    doc_id 		uid_t 		not null primary key default doc_id(),
+    inserted_ts 	ts_auto_t 	not null,
+    inserted_node 	hostname_t 	not null,
+    dev_pack 		int32_t 	not null,
+    doc_no 		uid_t 		not null,
+    dev_id 		devid_t 	not null,
+    dev_login 		uid_t 		not null,
+    imei 		imei_t 		null,
+    user_id 		uid_t 		not null,
+    account_id 		uid_t 		not null,
+    fix_dt 		datetime_t 	not null,
+    created_dt 		datetime_t 	not null,
+    created_gps_dt 	datetime_t 	null,
+    created_gps_la 	gps_t 		null,
+    created_gps_lo 	gps_t 		null,
+    closed_dt 		datetime_t 	not null,
+    closed_gps_dt 	datetime_t 	null,
+    closed_gps_la 	gps_t 		null,
+    closed_gps_lo 	gps_t 		null,
+    w_cookie 		uid_t 		not null,
+    a_cookie 		uid_t 		not null,
+    doc_note 		note_t 		null,
+    activity_type_id 	uid_t 		not null,
+    categ_id 		uid_t 		not null,
+    brand_id 		uid_t 		not null,
+    promo_type_ids 	uids_t 		not null,
+    blobs 		int32_t 	not null,
+    photos 		blobs_t 	null
+);
+
+create index i_fix_date_h_promo on h_promo (left(fix_dt,10));
+create index i_doc_no_h_promo on h_promo (doc_no);
+create index i_account_id_h_promo on h_promo (account_id);
+create index i_user_id_h_promo on h_promo (user_id);
+create index i_exist_h_promo on h_promo (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_h_promo on h_promo (inserted_ts);
+
+create trigger trig_lock_update before update on h_promo for each row 
+    when (not (old.blobs > 0 and (old.photos is null or old.blobs <> array_length(old.photos, 1)))) execute procedure tf_lock_update();
 
 /*[deprecated]*/ create table h_pt ( /* price-tags */
     doc_id 		uid_t 		not null primary key default doc_id(),
