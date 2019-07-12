@@ -25,7 +25,8 @@ select
     d.price, 
     case d.promo when 0 then 'no' else 'yes' end promo,
     quote_csv_string(e.descr) head_name,
-    quote_csv_string(k.kam_name) "KAM",
+    quote_csv_string((select array_to_string(array_agg(descr::varchar),', ') kam_name from users
+	where user_id in (select user_id from my_retail_chains where rc_id=a.rc_id and (region_id='' or region_id=a.region_id)) and hidden=0 and role='kam')) "KAM",
     d.fix_dt
 from dyn_prices d
     left join users u on u.user_id = d.user_id
@@ -40,7 +41,6 @@ from dyn_prices d
     left join regions r on r.region_id = a.region_id
     left join cities c on c.city_id = a.city_id
     left join retail_chains rc on rc.rc_id = a.rc_id
-    left join (select x.rc_id, array_to_string(array_agg(u.descr::varchar),', ') kam_name from my_retail_chains x, users u where x.user_id=u.user_id and u.hidden=0 and u.role='kam' group by x.rc_id) k on k.rc_id=rc.rc_id
 where "paramUID"('dumps:depth') is null or d.fix_date >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t
 order by d.fix_date desc, a.descr, a.address, p.descr, d.fix_dt
   ]]>
