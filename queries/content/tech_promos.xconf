@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tech_promos type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select
+    h.doc_id, h.fix_dt, h.inserted_ts, 
+    h.account_id, a.code a_code, a.descr a_name, a.address, 
+    c.descr categ,
+    b.descr brand,
+    (select array_to_string(array_agg(descr::text),'|') from promo_types where promo_type_id=any(h.promo_type_ids)) promo_types,
+    h.doc_note,
+    array_to_string(h.photos,',') photos
+from h_promo h
+    left join categories c on h.categ_id = c.categ_id
+    left join brands b on h.brand_id = b.brand_id
+    left join accounts a on a.account_id = h.account_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt, h.doc_id, b.row_no, b.descr
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+require('rtlib').main("tech_promos", false, function(r, n, a)
+	if std.contains({'promo_types'}, n) then
+	    r[n] = std.split(a, '|')
+	elseif std.contains({'photos'}, n) then
+	    r[n] = std.split(a, ',')
+	else
+	    r[n] = a
+	end
+    end)
+  ]]>
+    </generator>
+</tech_promos>
