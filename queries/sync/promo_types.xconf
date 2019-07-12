@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<promo_types templ="%promo_type_id%;%descr%;%note_needed%;%photo_needed%;%extra_info%;" empty="no">
+  <![CDATA[ 
+select promo_type_id, descr, note_needed, photo_needed, extra_info from promo_types
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</promo_types>

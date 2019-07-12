@@ -91,6 +91,7 @@
 <xi:include href="../queries/sync/presences_defaults.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/prices_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/promo_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/quest_names.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/quest_rows.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/quests_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -291,6 +292,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <photo_types />
     <placements />
     <potentials />
+    <promo_types />
     <rating_criterias hierarchy="rating_criteria_id" role="asm,ise,sv" />
     <rating_scores role="asm,ise,sv" />
     <reclamation_types />
