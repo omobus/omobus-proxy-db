@@ -49,6 +49,7 @@
 	    <xs:attribute name="phone" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="mobile" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="email" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="loyalty_level_id" use="optional" type="uid_t" default="" />
 	    <xs:attribute name="locked" use="required" type="bool_t" />
 	    <xs:attribute name="deleted" use="required" type="bool_t" />
 	    <xs:attribute name="exist" use="required" type="bool_t" />
