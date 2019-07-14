@@ -1198,6 +1198,7 @@ create table contacts (
     phone 		phone_t 	null,
     mobile 		phone_t 	null,
     email 		email_t 	null,
+    loyalty_level_id 	uid_t 		null,
     locked 		bool_t 		not null default 0,
     extra_info 		note_t 		null,
     author_id 		uid_t 		null,
@@ -1205,7 +1206,8 @@ create table contacts (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null /* target from the external sources */
+    "_isAlienData" 	bool_t 		null, /* contact from the external sources */
+    "_dataTimestamp" 	datetime_t 	null
 );
 
 create index i_account_id_contacts on contacts(account_id);
@@ -3759,6 +3761,7 @@ create table h_contact (
     phone 		phone_t 	null,
     mobile 		phone_t 	null,
     email 		email_t 	null,
+    loyalty_level_id 	uid_t 		null,
     locked 		bool_t 		not null default 0,
     deleted 		bool_t 		not null default 0,
     exist 		bool_t 		not null default 1
