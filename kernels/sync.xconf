@@ -59,6 +59,7 @@
 <xi:include href="../queries/sync/highlights.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/info_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/job_titles.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/loyalty_levels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/manufacturers.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/matrices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/mutuals.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -281,6 +282,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <discard_types />
     <equipment_types />
     <job_titles />
+    <loyalty_levels />
     <manufacturers />
     <oos_types />
     <order_types />

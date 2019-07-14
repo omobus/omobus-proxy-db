@@ -1497,6 +1497,20 @@ create trigger trig_updated_ts before update on languages for each row execute p
 insert into languages values('ru', 'Русский');
 insert into languages values('en', 'English');
 
+create table loyalty_levels (
+    loyalty_level_id	uid_t		not null primary key default man_id(),
+    descr		descr_t		not null,
+    extra_info 		note_t 		null,
+    row_no 		int32_t 	null, -- ordering
+    hidden		bool_t		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null
+);
+
+create index i_db_ids_oos_types on loyalty_levels using GIN (db_ids);
+create trigger trig_updated_ts before update on loyalty_levels for each row execute procedure tf_updated_ts();
+
 create table manufacturers (
     manuf_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	null,
