@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<equipments templ="%equipment_id%,%serial_number%,%equipment_type%,%ownership_type%,%extra_info%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%author_name%,%inserted_ts%,%updated_ts%" empty="no">
+<equipments templ="%equipment_id%,%serial_number%,%equipment_type%,%ownership_type%,%extra_info%,%photoref%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%author_name%,%inserted_ts%,%updated_ts%" empty="no">
   <![CDATA[
 select
     quote_csv_string(d.equipment_id) equipment_id,
@@ -7,6 +7,7 @@ select
     quote_csv_string(t.descr) equipment_type,
     quote_csv_string(z.descr) ownership_type,
     quote_csv_string(d.extra_info) extra_info,
+    case when ts.guid is null then null else format('https://%s/console/photo?ref=%s', "paramUID"('srv:domain'), ts.guid) end photoref,
     quote_csv_string(a.account_id) account_id,
     quote_csv_string(a.code) a_code,
     quote_csv_string(a.descr) a_name,
@@ -17,19 +18,20 @@ select
     quote_csv_string(n.descr) channel,
     quote_csv_string(r.descr) region,
     quote_csv_string(c.descr) city,
-    /*quote_csv_string(u.descr)*/null author_name,
+    quote_csv_string(u.descr) author_name,
     d.inserted_ts,
     d.updated_ts
 from equipments d
     left join equipment_types t on t.equipment_type_id = d.equipment_type_id
     left join ownership_types z on z.ownership_type_id = d.ownership_type_id
-    /*left join users u on u.user_id = d.author_id*/
+    left join users u on u.user_id = d.author_id
     left join accounts a on a.account_id = d.account_id
     left join channels n on n.chan_id = a.chan_id
     left join potentials o on o.poten_id = a.poten_id
     left join regions r on r.region_id = a.region_id
     left join cities c on c.city_id = a.city_id
     left join retail_chains rc on rc.rc_id = a.rc_id
+    left join thumbnail_stream ts on ts.photo = d.photo
 where c.hidden=0
 order by d.equipment_id, a.account_id, d.updated_ts
   ]]>
