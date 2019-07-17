@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<equipments templ="%account_id%;%equipment_id%;%equipment_type_id%;%ownership_type_id%;%serial_number%;%extra_info%;" empty="no">
+<equipments templ="%account_id%;%equipment_id%;%equipment_type_id%;%ownership_type_id%;%serial_number%;%extra_info%;%photo%;" empty="no">
   <![CDATA[ 
-select equipment_id, account_id, equipment_type_id, ownership_type_id, serial_number, extra_info from equipments
-    where hidden = 0
+select equipment_id, account_id, equipment_type_id, ownership_type_id, serial_number, extra_info, photo from equipments
+    where hidden = 0 and serial_number <> ''
 order by account_id, serial_number, equipment_id
   ]]>
 </equipments>
