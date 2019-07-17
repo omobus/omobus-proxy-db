@@ -1319,16 +1319,19 @@ create trigger trig_updated_ts before update on equipment_types for each row exe
 
 create table equipments (
     equipment_id 	uid_t 		not null primary key default man_id(),
-    account_id 		uid_t 		not null,
+    account_id 		uid_t 		null,
     serial_number 	code_t 		not null,
     equipment_type_id 	uid_t 		not null,
     ownership_type_id 	uid_t 		null,
     extra_info 		note_t 		null,
+    photo 		blob_t 		null,
+    author_id 		uid_t 		null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null /* target from the external sources */
+    "_isAlienData" 	bool_t 		null, /* target from the external sources */
+    "_dataTimestamp" 	datetime_t 	null
 );
 
 create index i_db_ids_equipments on equipments using GIN (db_ids);
@@ -3905,6 +3908,7 @@ create table h_equipment (
     serial_number 	code_t 		not null,
     equipment_type_id 	uid_t 		not null,
     ownership_type_id 	uid_t 		null,
+    photo 		blob_t 		null,
     deleted 		bool_t 		not null default 0,
     exist 		bool_t 		not null default 1
 );

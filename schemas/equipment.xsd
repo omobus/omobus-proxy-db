@@ -21,32 +21,36 @@
 
     <xs:element name="equipment">
 	<xs:complexType>
-	    <xs:attribute name="vstamp" use="required" type="xs:string" />
-	    <xs:attribute name="dev_pack" use="required" type="xs:integer" />
-	    <xs:attribute name="dev_id" use="required" type="xs:string" />
-	    <xs:attribute name="imei" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="fix_dt" use="required" type="datetime_t" />
-	    <xs:attribute name="doc_id" use="required" type="xs:string" />
-	    <xs:attribute name="doc_note" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="user_id" use="required" type="xs:string" />
-	    <xs:attribute name="w_cookie" use="required" type="xs:string" />
-	    <xs:attribute name="a_cookie" use="required" type="xs:string" />
-	    <xs:attribute name="activity_type_id" use="required" type="uid_t" />
-	    <xs:attribute name="account_id" use="required" type="uid_t" />
-	    <xs:attribute name="created_dt" use="required" type="datetime_t" />
-	    <xs:attribute name="created_gps_la" use="optional" type="xs:decimal" default="0.0" />
-	    <xs:attribute name="created_gps_lo" use="optional" type="xs:decimal" default="0.0" />
-	    <xs:attribute name="created_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
-	    <xs:attribute name="closed_dt" use="required" type="datetime_t" />
-	    <xs:attribute name="closed_gps_la" use="optional" type="xs:decimal" default="0.0" />
-	    <xs:attribute name="closed_gps_lo" use="optional" type="xs:decimal" default="0.0" />
-	    <xs:attribute name="closed_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
-	    <xs:attribute name="equipment_id" use="required" type="uid_t" />
-	    <xs:attribute name="serial_number" use="required" type="xs:string" />
-	    <xs:attribute name="equipment_type_id" use="required" type="uid_t" />
-	    <xs:attribute name="ownership_type_id" use="optional" type="uid_t" default="" />
-	    <xs:attribute name="deleted" use="required" type="bool_t" />
-	    <xs:attribute name="exist" use="required" type="bool_t" />
+	    <xs:simpleContent>
+		<xs:extension base="xs:base64Binary">
+		    <xs:attribute name="vstamp" use="required" type="xs:string" />
+		    <xs:attribute name="dev_pack" use="required" type="xs:integer" />
+		    <xs:attribute name="dev_id" use="required" type="xs:string" />
+		    <xs:attribute name="imei" use="optional" type="xs:string" default="" />
+		    <xs:attribute name="fix_dt" use="required" type="datetime_t" />
+		    <xs:attribute name="doc_id" use="required" type="xs:string" />
+		    <xs:attribute name="doc_note" use="optional" type="xs:string" default="" />
+		    <xs:attribute name="user_id" use="required" type="xs:string" />
+		    <xs:attribute name="w_cookie" use="required" type="xs:string" />
+		    <xs:attribute name="a_cookie" use="required" type="xs:string" />
+		    <xs:attribute name="activity_type_id" use="required" type="uid_t" />
+		    <xs:attribute name="account_id" use="required" type="uid_t" />
+		    <xs:attribute name="created_dt" use="required" type="datetime_t" />
+		    <xs:attribute name="created_gps_la" use="optional" type="xs:decimal" default="0.0" />
+		    <xs:attribute name="created_gps_lo" use="optional" type="xs:decimal" default="0.0" />
+		    <xs:attribute name="created_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
+		    <xs:attribute name="closed_dt" use="required" type="datetime_t" />
+		    <xs:attribute name="closed_gps_la" use="optional" type="xs:decimal" default="0.0" />
+		    <xs:attribute name="closed_gps_lo" use="optional" type="xs:decimal" default="0.0" />
+		    <xs:attribute name="closed_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
+		    <xs:attribute name="equipment_id" use="required" type="uid_t" />
+		    <xs:attribute name="serial_number" use="required" type="xs:string" />
+		    <xs:attribute name="equipment_type_id" use="required" type="uid_t" />
+		    <xs:attribute name="ownership_type_id" use="optional" type="uid_t" default="" />
+		    <xs:attribute name="deleted" use="required" type="bool_t" />
+		    <xs:attribute name="exist" use="required" type="bool_t" />
+		</xs:extension>
+	    </xs:simpleContent>
 	</xs:complexType>
     </xs:element>
 </xs:schema>

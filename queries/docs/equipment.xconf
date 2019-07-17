@@ -19,8 +19,24 @@ select * from doc_id()
 </create>
 <write_body>
   <![CDATA[
-insert into h_equipment(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, imei, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, account_id, equipment_id, serial_number, equipment_type_id, ownership_type_id, deleted, exist)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', '%account_id%', '%equipment_id%', '%serial_number%', '%equipment_type_id%', NIL('%ownership_type_id%'), "toBoolean"('%deleted%'), "toBoolean"('%exist%'))
+do $$
+declare
+    n blob_t = $1:blob;
+    x blob_t;
+begin
+    if( n is not null ) then
+	select photo from equipments where equipment_id = '%equipment_id%'
+	    into x;
+	if( x is not null and md5(lo_get(x)) = md5(lo_get(n)) ) then
+	    n := x;
+	    raise notice '(equipment) ignored updating photo parameter [equipment_id=%equipment_id%, doc_id=%doc_id_sys%].';
+	end if;
+    end if;
+
+    insert into h_equipment(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, imei, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, account_id, equipment_id, serial_number, equipment_type_id, ownership_type_id, photo, deleted, exist)
+	values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', '%account_id%', '%equipment_id%', '%serial_number%', '%equipment_type_id%', NIL('%ownership_type_id%'), n, "toBoolean"('%deleted%'), "toBoolean"('%exist%'));
+end;
+$$;
   ]]>
 </write_body>
 <close>
@@ -35,15 +51,30 @@ begin
 
 -- **** equipment --> equipments
     if( (select count(*) from equipments where equipment_id='%equipment_id%') = 0 ) then
-	insert into equipments (equipment_id, account_id, serial_number, equipment_type_id, ownership_type_id, extra_info)
-	    values('%equipment_id%', '%account_id%', '%serial_number%', '%equipment_type_id%', NIL('%ownership_type_id%'), NIL('%doc_note%'));
+	insert into equipments (equipment_id, account_id, serial_number, equipment_type_id, ownership_type_id, extra_info, photo, author_id, "_dataTimestamp")
+	    select equipment_id, account_id, serial_number, equipment_type_id, ownership_type_id, doc_note, photo, user_id, fix_dt from h_equipment where doc_id='%doc_id_sys%';
     elsif( '%exist%' <> 'yes' ) then
-	update equipments set account_id='%account_id%', serial_number='%serial_number%', equipment_type_id='%equipment_type_id%', ownership_type_id=NIL('%ownership_type_id%'), extra_info=NIL('%doc_note%'), hidden=0
+	if( (select count(*) from equipments where equipment_id='%equipment_id%' and ("_dataTimestamp" is null or "_dataTimestamp" < '%fix_dt%')) > 0 ) then
+	    update equipments set (account_id, serial_number, equipment_type_id, ownership_type_id, extra_info, photo, author_id, "_dataTimestamp") = 
+		(select account_id, serial_number, equipment_type_id, ownership_type_id, doc_note, photo, user_id, fix_dt from h_equipment where doc_id='%doc_id_sys%')
 	    where equipment_id='%equipment_id%';
-    else
-	update equipments set ownership_type_id=NIL('%ownership_type_id%'), extra_info=NIL('%doc_note%'), hidden=case when '%deleted%'='yes' then 1 else 0 end
+	end if;
+    elsif( (select count(*) from equipments where equipment_id='%equipment_id%' and ("_dataTimestamp" is null or "_dataTimestamp" < '%fix_dt%')) > 0 ) then
+	if( '%deleted%' <> 'yes' ) then
+	    update equipments set (account_id, ownership_type_id, extra_info, photo, author_id, "_dataTimestamp") = 
+		(select account_id, ownership_type_id, doc_note, photo, user_id, fix_dt from h_equipment where doc_id='%doc_id_sys%')
 	    where equipment_id='%equipment_id%';
+	else
+	    update equipments set (account_id, ownership_type_id, extra_info, photo, author_id, "_dataTimestamp") = 
+		(select null, ownership_type_id, doc_note, photo, user_id, fix_dt from h_equipment where doc_id='%doc_id_sys%')
+	    where equipment_id='%equipment_id%';
+	end if;
     end if;
+
+-- **** equipment --> thumbnail_stream
+    insert into thumbnail_stream(photo)
+	select photo from h_equipment where doc_id='%doc_id_sys%' and photo is not null
+    on conflict do nothing;
 
 -- **** equipment --> content_stream
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
