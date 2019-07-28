@@ -17,12 +17,13 @@ select
 	    (select state from a_bluetooth where j.act_id=act_id)
 	when 'a_device' then
 	    (select os_name || ' ' || os_version || case when su is null then '' else ' *** ROOTED ***' end || ', ' || 
-		manufacturer || ' ' || model || /*', IMEI: ' || imei || ', IMEI/SV: ' || imeisv ||*/ ', SIM: ' || sim_state || 
-		' [' || spn || ' ' || phone_number || '], uptime: ' || round(uptime/60000, 0) || ' min., CPU ABI''s: ' || 
-		case when cpu_abis is null then '-' else cpu_abis end || ', CPU cores: ' || cpu_cores || ', Heap: ' || 
-		round(heap_size/1048576.0, 2) || ' MiB., GPS: ' || case gps when 1 then 'yes' else '*** N/A ***' end || 
+		manufacturer || ' ' || model || ', IMEI: ' || coalesce(array_to_string(imei,' '),'-') || ', IMEI/SV: ' || 
+		coalesce(imeisv,'-') || ', SIM: ' || sim_state || ' [' || spn || ' ' || phone_number || '], uptime: ' || 
+		round(uptime/60000, 0) || ' min., CPU ABI''s: ' || coalesce(cpu_abis.'-') || ', CPU cores: ' || cpu_cores || 
+		', Heap: ' || round(heap_size/1048576.0, 2) || ' MiB., GPS: ' || case gps when 1 then 'yes' else '*** N/A ***' end || 
 		', Screen: ' || screen_inches || '", ' || screen_height || 'X' || screen_width || ' (' || screen_density || 
-		' dpi), small width: ' || round(160*least(screen_width,screen_height)/screen_density,1) || ' dp.'
+		' dpi), small width: ' || round(160*least(screen_width,screen_height)/screen_density,1) || ' dp., vstamp: ' ||
+		coalesce(vstamp,'-')
 	    from a_device where j.act_id=act_id)
 	when 'a_exchange' then
 	    (select status || ' (' || mode || ':' || packets || (case when corrupted is null or corrupted=0 then '' else ('; corrupted: ' || corrupted) end) || ')' || 
