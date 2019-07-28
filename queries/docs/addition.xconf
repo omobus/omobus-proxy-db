@@ -19,8 +19,8 @@ select * from doc_id()
 </create>
 <write_body>
   <![CDATA[
-insert into h_addition (doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, imei, fix_dt, user_id, w_cookie, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, doc_note, number, addition_type_id, account, address, legal_address, chan_id, attr_ids, guid, blobs)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', '%doc_note%', '%number%', '%addition_type_id%', '%account%', '%address%', '%legal_address%', NIL('%chan_id%'), case '%attr_ids%' when '' then null else string_to_array('%attr_ids%',',') end, NIL('%guid%'), %blobs%)
+insert into h_addition (doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, user_id, w_cookie, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, doc_note, number, addition_type_id, account, address, legal_address, chan_id, attr_ids, guid, blobs)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', '%doc_note%', '%number%', '%addition_type_id%', '%account%', '%address%', '%legal_address%', NIL('%chan_id%'), case '%attr_ids%' when '' then null else string_to_array('%attr_ids%',',') end, NIL('%guid%'), %blobs%)
   ]]>
 </write_body>
 <write_blob>
@@ -36,8 +36,8 @@ declare
     f_date date_t default left('%fix_dt%',10);
 begin
 -- *** addition -> j_docs
-    insert into j_docs(doc_id, doc_no, dev_id, dev_login, imei, user_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, inserted_node, dev_pack, doc_code)
-	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
+    insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, inserted_node, dev_pack, doc_code)
+	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
 
 -- *** addition -> j_additions
     insert into j_additions (doc_id, user_id, fix_dt, account, address, legal_address, number, addition_type_id, note, chan_id, photos, attr_ids, guid)

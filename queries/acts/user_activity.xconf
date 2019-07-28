@@ -19,8 +19,8 @@ select * from act_id()
 </create>
 <write_body>
   <![CDATA[
-insert into a_user_activity(act_id, inserted_node, dev_pack, dev_id, dev_login, imei, user_id, fix_dt, state, w_cookie, c_cookie, a_cookie, satellite_dt, latitude, longitude, activity_type_id, account_id, route_date, employee_id)
-    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%state%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', '%satellite_dt%', %latitude%, %longitude%, '%activity_type_id%', '%account_id%', NIL('%route_date%'), NIL('%employee_id%'))
+insert into a_user_activity(act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, state, w_cookie, c_cookie, a_cookie, satellite_dt, latitude, longitude, activity_type_id, account_id, route_date, employee_id)
+    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%state%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', '%satellite_dt%', %latitude%, %longitude%, '%activity_type_id%', '%account_id%', NIL('%route_date%'), NIL('%employee_id%'))
   ]]>
 </write_body>
 <close>
@@ -33,8 +33,8 @@ declare
     x bool_t default 0;
 begin
 -- **** user_activity --> j_acts
-    insert into j_acts(act_id, dev_id, dev_login, imei, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
-	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+    insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
 
 -- **** user_activity --> j_user_activities
     if( (select count(*) from j_user_activities where user_id='%user_id_sys%' and account_id='%account_id%' and activity_type_id='%activity_type_id%' and w_cookie='%w_cookie%' and a_cookie='%a_cookie%') > 0 ) then

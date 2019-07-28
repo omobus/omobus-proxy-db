@@ -19,8 +19,8 @@ select * from doc_id()
 </create>
 <write_body>
   <![CDATA[
-insert into h_target(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, imei, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, subject, b_date, e_date, target_type_id, myself, urgent, photo)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', '%subject%', '%b_date%', '%e_date%', '%target_type_id%', "toBoolean"('%myself%'), "toBoolean"('%urgent%'), $1:blob)
+insert into h_target(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, subject, b_date, e_date, target_type_id, myself, urgent, photo)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', '%subject%', '%b_date%', '%e_date%', '%target_type_id%', "toBoolean"('%myself%'), "toBoolean"('%urgent%'), $1:blob)
   ]]>
 </write_body>
 <close>
@@ -46,8 +46,8 @@ begin
 	into a_name, a_address;
 
 -- **** target --> j_docs
-    insert into j_docs(doc_id, doc_no, dev_id, dev_login, imei, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
-	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
+    insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
+	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
 
 -- **** target --> thumbnail_stream
     insert into thumbnail_stream(photo)

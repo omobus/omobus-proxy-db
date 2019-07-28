@@ -19,8 +19,8 @@ select * from act_id()
 </create>
 <write_body>
   <![CDATA[
-insert into a_time (act_id, inserted_node, dev_pack, dev_id, dev_login, imei, user_id, fix_dt, latitude, longitude, satellite_dt, status, msg, diff)
-    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', %latitude%, %longitude%, '%satellite_dt%', '%status%', NIL('%msg%'), NIL(%diff%))
+insert into a_time (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, latitude, longitude, satellite_dt, status, msg, diff)
+    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', %latitude%, %longitude%, '%satellite_dt%', '%status%', NIL('%msg%'), NIL(%diff%))
   ]]>
 </write_body>
 <close>
@@ -32,8 +32,8 @@ declare
     violation int default case when NIL(%diff%) is null or abs(NIL(%diff%)) > 10 then 1 else 0 end;
 begin
 -- **** time --> j_acts
-    insert into j_acts(act_id, dev_id, dev_login, imei, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
-	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+    insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
 
 -- **** time --> sysstats
     if( (select count(*) from sysstats where user_id='%user_id_sys%' and fix_date=f_date) > 0 ) then

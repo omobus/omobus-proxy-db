@@ -19,8 +19,8 @@ select * from doc_id()
 </create>
 <write_body>
   <![CDATA[ 
-insert into h_extra(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, imei, fix_dt, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, rows, placement_id, soe)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%',  %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', %rows%, '%placement_id%', %soe%)
+insert into h_extra(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, rows, placement_id, soe)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%',  %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', %rows%, '%placement_id%', %soe%)
   ]]>
 </write_body>
 <write_row>
@@ -37,8 +37,8 @@ declare
     x datetime_t;
 begin
 -- **** extra --> j_docs
-    insert into j_docs(doc_id, doc_no, dev_id, dev_login, imei, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
-	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
+    insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
+	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
 
 -- **** extra --> content_stream
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);

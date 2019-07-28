@@ -19,11 +19,11 @@ declare
     aid uid_t = act_id();
 begin
 -- **** package --> a_package
-    insert into a_package (act_id, inserted_node, dev_pack, dev_id, dev_login, imei, user_id, fix_dt, satellite_dt, latitude, longitude, status, package, enabled, name, system, debuggable)
-	values (aid, '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%status%', '%package%', "toBoolean"('%enabled%'), NIL('%name%'), "toBoolean"('%system%'), "toBoolean"('%debuggable%'));
+    insert into a_package (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, status, package, enabled, name, system, debuggable)
+	values (aid, '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%status%', '%package%', "toBoolean"('%enabled%'), NIL('%name%'), "toBoolean"('%system%'), "toBoolean"('%debuggable%'));
 -- **** package --> j_acts
-    insert into j_acts(act_id, dev_id, dev_login, imei, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
-	values(aid, '%dev_id%', '%user_id%', '%imei%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+    insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
+	values(aid, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
 end;
 $$;
   ]]>
