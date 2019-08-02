@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<training_types templ="%training_type_id%;%descr%;%personal%;" empty="no">
+<training_types templ="%training_type_id%;%descr%;" empty="no">
   <![CDATA[
-select training_type_id, descr, personal, dep_id from training_types where hidden=0
+select training_type_id, descr, dep_id from training_types where hidden=0
     order by row_no, descr
   ]]>
 </training_types>

@@ -997,7 +997,7 @@ create table agencies (
 create index i_db_ids_agencies on agencies using GIN (db_ids);
 create trigger trig_updated_ts before update on agencies for each row execute procedure tf_updated_ts();
 
-create table agreements (
+create table agreements1 (
     account_id		uid_t		not null,
     placement_id 	uid_t 		not null,
     posm_id 		uid_t 		not null,
@@ -1010,8 +1010,23 @@ create table agreements (
     primary key (account_id, placement_id, posm_id, b_date)
 );
 
-create index i_db_ids_agreements on agreements using GIN (db_ids);
-create trigger trig_updated_ts before update on agreements for each row execute procedure tf_updated_ts();
+create index i_db_ids_agreements1 on agreements1 using GIN (db_ids);
+create trigger trig_updated_ts before update on agreements1 for each row execute procedure tf_updated_ts();
+
+create table agreements2 (
+    account_id		uid_t		not null,
+    prod_id 		uid_t 		not null,
+    b_date 		date_t 		not null,
+    e_date 		date_t 		not null,
+    facing 		int32_t 	not null,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    primary key (account_id, prod_id, b_date)
+);
+
+create index i_db_ids_agreements2 on agreements2 using GIN (db_ids);
+create trigger trig_updated_ts before update on agreements2 for each row execute procedure tf_updated_ts();
 
 create table attributes (
     attr_id 		uid_t 		not null primary key default man_id(),
@@ -1330,7 +1345,7 @@ create table equipments (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null, /* target from the external sources */
+    "_isAlienData" 	bool_t 		null, /* equipment from the external sources */
     "_dataTimestamp" 	datetime_t 	null
 );
 
@@ -1886,10 +1901,38 @@ create table pos_materials ( /* Point-of-Sale and Point-of-Purchase materials */
     author_id 		uid_t 		not null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null, /* pos_material from the external sources */
+    "_dataTimestamp" 	datetime_t 	null
 );
 
+create index i_db_ids_pos_materials on pos_materials using GIN (db_ids);
 create trigger trig_updated_ts before update on pos_materials for each row execute procedure tf_updated_ts();
+
+create table potentials (
+    poten_id 		uid_t 		not null primary key default man_id(),
+    descr 		descr_t 	not null,
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null
+);
+
+create index i_db_ids_potentials on potentials using GIN (db_ids);
+create trigger trig_updated_ts before update on potentials for each row execute procedure tf_updated_ts();
+
+create table priorities (
+    country_id 		uid_t 		not null,
+    brand_id 		uid_t 		not null,
+    b_date 		date_t 		not null,
+    e_date 		date_t 		not null,
+    db_ids 		uids_t 		null,
+    primary key (country_id, brand_id, b_date)
+);
+
+create index i_db_ids_priorities on priorities using GIN (db_ids);
+create trigger trig_updated_ts before update on priorities for each row execute procedure tf_updated_ts();
 
 create table products (
     prod_id 		uid_t 		not null primary key default man_id(),
@@ -1935,18 +1978,6 @@ create table promo_types (
 
 create index i_db_ids_promo_types on promo_types using GIN (db_ids);
 create trigger trig_updated_ts before update on promo_types for each row execute procedure tf_updated_ts();
-
-create table potentials (
-    poten_id 		uid_t 		not null primary key default man_id(),
-    descr 		descr_t 	not null,
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
-);
-
-create index i_db_ids_potentials on potentials using GIN (db_ids);
-create trigger trig_updated_ts before update on potentials for each row execute procedure tf_updated_ts();
 
 create table quest_names (
     qname_id 		uid_t 		not null primary key default man_id(),
@@ -2419,7 +2450,6 @@ create trigger trig_updated_ts before update on training_materials for each row 
 create table training_types (
     training_type_id	uid_t		not null primary key default man_id(),
     descr		descr_t		not null,
-    personal 		bool_t 		not null default 0,
     dep_id		uid_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden		bool_t		not null default 0,

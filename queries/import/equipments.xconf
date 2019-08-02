@@ -29,7 +29,7 @@ update equipments set account_id='%account_id%', serial_number='%serial_number%'
 <insert>
   <![CDATA[
 insert into equipments (equipment_id, account_id, serial_number, equipment_type_id, ownership_type_id, extra_info, hidden, db_ids, "_isAlienData") 
-    values ('%equipment_id%', '%account_id%', '%serial_number%', NIL('%equipment_type_id%'), NIL('%ownership_type_id%'), NIL('%extra_info%'), 0, 1, array['%ErpCode%'])
+    values ('%equipment_id%', '%account_id%', '%serial_number%', NIL('%equipment_type_id%'), NIL('%ownership_type_id%'), NIL('%extra_info%'), 0, array['%ErpCode%'], 1)
   ]]>
 </insert>
 <end>

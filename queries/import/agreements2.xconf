@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<agreements2 templ="%account_id%;%prod_id%;%b_date%;%e_date%;%facing%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from agreements2
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update agreements2 set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from agreements2
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select sum(x) exist from (
+    select count(*) x from agreements2
+	where account_id='%account_id%' and prod_id='%prod_id%' and b_date='%b_date'
+union
+    select case when '%e_date%' < current_date::date_t then 1 else 0 end x
+) q
+  ]]>
+</check_exist>
+<insert>
+  <![CDATA[
+insert into agreements2(account_id, prod_id, b_date, e_date, facing, db_ids)
+    values('%account_id%', '%prod_id%', '%b_date%', '%e_date%', 0%facing%, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+  ]]>
+</end>
+</agreements2>

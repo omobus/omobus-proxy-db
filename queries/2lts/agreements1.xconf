@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<agreements1 templ="%account_id%;%placement_id%;%posm_id%;%b_date%;%e_date%;%strict%;">
+  <![CDATA[
+select account_id, placement_id, posm_id, b_date, e_date, strict from agreements1
+    where e_date >= "LTS_aging_L"()::date_t
+order by 1, 2, 3, 4
+  ]]>
+</agreements1>

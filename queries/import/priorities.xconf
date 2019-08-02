@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<priorities templ="%country_id%;%brand_id%;%b_date%;%e_date%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from priorities
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update priorities set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from priorities
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select sum(x) exist from (
+    select count(*) x from priorities
+	where country_id='%country_id%' and brand_id='%brand_id%' and b_date='%b_date'
+union
+    select case when '%e_date%' < current_date::date_t then 1 else 0 end x
+) q
+  ]]>
+</check_exist>
+<insert>
+  <![CDATA[
+insert into priorities(country_id, brand_id, b_date, e_date, db_ids)
+    values('%country_id%', '%brand_id%', '%b_date%', '%e_date%', array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+  ]]>
+</end>
+</priorities>

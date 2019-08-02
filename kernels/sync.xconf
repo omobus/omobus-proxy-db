@@ -32,7 +32,8 @@
 <xi:include href="../queries/sync/activity_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/addition_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/advt_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/agreements.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/agreements1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/agreements2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/attributes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> 
 <xi:include href="../queries/sync/audit_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/audit_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -91,6 +92,7 @@
 <xi:include href="../queries/sync/potentials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/presences_defaults.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/prices_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/priorities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/promo_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/quest_names.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -320,6 +322,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	</my_productsL1>
 	<planograms key="country_id" />
 	<pos_materials key="country_id" />
+	<priorities key="country_id" />
 	<support key="country_id" />
 	<training_materials key="country_id" />
     </my_countries>
@@ -396,7 +399,8 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	</account_params>
 	<account_prices key="account_id" strict="yes" />
 	<advt_history key="account_id" strict="yes" />
-	<agreements key="account_id" strict="yes" />
+	<agreements1 key="account_id" strict="yes" />
+	<agreements2 key="account_id" strict="yes" />
 	<blacklist key="account_id" />
 	<checkup_defaults key="account_id" strict="yes" />
 	<contacts key="account_id">
@@ -456,6 +460,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     </accounts>
     <brands>
 	<photos_history key="brand_id" strict="yes" />
+	<priorities key="brand_id" />
 	<products key="brand_id" />
     </brands>
     <categories>
@@ -463,6 +468,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     </categories>
     <products hierarchy="prod_id" index="prod_id" >
 	<account_prices key="prod_id" strict="yes" />
+	<agreements2 key="prod_id" strict="yes" />
 	<checkup_defaults key="prod_id" strict="yes" />
 	<blacklist key="prod_id" />
 	<discounts key="prod_id" />
@@ -491,7 +497,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <planograms hierarchy="pl_id" />
     <pos_materials hierarchy="posm_id">
 	<advt_history key="posm_id" strict="yes" />
-	<agreements key="posm_id" strict="yes" />
+	<agreements1 key="posm_id" strict="yes" />
     </pos_materials>
     <quest_names>
 	<quests_history key="qname_id" Xstrict="yes" />

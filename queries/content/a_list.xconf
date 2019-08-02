@@ -19,7 +19,7 @@ select
 	    (select os_name || ' ' || os_version || case when su is null then '' else ' *** ROOTED ***' end || ', ' || 
 		manufacturer || ' ' || model || ', IMEI: ' || coalesce(array_to_string(imei,' '),'-') || ', IMEI/SV: ' || 
 		coalesce(imeisv,'-') || ', SIM: ' || sim_state || ' [' || spn || ' ' || phone_number || '], uptime: ' || 
-		round(uptime/60000, 0) || ' min., CPU ABI''s: ' || coalesce(cpu_abis.'-') || ', CPU cores: ' || cpu_cores || 
+		round(uptime/60000, 0) || ' min., CPU ABI''s: ' || coalesce(cpu_abis,'-') || ', CPU cores: ' || cpu_cores || 
 		', Heap: ' || round(heap_size/1048576.0, 2) || ' MiB., GPS: ' || case gps when 1 then 'yes' else '*** N/A ***' end || 
 		', Screen: ' || screen_inches || '", ' || screen_height || 'X' || screen_width || ' (' || screen_density || 
 		' dpi), small width: ' || round(160*least(screen_width,screen_height)/screen_density,1) || ' dp., vstamp: ' ||

@@ -29,7 +29,8 @@
 <xi:include href="../queries/2lts/additions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/addition_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/agencies.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/2lts/agreements.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/agreements1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/agreements2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/attributes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/audit_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/audit_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -89,6 +90,7 @@
 <xi:include href="../queries/2lts/placements.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/pos_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/potentials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/priorities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/presentations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/quest_names.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -128,7 +130,8 @@
     <additions />
     <addition_types />
     <agencies />
-    <agreements />
+    <agreements1 />
+    <agreements2 />
     <attributes />
     <audit_criterias />
     <audit_scores />
@@ -188,6 +191,7 @@
     <placements />
     <pos_materials />
     <potentials />
+    <priorities />
     <products />
     <presentations />
     <quest_names />
