@@ -460,7 +460,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     </accounts>
     <brands>
 	<photos_history key="brand_id" strict="yes" />
-	<priorities key="brand_id" />
+	<priorities key="brand_id" strict="yes" />
 	<products key="brand_id" />
     </brands>
     <categories>

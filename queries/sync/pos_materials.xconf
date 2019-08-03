@@ -47,7 +47,12 @@ select
     dep_id,
     null row_no
 from pos_materials, (select count(*) f from pos_materials where hidden = 0 and brand_ids is not null and cardinality(brand_ids) = 1) a
-    where hidden = 0 and (b_date is null or b_date<=current_date::date_t) and (e_date is null or current_date::date_t<=e_date)
+    where hidden = 0 and (
+	/* current: */  (b_date <= current_date::date_t and current_date::date_t <= e_date) or
+	/* obsolete: */ (current_date::date_t > e_date and e_date >= (current_date - 1)::date_t) or
+	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t) or
+	(b_date is null and e_date is null)
+    )
 order by _xz, row_no, descr
   ]]>
 </pos_materials>

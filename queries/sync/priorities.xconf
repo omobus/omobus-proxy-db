@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<priorities templ="brand_id%;%b_date%;%e_date%;" empty="no">
+<priorities templ="%brand_id%;%b_date%;%e_date%;" empty="no">
   <![CDATA[ 
 select country_id, brand_id, b_date, e_date from priorities
-    where (b_date <= (current_date+15)::date_t and current_date::date_t <= e_date) or (b_date = '' and e_date = '')
+    where 
+	/* current: */  (b_date <= current_date::date_t and current_date::date_t <= e_date) or
+	/* obsolete: */ (current_date::date_t > e_date and e_date >= (current_date - 1)::date_t) or
+	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t) or
+	(b_date = '' and e_date = '')
 order by 1, 2, 3
   ]]>
 </priorities>
