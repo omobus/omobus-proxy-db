@@ -1846,7 +1846,7 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','tm_change/caption','НЕ МЕНЯЙТЕ ВРЕМЯ НА УСТРОЙСТВЕ');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','tm_change/body', 
     '<html><body>$(fix_dt) зафиксировано <b>изменение веремени</b> на устройстве. <i>Это серьезное нарушение может повлиять на результаты Вашей работы.</i> ' ||
-    'Для того, что-бы в дальнейшем избежать возникновение спорных ситуация, необходимо полностью исключить практику изменения времени на устройстве за исключением ' ||
+    'Для того, что-бы в дальнейшем избежать возникновение спорных ситуаций, необходимо полностью исключить практику изменения времени на устройстве за исключением ' ||
     'тех случаев, когда данная процедура согласована с Вашим непосредственным руководителем.<br/>' ||
     '<br />'||
     'ВНИМАНИЕ. В том случае, если Вы не меняли время, необходимо в настройках устройства отключить автоматическую синхронизацию времени и часового пояса по данным сети, для этого:<br/>' ||
@@ -1858,6 +1858,11 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
     '</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','tm_violation/caption','Изменение времени ($(dev_login))');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','tm_violation/body','$(fix_dt) на устройстве $(dev_login) (сотрудник: $(u_name)) зафиксировано изменение времени.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/caption','Нарушение регламента посещения');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/body','<html><body>$(a_type) <i>$(a_name) $(address)</i> от <i>$(b_dt)</i> выполнено со следующими нарушениями регламента:<br/><br/>$(violations).<br/><br/>Рекомендуется исключать нарушений регламента посещения в будущем.</body></html>');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/violation/duration','&nbsp;&nbsp;&nbsp;&bull; продолжительность посещения менее $(duration) мин.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/violation/b_distance','&nbsp;&nbsp;&nbsp;&bull; начато посещение более чем за $(distance) м. от адреса клиента');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/violation/e_distance','&nbsp;&nbsp;&nbsp;&bull; закончено посещения более чем за $(distance) м. от адреса клиента');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/caption:new','Включение в маршрут (заявка): $(a_name)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/body:notice','<html><body>$(u_name), $(fix_dt) сформировал(-а) заявку на включение <i>$(a_name) $(address)</i> в маршрута. Вам необходимо подтвердить или отклонить данную заявку через web-console OMOBUS.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/caption:reject','Включение в маршрута (отмена): $(a_name)');

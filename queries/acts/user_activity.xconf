@@ -27,10 +27,21 @@ insert into a_user_activity(act_id, inserted_node, dev_pack, dev_id, dev_login, 
   <![CDATA[
 do $$
 declare
-    f_date date_t default left('%fix_dt%',10);
-    f_time time_t default substring('%fix_dt%', 12, 5);
+    f_date date_t = left('%fix_dt%',10);
+    f_time time_t = substring('%fix_dt%',12,5);
+    min_duration int = "paramInteger"('rules:min_duration');
+    max_distance int = "paramInteger"('rules:max_distance');
+    u_lang lang_t;
+    rcpt_to emails_t;
+    a_strict bool_t;
+    a_type descr_t;
+    a_name descr_t;
+    a_address address_t;
+    violations text array;
     x_date date_t;
+    x_dt datetime_t;
     x bool_t default 0;
+    t int;
 begin
 -- **** user_activity --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
@@ -89,8 +100,49 @@ begin
     end if;
 
 -- **** user_activity --> mail_stream
+    select evaddrs, lang_id from users where user_id='%user_id_sys%'
+	into rcpt_to, u_lang;
+    select strict, descr from activity_types where activity_type_id='%activity_type_id%'
+	into a_strict, a_type;
+
     if( x = 1 ) then
-	perform evmail_add('%user_id_sys%','canceling/caption:revoke','canceling/body:autorevoke',2::smallint /*high*/,array['route_date',"L"('%route_date%'::date)]);
+	perform evmail_add(rcpt_to,u_lang,'canceling/caption:revoke','canceling/body:autorevoke',2::smallint /*high*/,array['route_date',"L"('%route_date%'::date)]);
+    end if;
+
+    if( a_strict = 1 ) then
+	select b_dt, datediff(b_dt, e_dt) from j_user_activities
+	    where user_id='%user_id_sys%' and account_id='%account_id%' and activity_type_id='%activity_type_id%' and w_cookie='%w_cookie%' and a_cookie='%a_cookie%'
+		and b_dt is not null and e_dt is not null
+	into x_dt, t;
+	if( t is not null and t < min_duration ) then
+	    violations := array_append(violations, "L10n_format_a"(u_lang,'evmail','','user_activity/violation/duration',array['duration',min_duration::text]));
+	end if;
+
+	select distance(j.b_la, j.b_lo, a.latitude, a.longitude) from j_user_activities j, accounts a
+	    where j.user_id='%user_id_sys%' and j.account_id='%account_id%' and j.activity_type_id='%activity_type_id%' and j.w_cookie='%w_cookie%' and j.a_cookie='%a_cookie%'
+		and j.account_id = a.account_id and j.b_dt is not null and j.e_dt is not null and j.b_la is not null and j.b_lo is not null and (j.b_la <> 0 or j.b_lo <> 0)
+		and a.latitude is not null and a.longitude is not null and (a.latitude <> 0 or a.longitude <> 0)
+	into t;
+	if( t is not null and t > max_distance ) then
+	    violations := array_append(violations, "L10n_format_a"(u_lang,'evmail','','user_activity/violation/b_distance',array['distance',max_distance::text]));
+	end if;
+
+	select distance(j.e_la, j.e_lo, a.latitude, a.longitude) from j_user_activities j, accounts a
+	    where j.user_id='%user_id_sys%' and j.account_id='%account_id%' and j.activity_type_id='%activity_type_id%' and j.w_cookie='%w_cookie%' and j.a_cookie='%a_cookie%'
+		and j.account_id = a.account_id and j.b_dt is not null and j.e_dt is not null and j.e_la is not null and j.e_lo is not null and (j.e_la <> 0 or j.e_lo <> 0)
+		and a.latitude is not null and a.longitude is not null and (a.latitude <> 0 or a.longitude <> 0)
+	into t;
+	if( t is not null and t > max_distance ) then
+	    violations := array_append(violations, "L10n_format_a"(u_lang,'evmail','','user_activity/violation/e_distance',array['distance',max_distance::text]));
+	end if;
+
+	if( violations is not null ) then
+	    select descr, address from accounts where account_id='%account_id%'
+		into a_name, a_address;
+	    perform evmail_add(rcpt_to,u_lang,'user_activity/caption','user_activity/body',2::smallint /*high*/,array['a_type',a_type,'a_name',a_name,'address',a_address,
+		'b_dt',"L"(x_dt),'violations',array_to_string(violations,';<br/>')]);
+	    raise notice '[user_activity] % violation(-s) detected (user_id=%user_id_sys%, account_id=%account_id%, fix_date=%)', cardinality(violations), x_dt::date_t;
+	end if;
     end if;
 end;
 $$;
