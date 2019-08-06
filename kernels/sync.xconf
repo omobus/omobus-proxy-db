@@ -253,6 +253,14 @@ select null country_id, prod_id fid from products where country_ids is null and 
 order by 1, 2
     ]]>
 </my_productsL1>
+<my_quests>
+  <![CDATA[
+select unnest(country_ids) country_id, format('%s+%s',qname_id,qrow_id) fid from quest_rows where country_ids is not null and hidden=0
+    union
+select null country_id, format('%s+%s',qname_id,qrow_id) fid from quest_rows where country_ids is null and hidden=0
+order by 1, 2
+  ]]>
+</my_quests>
 <my_reminders>
   <![CDATA[
 select r.user_id person_id, r.reminder_id from (select unnest(user_ids) user_id, reminder_id, permanent from reminders) r
@@ -320,6 +328,9 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<my_productsL1 key="country_id">
 	    <products key="fid" />
 	</my_productsL1>
+	<my_quests key="country_id">
+	    <quest_rows key="fid" />
+	</my_quests>
 	<planograms key="country_id" />
 	<pos_materials key="country_id" />
 	<priorities key="country_id" />
@@ -501,8 +512,9 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     </pos_materials>
     <quest_names>
 	<quests_history key="qname_id" Xstrict="yes" />
+	<quest_rows key="qname_id" Xstrict="yes" />
     </quest_names>
-    <quest_rows hierarchy="qrow_id">
+    <quest_rows hierarchy="fid">
 	<quests_history key="qrow_id" strict="yes" />
     </quest_rows>
     <vf_names>
