@@ -1951,7 +1951,6 @@ create table products (
     barcodes 		ean13 array 	null,
     image 		blob_t 		null,
     country_ids 	countries_t 	null,
-    rc_id 		uid_t 		null,
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
