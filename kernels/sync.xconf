@@ -67,6 +67,7 @@
 <xi:include href="../queries/sync/mutuals_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/mutuals_history_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/my_accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/my_jobs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/my_kpi.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/my_routes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/my_targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -323,6 +324,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<route_history_extra key="lang_id" />
     </L10n>
     <my_accounts personalize="ErpId" />
+    <my_jobs personalize="ErpId" />
     <my_countries personalize="ErpId">
 	<info_materials key="country_id" />
 	<my_productsL1 key="country_id">
@@ -422,7 +424,9 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<equipments key="account_id" strict="yes" />
 	<floating_prices key="account_id" strict="yes" />
 	<matrices key="account_id" />
-	<my_accounts key="account_id" strict="yes" />
+	<my_accounts key="account_id" strict="yes">
+	    <my_jobs key="account_id" strict="yes" />
+	</my_accounts>
 	<my_info_materials key="chan_id">
 	    <info_materials key="infom_id" />
 	</my_info_materials>
@@ -433,8 +437,8 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	    <pos_materials key="fid" />
 	</my_pos_materials>
 	<my_routes key="account_id" strict="yes" />
-	<my_targets key="account_id">
-	    <targets key="target_id" />
+	<my_targets key="account_id" strict="yes">
+	    <targets key="target_id" strict="yes" />
 	</my_targets>
 	<mutuals key="account_id" strict="yes" />
 	<mutuals_history key="account_id" strict="yes">

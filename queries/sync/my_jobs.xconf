@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<my_jobs templ="%account_id%;%jobs%;" empty="no">
+  <![CDATA[ 
+select x.user_id person_id, x.account_id, array_to_string(array_agg(x.doc_type::text),',') jobs from (
+    select 
+	u.user_id, expand_accounts(r.account_ids, r.region_ids, r.city_ids, r.rc_ids, r.chan_ids, r.poten_ids) account_id, r.doc_type, r.frequency 
+    from rules r, users u
+    where r.hidden = 0 and u.hidden = 0 and u.dev_login is not null and u.dev_login <> '' and r.role = u.role 
+	and (r.account_ids is not null or r.region_ids is not null or r.city_ids is not null or r.rc_ids is not null or r.chan_ids is not null or r.poten_ids is not null)
+union
+    select 
+	u.user_id, a.account_id, r.doc_type, r.frequency 
+    from rules r, users u, accounts a
+    where r.hidden = 0 and u.hidden = 0 and a.hidden = 0 and a.approved = 1 and a.ownerless = 0 and u.dev_login is not null and u.dev_login <> '' and r.role = u.role  
+	and r.account_ids is null and r.region_ids is null and r.city_ids is null and r.rc_ids is null and r.chan_ids is null and r.poten_ids is null
+) x
+left join (
+    select user_id, account_id, doc_type, 'once_a_month'::code_t frequency, count(act_id) qty from a_user_document 
+	where "monthDate_First"(current_date)::date_t <= left(fix_dt,10) and left(fix_dt,10) <= "monthDate_Last"(current_date)::date_t
+    group by user_id, account_id, doc_type
+) f0 on x.user_id = f0.user_id and x.account_id = f0.account_id and x.doc_type = f0.doc_type and x.frequency = f0.frequency
+left join (
+    select user_id, account_id, doc_type, 'once_a_week'::code_t frequency, count(act_id) qty from a_user_document 
+	where date_trunc('week', current_date)::date_t <= left(fix_dt,10) and left(fix_dt,10) <= (date_trunc('week', current_date) + '6 days')::date_t
+    group by user_id, account_id, doc_type
+) f1 on x.user_id = f1.user_id and x.account_id = f1.account_id and x.doc_type = f1.doc_type and x.frequency = f1.frequency
+where f0.qty is null and f1.qty is null
+group by x.user_id, x.account_id
+order by x.user_id, x.account_id
+  ]]> 
+</my_jobs>

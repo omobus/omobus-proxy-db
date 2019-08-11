@@ -2245,6 +2245,28 @@ create table routes (
 
 create trigger trig_updated_ts before update on routes for each row execute procedure tf_updated_ts();
 
+create table rules (
+    doc_type 		doctype_t 	not null,
+    role 		code_t 		not null,
+    frequency 		code_t 		not null check(frequency in ('everytime','once_a_week','once_a_month')),
+/* extra attributes for the my_jobs stream (accounts filter) BEGIN */
+    account_ids 	uids_t 		null,
+    region_ids 		uids_t		null,
+    city_ids 		uids_t		null,
+    rc_ids 		uids_t		null, /* -> retail_chains */
+    chan_ids		uids_t 		null,
+    poten_ids 		uids_t 		null,
+/* extra attributes for the my_jobs stream (accounts filter) END */
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    primary key(doc_type, role)
+);
+
+create trigger trig_updated_ts before update on rules for each row execute procedure tf_updated_ts();
+create index i_db_ids_rules on rules using GIN (db_ids);
+
 create table sales_history (
     account_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
