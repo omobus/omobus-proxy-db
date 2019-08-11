@@ -1,22 +1,22 @@
 /* Copyright (c) 2006 - 2019 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
 delete from activity_types;
-insert into activity_types(activity_type_id, descr, note, docs_needed, pos_needed, exec_limit, strict, selectable)
-    values('0', 'Посещение', 'Плановый визит в торговую точку.', 1, 1, 1, 1, 0);
-insert into activity_types(activity_type_id, descr, note, docs_needed, pos_needed, exec_limit, strict, selectable, row_no, roles)
-    values('1', 'Внеплановое посещение', 'Внеплановый визит в торговую точку. Не влияет на выполнение планов по посещениям.', 1, 1, 4, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t);
-insert into activity_types(activity_type_id, descr, note, docs_needed, pos_needed, exec_limit, selectable, roles)
-    values('2', 'Звонок клиента(-у)', 'Прием документов по телефону. Не влияет на выполнение планов по посещениям.', 0, 0, 255, 1, array['sr','sv']::uids_t);
-insert into activity_types(activity_type_id, descr, note, docs_needed, pos_needed, exec_limit, selectable)
-    values('3', 'Анализ информации', 'Просмотр отчетов. Не влияет на выполнение планов по посещениям.', 0, 0, 255, 1);
-insert into activity_types(activity_type_id, descr, note, docs_needed, pos_needed, exec_limit, strict, selectable, roles, row_no)
-    values('4', 'Контрольное посещение', 'Посещение торговой точки для контроля/аудита результатов работы сотрудников.', 0, 1, 2, 1, 1, array['sv','ise','asm','kam','tme']::uids_t, 0);
-insert into activity_types(activity_type_id, descr, note, docs_needed, pos_needed, exec_limit, strict, selectable, roles, joint, row_no)
-    values('5', 'Совместное посещение', 'Посещение торговой точки совместно с подчиненным.', 0, 1, 2, 1, 1, array['sv','ise','asm']::uids_t, 1, 0);
-insert into activity_types(activity_type_id, descr, note, docs_needed, pos_needed, exec_limit, strict, selectable, roles, hidden, row_no)
-    values('6', 'Повторное посещение', 'Выполнение повторного визита в торговую точку из планового маршрута. Не влияет на выполнение планов по посещениям.', 1, 1, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t, 1, 0);
-insert into activity_types(activity_type_id, descr, note, docs_needed, pos_needed, exec_limit, strict, selectable, important)
-    values('7', 'Срочное посещение', 'Срочный визит в торговую точку для устранения нарушений, выявленных в ходе контрольного посещения (аудита).', 1, 1, 1, 1, 0, 1);
+insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable)
+    values('0', 'Посещение', 'Плановый визит в торговую точку.', 1, 1, 1, 0);
+insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, row_no, roles)
+    values('1', 'Внеплановое посещение', 'Внеплановый визит в торговую точку. Не влияет на выполнение планов по посещениям.', 1, 4, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t);
+insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, selectable, roles)
+    values('2', 'Звонок клиента(-у)', 'Прием документов по телефону. Не влияет на выполнение планов по посещениям.', 0, 255, 1, array['sr','sv']::uids_t);
+insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, selectable)
+    values('3', 'Анализ информации', 'Просмотр отчетов. Не влияет на выполнение планов по посещениям.', 0, 255, 1);
+insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, row_no)
+    values('4', 'Контрольное посещение', 'Посещение торговой точки для контроля/аудита результатов работы сотрудников.', 0, 2, 1, 1, array['sv','ise','asm','kam','tme']::uids_t, 0);
+insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, joint, row_no)
+    values('5', 'Совместное посещение', 'Посещение торговой точки совместно с подчиненным.', 0, 2, 1, 1, array['sv','ise','asm']::uids_t, 1, 0);
+insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, hidden, row_no)
+    values('6', 'Повторное посещение', 'Выполнение повторного визита в торговую точку из планового маршрута. Не влияет на выполнение планов по посещениям.', 1, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t, 1, 0);
+insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, important)
+    values('7', 'Срочное посещение', 'Срочный визит в торговую точку для устранения нарушений, выявленных в ходе контрольного посещения (аудита).', 1, 1, 1, 0, 1);
 
 delete from addition_types;
 insert into addition_types(addition_type_id, descr) values('0', 'Готов подписать договор');
@@ -1860,9 +1860,9 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','tm_violation/body','$(fix_dt) на устройстве $(dev_login) (сотрудник: $(u_name)) зафиксировано изменение времени.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/caption','Нарушение регламента посещения');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/body','<html><body>$(a_type) <i>$(a_name) $(address)</i> от <i>$(b_dt)</i> выполнено со следующими нарушениями регламента:<br/><br/>$(violations).<br/><br/>Рекомендуется не допускать нарушений регламента посещения в будущем.</body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/violation/duration','&nbsp;&nbsp;&nbsp;&bull; продолжительность посещения менее $(duration) мин.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/violation/b_distance','&nbsp;&nbsp;&nbsp;&bull; начато посещение более чем за $(distance) м. от адреса клиента');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/violation/e_distance','&nbsp;&nbsp;&nbsp;&bull; закончено посещения более чем за $(distance) м. от адреса клиента');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/violation/duration','&nbsp;&nbsp;&nbsp;&bull; продолжительность менее $(duration) мин.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/violation/b_distance','&nbsp;&nbsp;&nbsp;&bull; начато более чем за $(distance) м. от адреса клиента');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','user_activity/violation/e_distance','&nbsp;&nbsp;&nbsp;&bull; закончено более чем за $(distance) м. от адреса клиента');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/caption:new','Включение в маршрут (заявка): $(a_name)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/body:notice','<html><body>$(u_name), $(fix_dt) сформировал(-а) заявку на включение <i>$(a_name) $(address)</i> в маршрута. Вам необходимо подтвердить или отклонить данную заявку через web-console OMOBUS.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/caption:reject','Включение в маршрута (отмена): $(a_name)');

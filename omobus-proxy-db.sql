@@ -958,7 +958,6 @@ create table activity_types (
     descr 		descr_t 	not null,
     note 		note_t 		null,
     docs_needed 	bool_t 		not null default 0,
-    pos_needed 		bool_t 		not null default 0,
     exec_limit 		int32_t 	not null default 255 check (exec_limit between 1 and 255),
     strict 		bool_t 		not null default 0, /* sets to 1 (true) for direct visits to the accounts */
     selectable 		bool_t 		not null default 1, /* sets to 1 (true) if end users allow to select this activity type on the mobile devices */
