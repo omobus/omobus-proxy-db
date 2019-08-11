@@ -3,6 +3,6 @@
   <![CDATA[ 
 select delivery_type_id, descr from delivery_types
     where hidden = 0
-order by descr
+order by row_no, descr
   ]]>
 </delivery_types>

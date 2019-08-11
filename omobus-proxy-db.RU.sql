@@ -2,21 +2,23 @@
 
 delete from activity_types;
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable)
-    values('0', 'Посещение', 'Плановый визит в торговую точку.', 1, 1, 1, 0);
+    values('0', 'Посещение', 'Плановый визит к клиенту.', 1, 1, 1, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, row_no, roles)
-    values('1', 'Внеплановое посещение', 'Внеплановый визит в торговую точку. Не влияет на выполнение планов по посещениям.', 1, 4, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t);
+    values('1', 'Внеплановое посещение', 'Внеплановый визит к клиенту. Не влияет на выполнение планов по посещениям.', 0, 4, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, selectable, roles)
     values('2', 'Звонок клиента(-у)', 'Прием документов по телефону. Не влияет на выполнение планов по посещениям.', 0, 255, 1, array['sr','sv']::uids_t);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, selectable)
     values('3', 'Анализ информации', 'Просмотр отчетов. Не влияет на выполнение планов по посещениям.', 0, 255, 1);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, row_no)
-    values('4', 'Контрольное посещение', 'Посещение торговой точки для контроля/аудита результатов работы сотрудников.', 0, 2, 1, 1, array['sv','ise','asm','kam','tme']::uids_t, 0);
+    values('4', 'Контрольное посещение', 'Посещение клиента для контроля/аудита результатов работы сотрудников.', 0, 2, 1, 1, array['sv','ise','asm','kam','tme']::uids_t, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, joint, row_no)
-    values('5', 'Совместное посещение', 'Посещение торговой точки совместно с подчиненным.', 0, 2, 1, 1, array['sv','ise','asm']::uids_t, 1, 0);
+    values('5', 'Совместное посещение', 'Посещение клиента совместно с подчиненным.', 0, 2, 1, 1, array['sv','ise','asm']::uids_t, 1, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, hidden, row_no)
-    values('6', 'Повторное посещение', 'Выполнение повторного визита в торговую точку из планового маршрута. Не влияет на выполнение планов по посещениям.', 1, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t, 1, 0);
+    values('6', 'Повторное посещение', 'Выполнение повторного визита к клиенту из планового маршрута. Не влияет на выполнение планов по посещениям.', 1, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t, 1, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, important)
     values('7', 'Срочное посещение', 'Срочный визит в торговую точку для устранения нарушений, выявленных в ходе контрольного посещения (аудита).', 1, 1, 1, 0, 1);
+insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, row_no, roles, hidden)
+    values('8', 'Свободное посещение', 'Плановый визит к клиенту.', 1, 1, 1, 1, 0, array['merch','mr','ksr','sr']::uids_t, 1);
 
 delete from addition_types;
 insert into addition_types(addition_type_id, descr) values('0', 'Готов подписать договор');
@@ -1532,9 +1534,10 @@ insert into departments(dep_id, descr) values('0', 'MASS');
 insert into departments(dep_id, descr) values('1', 'OTC');
 
 delete from discard_types;
-insert into discard_types(discard_type_id, descr) values('0', 'Дебиторская задолженность');
-insert into discard_types(discard_type_id, descr) values('1', 'Торговая точка закрыта на ремонт');
+insert into discard_types(discard_type_id, descr, row_no) values('0', 'Ошибочно добавлено в маршрут', 0);
+insert into discard_types(discard_type_id, descr) values('1', 'Закрыта на ремонт');
 insert into discard_types(discard_type_id, descr) values('2', 'Больше не работает с дистрибутором');
+insert into discard_types(discard_type_id, descr) values('3', 'Дебиторская задолженность');
 
 delete from distributors;
 insert into distributors(distr_id, descr) values('0', 'Рогов и Копытин, ЗАО');
@@ -1609,9 +1612,10 @@ insert into payment_methods(payment_method_id, descr, row_no, encashment) values
 insert into payment_methods(payment_method_id, descr, row_no) values('3', 'Оплата наличными (точно по сумме документа)', 3);
 
 delete from pending_types;
-insert into pending_types(pending_type_id, descr) values('0', 'Отсутствует контактное лицо');
+insert into pending_types(pending_type_id, descr, row_no) values('0', 'Нет успеваю выполнить посещение', 0);
 insert into pending_types(pending_type_id, descr) values('1', 'Торговая точка закрыта на ремонт');
 insert into pending_types(pending_type_id, descr) values('2', 'Ревизия в торговой точке');
+insert into pending_types(pending_type_id, descr) values('3', 'Отсутствует контактное лицо');
 
 delete from photo_types;
 insert into photo_types(photo_type_id, descr, row_no) values('0', 'Основное фото', 0);

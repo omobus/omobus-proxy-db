@@ -3,6 +3,6 @@
   <![CDATA[ 
 select discard_type_id, descr from discard_types
     where hidden = 0
-order by descr
+order by row_no, descr
   ]]>
 </discard_types>

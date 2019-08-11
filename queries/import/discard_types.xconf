@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<discard_types templ="%discard_type_id%;%descr%;">
+<discard_types templ="%discard_type_id%;%descr%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from discard_types
 </check_exist>
 <update>
   <![CDATA[
-update discard_types set descr=trim(both from '%descr%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update discard_types set descr=trim(both from '%descr%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where discard_type_id = '%discard_type_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into discard_types (discard_type_id, descr, hidden, db_ids)
-    values ('%discard_type_id%', trim(both from '%descr%'), 0, array['%ErpCode%'])
+insert into discard_types (discard_type_id, descr, row_no, hidden, db_ids)
+    values ('%discard_type_id%', trim(both from '%descr%'), NIL(%row_no%), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>

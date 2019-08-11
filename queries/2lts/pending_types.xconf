@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pending_types templ="%pending_type_id%;%descr%;">
+<pending_types templ="%pending_type_id%;%descr%;%row_no%;">
   <![CDATA[
-select pending_type_id, descr from pending_types
+select pending_type_id, descr, row_no from pending_types
     where hidden = 0
 order by 1
   ]]>

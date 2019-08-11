@@ -3,6 +3,6 @@
   <![CDATA[ 
 select pending_type_id, descr from pending_types
     where hidden = 0
-order by descr
+order by row_no, descr
   ]]>
 </pending_types>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<discard_types templ="%discard_type_id%;%descr%;">
+<discard_types templ="%discard_type_id%;%descr%;%row_no%;">
   <![CDATA[
-select discard_type_id, descr from discard_types
+select discard_type_id, descr, row_no from discard_types
     where hidden = 0
 order by 1
   ]]>
