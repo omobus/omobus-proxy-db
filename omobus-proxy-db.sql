@@ -1177,6 +1177,7 @@ create table comment_types (
     descr 		descr_t 	not null,
     min_note_length 	int32_t 	null,
     photo_needed 	bool_t 		null,
+    extra_info 		note_t 		null,
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,

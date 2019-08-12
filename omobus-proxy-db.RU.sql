@@ -1492,10 +1492,10 @@ insert into cities(city_id,ftype,descr,pid,population,country_id) values('401/1:
 insert into cities(city_id,ftype,descr,pid,population,country_id) values('401/1:087',0,'Эмба','401/0:03',12,'KZ');
 
 delete from comment_types;
-insert into comment_types(comment_type_id, descr, min_note_length, row_no) values('0', 'Объяснение (не менее 5 символов)', 5, 0);
-insert into comment_types(comment_type_id, descr, photo_needed, row_no, hidden) values('1', 'Подтверждение факта посещения (требуется фото)', 1, 1, 1);
-insert into comment_types(comment_type_id, descr, photo_needed) values('2', 'Торговая точка закрыта на учет (требуется фото)', 1);
-insert into comment_types(comment_type_id, descr, photo_needed) values('3', 'Торговая точка закрыта на ремонт (требуется фото)', 1);
+insert into comment_types(comment_type_id, descr, min_note_length, extra_info, row_no) values('0', 'Объяснение', 5, 'Необходимо ввести в поле дополнительной информации описание проблемы длиной не менее 5 символов.', 0);
+insert into comment_types(comment_type_id, descr, photo_needed, extra_info, row_no, hidden) values('1', 'Подтверждение факта посещения', 1, 'Необходимо сделать фотографию входа в торговую точку.', 1, 1);
+insert into comment_types(comment_type_id, descr, photo_needed, extra_info) values('2', 'Торговая точка закрыта на учет', 1, 'Необходимо сделать фотографию входа торговой точки');
+insert into comment_types(comment_type_id, descr, photo_needed, extra_info) values('3', 'Торговая точка закрыта на ремонт', 1, 'Необходимо сделать фотографию входа торговой точки');
 insert into comment_types(comment_type_id, descr) values('4', 'Дебиторская задолженность');
 insert into comment_types(comment_type_id, descr) values('5', 'Ответственное лицо отсутствует');
 

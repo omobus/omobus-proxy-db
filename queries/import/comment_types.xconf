@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<comment_types templ="%comment_type_id%;%descr%;%min_note_length%;%photo_needed%;%row_no%;">
+<comment_types templ="%comment_type_id%;%descr%;%min_note_length%;%photo_needed%;%extra_info%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from comment_types
 </check_exist>
 <update>
   <![CDATA[
-update comment_types set descr=trim(both from '%descr%'), min_note_length=NIL(%min_note_length%), photo_needed=NIL(%photo_needed%), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update comment_types set descr=trim(both from '%descr%'), min_note_length=NIL(%min_note_length%), photo_needed=NIL(%photo_needed%), extra_info=NIL('%extra_info%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where comment_type_id = '%comment_type_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into comment_types (comment_type_id, descr, min_note_length, photo_needed, row_no, hidden, db_ids)
-    values ('%comment_type_id%', trim(both from '%descr%'), NIL(%min_note_length%), NIL(%photo_needed%), NIL(%row_no%), 0, array['%ErpCode%'])
+insert into comment_types (comment_type_id, descr, min_note_length, photo_needed, extra_info, row_no, hidden, db_ids)
+    values ('%comment_type_id%', trim(both from '%descr%'), NIL(%min_note_length%), NIL(%photo_needed%), NIL('%extra_info%'), NIL(%row_no%), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>
