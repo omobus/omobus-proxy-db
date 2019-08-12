@@ -1534,7 +1534,7 @@ insert into departments(dep_id, descr) values('0', 'MASS');
 insert into departments(dep_id, descr) values('1', 'OTC');
 
 delete from discard_types;
-insert into discard_types(discard_type_id, descr, row_no) values('0', 'Ошибочно добавлено в маршрут', 0);
+insert into discard_types(discard_type_id, descr, row_no) values('0', 'Ошибочно добавлена в маршрут', 0);
 insert into discard_types(discard_type_id, descr) values('1', 'Закрыта на ремонт');
 insert into discard_types(discard_type_id, descr) values('2', 'Больше не работает с дистрибутором');
 insert into discard_types(discard_type_id, descr) values('3', 'Дебиторская задолженность');

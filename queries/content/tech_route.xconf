@@ -35,6 +35,8 @@ select
     r.b_dt, r.e_dt, datediff(r.b_dt, r.e_dt) duration,
     r.latitude, r.longitude, distance(a.latitude, a.longitude, r.latitude, r.longitude) dist,
     r.latitude_e, r.longitude_e, distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) dist_e,
+    r.extra_info,
+    r.docs,
     c.descr chan, p.descr poten,
     x.descr canceling_type, r.canceling_note,
     r.zstatus, r.znote,
@@ -616,7 +618,7 @@ tb.user_id = _user_id
 tb.data_ts = _data_ts
 tb.date = _b_date
 tb.route = rt.rows(_route, true, function(r, n, a)
-    if std.contains({'duration','dist','dist_e','strict','route','closed','canceled','sched_no'}, n) then
+    if std.contains({'duration','dist','dist_e','strict','route','closed','canceled','sched_no','docs'}, n) then
 	r[n] = tonumber(a);
     elseif std.contains({'latitude','longitude','latitude_e','longitude_e'}, n) then
 	local pos = tonumber(a)

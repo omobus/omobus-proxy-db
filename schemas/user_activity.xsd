@@ -18,6 +18,12 @@
 	</xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="int_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="(|[0-9]*)" />
+	</xs:restriction>
+    </xs:simpleType>
+
     <xs:element name="user_activity">
 	<xs:complexType>
 	    <xs:attribute name="vstamp" use="required" type="xs:string" />
@@ -37,6 +43,8 @@
 	    <xs:attribute name="state" use="required" type="state_t" />
 	    <xs:attribute name="route_date" use="optional" type="date_t" default="" />
 	    <xs:attribute name="employee_id" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="extra_info" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="docs" use="optional" type="int_t" default="" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>

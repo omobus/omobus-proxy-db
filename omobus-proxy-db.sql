@@ -1255,6 +1255,7 @@ create trigger trig_updated_ts before update on debts for each row execute proce
 create table delivery_types (
     delivery_type_id	uid_t		not null primary key default man_id(),
     descr 		descr_t 	not null,
+    row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -1279,6 +1280,7 @@ create trigger trig_updated_ts before update on departments for each row execute
 create table discard_types (
     discard_type_id 	uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
+    row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -1775,6 +1777,7 @@ create trigger trig_updated_ts before update on payment_methods for each row exe
 create table pending_types (
     pending_type_id 	uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
+    row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -3256,7 +3259,9 @@ create table a_user_activity (
     c_cookie 		uid_t 		null,
     a_cookie 		uid_t 		not null,
     route_date 		date_t 		null,
-    employee_id 	uid_t 		null
+    employee_id 	uid_t 		null,
+    extra_info 		note_t 		null,
+    docs 		int32_t 	null
 );
 
 create index i_user_id_a_user_activity on a_user_activity (user_id);
@@ -5461,6 +5466,8 @@ create table j_user_activities (
     e_la 		gps_t 		null,
     e_lo 		gps_t 		null,
     e_sat_dt 		datetime_t 	null,
+    extra_info 		note_t 		null,
+    docs 		int32_t 	null,
     zstatus 		varchar(8) 	null check(zstatus in ('accepted','rejected') and zstatus = lower(zstatus)),
     znote 		note_t 		null,
     inserted_ts 	ts_auto_t 	not null,
@@ -6297,6 +6304,8 @@ create or replace function user_routes(f_user_id uid_t, f_b_date date_t, f_e_dat
     longitude_e gps_t,
     activity_type_id uid_t,
     a_cookie uid_t,
+    extra_info note_t,
+    docs int32_t,
     canceling_type_id uid_t,
     canceling_note note_t,
     discard_type_id uid_t,
@@ -6325,7 +6334,10 @@ as $body$
 	b_lo longitude, 
 	e_la latitude_e, 
 	e_lo longitude_e, 
-	activity_type_id, a_cookie,
+	activity_type_id, 
+	a_cookie,
+	extra_info,
+	docs,
 	null::uid_t canceling_type_id, 
 	null::note_t canceling_note, 
 	null::uid_t discard_type_id, 
@@ -6357,7 +6369,9 @@ union
 	v.e_la latitude_e, 
 	v.e_lo longitude_e, 
 	r.activity_type_id, 
-	a_cookie,
+	v.a_cookie,
+	v.extra_info,
+	v.docs,
 	case when s.h_date is not null then null::uid_t else c.canceling_type_id end canceling_type_id,
 	case when s.h_date is not null then s.descr::note_t else c.note::note_t end canceling_note,
 	d.discard_type_id, 
@@ -6394,7 +6408,10 @@ union /* orphaned routes: */
 	j.b_lo longitude,
 	j.e_la latitude_e,
 	j.e_lo longitude_e,
-	j.activity_type_id, a_cookie,
+	j.activity_type_id, 
+	j.a_cookie,
+	j.extra_info,
+	j.docs,
 	null::uid_t canceling_type_id,
 	null::note_t canceling_note,
 	null::uid_t discard_type_id,
