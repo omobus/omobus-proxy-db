@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules templ="%doc_type%;%role%;%frequency%;%account_ids%;%rc_ids%;%chan_ids%;%poten_ids%;%region_ids%;%city_ids%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update rules set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update rules set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from rules
+    where doc_type = '%doc_type%' and "role" = '%role%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update rules set frequency='%frequency%', account_ids=string_to_array(NIL('%account_ids%'),','), rc_ids=string_to_array(NIL('%rc_ids%'),','), chan_ids=string_to_array(NIL('%chan_ids%'),','), poten_ids=string_to_array(NIL('%poten_ids%'),','), region_ids=string_to_array(NIL('%region_ids%'),','), city_ids=string_to_array(NIL('%city_ids%'),','), hidden = 0, db_ids=array_append(db_ids,'%ErpCode%')
+    where doc_type = '%doc_type%' and "role" = '%role%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into rules (doc_type, role, frequency, account_ids, rc_ids, chan_ids, poten_ids, region_ids, city_ids, hidden, db_ids)
+    values ('%doc_type%', '%role%', '%frequency%', string_to_array(NIL('%account_ids%'),','), string_to_array(NIL('%rc_ids%'),','), string_to_array(NIL('%chan_ids%'),','), string_to_array(NIL('%poten_ids%'),','), string_to_array(NIL('%region_ids%'),','), string_to_array(NIL('%city_ids%'),','), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</rules>
