@@ -5,7 +5,6 @@
 do $$
 declare
     gc_date date_t = ("monthDate_First"(current_date - "paramInteger"('gc:keep_alive'::uid_t)))::date_t;
-    unapproved_date date_t = (current_date - 14)::date_t;
     i uid_t;
     f int;
     c int;
@@ -177,11 +176,11 @@ begin
 
     raise notice 'deleted rows before %.', gc_date;
 
-    update accounts set hidden = 1
-	where hidden = 0 and approved = 0 and inserted_ts::date_t < unapproved_date;
+    update accounts a set hidden = 1
+	where hidden = 0 and approved = 0 and (select count(*) from j_additions where guid = a.account_id) = 0;
     GET DIAGNOSTICS c = ROW_COUNT;
     if( c > 0 ) then
-	raise notice 'deleted % unapproved accounts that created before %.', c, unapproved_date;
+	raise notice 'deleted % unapproved accounts.', c;
     end if;
 
     delete from celltower_stream
