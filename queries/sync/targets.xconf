@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<targets templ="%target_id%;%target_type_id%;%b_date%;%e_date%;%subject%;%body%;%image%;" empty="no">
+<targets templ="%target_id%;%target_type_id%;%b_date%;%e_date%;%subject%;%body%;%image%;%awaiting%;" empty="no">
   <![CDATA[
-select target_id, target_type_id, b_date, e_date, subject, body, image from targets
-    where hidden = 0 and b_date<=current_date::date_t and current_date::date_t<=e_date
-order by 1, 4, 3
+select
+    dep_id,
+    target_id, target_type_id, b_date, e_date, subject, body, image,
+    case when b_offset is not null and b_date::date + b_offset - 1 > current_date then 1 else null end awaiting
+from targets
+    where hidden = 0 and (
+	/* current: */  (b_date <= current_date::date_t and current_date::date_t <= e_date) or
+	/* obsolete: */ (current_date::date_t > e_date and e_date >= (current_date - 1)::date_t) or
+	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t)
+    )
+order by awaiting nulls first, e_date, b_date, subject, target_id
   ]]>
 </targets>
