@@ -15,7 +15,7 @@ database=/var/lib/pgsql/data/omobus
 fname=OCID-celltowers
 flag=0
 
-$WGET -O $database/$fname.csv.gz http://ocid.omobus.org/OCID-celltowers.csv.gz
+$WGET -O $database/$fname.csv.gz http://ocid.omobus.org:8080/OCID-celltowers.csv.gz
 $GZIP -d $database/$fname.csv.gz
 
 $ECHO "mcc,mnc,cid,lac,latitude,longitude,radio,changeable" > $database/.$fname.txt
