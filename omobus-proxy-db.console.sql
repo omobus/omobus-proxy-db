@@ -395,40 +395,19 @@ end;
 $BODY$ language plpgsql;
 
 create type console.target_t as (
-    target_type_id uid_t, sub descr_t, msg text, b_date date_t, e_date date_t, 
-    country_id uid_t, dep_id uid_t, 
-    account_ids uids_t, region_ids uids_t, city_ids uids_t, rc_ids uids_t, chan_ids uids_t, poten_ids uids_t
+    target_type_id uid_t, 
+    sub descr_t, 
+    msg text, 
+    b_date date_t, 
+    e_date date_t, 
+    dep_id uid_t, 
+    account_ids uids_t, 
+    region_ids uids_t, 
+    city_ids uids_t, 
+    rc_ids uids_t, 
+    chan_ids uids_t, 
+    poten_ids uids_t
 );
-
-create or replace function console.req_target(rlogin uid_t, opt console.target_t) returns uid_t
-as $BODY$
-declare
-    stack text; fcesig text;
-    t_id uid_t;
-begin
-    GET DIAGNOSTICS stack = PG_CONTEXT;
-    fcesig := substring(stack from 'function console\.(.*?)\(');
-
-    if( opt is null or (opt).target_type_id is null or (opt).sub is null or (opt).msg is null ) then
-	raise exception '% invalid input attribute!', fcesig;
-    end if;
-
-    t_id := man_id();
-
-    insert into targets (target_id, target_type_id, subject, body, b_date, e_date, country_id, dep_id, author_id, account_ids, region_ids, city_ids, rc_ids, chan_ids, poten_ids, "immutable")
-	values(t_id, (opt).target_type_id, (opt).sub, (opt).msg, (opt).b_date, (opt).e_date, (opt).country_id, (opt).dep_id, rlogin, (opt).account_ids, (opt).region_ids, (opt).city_ids, (opt).rc_ids, (opt).chan_ids, (opt).poten_ids, 0);
-
-    perform content_add('targets_compliance', '', '', '');
-
-    insert into console.requests(req_login, req_type, status, attrs)
-	values(rlogin, fcesig, 'update', hstore(array['target_id',t_id,'target_type_id',(opt).target_type_id,'subject',(opt).sub,'body',(opt).msg,
-	    'b_date',(opt).b_date,'e_date',(opt).e_date,'account_ids',(opt).account_ids::varchar,'region_ids',(opt).region_ids::varchar,
-	    'city_ids',(opt).city_ids::varchar,'rc_ids',(opt).rc_ids::varchar,'chan_ids',(opt).chan_ids::varchar,'poten_ids',(opt).poten_ids::varchar,
-	    'country_id',(opt).country_id,'dep_id',(opt).dep_id,'author_id',rlogin]));
-
-    return t_id;
-end;
-$BODY$ language plpgsql;
 
 create or replace function console.req_target(rlogin uid_t, t_id uid_t, opt console.target_t) returns uid_t
 as $BODY$
@@ -438,15 +417,19 @@ begin
     GET DIAGNOSTICS stack = PG_CONTEXT;
     fcesig := substring(stack from 'function console\.(.*?)\(');
 
-    if( opt is null or t_id is null or (opt).target_type_id is null or (opt).sub is null or (opt).msg is null ) then
+    if( opt is null or (opt).target_type_id is null or (opt).sub is null or (opt).msg is null ) then
 	raise exception '% invalid input attribute!', fcesig;
     end if;
 
-    if( (select count(target_id) from targets where target_id=t_id) = 0 ) then
-	insert into targets (target_id, target_type_id, subject, body, b_date, e_date, country_id, dep_id, author_id, account_ids, region_ids, city_ids, rc_ids, chan_ids, poten_ids, "immutable")
-	    values(t_id, (opt).target_type_id, (opt).sub, (opt).msg, (opt).b_date, (opt).e_date, (opt).country_id, (opt).dep_id, rlogin, (opt).account_ids, (opt).region_ids, (opt).city_ids, (opt).rc_ids, (opt).chan_ids, (opt).poten_ids, 0);
+    if( t_id is null or (select count(target_id) from targets where target_id=t_id) = 0 ) then
+	if( t_id is null ) then
+	    t_id := man_id();
+	end if;
+
+	insert into targets (target_id, target_type_id, subject, body, b_date, e_date, dep_id, author_id, account_ids, region_ids, city_ids, rc_ids, chan_ids, poten_ids, "immutable")
+	    values(t_id, (opt).target_type_id, (opt).sub, (opt).msg, (opt).b_date, (opt).e_date, (opt).dep_id, rlogin, (opt).account_ids, (opt).region_ids, (opt).city_ids, (opt).rc_ids, (opt).chan_ids, (opt).poten_ids, 0);
     else
-	update targets set target_type_id=(opt).target_type_id, subject=(opt).sub, body=(opt).msg, b_date=(opt).b_date, e_date=(opt).e_date, country_id=(opt).country_id, dep_id=(opt).dep_id, account_ids=(opt).account_ids, region_ids=(opt).region_ids, city_ids=(opt).city_ids, rc_ids=(opt).rc_ids, chan_ids=(opt).chan_ids, poten_ids=(opt).poten_ids
+	update targets set target_type_id=(opt).target_type_id, subject=(opt).sub, body=(opt).msg, b_date=(opt).b_date, e_date=(opt).e_date, dep_id=(opt).dep_id, account_ids=(opt).account_ids, region_ids=(opt).region_ids, city_ids=(opt).city_ids, rc_ids=(opt).rc_ids, chan_ids=(opt).chan_ids, poten_ids=(opt).poten_ids
 	    where target_id=t_id;
     end if;
 
@@ -456,9 +439,16 @@ begin
 	values(rlogin, fcesig, 'update', hstore(array['target_id',t_id,'target_type_id',(opt).target_type_id,'subject',(opt).sub,'body',(opt).msg,
 	    'b_date',(opt).b_date,'e_date',(opt).e_date,'account_ids',(opt).account_ids::varchar,'region_ids',(opt).region_ids::varchar,
 	    'city_ids',(opt).city_ids::varchar,'rc_ids',(opt).rc_ids::varchar,'chan_ids',(opt).chan_ids::varchar,'poten_ids',(opt).poten_ids::varchar,
-	    'country_id',(opt).country_id,'dep_id',(opt).dep_id,'author_id',rlogin]));
+	    'dep_id',(opt).dep_id,'author_id',rlogin]));
 
     return t_id;
+end;
+$BODY$ language plpgsql;
+
+create or replace function console.req_target(rlogin uid_t, opt console.target_t) returns uid_t
+as $BODY$
+begin
+    return console.req_target(rlogin, null, opt);
 end;
 $BODY$ language plpgsql;
 
