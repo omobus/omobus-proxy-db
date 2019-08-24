@@ -4,7 +4,7 @@ delete from activity_types;
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable)
     values('0', 'Посещение', 'Плановый визит к клиенту.', 1, 1, 1, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, row_no, roles)
-    values('1', 'Внеплановое посещение', 'Внеплановый визит к клиенту. Не влияет на выполнение планов по посещениям.', 1, 4, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t);
+    values('1', 'Внеплановое посещение', 'Внеплановый визит к клиенту. Не влияет на выполнение планов по посещениям.', 0, 4, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, selectable, roles)
     values('2', 'Звонок клиента(-у)', 'Прием документов по телефону. Не влияет на выполнение планов по посещениям.', 0, 255, 1, array['sr','sv']::uids_t);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, selectable)
@@ -1842,7 +1842,7 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','resolution/caption','Резолюция на заявку #$(ticket_id).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','resolution/body','<html><body>От $(inserted_ts)<br/>$(doc_note)</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/caption','Новая задача: $(subject)');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/body','<html><body>В рамках выполнения активности $(activity_type), <i>$(fix_dt)</i> была поставлена следующая задача:<br/><br/>$(body)<br/><br/>Автор: <b>$(u_name)</b>.<br/>Срок действия с <b>$(b_date)</b> по <b>$(e_date)</b>.</body></html>');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/body','<html><body>$(u_name) $(fix_dt) в рамках выполнения активности $(activity_type) в <i>$(a_name) $(address)</i> поставил(-а) следующую задачу:<br/><br/>$(body)<br/><br/>Срок действия с <b>$(b_date)</b> по <b>$(e_date)</b>.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','ticket/caption','Заявка #$(ticket_id)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','ticket/caption:closed','Заявка #$(ticket_id) (ЗАКРЫТА)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','ticket/body','<html><body>ВНИМАНИЕ. Результаты решения данной проблемы будут высланы отдельным уведомлением (резолюцией).<br/><br/>Зарегистрировано: $(inserted_ts).<br/>Проблема: $(issue).<br/>$(doc_note)</body></html>');
