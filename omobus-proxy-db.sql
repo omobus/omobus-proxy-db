@@ -2358,22 +2358,18 @@ create table targets (
     b_date 		date_t 		not null,
     e_date 		date_t 		not null,
     image 		blob_t 		null, /* image attached to the target */
-/* extra attributes for the my_targets stream (users filter) BEGIN */
-    country_id		uid_t		null,
     dep_id		uid_t		null,
-/* extra attributes for the my_targets stream (users filter) END */
-/* extra attributes for the my_targets stream (accounts filter) BEGIN */
-    myself 		bool_t 		not null default 0,
     account_ids 	uids_t 		null,
     region_ids 		uids_t		null,
     city_ids 		uids_t		null,
     rc_ids 		uids_t		null, /* -> retail_chains */
     chan_ids		uids_t 		null,
     poten_ids 		uids_t 		null,
-/* extra attributes for the my_targets stream (accounts filter) END */
-    author_id 		uid_t 		null,
-    rows		int32_t 	null,
+    b_offset 		int32_t 	null check(b_offset is null or b_offset > 0),
     attrs 		hstore 		null,
+    myself 		bool_t 		not null default 0,
+    rows		int32_t 	null,
+    author_id 		uid_t 		null,
     hidden 		bool_t 		not null default 0,
     immutable 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
