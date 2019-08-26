@@ -1987,8 +1987,10 @@ create table quest_names (
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null
+    db_ids 		uids_t 		null
 );
 
+create index i_db_ids_quest_names on quest_names using GIN (db_ids);
 create trigger trig_updated_ts before update on quest_names for each row execute procedure tf_updated_ts();
 
 create table quest_rows (
@@ -2004,9 +2006,11 @@ create table quest_rows (
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
     primary key(qname_id, qrow_id)
 );
 
+create index i_db_ids_quest_rows on quest_rows using GIN (db_ids);
 create trigger trig_updated_ts before update on quest_rows for each row execute procedure tf_updated_ts();
 
 create table rating_criterias (
