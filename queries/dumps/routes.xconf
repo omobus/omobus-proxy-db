@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<routes templ="%user_id%,%u_name%,%u_area%,%department%,%year%,%month%,%week%,%day_of_week%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%route_date%,%fix_date%,%b_time%,%e_time%,%duration%,%distance%,%route%,%closed%,%canceled%,%canceling_type%,%canceling_note%,%discard_type%,%discard_note%,%activity_type%,%strict%,%zstatus%,%znote%,%head_name%" empty="no">
+<routes templ="%user_id%,%u_name%,%u_area%,%department%,%year%,%month%,%week%,%day_of_week%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%route_date%,%fix_date%,%b_time%,%e_time%,%duration%,%b_distance%,%e_distance%,%route%,%closed%,%canceled%,%canceling_type%,%canceling_note%,%discard_type%,%discard_note%,%activity_type%,%strict%,%zstatus%,%znote%,%head_name%" empty="no">
   <![CDATA[
 select
     x.user_id,
