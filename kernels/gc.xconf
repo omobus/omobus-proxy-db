@@ -4,7 +4,7 @@
   <![CDATA[
 do $$
 declare
-    gc_date date_t = ("monthDate_First"(current_date - "paramInteger"('gc:keep_alive'::uid_t)))::date_t;
+    gc_date date_t = ("monthDate_First"(current_date - greatest("paramInteger"('gc:keep_alive'::uid_t),60)))::date_t;
     i uid_t;
     f int;
     c int;
