@@ -8,6 +8,9 @@ select count(*) from data_stream
 </verification>
 <begin>
   <![CDATA[
+/* store max route date */
+insert into ".sesparams"(f, "X") select '%uid%#p_date', max(p_date) from my_routes on conflict do nothing;
+
 delete from my_routes
     where p_date > current_date::date_t and db_ids = (array['%ErpCode%'])::uids_t;
 update my_routes set db_ids=array_remove(db_ids,'%ErpCode%')
@@ -43,12 +46,8 @@ begin
     delete from my_routes where user_id='';
     delete from my_routes where account_id='';
 
-    for x in select generate_series::date_t from generate_series(current_date + 1, (
-	select max(d) from (
-	    select max(p_date)::date d from my_routes
-		union
-	    select max(b_date)::date d from content_stream where content_code='tech_route'
-	) subq), '1 day')
+    for x in select generate_series::date_t from generate_series(current_date + 1, greatest(
+	(select max(p_date)::date d from my_routes),(select "X"::date d from ".sesparams" where f='%uid%#p_date')), '1 day')
     loop
 	c := 0;
 	for u in

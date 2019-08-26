@@ -3,7 +3,8 @@
   <![CDATA[
 /* point: %uid%, %ErpCode% */
 create temporary table if not exists ".sesparams"(
-    f varchar(32) not null primary key
+    f varchar(32) not null primary key,
+    "X" text null
 );
 create temporary table if not exists ".content"(
     user_id uid_t not null,

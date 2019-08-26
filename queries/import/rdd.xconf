@@ -29,7 +29,7 @@ update rdd set r_date=trim(both from '%r_date%'), hidden=0, db_ids=array_append(
 <insert>
   <![CDATA[
 insert into rdd (distr_id, obj_code, r_date, hidden, db_ids)
-    r_dates ('%distr_id%', '%obj_code%', trim(both from '%r_date%'), 0, array['%ErpCode%'])
+    values ('%distr_id%', '%obj_code%', trim(both from '%r_date%'), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>
