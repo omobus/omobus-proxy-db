@@ -423,6 +423,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<discounts key="account_id" />
 	<equipments key="account_id" strict="yes" />
 	<floating_prices key="account_id" strict="yes" />
+	<highlights key="account_id" />
 	<matrices key="account_id" />
 	<my_accounts key="account_id" strict="yes">
 	    <my_jobs key="account_id" strict="yes" />
@@ -471,7 +472,8 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<shipments key="account_id" strict="yes" />
 	<stocks_defaults key="account_id" />
 	<trainings_history key="account_id" strict="yes" />
-	<vf_accounts key="account_id" />
+	<vf_accounts key="account_id" strict="yes" />
+	<vf_products key="account_id" />
     </accounts>
     <brands>
 	<photos_history key="brand_id" strict="yes" />
@@ -489,7 +491,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<discounts key="prod_id" />
 	<floating_prices key="prod_id" strict="yes" />
 	<group_prices key="prod_id" strict="yes" />
-	<highlights key="prod_id" />
+	<highlights key="prod_id" strict="yes" />
 	<matrices key="prod_id" strict="yes" />
 	<mutuals_history_products key="prod_id" strict="yes" />
 	<oos_history key="prod_id" strict="yes" />
