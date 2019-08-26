@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pmlist templ="%account_id%;%prod_id%;%b_date%;%e_date%;" empty="no">
+<pmlist templ="%account_id%;%prod_id%;%b_date%;%e_date%;">
   <![CDATA[
 select account_id, prod_id, b_date, e_date from pmlist
     where 
