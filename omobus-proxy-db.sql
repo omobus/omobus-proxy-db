@@ -6168,8 +6168,8 @@ begin
     for u in select user_id from users where my_id = any(pids) /*and hidden = 0*/
     loop
 	if u = any(_ar) then
-	    --raise notice '% already added to the hierarchy.', u;
-	    exit;
+	    --raise notice '% already added to the hierarchy at %.', u, my_id;
+	    continue;
 	end if;
 
 	_ar := array_append(_ar::text[], u::text);
