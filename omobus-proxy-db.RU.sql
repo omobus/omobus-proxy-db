@@ -1742,7 +1742,7 @@ insert into target_types(target_type_id, descr, row_no) values('reminder', 'На
 insert into target_types(target_type_id, descr, row_no) values('target:strict', 'ЗАДАЧА до подтверждения с ОБЯЗАТЕЛЬНОЙ фотографией', 1);
 insert into target_types(target_type_id, descr, row_no) values('target:normal', 'ЗАДАЧА до подтверждения', 0);
 insert into target_types(target_type_id, descr, row_no) values('target:permanent', 'ЗАДАЧА на каждом посещении с ОБЯЗАТЕЛЬНОЙ фотографией', 2);
-insert into target_types(target_type_id, descr, row_no) values('yes:no', 'Анкетирование (ответ Да или Нет)', 90);
+insert into target_types(target_type_id, descr, row_no, selectable) values('yes:no', 'Анкетирование (ответ Да или Нет)', 90, 0);
 
 delete from testing_scores;
 insert into testing_scores(testing_score_id, descr, score, wf) values('0', '<b>Оценка: 0 баллов</b> (имеются серьезные недостатки)', 0, 0);

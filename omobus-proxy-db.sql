@@ -2401,6 +2401,7 @@ create trigger trig_updated_ts before update on targets for each row execute pro
 create table target_types (
     target_type_id 	uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
+    selectable 		bool_t 		not null default 1, /* sets to 1 (true) if end users allow to select this targen type on the mobile devices */
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
@@ -5406,9 +5407,6 @@ create table j_docs (
     account_id 		uid_t 		null,
     activity_type_id 	uid_t 		null,
     employee_id 	uid_t 		null,
-    /* Transfered-to-Distributor: (see queries/import/TTD.xconf and queries/ttd/orders.xconf for more information) */
-    ttd 		varchar(9) 	null check (ttd in ('delivered','accepted') and ttd = lower(ttd)),
-    updated_ts		ts_auto_t 	not null
 );
 
 create index i_fix_date_j_docs on j_docs (left(fix_dt,10));
@@ -5417,7 +5415,7 @@ create index i_user_id_j_docs on j_docs (user_id);
 create index i_doc_no_j_docs on j_docs (doc_no);
 create index i_daily_j_docs on j_docs (user_id, left(fix_dt,10)); /* especially for getting daily data */
 
-create trigger trig_updated_ts before update on j_docs for each row execute procedure tf_updated_ts();
+create trigger trig_lock_update before update on j_docs for each row execute procedure tf_lock_update();
 
 create table j_pending (
     account_id  	uid_t 		not null, 
@@ -5448,6 +5446,15 @@ create index i_2lts_j_revocations on j_revocations (updated_ts);
 create index i_rev_cookie_j_revocations on j_revocations (rev_cookie);
 
 create trigger trig_updated_ts before update on j_revocations for each row execute procedure tf_updated_ts();
+
+create table j_ttd ( /* Transfered-to-Distributor (see queries/import/TTD.xconf and queries/ttd/orders.xconf for more information) */
+    doc_id 		uid_t 		not null primary key,
+    ttd_status 		varchar(9) 	not null check (ttd_status in ('delivered','accepted') and ttd_status = lower(ttd_status)),
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts		ts_auto_t 	not null
+);
+
+create trigger trig_updated_ts before update on j_ttd for each row execute procedure tf_updated_ts();
 
 create table j_user_activities (
     user_id 		uid_t 		not null,

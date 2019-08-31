@@ -8,8 +8,8 @@ select count(*) from data_stream
 </verification>
 <check_exist>
   <![CDATA[
-select count(*) from j_docs
-    where doc_id='%doc_id%' and doc_code='h_order' and ttd is not null
+select count(*) from j_ttd
+    where doc_id='%doc_id%'
   ]]>
 </check_exist>
 <insert>
@@ -24,13 +24,13 @@ begin
 	into d_no, f_date, u_id;
 
     if( d_no is null or f_date is null or u_id is null ) then
-	raise notice 'unknown doc_id=%doc_id%';
+	raise notice '(%ErpCode%) unknown doc_id=%doc_id%';
 	return;
     end if;
 
--- **** TTD -> j_docs
-    update j_docs set ttd = 'delivered'
-	where doc_id='%doc_id%';
+-- **** TTD -> j_ttd
+    insert into j_ttd(doc_id, ttd_status) values('%doc_id%', 'delivered')
+	on conflict do nothing;
 
 -- *** TTD -> content_stream
     perform content_add('stat_orders', '', "monthDate_First"(f_date)::date_t, "monthDate_Last"(f_date)::date_t);
