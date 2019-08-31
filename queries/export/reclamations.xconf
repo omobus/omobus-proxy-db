@@ -6,8 +6,9 @@ select
     t.row_no, t.prod_id, t.reclamation_type_id, t.pack_id, t.pack, t.qty, t.unit_price, t.amount, t.weight, t.volume
 from t_reclamation t
     left join h_reclamation h on h.doc_id = t.doc_id
+    left join j_ttd j on h.doc_id = j.doc_id
 where h.inserted_ts::date >= current_date - 5
-    and (select count(*) from j_docs where doc_id=h.doc_id and (ttd is null or ttd='delivered')) > 0
+    and (j.ttd_status is null or j.ttd_status = 'delivered')
 order by h.doc_id, t.row_no
   ]]>
 </reclamations>

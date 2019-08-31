@@ -2,10 +2,11 @@
 <receipts templ="%doc_id%;%fix_dt%;%doc_no%;%user_id%;%dev_login%;%account_id%;%distr_id%;%receipt_type_id%;%doc_note%;%amount%;">
   <![CDATA[
 select
-    doc_id, fix_dt, doc_no, user_id, dev_login, account_id, distr_id, doc_note, amount, receipt_type_id
+    h.doc_id, h.fix_dt, h.doc_no, h.user_id, h.dev_login, h.account_id, h.distr_id, h.doc_note, h.amount, h.receipt_type_id
 from h_receipt h
-where inserted_ts::date >= current_date - 5
-    and (select count(*) from j_docs where doc_id=h.doc_id and (ttd is null or ttd='delivered')) > 0
-order by doc_id
+    left join j_ttd j on h.doc_id = j.doc_id
+where h.inserted_ts::date >= current_date - 5
+    and (j.ttd_status is null or j.ttd_status = 'delivered')
+order by h.doc_id
   ]]>
 </receipts>
