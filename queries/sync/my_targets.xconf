@@ -14,7 +14,7 @@ select t.user_id person_id, t.account_id, t.target_id from (
 	)
 ) t
     left join (
-	select h.doc_id, h.user_id, h.account_id, h.target_id, unnest(c.target_type_ids) target_type_id from h_confirmation h left join confirmation_types c on h.confirm_id=c.confirm_id
+	select h.doc_id, h.user_id, h.account_id, h.target_id, unnest(c.target_type_ids) target_type_id from h_confirmation h left join confirmation_types c on h.confirmation_type_id=c.confirmation_type_id
 	    where c.accomplished=1
 	) c on c.target_id = t.target_id and (t.user_id is null or t.user_id='' or c.user_id=t.user_id) and c.account_id=t.account_id and c.target_type_id=t.target_type_id
 where c.doc_id is null

@@ -1027,6 +1027,19 @@ create table agreements2 (
 create index i_db_ids_agreements2 on agreements2 using GIN (db_ids);
 create trigger trig_updated_ts before update on agreements2 for each row execute procedure tf_updated_ts();
 
+create table asp_types ( /* Addition-Sales-Place */
+    asp_type_id 	uid_t 		not null primary key default man_id(),
+    descr 		descr_t 	not null,
+    row_no 		int32_t 	null, -- ordering
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null
+);
+
+create index i_db_ids_asp_types on asp_types using GIN (db_ids);
+create trigger trig_updated_ts before update on asp_types for each row execute procedure tf_updated_ts();
+
 create table attributes (
     attr_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
@@ -1189,7 +1202,7 @@ create index i_db_ids_comment_types on comment_types using GIN (db_ids);
 create trigger trig_updated_ts before update on comment_types for each row execute procedure tf_updated_ts();
 
 create table confirmation_types (
-    confirm_id 		uid_t 		not null primary key default man_id(),
+    confirmation_type_id uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
     min_note_length 	int32_t 	null,
     photo_needed 	bool_t 		null,
@@ -3741,7 +3754,7 @@ create table h_confirmation (
     doc_note 		note_t 		null,
     activity_type_id 	uid_t 		not null,
     target_id 		uid_t 		not null,
-    confirm_id 		uid_t 		not null,
+    confirmation_type_id uid_t 		not null,
     blobs 		int32_t 	not null,
     photos 		blobs_t 	null
 );
@@ -5432,6 +5445,18 @@ create table j_pending (
 );
 
 create trigger trig_updated_ts before update on j_pending for each row execute procedure tf_updated_ts();
+
+create table j_remarks (
+    doc_id 		uid_t 		not null primary key,
+    zstatus 		varchar(8) 	null check(zstatus in ('accepted','rejected') and zstatus = lower(zstatus)),
+    znote 		note_t 		null,
+    attrs 		hstore 		null,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts		ts_auto_t 	not null
+);
+
+create index i_2lts_j_remarks on j_remarks (updated_ts);
+create trigger trig_updated_ts before update on j_remarks for each row execute procedure tf_updated_ts();
 
 create table j_revocations (
     doc_id 		uid_t 		not null primary key,

@@ -1500,16 +1500,16 @@ insert into comment_types(comment_type_id, descr) values('4', 'Дебиторс�
 insert into comment_types(comment_type_id, descr) values('5', 'Ответственное лицо отсутствует');
 
 delete from confirmation_types;
-insert into confirmation_types(confirm_id, target_type_ids, descr, accomplished)     values('0', array['notice']::uids_t, 'Я понял(-а) данное уведомление', 1);
-insert into confirmation_types(confirm_id, target_type_ids, descr)                   values('1', array['reminder']::uids_t, 'Скрыть напоминание');
-insert into confirmation_types(confirm_id, target_type_ids, descr, min_note_length)  values('2', array['target:normal','target:strict','target:permanent']::uids_t, 'Задача НЕ выполнена (объяснение от 10 символов)', 10);
-insert into confirmation_types(confirm_id, target_type_ids, descr, min_note_length)  values('3', array['target:normal','target:strict','target:permanent']::uids_t, 'Задача выполнена частично (объяснение от 10 символов)', 10);
-insert into confirmation_types(confirm_id, target_type_ids, descr, accomplished)     values('4', array['target:normal']::uids_t, 'Задача выполнена ПОЛНОСТЬЮ', 1);
-insert into confirmation_types(confirm_id, target_type_ids, descr, photo_needed, accomplished) values('5', array['target:strict']::uids_t, 'Задача выполнена ПОЛНОСТЬЮ (требуется фото)', 1, 1);
-insert into confirmation_types(confirm_id, target_type_ids, descr, photo_needed)     values('6', array['target:permanent']::uids_t, 'Задача выполнена ПОЛНОСТЬЮ (требуется фото)', 1);
-insert into confirmation_types(confirm_id, target_type_ids, descr, accomplished)     values('7', array['yes:no']::uids_t, 'Нет, т/точка не будет участвовать в акции', 1);
-insert into confirmation_types(confirm_id, target_type_ids, descr, accomplished)     values('8', array['yes:no']::uids_t, 'ДА, т/точка будет участвовать в акции', 1);
-insert into confirmation_types(confirm_id, target_type_ids, descr, accomplished)     values('9', array['yes:no']::uids_t, 'Неизвестно, уточнить в следующий раз', 0);
+insert into confirmation_types(confirmation_type_id, target_type_ids, descr, accomplished)     values('0', array['notice']::uids_t, 'Я понял(-а) данное уведомление', 1);
+insert into confirmation_types(confirmation_type_id, target_type_ids, descr)                   values('1', array['reminder']::uids_t, 'Скрыть напоминание');
+insert into confirmation_types(confirmation_type_id, target_type_ids, descr, min_note_length)  values('2', array['target:normal','target:strict','target:permanent']::uids_t, 'Задача НЕ выполнена (объяснение от 10 символов)', 10);
+insert into confirmation_types(confirmation_type_id, target_type_ids, descr, min_note_length)  values('3', array['target:normal','target:strict','target:permanent']::uids_t, 'Задача выполнена частично (объяснение от 10 символов)', 10);
+insert into confirmation_types(confirmation_type_id, target_type_ids, descr, accomplished)     values('4', array['target:normal']::uids_t, 'Задача выполнена ПОЛНОСТЬЮ', 1);
+insert into confirmation_types(confirmation_type_id, target_type_ids, descr, photo_needed, accomplished) values('5', array['target:strict']::uids_t, 'Задача выполнена ПОЛНОСТЬЮ (требуется фото)', 1, 1);
+insert into confirmation_types(confirmation_type_id, target_type_ids, descr, photo_needed)     values('6', array['target:permanent']::uids_t, 'Задача выполнена ПОЛНОСТЬЮ (требуется фото)', 1);
+insert into confirmation_types(confirmation_type_id, target_type_ids, descr, accomplished)     values('7', array['yes:no']::uids_t, 'Нет, т/точка не будет участвовать в акции', 1);
+insert into confirmation_types(confirmation_type_id, target_type_ids, descr, accomplished)     values('8', array['yes:no']::uids_t, 'ДА, т/точка будет участвовать в акции', 1);
+insert into confirmation_types(confirmation_type_id, target_type_ids, descr, accomplished)     values('9', array['yes:no']::uids_t, 'Неизвестно, уточнить в следующий раз', 0);
 
 delete from countries;
 insert into countries(country_id, descr) values('AZ', 'Азербайджан');

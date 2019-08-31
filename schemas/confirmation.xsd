@@ -46,7 +46,9 @@
 	    <xs:attribute name="closed_gps_lo" use="optional" type="xs:decimal" default="0.0" />
 	    <xs:attribute name="closed_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
 	    <xs:attribute name="target_id" use="required" type="uid_t" />
-	    <xs:attribute name="confirm_id" use="required" type="uid_t" />
+	    <!-- obsolete: --><xs:attribute name="confirm_id" use="optional" type="uid_t" default="" /><!-- УБРАТЬ в docs/confirmation.xconf этот реквизит !!!!! -->
+	    <!-- obsolete: --><xs:attribute name="confirmation_type_id" use="optional" type="uid_t" default="" />
+	    <!-- NEW: <xs:attribute name="confirmation_type_id" use="required" type="uid_t" /> -->
 	    <xs:attribute name="blobs" use="required" type="xs:integer" />
 	</xs:complexType>
     </xs:element>

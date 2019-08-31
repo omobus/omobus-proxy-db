@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<confirmations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%target_id%;%confirm_id%;%doc_note%;%photos%;">
+<confirmations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%target_id%;%confirmation_type_id%;%doc_note%;%photos%;">
   <![CDATA[
 select 
-    x.doc_id, x.fix_dt, x.user_id, x.account_id, x.target_id, x.confirm_id, x.doc_note, 
+    x.doc_id, x.fix_dt, x.user_id, x.account_id, x.target_id, x.confirmation_type_id, x.doc_note, 
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(x.photos)) photos
 from h_confirmation x
     where "LTS_aging_L"() <= x.inserted_ts and x.inserted_ts <= "LTS_aging_R"()
