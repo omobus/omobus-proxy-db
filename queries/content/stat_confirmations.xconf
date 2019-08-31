@@ -16,7 +16,7 @@ select
     a.chan_id, ch.descr chan,
     t.target_id, t.subject, t.body, t.b_date, t.e_date, 
     tt.descr target_type, 
-    h.confirm_id, f.descr confirm, 
+    h.confirmation_type_id, f.descr confirm, 
     h.doc_note, 
     array_to_string(h.photos,',') photos, 
     u.executivehead_id head_id, ex.descr head_name,
@@ -31,7 +31,7 @@ from h_confirmation h
     left join cities c on a.city_id = c.city_id
     left join targets t on t.target_id = h.target_id
     left join target_types tt on tt.target_type_id = t.target_type_id
-    left join confirmation_types f on f.confirm_id = h.confirm_id
+    left join confirmation_types f on f.confirmation_type_id = h.confirmation_type_id
     left join users u on u.user_id = h.user_id
     left join users ex on ex.user_id = u.executivehead_id
     left join users z on z.user_id = t.author_id

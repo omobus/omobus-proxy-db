@@ -17,7 +17,7 @@ select
     h.doc_note, h.doc_no, h.amount, h.weight, h.volume, h.return_date,
     h.distr_id, d.descr distributor,
     u.executivehead_id head_id, ex.descr head_name,
-    j.ttd,
+    j.ttd_status ttd,
     h.inserted_ts
 from h_reclamation h
     left join distributors d on d.distr_id = h.distr_id
@@ -29,7 +29,7 @@ from h_reclamation h
     left join cities c on a.city_id = c.city_id
     left join users u on u.user_id = h.user_id
     left join users ex on ex.user_id = u.executivehead_id
-    left join j_docs j on j.doc_id = h.doc_id
+    left join j_ttd j on j.doc_id = h.doc_id
 where '%b_date%'<=left(h.fix_dt, 10) and left(h.fix_dt, 10)<='%e_date%'
 order by h.inserted_ts desc, u.descr
   ]]>

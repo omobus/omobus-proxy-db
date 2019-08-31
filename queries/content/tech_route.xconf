@@ -205,7 +205,7 @@ select
 from h_confirmation h
     left join targets x on x.target_id = h.target_id
     left join target_types t on t.target_type_id = x.target_type_id
-    left join confirmation_types f on f.confirm_id = h.confirm_id
+    left join confirmation_types f on f.confirmation_type_id = h.confirmation_type_id
 where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
 order by h.fix_dt
   ]]>
