@@ -5474,7 +5474,7 @@ create trigger trig_updated_ts before update on j_revocations for each row execu
 
 create table j_ttd ( /* Transfered-to-Distributor (see queries/import/TTD.xconf and queries/ttd/orders.xconf for more information) */
     doc_id 		uid_t 		not null primary key,
-    ttd_status 		varchar(9) 	not null check (ttd_status in ('delivered','accepted') and ttd_status = lower(ttd_status)),
+    status 		varchar(9) 	not null check (status in ('delivered','accepted') and status = lower(status)),
     inserted_ts 	ts_auto_t 	not null,
     updated_ts		ts_auto_t 	not null
 );

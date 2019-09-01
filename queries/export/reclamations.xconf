@@ -8,7 +8,7 @@ from t_reclamation t
     left join h_reclamation h on h.doc_id = t.doc_id
     left join j_ttd j on h.doc_id = j.doc_id
 where h.inserted_ts::date >= current_date - 5
-    and (j.ttd_status is null or j.ttd_status = 'delivered')
+    and (j.status is null or j.status = 'delivered')
 order by h.doc_id, t.row_no
   ]]>
 </reclamations>

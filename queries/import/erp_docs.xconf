@@ -32,7 +32,7 @@ declare
     u_id uid_t;
     f_date date_t;
     d_code uid_t;
-    ttd j_ttd.ttd_status%TYPE;
+    ttd j_ttd.status%TYPE;
 begin
 -- **** erp_docs --> content_stream
     for d_code, f_date, u_id in
@@ -52,15 +52,15 @@ begin
 
 -- **** erp_docs --> j_ttd, mail_stream
     for d_code, d_id, ttd in
-	select j.doc_code, j.doc_id, t.ttd_status from j_docs j 
+	select j.doc_code, j.doc_id, t.status from j_docs j 
 	    left join j_ttd t on t.doc_id=j.doc_id 
 	where j.doc_id in (select doc_id from erp_docs where updated_ts=current_timestamp)
-	    and (t.ttd_status is null or t.ttd_status = 'delivered')
+	    and (t.status is null or t.status = 'delivered')
     loop
 	if( ttd is null ) then
-	    insert into j_ttd(doc_id, ttd_status) values('%doc_id%', 'delivered');
+	    insert into j_ttd(doc_id, status) values(d_id, 'accepted');
 	else
-	    update j_ttd set ttd_status = 'accepted' where doc_id = d_id;
+	    update j_ttd set status = 'accepted' where doc_id = d_id;
 	end if;
 	if( d_code = 'h_order' ) then
 	    perform evmail_add(u_id,'TTD/caption:order','TTD/body:accepted',3::smallint /*normal*/,array['doc_no',d_id,

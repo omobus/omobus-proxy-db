@@ -22,7 +22,7 @@ select
     h.distr_id, d.descr distributor,
     array_to_string((select array_agg(replace(descr,'|',' ')) from order_params where distr_id=h.distr_id and order_param_id=any(h.order_param_ids)),'|') order_params,
     u.executivehead_id head_id, ex.descr head_name,
-    j.ttd_status ttd,
+    j.status ttd,
     h.inserted_ts
 from h_order h
     left join order_types t on t.order_type_id = h.order_type_id
