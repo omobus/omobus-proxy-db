@@ -5448,8 +5448,8 @@ create trigger trig_updated_ts before update on j_pending for each row execute p
 
 create table j_remarks (
     doc_id 		uid_t 		not null primary key,
-    zstatus 		varchar(8) 	null check(zstatus in ('accepted','rejected') and zstatus = lower(zstatus)),
-    znote 		note_t 		null,
+    status 		varchar(8) 	null check(status in ('accepted','rejected') and status = lower(status)),
+    note 		note_t 		null,
     attrs 		hstore 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts		ts_auto_t 	not null
