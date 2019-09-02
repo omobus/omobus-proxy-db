@@ -406,6 +406,9 @@ begin
 	lo0 := lo;
     end loop;
     return dist;
+exception 
+    when numeric_value_out_of_range then 
+	return -1;
 end;
 $BODY$ language plpgsql STABLE;
 
