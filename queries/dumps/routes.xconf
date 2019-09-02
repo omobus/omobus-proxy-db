@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<routes templ="%user_id%,%u_name%,%u_area%,%department%,%year%,%month%,%week%,%day_of_week%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%route_date%,%fix_date%,%b_time%,%e_time%,%duration%,%b_distance%,%e_distance%,%route%,%closed%,%canceled%,%canceling_type%,%canceling_note%,%discard_type%,%discard_note%,%activity_type%,%strict%,%zstatus%,%znote%,%head_name%" empty="no">
+<routes templ="%user_id%,%u_name%,%u_area%,%department%,%year%,%month%,%week%,%day_of_week%,%account_id%,%a_code%,%a_name%,%address%,%undefined_account_location%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%route_date%,%fix_date%,%b_time%,%e_time%,%duration%,%b_distance%,%e_distance%,%route%,%closed%,%canceled%,%canceling_type%,%canceling_note%,%discard_type%,%discard_note%,%activity_type%,%strict%,%zstatus%,%znote%,%head_name%" empty="no">
   <![CDATA[
 select
     x.user_id,
@@ -39,7 +39,8 @@ select
     t.strict,
     x.zstatus,
     quote_csv_string(x.znote) znote,
-    quote_csv_string(e.descr) head_name
+    quote_csv_string(e.descr) head_name,
+    case when a.latitude is null or a.longitude is null or (a.latitude=0 and a.longitude=0) then 1 else null end "undefined_account_location"
 from user_routes(
 	null,
 	"monthDate_First"(current_date - "paramInteger"(case when "paramUID"('dumps:depth') is null then 'gc:keep_alive' else 'dumps:depth' end))::date_t,
