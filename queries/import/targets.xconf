@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<targets templ="%target_id%;%target_type_id%;%subject%;%body%;%b_date%;%e_date%;%dep_id%;%account_ids%;%rc_ids%;%chan_ids%;%poten_ids%;%region_ids%;%city_ids%;%b_offset%;%attrs%;">
+<targets templ="%target_id%;%target_type_id%;%subject%;%body%;%b_date%;%e_date%;%dep_id%;%account_ids%;%rc_ids%;%chan_ids%;%poten_ids%;%region_ids%;%city_ids%;%b_offset%;%renewable%;%attrs%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from targets
 </check_exist>
 <update>
   <![CDATA[
-update targets set target_type_id='%target_type_id%', subject='%subject%', body='%body%', b_date='%b_date%', e_date='%e_date%', dep_id=NIL('%dep_id%'), account_ids=string_to_array(NIL('%account_ids%'),','), rc_ids=string_to_array(NIL('%rc_ids%'),','), chan_ids=string_to_array(NIL('%chan_ids%'),','), poten_ids=string_to_array(NIL('%poten_ids%'),','), region_ids=string_to_array(NIL('%region_ids%'),','), city_ids=string_to_array(NIL('%city_ids%'),','), b_offset=NIL(%b_offset%), attrs='%attrs%'::hstore, db_ids=array_append(db_ids,'%ErpCode%'), "_isAlienData"=1, "_isSuppressedData"=0
+update targets set target_type_id='%target_type_id%', subject='%subject%', body='%body%', b_date='%b_date%', e_date='%e_date%', dep_id=NIL('%dep_id%'), account_ids=string_to_array(NIL('%account_ids%'),','), rc_ids=string_to_array(NIL('%rc_ids%'),','), chan_ids=string_to_array(NIL('%chan_ids%'),','), poten_ids=string_to_array(NIL('%poten_ids%'),','), region_ids=string_to_array(NIL('%region_ids%'),','), city_ids=string_to_array(NIL('%city_ids%'),','), b_offset=NIL(%b_offset%), "renewable"=case when '%renewable%'='1' then 1 else 0 end, attrs='%attrs%'::hstore, db_ids=array_append(db_ids,'%ErpCode%'), "_isAlienData"=1, "_isSuppressedData"=0
     where target_id = '%target_id%' and '%e_date%' >= current_date::date_t;
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into targets (target_id, target_type_id, subject, body, b_date, e_date, dep_id, account_ids, rc_ids, chan_ids, poten_ids, region_ids, city_ids, b_offset, attrs, "immutable", hidden, db_ids, "_isAlienData", "_isSuppressedData")
-    values ('%target_id%', '%target_type_id%', '%subject%', '%body%', '%b_date%', '%e_date%', NIL('%dep_id%'), string_to_array(NIL('%account_ids%'),','), string_to_array(NIL('%rc_ids%'),','), string_to_array(NIL('%chan_ids%'),','), string_to_array(NIL('%poten_ids%'),','), string_to_array(NIL('%region_ids%'),','), string_to_array(NIL('%city_ids%'),','), NIL(%b_offset%), '%attrs%'::hstore, 1, 0, array['%ErpCode%'], 1, 0)
+insert into targets (target_id, target_type_id, subject, body, b_date, e_date, dep_id, account_ids, rc_ids, chan_ids, poten_ids, region_ids, city_ids, b_offset, "renewable", attrs, "immutable", hidden, db_ids, "_isAlienData", "_isSuppressedData")
+    values ('%target_id%', '%target_type_id%', '%subject%', '%body%', '%b_date%', '%e_date%', NIL('%dep_id%'), string_to_array(NIL('%account_ids%'),','), string_to_array(NIL('%rc_ids%'),','), string_to_array(NIL('%chan_ids%'),','), string_to_array(NIL('%poten_ids%'),','), string_to_array(NIL('%region_ids%'),','), string_to_array(NIL('%city_ids%'),','), NIL(%b_offset%), case when '%renewable%'='1' then 1 else 0 end, '%attrs%'::hstore, 1, 0, array['%ErpCode%'], 1, 0)
   ]]>
 </insert>
 <end>

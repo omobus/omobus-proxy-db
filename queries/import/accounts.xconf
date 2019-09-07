@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<accounts templ="%account_id%;%pid%;%ftype%;%code%;%descr%;%address%;%chan_id%;%poten_id%;%rc_id%;%region_id%;%city_id%;%latitude%;%longitude%;">
+<accounts templ="%account_id%;%pid%;%ftype%;%code%;%descr%;%address%;%chan_id%;%poten_id%;%rc_id%;%region_id%;%city_id%;%latitude%;%longitude%;%attrs%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from accounts
 </check_exist>
 <update>
   <![CDATA[
-update accounts set pid=NIL('%pid%'), code=trim(both from '%code%'), ftype=0%ftype%, descr=trim(both from '%descr%'), address=trim(both from '%address%'), rc_id=NIL('%rc_id%'), chan_id=NIL('%chan_id%'), poten_id=NIL('%poten_id%'), region_id=NIL('%region_id%'), city_id=case when "paramUID"('accounts:city_id') = 'auto' then city_id else NIL('%city_id%') end, approved=1, hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update accounts set pid=NIL('%pid%'), code=trim(both from '%code%'), ftype=0%ftype%, descr=trim(both from '%descr%'), address=trim(both from '%address%'), rc_id=NIL('%rc_id%'), chan_id=NIL('%chan_id%'), poten_id=NIL('%poten_id%'), region_id=NIL('%region_id%'), city_id=case when "paramUID"('accounts:city_id') = 'auto' then city_id else NIL('%city_id%') end, attrs=NIL('%attrs%'), approved=1, hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where account_id = '%account_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into accounts(pid, account_id, code, ftype, descr, address, rc_id, chan_id, poten_id, region_id, city_id, latitude, longitude, approved, hidden, db_ids)
-    values(NIL('%pid%'), '%account_id%', trim(both from '%code%'), 0%ftype%, trim(both from '%descr%'), trim(both from '%address%'), NIL('%rc_id%'), NIL('%chan_id%'), NIL('%poten_id%'), NIL('%region_id%'), case when "paramUID"('accounts:city_id') = 'auto' then null else NIL('%city_id%') end, NIL(%latitude%), NIL(%longitude%), 1, 0, array['%ErpCode%'])
+insert into accounts(pid, account_id, code, ftype, descr, address, rc_id, chan_id, poten_id, region_id, city_id, latitude, longitude, attrs, approved, hidden, db_ids)
+    values(NIL('%pid%'), '%account_id%', trim(both from '%code%'), 0%ftype%, trim(both from '%descr%'), trim(both from '%address%'), NIL('%rc_id%'), NIL('%chan_id%'), NIL('%poten_id%'), NIL('%region_id%'), case when "paramUID"('accounts:city_id') = 'auto' then null else NIL('%city_id%') end, NIL(%latitude%), NIL(%longitude%), NIL('%attrs%'), 1, 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>

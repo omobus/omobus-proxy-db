@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<agreements2 templ="%account_id%;%prod_id%;%b_date%;%e_date%;%facing%;">
+<agreements2 templ="%account_id%;%prod_id%;%b_date%;%e_date%;%facing%;%strict%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -28,8 +28,8 @@ union
 </check_exist>
 <insert>
   <![CDATA[
-insert into agreements2(account_id, prod_id, b_date, e_date, facing, db_ids)
-    values('%account_id%', '%prod_id%', '%b_date%', '%e_date%', 0%facing%, array['%ErpCode%'])
+insert into agreements2(account_id, prod_id, b_date, e_date, facing, "strict", db_ids)
+    values('%account_id%', '%prod_id%', '%b_date%', '%e_date%', 0%facing%, case when '%strict%'='1' then 1 else 0 end, array['%ErpCode%'])
   ]]>
 </insert>
 <end>
