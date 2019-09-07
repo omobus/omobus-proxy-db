@@ -2392,6 +2392,7 @@ create table targets (
     author_id 		uid_t 		null,
     hidden 		bool_t 		not null default 0,
     immutable 		bool_t 		not null default 0,
+    renewable 		bool_t 		not null default 0, /* sew [console.req_remark] for more info */
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
@@ -2410,6 +2411,7 @@ language 'plpgsql';
 
 create index i_db_ids_targets on targets using GIN (db_ids);
 create index i_2lts_targets on targets (updated_ts);
+create index i_pid_targets on targets (pid);
 
 create trigger trig_rows before insert or update on targets for each row execute procedure tf_targets$rows();
 create trigger trig_updated_ts before update on targets for each row execute procedure tf_updated_ts();
@@ -5451,7 +5453,7 @@ create trigger trig_updated_ts before update on j_pending for each row execute p
 
 create table j_remarks (
     doc_id 		uid_t 		not null primary key,
-    status 		varchar(8) 	null check(status in ('accepted','rejected') and status = lower(status)),
+    status 		varchar(8) 	not null check(status in ('accepted','rejected') and status = lower(status)),
     note 		note_t 		null,
     attrs 		hstore 		null,
     inserted_ts 	ts_auto_t 	not null,
@@ -5659,6 +5661,13 @@ begin
 end;
 $BODU$ language plpgsql;
 
+create or replace function content_add(f_content_code code_t, f_user_id uid_t, f_b_date date, f_e_date date) returns int
+as $BODU$
+begin
+    return content_add(f_content_code, f_user_id, f_b_date::date_t, f_e_date::date_t);
+end;
+$BODU$ language plpgsql;
+
 create or replace function content_get(f_content_code code_t, f_user_id uid_t, f_b_date date_t, f_e_date date_t) returns table(
     content_ts ts_t,
     content_type VARCHAR(32),
@@ -5667,7 +5676,17 @@ create or replace function content_get(f_content_code code_t, f_user_id uid_t, f
 ) as $BODY$
     select content_ts, content_type, content_compress, content_blob from content_stream
 	where content_ts is not null and content_blob is not null and user_id=f_user_id and b_date=f_b_date and e_date=f_e_date and content_code=f_content_code;
-$BODY$ language sql;
+$BODY$ language sql STABLE;
+
+create or replace function content_get(f_content_code code_t, f_user_id uid_t, f_b_date date, f_e_date date) returns table(
+    content_ts ts_t,
+    content_type VARCHAR(32),
+    content_compress VARCHAR(6),
+    content_blob blob_t
+) as $BODY$
+    select content_ts, content_type, content_compress, content_blob from content_stream
+	where content_ts is not null and content_blob is not null and user_id=f_user_id and b_date=f_b_date::date_t and e_date=f_e_date::date_t and content_code=f_content_code;
+$BODY$ language sql STABLE;
 
 
 create table data_stream ( /* data streams, that imported to the stogage */

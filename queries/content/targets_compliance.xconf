@@ -48,11 +48,14 @@ select
     h.confirmation_type_id, f.descr confirm,
     h.doc_note,
     array_to_string(h.photos,',') photos,
+    j.status restatus,
+    j.note renote,
     u.executivehead_id head_id, ex.descr head_name
 from h_confirmation h
     left join confirmation_types f on f.confirmation_type_id = h.confirmation_type_id
     left join users u on u.user_id = h.user_id
     left join users ex on ex.user_id = u.executivehead_id
+    left join j_remarks j on j.doc_id = h.doc_id
 order by h.fix_dt desc
   ]]>
 	</L1>
@@ -105,6 +108,16 @@ if rows > 0 and cols > 0 then
 		if a ~= nil and n ~= "target_id" and n ~= "account_id" then
 		    if std.contains({'photos'}, n) then
 			x[n] = std.split(a, ',')
+		    elseif( n == 'restatus' and a ~= nil ) then
+			if( x.remark == nil ) then
+			    x.remark = {}
+			end
+			x.remark.status = a
+		    elseif( n == 'renote' and a ~= nil ) then
+			if( x.remark == nil ) then
+			    x.remark = {}
+			end
+			x.remark.note = a
 		    else
 			x[n] = a
 		    end

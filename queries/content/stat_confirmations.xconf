@@ -19,10 +19,13 @@ select
     h.confirmation_type_id, f.descr confirm, 
     h.doc_note,
     array_to_string(h.photos,',') photos, 
+    j.status restatus,
+    j.note renote,
     u.executivehead_id head_id, ex.descr head_name,
     t.author_id, case when z.descr is null then t.author_id else z.descr end author_name,
     t.updated_ts
 from h_confirmation h
+    left join j_remarks j on j.doc_id = h.doc_id
     left join accounts a on a.account_id = h.account_id
     left join potentials p on a.poten_id = p.poten_id
     left join channels ch on a.chan_id = ch.chan_id
@@ -43,7 +46,23 @@ order by h.inserted_ts desc, u.descr
     <generator>
   <![CDATA[
 local std = require('stdlib')
-require('rtlib').main("confirmations", true, function(r, n, a) r[n] = std.contains({'photos'}, n) and std.split(a, ',') or a; end)
+require('rtlib').main("confirmations", true, function(r, n, a) 
+    if( n == 'photos' ) then
+	r[n] = std.split(a, ',')
+    elseif( n == 'restatus' and a ~= nil ) then
+	if( r.remark == nil ) then
+	    r.remark = {}
+	end
+	r.remark.status = a
+    elseif( n == 'renote' and a ~= nil ) then
+	if( r.remark == nil ) then
+	    r.remark = {}
+	end
+	r.remark.note = a
+    else
+	r[n] = a
+    end
+end)
   ]]>
     </generator>
 </stat_confirmations>
