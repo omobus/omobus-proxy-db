@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<accounts templ="%account_id%;%pid%;%code%;%ftype%;%descr%;%address%;%region_id%;%city_id%;%rc_id%;%chan_id%;%poten_id%;%cash_register%;%latitude%;%longitude%;%attr_ids%;%locked%;%approved%;">
+<accounts templ="%account_id%;%pid%;%code%;%ftype%;%descr%;%address%;%region_id%;%city_id%;%rc_id%;%chan_id%;%poten_id%;%cash_register%;%latitude%;%longitude%;%attr_ids%;%locked%;%approved%;%props%;">
   <![CDATA[
-select account_id, pid, code, ftype, descr, address, region_id, city_id, rc_id, chan_id, poten_id, cash_register, latitude, longitude, attr_ids, locked, approved from accounts
+select account_id, pid, code, ftype, descr, address, region_id, city_id, rc_id, chan_id, poten_id, cash_register, latitude, longitude, attr_ids, locked, approved, props from accounts
     where hidden = 0
 order by 1
   ]]>
