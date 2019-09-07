@@ -60,8 +60,8 @@ begin
     perform content_add('targets_compliance', '', '', '');
 
 -- **** target --> targets
-    insert into targets(target_id, target_type_id, b_date, e_date, subject, body, image, author_id, myself, account_ids, "immutable")
-	select doc_id, target_type_id, b_date, e_date, subject, case when myself = 1 then doc_note else "L10n_format_a"(u_lang,'targets','','new',array['activity_type',t_name,'fix_date',"L"(f_date),'body',doc_note,'u_name',u_name],doc_note) end, photo, user_id, myself, string_to_array(account_id,','), 1 from h_target where doc_id='%doc_id_sys%';
+    insert into targets(target_id, target_type_id, b_date, e_date, subject, body, image, author_id, myself, account_ids, "immutable", "renewable")
+	select doc_id, target_type_id, b_date, e_date, subject, case when myself = 1 then doc_note else "L10n_format_a"(u_lang,'targets','','new',array['activity_type',t_name,'fix_date',"L"(f_date),'body',doc_note,'u_name',u_name],doc_note) end, photo, user_id, myself, string_to_array(account_id,','), 1, 1 from h_target where doc_id='%doc_id_sys%';
 
 -- **** target --> urgent_activities, mail_stream
     if( '%urgent%' = 'yes' ) then
