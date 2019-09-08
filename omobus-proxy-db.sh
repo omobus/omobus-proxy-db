@@ -29,7 +29,7 @@ psql -d $dbname -f ./omobus-proxy-db.console.sql
 psql -d $dbname -f ./omobus-proxy-db.RU.sql
 psql -d $dbname -f ./version.sql
 
-for i in ./_req_func.sql/*.sql; do
+for i in ./req_*.sql; do
     psql -d $dbname -f "$i"
 done;
 
