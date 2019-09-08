@@ -1,6 +1,6 @@
 /* Copyright (c) 2006 - 2019 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
-create or replace function console.req_remark(rlogin uid_t, cmd code_t, _doc_id uid_t, _note note_t, _attrs hstore) returns int
+create or replace function console.req_remark(rlogin uid_t, cmd code_t, _doc_id uid_t, _note note_t, _props hstore) returns int
 as $BODY$
 declare
     stack text; fcesig text;
@@ -38,19 +38,19 @@ begin
 
     if( cmd = 'accept' ) then
 	if( (select count(doc_id) from j_remarks where doc_id = _doc_id) = 0 ) then
-	    insert into j_remarks(doc_id, status, note, attrs)
-		values(_doc_id, 'accepted', _note, _attrs);
+	    insert into j_remarks(doc_id, status, note, props)
+		values(_doc_id, 'accepted', _note, _props);
 	else
-	    update j_remarks set status = 'accepted', note = _note, attrs = _attrs
+	    update j_remarks set status = 'accepted', note = _note, props = _props
 		where doc_id = _doc_id and status <> 'accepted';
 	end if;
 	GET DIAGNOSTICS rows = ROW_COUNT;
     elsif( cmd = 'reject' ) then
 	if( (select count(doc_id) from j_remarks where doc_id = _doc_id) = 0 ) then
-	    insert into j_remarks(doc_id, status, note, attrs)
-		values(_doc_id, 'rejected', _note, _attrs);
+	    insert into j_remarks(doc_id, status, note, props)
+		values(_doc_id, 'rejected', _note, _props);
 	else
-	    update j_remarks set status = 'rejected', note = _note, attrs = _attrs
+	    update j_remarks set status = 'rejected', note = _note, props = _props
 		where doc_id = _doc_id and status <> 'rejected';
 	end if;
 	GET DIAGNOSTICS rows = ROW_COUNT;
@@ -117,7 +117,7 @@ begin
     end if;
 
     insert into console.requests(req_login, req_type, status, attrs)
-	values(rlogin, fcesig, cmd, coalesce(_attrs,''::hstore) || hstore(array['doc_id',_doc_id,'note',_note,'rows',rows::varchar]));
+	values(rlogin, fcesig, cmd, coalesce(_props,''::hstore) || hstore(array['doc_id',_doc_id,'note',_note,'rows',rows::varchar]));
 
     return rows;
 end;
