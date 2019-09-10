@@ -74,6 +74,7 @@ begin
 	    perform evmail_add(u_id,'TTD/caption:reclamation','TTD/body:accepted',3::smallint /*normal*/,array['doc_no','%doc_id%'
 		'erp_no',(select array_to_string(array_agg(erp_id::varchar),', ') from erp_docs where doc_id=d_id)]);
 	end if;
+	raise notice '(%ErpCode%) erp_docs: doc_id=% accepted', d_id;
     end loop;
 
 -- erp_docs --> data_stream
