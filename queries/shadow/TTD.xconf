@@ -8,8 +8,8 @@ select count(*) from data_stream
 </verification>
 <check_exist>
   <![CDATA[
-select count(*) from j_docs 
-    where doc_id='%doc_id%' and ttd is not null
+select count(*) from j_ttd 
+    where doc_id='%doc_id%'
   ]]>
 </check_exist>
 <insert>
@@ -29,9 +29,9 @@ begin
 	return;
     end if;
 
--- **** TTD -> j_docs
-    update j_docs set ttd = 'delivered'
-	where doc_id='%doc_id%';
+-- **** TTD -> j_ttd
+    insert into j_ttd(doc_id, status) values('%doc_id%', 'delivered')
+	on conflict do nothing;
 
 -- *** TTD -> content_stream, mail_stream
     if( d_code = 'h_order' ) then
@@ -45,6 +45,8 @@ begin
 	on conflict do nothing;
 	perform evmail_add(u_id,'TTD/caption:reclamation','TTD/body:delivered',3::smallint /*normal*/,array['doc_no','%doc_id%']);
     end if;
+
+    raise notice '(%ErpCode%) TTD: doc_id=%doc_id% delivered';
 end;
 $$
   ]]>
