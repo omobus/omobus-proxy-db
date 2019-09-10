@@ -39,6 +39,7 @@ declare
     x_mnc int32_t;
     x_cid int32_t;
     x_lac int32_t;
+    x_ts ts_t;
 begin
 -- **** gsm_pos --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
@@ -60,9 +61,13 @@ begin
 	    select mcc, mnc, cid, lac from a_gsm_pos where act_id='%doc_id_sys%' and not (latitude=0 and longitude=0)
 	) z
     loop
-	if( (select inserted_ts from celltower_stream where mcc=x_mcc and mnc=x_mnc and cid=x_cid and lac=x_lac) is null ) then
+	select data_ts from celltower_stream where mcc=x_mcc and mnc=x_mnc and cid=x_cid and lac=x_lac
+	    into x_ts;
+	if( x_ts is null ) then
 	    insert into celltower_stream(mcc, mnc, cid, lac) values(x_mcc, x_mnc, x_cid, x_lac);
 	    raise notice 'added new cell tower: mcc=%, mnc=%, cid=%, lac=%.', x_mcc, x_mnc, x_cid, x_lac;
+	elseif( (current_date - x_ts::date) > 180 ) then
+	    update celltower_stream set data_ts=current_timestamp, source=null where mcc=x_mcc and mnc=x_mnc and cid=x_cid and lac=x_lac;
 	end if;
     end loop;
 end;

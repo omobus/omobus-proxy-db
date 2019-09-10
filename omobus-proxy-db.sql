@@ -5614,6 +5614,7 @@ create table celltower_stream (
     cid 		int32_t 	not null, /* cell tower ID */
     lac 		int32_t 	not null, /* local area code */
     inserted_ts 	ts_auto_t 	not null,
+    data_ts 		ts_auto_t 	not null,
     content_ts 		ts_t 		null,
     latitude 		gps_t 		null,
     longitude 		gps_t 		null,
