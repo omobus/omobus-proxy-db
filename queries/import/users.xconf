@@ -22,14 +22,14 @@ select count(*) from users
 </check_exist>
 <update>
   <![CDATA[
-update users set pids=string_to_array(NIL('%pids%'),','), descr=trim(both from '%descr%'), country_ids=string_to_array(NIL('%country_ids%','RU'),','), dep_ids=string_to_array(NIL('%dep_ids%'),','), distr_ids=string_to_array(NIL('%distr_ids%'),','), agency_id=NIL('%agency_id%'), mobile=NIL('%mobile%'), email=NIL('%email%'), area=NIL('%area%'), props=NIL('%props%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update users set pids=string_to_array(NIL('%pids%'),','), descr=trim(both from '%descr%'), country_ids=string_to_array(NIL('%country_ids%','RU'),','), dep_ids=string_to_array(NIL('%dep_ids%'),','), distr_ids=string_to_array(NIL('%distr_ids%'),','), agency_id=NIL('%agency_id%'), mobile=NIL('%mobile%'), email=NIL('%email%'), area=NIL('%area%'), props=NIL('%props%')::hstore, hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where user_id = '%user_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
 insert into users(user_id, pids, descr, role, country_ids, dep_ids, distr_ids, agency_id, mobile, email, area, props, hidden, db_ids)
-    values('%user_id%', string_to_array(NIL('%pids%'),','), trim(both from '%descr%'), NIL('%role%'), string_to_array(NIL('%country_ids%','RU'),','), string_to_array(NIL('%dep_ids%'),','), string_to_array(NIL('%distr_ids%'),','), NIL('%agency_id%'), NIL('%mobile%'), NIL('%email%'), NIL('%area%'), NIL('%props%'), 0, array['%ErpCode%'])
+    values('%user_id%', string_to_array(NIL('%pids%'),','), trim(both from '%descr%'), NIL('%role%'), string_to_array(NIL('%country_ids%','RU'),','), string_to_array(NIL('%dep_ids%'),','), string_to_array(NIL('%distr_ids%'),','), NIL('%agency_id%'), NIL('%mobile%'), NIL('%email%'), NIL('%area%'), NIL('%props%')::hstore, 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>
