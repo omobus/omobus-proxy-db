@@ -4,7 +4,7 @@
 select
     dep_id,
     target_id, target_type_id, b_date, e_date, subject, body, image,
-    case when b_offset is not null and b_date::date + b_offset - 1 > current_date then 1 else null end awaiting
+    case when props->'b_offset' is not null and (b_date::date + (props->'b_offset')::int - 1) > current_date then 1 else null end awaiting
 from targets
     where hidden = 0 and (
 	/* current: */  (b_date <= current_date::date_t and current_date::date_t <= e_date) or

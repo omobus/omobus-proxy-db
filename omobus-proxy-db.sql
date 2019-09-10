@@ -2380,21 +2380,20 @@ create table targets (
     b_date 		date_t 		not null,
     e_date 		date_t 		not null,
     image 		blob_t 		null, /* image attached to the target */
-    dep_id		uid_t		null,
+    dep_id 		uid_t		null,
     account_ids 	uids_t 		null,
     region_ids 		uids_t		null,
     city_ids 		uids_t		null,
     rc_ids 		uids_t		null, /* -> retail_chains */
     chan_ids		uids_t 		null,
     poten_ids 		uids_t 		null,
-    b_offset 		int32_t 	null check(b_offset is null or b_offset > 0),
     props 		hstore 		null,
     myself 		bool_t 		not null default 0,
     rows		int32_t 	null,
     author_id 		uid_t 		null,
     hidden 		bool_t 		not null default 0,
     immutable 		bool_t 		not null default 0,
-    renewable 		bool_t 		not null default 0, /* sew [console.req_remark] for more info */
+    renewable 		bool_t 		not null default 0, /* see [console.req_remark] for more info */
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
