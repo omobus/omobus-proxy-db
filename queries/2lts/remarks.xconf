@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<remarks templ="%doc_id%;%status%;%remark_type_id%;%note%;">
+  <![CDATA[
+select doc_id, status, remark_type_id, note from j_remarks
+    where "LTS_aging_L"() <= a.updated_ts and a.updated_ts <= "LTS_aging_R"()
+order by 1
+  ]]>
+</remarks>

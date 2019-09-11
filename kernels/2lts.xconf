@@ -31,6 +31,7 @@
 <xi:include href="../queries/2lts/agencies.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/agreements1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/agreements2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/asp_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/attributes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/audit_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/audit_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -102,6 +103,8 @@
 <xi:include href="../queries/2lts/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/reclamation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/regions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/remark_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/remarks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/retail_chains.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/revocations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/shelf_lifes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -132,6 +135,7 @@
     <agencies />
     <agreements1 />
     <agreements2 />
+    <asp_types />
     <attributes />
     <audit_criterias />
     <audit_scores />
@@ -203,6 +207,8 @@
     <reclamations />
     <reclamation_types />
     <regions />
+    <remark_types />
+    <remarks />
     <retail_chains />
     <revocations />
     <shelf_lifes />
