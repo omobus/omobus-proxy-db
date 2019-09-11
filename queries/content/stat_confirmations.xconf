@@ -20,12 +20,14 @@ select
     h.doc_note,
     array_to_string(h.photos,',') photos, 
     j.status restatus,
+    k.descr retype,
     j.note renote,
     u.executivehead_id head_id, ex.descr head_name,
     t.author_id, case when z.descr is null then t.author_id else z.descr end author_name,
     t.updated_ts
 from h_confirmation h
     left join j_remarks j on j.doc_id = h.doc_id
+    left join remark_types k on k.remark_type_id = j.remark_type_id
     left join accounts a on a.account_id = h.account_id
     left join potentials p on a.poten_id = p.poten_id
     left join channels ch on a.chan_id = ch.chan_id
@@ -54,6 +56,11 @@ require('rtlib').main("confirmations", true, function(r, n, a)
 	    r.remark = {}
 	end
 	r.remark.status = a
+    elseif( n == 'retype' and a ~= nil ) then
+	if( r.remark == nil ) then
+	    r.remark = {}
+	end
+	r.remark.type = a
     elseif( n == 'renote' and a ~= nil ) then
 	if( r.remark == nil ) then
 	    r.remark = {}
