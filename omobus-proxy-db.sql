@@ -2183,6 +2183,19 @@ create table regions (
 create index i_db_ids_regions on regions using GIN (db_ids);
 create trigger trig_updated_ts before update on regions for each row execute procedure tf_updated_ts();
 
+create table remark_types (
+    remark_type_id 	uid_t 		not null primary key default man_id(),
+    descr 		descr_t 	not null,
+    row_no 		int32_t 	null, -- ordering
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null
+);
+
+create index i_db_ids_remark_types on remark_types using GIN (db_ids);
+create trigger trig_updated_ts before update on remark_types for each row execute procedure tf_updated_ts();
+
 create table reminders (
     reminder_id 	uid_t 		not null primary key default man_id(),
     subject 		descr_t 	not null,
@@ -5456,8 +5469,8 @@ create trigger trig_updated_ts before update on j_pending for each row execute p
 create table j_remarks (
     doc_id 		uid_t 		not null primary key,
     status 		varchar(8) 	not null check(status in ('accepted','rejected') and status = lower(status)),
+    remark_type_id 	uid_t 		null,
     note 		note_t 		null,
-    props 		hstore 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts		ts_auto_t 	not null
 );

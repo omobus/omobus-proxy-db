@@ -1,6 +1,6 @@
 /* Copyright (c) 2006 - 2019 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
-create or replace function console.req_remark(rlogin uid_t, cmd code_t, _doc_id uid_t, _note note_t, _props hstore) returns int
+create or replace function console.req_remark(rlogin uid_t, cmd code_t, _doc_id uid_t, _remark_type_id uid_t, _note note_t) returns int
 as $BODY$
 declare
     stack text; fcesig text;
@@ -20,16 +20,18 @@ declare
     blob_id blob_t;
     target_created int = 0;
     rcpt_to emails_t;
+    ar text array;
 begin
     GET DIAGNOSTICS stack = PG_CONTEXT;
     fcesig := substring(stack from 'function console\.(.*?)\(');
     cmd := lower(cmd);
+    _remark_type_id := NIL(_remark_type_id);
     _note := NIL(trim(_note));
 
     if( cmd not in ('accept','reject') ) then
 	raise exception '% doesn''t support [%] command.', fcesig, cmd;
     end if;
-    if( _doc_id is null or (cmd = 'reject' and _note is null)) then
+    if( _doc_id is null or (cmd = 'reject' and _remark_type_id is null and _note is null)) then
 	raise exception '% invalid input attribute.', fcesig;
     end if;
     if( (select count(doc_id) from h_confirmation where doc_id = _doc_id) = 0 ) then
@@ -38,19 +40,19 @@ begin
 
     if( cmd = 'accept' ) then
 	if( (select count(doc_id) from j_remarks where doc_id = _doc_id) = 0 ) then
-	    insert into j_remarks(doc_id, status, note, props)
-		values(_doc_id, 'accepted', _note, _props);
+	    insert into j_remarks(doc_id, status, remark_type_id, note)
+		values(_doc_id, 'accepted', _remark_type_id, _note);
 	else
-	    update j_remarks set status = 'accepted', note = _note, props = _props
+	    update j_remarks set status = 'accepted', remark_type_id = _remark_type_id, note = _note
 		where doc_id = _doc_id and status <> 'accepted';
 	end if;
 	GET DIAGNOSTICS rows = ROW_COUNT;
     elsif( cmd = 'reject' ) then
 	if( (select count(doc_id) from j_remarks where doc_id = _doc_id) = 0 ) then
-	    insert into j_remarks(doc_id, status, note, props)
-		values(_doc_id, 'rejected', _note, _props);
+	    insert into j_remarks(doc_id, status, remark_type_id, note)
+		values(_doc_id, 'rejected', _remark_type_id, _note);
 	else
-	    update j_remarks set status = 'rejected', note = _note, props = _props
+	    update j_remarks set status = 'rejected', remark_type_id = _remark_type_id, note = _note
 		where doc_id = _doc_id and status <> 'rejected';
 	end if;
 	GET DIAGNOSTICS rows = ROW_COUNT;
@@ -74,11 +76,19 @@ begin
 	update targets set e_date = current_date, hidden = 1 
 	    where pid = _doc_id and e_date > current_date::date_t and hidden = 0;
 
+	if( _remark_type_id is not null ) then
+	    ar := array_append(ar, coalesce((select descr from remark_types where remark_type_id = _remark_type_id)::text,'-'));
+	end if;
+	if( _note is not null ) then
+	    ar := array_append(ar, coalesce(_note::text,'-'));
+	end if;
+
 	if( cmd = 'reject' and x > current_date and done = 1 ) then
 	    insert into targets (target_type_id, subject, body, b_date, e_date, author_id, account_ids, image, "immutable", "renewable", pid)
 		values(
 		    case when strict = 1 then 'target:strict' else 'target:normal' end, format('RE: %s',sub),
-		    "L10n_format_a"(u_lang,'targets','','confirmation',array['fix_date',"L"(current_date),'msg',_note,'u_name',coalesce(author_name,rlogin)],_note),
+		    "L10n_format_a"(u_lang,'targets','','confirmation',array['fix_date',"L"(current_date),'msg',array_to_string(ar,'<br/>'),
+			'u_name',coalesce(author_name,rlogin)],_note),
 		    current_date, 
 		    case when re = 1 then current_date + "paramInteger"('target:depth') else x end, 
 		    rlogin, 
@@ -100,7 +110,7 @@ begin
 	perform evmail_add(rcpt_to, u_lang, format('remark/caption:%s', cmd), 
 	    format('remark/body:%s', case 
 		when cmd = 'reject' then cmd || (case when target_created = 1 then '1' else '0' end) 
-		else cmd || (case when _note is null then '1' else '0' end) 
+		else cmd || (case when ar is null then '1' else '0' end) 
 	    end),
 	    case when cmd = 'reject' then 2::smallint /*high*/ else 3::smallint /*normal*/ end, 
 	    array[
@@ -109,7 +119,7 @@ begin
 		'fix_dt',"L"(f_dt),
 		'u_name',coalesce(author_name,rlogin),
 		'sub',sub,
-		'note',_note
+		'note',array_to_string(ar,'<br/>')
 	    ]);
 
 	    perform content_add('stat_confirmations', '', "monthDate_First"(f_dt::date_t), "monthDate_Last"(f_dt::date_t));
@@ -117,7 +127,7 @@ begin
     end if;
 
     insert into console.requests(req_login, req_type, status, attrs)
-	values(rlogin, fcesig, cmd, coalesce(_props,''::hstore) || hstore(array['doc_id',_doc_id,'note',_note,'rows',rows::varchar]));
+	values(rlogin, fcesig, cmd, hstore(array['doc_id',_doc_id,'remark_type_id',_remark_type_id,'note',_note,'rows',rows::varchar]));
 
     return rows;
 end;
