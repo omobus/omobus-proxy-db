@@ -19,6 +19,7 @@ select
     h.confirmation_type_id, f.descr confirm, 
     h.doc_note,
     array_to_string(h.photos,',') photos, 
+    (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(h.photos)) refs,
     j.status restatus,
     k.descr retype,
     j.note renote,
@@ -49,7 +50,7 @@ order by h.inserted_ts desc, u.descr
   <![CDATA[
 local std = require('stdlib')
 require('rtlib').main("confirmations", true, function(r, n, a) 
-    if( n == 'photos' ) then
+    if( std.contains({'photos','refs'}, n) ) then
 	r[n] = std.split(a, ',')
     elseif( n == 'restatus' and a ~= nil ) then
 	if( r.remark == nil ) then
