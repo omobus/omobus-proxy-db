@@ -4,7 +4,9 @@
   <![CDATA[
 do $$
 declare
-    gc_date date_t = ("monthDate_First"(current_date - greatest("paramInteger"('gc:keep_alive'::uid_t),60)))::date_t;
+    alive int = "paramInteger"('gc:keep_alive'::uid_t);
+    gc_date date_t = ("monthDate_First"(current_date - greatest(alive,60)))::date_t;
+    ct_date date_t = current_date - greatest(alive+180,360);
     i uid_t;
     f int;
     c int;
@@ -192,10 +194,10 @@ begin
     end if;
 
     delete from celltower_stream
-	where data_ts::date < current_date - 360;
+	where data_ts::date_t < ct_date;
     GET DIAGNOSTICS c = ROW_COUNT;
     if( c > 0 ) then
-	raise notice 'deleted % obsolete celltower measures that created before %.', c, (current_date - 360)::date_t;
+	raise notice 'deleted % obsolete celltower measures that created before %.', c, ct_date;
     end if;
 end;
 $$;
