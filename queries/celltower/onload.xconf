@@ -14,6 +14,5 @@ select 'ocid' content_code, mcc, mnc, cid, lac from celltower_stream
 /* if OpenCellID doesn't return cell tower location, try Mozilla Location Service data: */ union
 select 'mls' content_code, mcc, mnc, cid, lac from celltower_stream 
     where (content_ts is null or data_ts > content_ts) and source='ocid'
-/* max rows: */ limit 500
   ]]>
 </onload>
