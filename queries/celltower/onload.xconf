@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <onload>
   <![CDATA[
+select content_code, mcc, mnc, cid, lac from (
 /* first of all, try yandex web-service: */
-select 'yandex' content_code, mcc, mnc, cid, lac from celltower_stream 
-    where (content_ts is null or data_ts > content_ts) and source is null
+    select 'yandex'::text content_code, mcc, mnc, cid, lac from celltower_stream 
+	where (content_ts is null or data_ts > content_ts) and source is null
+    order by data_ts desc
+    limit 10
+) x
 /* if yandex doesn't return cell tower location, try OpenCellID data: */ union
 select 'ocid' content_code, mcc, mnc, cid, lac from celltower_stream 
-    where (content_ts is null or data_ts > content_ts) and source='yandex'
+    where (content_ts is null or data_ts > content_ts) and (source='yandex' or (source is null and data_ts::date < current_date - 2))
 /* if OpenCellID doesn't return cell tower location, try Mozilla Location Service data: */ union
 select 'mls' content_code, mcc, mnc, cid, lac from celltower_stream 
     where (content_ts is null or data_ts > content_ts) and source='ocid'
-/* max rows: */ limit 10;
+/* max rows: */ limit 500
   ]]>
 </onload>

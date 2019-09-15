@@ -14,11 +14,16 @@ CHMOD=/bin/chmod
 CHOWN=/bin/chown
 GZIP=/bin/gzip
 WGET=/usr/bin/wget
+MKDIR=/bin/mkdir
+PSQL=/usr/local/libexec/pgsql-9.6/bin/psql
+SU=/bin/su
 
-database=/var/lib/pgsql/data/omobus
-fname=MLS-celltowers
+database=/var/lib/omobus.d/celltowers
+fname=MLS
 flag=0
+copyscript="truncate table celltowers.\"$fname\";COPY celltowers.\"$fname\"(mcc,mnc,cid,lac,latitude,longitude,radio,changeable) FROM '$database/$fname.txt' DELIMITER ',' CSV HEADER;"
 
+$MKDIR -p $database
 $WGET -O $database/$fname.csv.gz https://d3r3tk5171bc5t.cloudfront.net/export/MLS-full-cell-export-`$DATE +%Y-%m-%d`T000000.csv.gz
 $GZIP -d $database/$fname.csv.gz
 
@@ -66,6 +71,7 @@ if [ "$flag" != "0" ]; then
     $CHOWN postgres:postgres $database/.$fname.txt
     $RM -f $database/$fname.txt
     $MV $database/.$fname.txt $database/$fname.txt
+    $ECHO "$copyscript" | $SU omobus -c "$PSQL -d omobus-proxy-db"
 fi
 
 $RM -f $database/.$fname.txt $database/$fname.csv $database/$fname.csv.gz

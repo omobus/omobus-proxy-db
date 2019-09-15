@@ -3,7 +3,7 @@
     <queries>
 	<L>
   <![CDATA[
-select latitude, longitude, changeable from ".MLS" where mcc=%mcc% and mnc=%mnc% and cid=%cid% and lac=%lac% limit 1
+select latitude, longitude, changeable from celltowers."MLS" where mcc=%mcc% and mnc=%mnc% and cid=%cid% and lac=%lac% limit 1
   ]]>
 	</L>
     </queries>

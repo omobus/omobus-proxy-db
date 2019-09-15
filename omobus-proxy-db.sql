@@ -750,30 +750,6 @@ language plpgsql IMMUTABLE;
 
 -- **** System tables ****
 
-create foreign table ".MLS" (
-    mcc 		int32_t 	not null, /* mobile country code */
-    mnc 		int32_t 	not null, /* mobile network code */
-    cid 		int32_t 	not null, /* cell tower ID */
-    lac 		int32_t 	not null, /* local area code */
-    latitude 		gps_t 		not null,
-    longitude 		gps_t 		not null,
-    radio 		text 		not null,
-    changeable 		bool_t 		not null /* defines if coordinates of the cell tower are exact (0) or approximate (1). */
-) server fs
-options (filename '/var/lib/pgsql/data/omobus/MLS-celltowers.txt', format 'csv', header 'true', delimiter ',');
-
-create foreign table ".OCID" (
-    mcc 		int32_t 	not null, /* mobile country code */
-    mnc 		int32_t 	not null, /* mobile network code */
-    cid 		int32_t 	not null, /* cell tower ID */
-    lac 		int32_t 	not null, /* local area code */
-    latitude 		gps_t 		not null,
-    longitude 		gps_t 		not null,
-    radio 		text 		not null,
-    changeable 		bool_t 		not null /* defines if coordinates of the cell tower are exact (0) or approximate (1). */
-) server fs
-options (filename '/var/lib/pgsql/data/omobus/OCID-celltowers.txt', format 'csv', header 'true', delimiter ',');
-
 create table "L10n" (
     lang_id 		lang_t 		not null,
     obj_code 		code_t 		not null, -- product|account|user|...
