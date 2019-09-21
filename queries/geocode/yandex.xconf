@@ -2,15 +2,14 @@
 <yandex>
     <generator>
   <![CDATA[
-local req = "GET /1.x/?format=json&geocode=$address&results=20 HTTP/1.1\r\nHost: $hostname\r\nUser-Agent: omobusd\r\nConnection: close\r\n\r\n"
+local http = require('httpslib')
+local req = "GET /1.x/?format=json&geocode=$address&results=3 HTTP/1.1\r\nHost: $hostname\r\nUser-Agent: omobusd\r\nConnection: close\r\n\r\n"
 local hostname = "geocode-maps.yandex.ru"
-local port = 443
-local connect_timeout = 10
-local params = {rcvtimeo = 30, sndtimeo = 15}
-local tlsconfig = { noverifycert = true, noverifyname = true, ciphers = "compat", ca_file = "/etc/ssl/certs/Certum_Root_CA.pem" }
 
 local function shielding(s)
-    return s:replace(";", "%3B"):replace(' ', '%20'):replace('#', ' ')
+    return s:replace(";", ","):gsub("([^A-Za-z0-9%_%.%-%~])", function(v)
+        return string.upper(string.format("%%%02x", string.byte(v)))
+    end)
 end
 
 local function strrepl(s, f, t)
@@ -47,111 +46,10 @@ local function get_metadata(tb)
 end
 
 local function main()
-    local sockfd, resp, tb, step, jsonstr, latitude, longitude, obj, xobj
+    local tb, obj, xobj, err
 
-    sockfd = assert(sock.connect(hostname, port, connect_timeout, params))
-    assert(sockfd:start_tls(tlsconfig))
-    assert(sockfd:send(build_request()))
-    resp = assert(sockfd:recv())
-
-    step = 0
-    resp:gsub("([^\r\n]+)", function(c)
-	if step == 0 then
-	    -- *** HTTP/1.1 200 OK
-	    local protocol, code
-	    c:gsub("(%w+)/(%d+).(%d+)([ ]+)(%d+)([ ]+)(%w*)", function(arg0,arg1,arg2,arg3,arg4,arg5,arg6) 
-		protocol = arg0; code = arg4
-	    end)
-	    assert(protocol, string.format("unknown response from the %s:%d", hostname, port))
-	    assert(protocol == "HTTP", string.format("the %s:%d does not support HTTP format", hostname, port))
-	    assert(code == "200", string.format("%s from the %s:%d, account_id='%s'", c, hostname, port, _account_id))
-	elseif c:sub(1, 12) == "Content-Type" then
-	    -- *** Content-Type: application/json; charset=utf-8
-	    local charset, type
-	    c:gsub("([%w-%w]+):([ ]+)(%w+)/(%w+);([ ]+)(%w+)=([%w-%w]+)", function(arg0,arg1,arg2,arg3,arg4,arg5,arg6)
-		type = arg3; charset = arg6
-	    end)
-	    assert(type == 'json', string.format("supported only json responses; the %s:%d returns %s data", hostname, port, type))
-	    assert(charset == 'utf-8', string.format("supported only utf-8 responses; the %s:%d returns %s data", hostname, port, charset))
-	elseif c:sub(1, 17) == "Transfer-Encoding" and c:sub(19):ltrim(" ") == "chunked" then
-	    for xx=1,25 do
-		if resp:sub(-5) ~= "0\r\n\r\n" then
-		    resp = resp .. assert(sockfd:recv())
-		else 
-		    break
-		end
-	    end
-	    assert(resp:sub(-5) == "0\r\n\r\n", string.format(
-		"unable to download all response data from the %s:%d; downloaded %d bytes; account_id='%s'", 
-		hostname, port, #resp, _account_id))
-	end
-	step = step + 1
-    end)
-
-    sockfd:stop_tls()
-    sockfd:close()
-    step = 1
-    jsonstr = ""
-
-    -- concatenate all chunks
-    resp:sub(resp:find("\r\n\r\n", 1, true) + 4):gsub("([^\r\n]+)", function(c)
-	if not (step%2 ~= 0) then jsonstr = jsonstr .. c end
-	step = step + 1
-    end)
-
-    assert(#jsonstr >= 2, string.format("downloaded invalid json data from the %s:%d", hostname, port))
-    tb = json.decode(jsonstr)
-    obj = get_metadata(tb)
-    if obj ~= nil then
-	for lo, _, la in obj.Point.pos:gmatch("([0-9.]+)([ ]*)([0-9.]+)") do
-	    latitude = la; longitude = lo
-	    break
-	end
-	if latitude == nil or longitude == nil then
-	    set_param(_content, "x-latitude", "null")
-	    set_param(_content, "x-longitude", "null")
-	else
-	    set_param(_content, "x-latitude", latitude)
-	    set_param(_content, "x-longitude", longitude)
-	end
-	xobj = obj.metaDataProperty.GeocoderMetaData
-	set_param_s("x-address", xobj.text)
-	xobj = xobj.AddressDetails.Country
-	set_param_s("x-country", xobj.CountryNameCode)
-	if xobj.AdministrativeArea ~= nil then 
-	    set_param_s("x-region", xobj.AdministrativeArea.AdministrativeAreaName)
-	    if xobj.AdministrativeArea.SubAdministrativeArea ~= nil then
-		xobj = xobj.AdministrativeArea.SubAdministrativeArea
-		set_param_s("x-area", xobj.SubAdministrativeAreaName)
-	    else
-		xobj = xobj.AdministrativeArea
-		set_param(_content, "x-area", "")
-	    end
-	else
-	    set_param(_content, "x-region", "")
-	    set_param(_content, "x-area", "")
-	end
-	if xobj.Locality ~= nil then
-	    set_param_s("x-city", xobj.Locality.LocalityName)
-	    if xobj.Locality.Thoroughfare ~= nil then
-		set_param_s("x-street", xobj.Locality.Thoroughfare.ThoroughfareName)
-		set_param_s("x-house", xobj.Locality.Thoroughfare.Premise.PremiseNumber)
-	    elseif xobj.Locality.DependentLocality ~= nil and xobj.Locality.DependentLocality.Thoroughfare ~= nil then
-		set_param_s("x-street", xobj.Locality.DependentLocality.Thoroughfare.ThoroughfareName)
-		set_param_s("x-house", xobj.Locality.DependentLocality.Thoroughfare.Premise.PremiseNumber)
-	    elseif xobj.Locality.Premise ~= nil then
-		set_param(_content, "x-street", "")
-		set_param_s("x-house", xobj.Locality.Premise.PremiseNumber)
-	    else
-		set_param(_content, "x-street", "")
-		set_param(_content, "x-house", "")
-	    end
-	else
-	    set_param(_content, "x-city", "")
-	    set_param(_content, "x-street", "")
-	    set_param(_content, "x-house", "")
-	end
-    else
+    tb, err = http.getJSON(hostname, build_request())
+    if err or tb == nil then
 	set_param(_content, "x-latitude", "null")
 	set_param(_content, "x-longitude", "null")
 	set_param(_content, "x-address", "")
@@ -161,10 +59,72 @@ local function main()
 	set_param(_content, "x-city", "")
 	set_param(_content, "x-street", "")
 	set_param(_content, "x-house", "")
-	log_warn(string.format("la/lo is not available for account_id='%s', address='%s'", _account_id, _address))
+	log_warn(string.format("invalid geocoding for account_id='%s'", _account_id))
+    else
+	obj = get_metadata(tb)
+	if obj ~= nil then
+	    for lo, _, la in obj.Point.pos:gmatch("([0-9.]+)([ ]*)([0-9.]+)") do
+		latitude = la; longitude = lo
+		break
+	    end
+	    if latitude == nil or longitude == nil then
+		set_param(_content, "x-latitude", "null")
+		set_param(_content, "x-longitude", "null")
+	    else
+		set_param(_content, "x-latitude", latitude)
+		set_param(_content, "x-longitude", longitude)
+	    end
+	    xobj = obj.metaDataProperty.GeocoderMetaData
+	    set_param_s("x-address", xobj.text)
+	    xobj = xobj.AddressDetails.Country
+	    set_param_s("x-country", xobj.CountryNameCode)
+	    if xobj.AdministrativeArea ~= nil then 
+		set_param_s("x-region", xobj.AdministrativeArea.AdministrativeAreaName)
+		if xobj.AdministrativeArea.SubAdministrativeArea ~= nil then
+		    xobj = xobj.AdministrativeArea.SubAdministrativeArea
+		    set_param_s("x-area", xobj.SubAdministrativeAreaName)
+		else
+		    xobj = xobj.AdministrativeArea
+		    set_param(_content, "x-area", "")
+		end
+	    else
+		set_param(_content, "x-region", "")
+		set_param(_content, "x-area", "")
+	    end
+	    if xobj.Locality ~= nil then
+		set_param_s("x-city", xobj.Locality.LocalityName)
+		if xobj.Locality.Thoroughfare ~= nil then
+		    set_param_s("x-street", xobj.Locality.Thoroughfare.ThoroughfareName)
+		    set_param_s("x-house", xobj.Locality.Thoroughfare.Premise.PremiseNumber)
+		elseif xobj.Locality.DependentLocality ~= nil and xobj.Locality.DependentLocality.Thoroughfare ~= nil then
+		    set_param_s("x-street", xobj.Locality.DependentLocality.Thoroughfare.ThoroughfareName)
+		    set_param_s("x-house", xobj.Locality.DependentLocality.Thoroughfare.Premise.PremiseNumber)
+		elseif xobj.Locality.Premise ~= nil then
+		    set_param(_content, "x-street", "")
+		    set_param_s("x-house", xobj.Locality.Premise.PremiseNumber)
+		else
+		    set_param(_content, "x-street", "")
+		    set_param(_content, "x-house", "")
+		end
+	    else
+		set_param(_content, "x-city", "")
+		set_param(_content, "x-street", "")
+		set_param(_content, "x-house", "")
+	    end
+	else
+	    set_param(_content, "x-latitude", "null")
+	    set_param(_content, "x-longitude", "null")
+	    set_param(_content, "x-address", "")
+	    set_param(_content, "x-country", "")
+	    set_param(_content, "x-region", "")
+	    set_param(_content, "x-area", "")
+	    set_param(_content, "x-city", "")
+	    set_param(_content, "x-street", "")
+	    set_param(_content, "x-house", "")
+	    log_warn(string.format("la/lo is not available for account_id='%s', address='%s'", _account_id, _address))
+	end
     end
 end
-
 
 main()
 -- ** The end **

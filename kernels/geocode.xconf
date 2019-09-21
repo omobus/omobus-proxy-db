@@ -6,4 +6,7 @@
 <xi:include href="../queries/geocode/yandex.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/geocode/yandex-reverse.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 </content>
+<libs>
+<xi:include href="../queries/geocode/httpslib.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</libs>
 </kernel>

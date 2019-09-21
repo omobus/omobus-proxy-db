@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<httpslib>
+  <![CDATA[
+local port = 443
+local connect_timeout = 10
+local params = {rcvtimeo = 30, sndtimeo = 15}
+local tlsconfig = { noverifycert = true, noverifyname = true, ciphers = "compat", ca_file = "/etc/ssl/certs/Certum_Root_CA.pem" }
+
+local M = {}
+
+function M.getJSON(hostname, req)
+    local sockfd, resp, step, more, err
+
+    sockfd = assert(sock.connect(hostname, port, connect_timeout, params))
+    assert(sockfd:start_tls(tlsconfig))
+    assert(sockfd:send(req))
+    resp = assert(sockfd:recv())
+
+    step = 0
+    resp:gsub("([^\r\n]+)", function(c)
+	if step == 0 then
+	    -- *** HTTP/1.1 200 OK
+	    local protocol, code
+	    c:gsub("(%w+)/(%d+).(%d+)([ ]+)(%d+)([ ]+)(%w*)", function(arg0,arg1,arg2,arg3,arg4,arg5,arg6) 
+		protocol = arg0; code = arg4
+	    end)
+	    assert(protocol, string.format("unknown response from the %s:%d", hostname, port))
+	    assert(protocol == "HTTP", string.format("the %s:%d does not support HTTP format", hostname, port))
+	    if code ~= "200" then
+		log_error(string.format("%s from the %s:%d", c, hostname, port))
+		err = true
+	    end
+	elseif c:sub(1, 12) == "Content-Type" then
+	    -- *** Content-Type: application/json; charset=utf-8
+	    local charset, type
+	    c:gsub("([%w-%w]+):([ ]+)(%w+)/(%w+);([ ]+)(%w+)=([%w-%w]+)", function(arg0,arg1,arg2,arg3,arg4,arg5,arg6)
+		type = arg3; charset = arg6
+	    end)
+	    assert(type == 'json', string.format("supported only json responses; the %s:%d returns %s data", hostname, port, type))
+	    assert(charset == 'utf-8', string.format("supported only utf-8 responses; the %s:%d returns %s data", hostname, port, charset))
+	elseif c:sub(1, 17) == "Transfer-Encoding" and c:sub(19):ltrim(" ") == "chunked" then
+	    for xx=1,25 do
+		if resp:sub(-5) ~= "0\r\n\r\n" then
+		    resp = resp .. assert(sockfd:recv())
+		else 
+		    break
+		end
+	    end
+	    assert(resp:sub(-5) == "0\r\n\r\n", string.format(
+		"unable to download all response data from the %s:%d; downloaded %d bytes", 
+		hostname, port, #resp))
+	elseif c:sub(1, 14) == "Content-Length" then
+	    c:gsub("([%w-%w]+):([ ]+)(%d+)", function(arg0,arg1,arg2)
+		more = tonumber(arg2)
+	    end)
+	end
+	step = step + 1
+    end)
+
+    if not err then
+	resp = resp:sub(resp:find("\r\n\r\n", 1, true) + 4)
+	if more ~= nil and more > #resp then
+	    while more > #resp and not err do
+		local tmp
+		tmp, msg = sockfd:recv()
+		if tmp == nil then
+		    err = true
+		elseif #tmp == 0 then
+		    break
+		else
+		    resp = resp .. tmp
+		end
+	    end
+	end
+	assert(#resp >= 2, string.format("downloaded invalid json data from the %s:%d", hostname, port))
+    end
+
+    sockfd:stop_tls()
+    sockfd:close()
+
+    if err then
+	resp = nil
+    else
+	resp = json.decode(resp)
+    end
+
+    return resp, err
+end
+
+return M
+  ]]>
+</httpslib>
