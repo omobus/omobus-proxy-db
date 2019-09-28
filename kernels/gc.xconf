@@ -187,13 +187,6 @@ begin
     end if;
 
     delete from celltower_stream
-	where (content_ts is null or data_ts > content_ts) and (latitude is null or longitude is null) and (data_ts::date < current_date - 1) and source is not null;
-    GET DIAGNOSTICS c = ROW_COUNT;
-    if( c > 0 ) then
-	raise notice 'deleted % undefined celltower measures with empty location.', c;
-    end if;
-
-    delete from celltower_stream
 	where data_ts::date_t < ct_date;
     GET DIAGNOSTICS c = ROW_COUNT;
     if( c > 0 ) then
