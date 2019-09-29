@@ -43,7 +43,7 @@ delete from syscellids where source = '%ErpCode%';
 <check_exist>
   <![CDATA[
 /* ignoring unused mcc: */
-select case count(mcc) when 0 then 1 else 0 end from ".sesmcc"
+select case count(mcc) when 0 then 1 else 0 end as "count" from ".sesmcc"
     where mcc = %mcc%
   ]]>
 </check_exist>
