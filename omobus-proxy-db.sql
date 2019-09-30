@@ -261,6 +261,26 @@ begin
 end;
 $body$ language plpgsql;
 
+create or replace function ean13_in(m text) returns ean13
+as $body$
+declare
+    m text;
+    x ean13;
+begin
+    if m is not null then
+	perform isn_weak(true);
+	m := trim(m);
+	begin
+	    x := ean13_in(m::cstring);
+	exception when others then
+	    --raise notice '[%s] is invalid EAN13 value.', m;
+	end;
+	--perform isn_weak(false);
+    end if;
+    return x;
+end;
+$body$ language plpgsql IMMUTABLE;
+
 create or replace function ean13_in(ar text array) returns ean13 array
 as $body$
 declare
@@ -284,7 +304,7 @@ begin
     --perform isn_weak(false);
     return x;
 end;
-$body$ language plpgsql;
+$body$ language plpgsql IMMUTABLE;
 
 create or replace function ean13_out(ar ean13 array) returns text array
 as $body$
@@ -304,7 +324,7 @@ begin
     --perform isn_weak(false);
     return x;
 end;
-$body$ language plpgsql;
+$body$ language plpgsql IMMUTABLE;
 
 create or replace function explain_cycle_date(d date_t) returns table(lang_id lang_t, descr descr_t)
 as $BODY$
