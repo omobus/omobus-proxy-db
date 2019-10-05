@@ -78,7 +78,8 @@ select
 	    (select path || ' available: ' || round(available_bytes/1048576.0, 2) || ' MiB, total: ' || round(total_bytes/1048576.0, 2) || ' MiB'
 		from a_statfs where j.act_id=act_id)
 	when 'a_time' then
-	    (select status || ': ' || msg from a_time where j.act_id=act_id)
+	    (select format('%s: %s, diff: %s, interactive: %s', status, msg, coalesce(diff::varchar||' min.','-'), case interactive when 1 then 'yes' when 0 then 'no' else 'N/A' end) 
+		from a_time where j.act_id=act_id)
 	when 'a_traffic' then
 	    (select '(' || duration || ' sec.) Total: RX:' || round(total_rx_bytes/1048576.0, 2) || ' MiB TX:' || round(total_tx_bytes/1048576.0, 2) || 
 		' MiB, [Mobile: RX:' || round(mobile_rx_bytes/1048576.0, 2) || ' MiB TX:' || round(mobile_tx_bytes/1048576.0, 2) || 
