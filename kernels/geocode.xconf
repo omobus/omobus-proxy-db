@@ -8,5 +8,18 @@
 </content>
 <libs>
 <xi:include href="../queries/geocode/httpslib.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+    <apikeys>
+  <![CDATA[
+local M = {}
+
+M.yandex = {
+    -- this API keys for testing purposes only
+    forward = "239a23e9-6e53-45ce-a6e8-789cd03daf73",
+    reverse = "239a23e9-6e53-45ce-a6e8-789cd03daf73"
+}
+
+return M
+  ]]>
+    </apikeys>
 </libs>
 </kernel>

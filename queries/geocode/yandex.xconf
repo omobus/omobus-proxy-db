@@ -3,8 +3,9 @@
     <generator>
   <![CDATA[
 local http = require('httpslib')
-local req = "GET /1.x/?format=json&geocode=$address&results=3 HTTP/1.1\r\nHost: $hostname\r\nUser-Agent: omobusd\r\nConnection: close\r\n\r\n"
+local req = "GET /1.x/?format=json&geocode=$address&results=3&apikey=$apikey HTTP/1.1\r\nHost: $hostname\r\nUser-Agent: omobusd\r\nConnection: close\r\n\r\n"
 local hostname = "geocode-maps.yandex.ru"
+local apikey = require('apikeys').yandex.forward
 
 local function shielding(s)
     return s:replace(";", ","):gsub("([^A-Za-z0-9%_%.%-%~])", function(v)
@@ -17,7 +18,11 @@ local function strrepl(s, f, t)
 end
 
 local function build_request()
-    return strrepl(strrepl(req, "address", shielding(_address)), "hostname", hostname)
+    local x = req
+    x = strrepl(x, "address", shielding(_address))
+    x = strrepl(x, "hostname", hostname)
+    x = strrepl(x, "apikey", apikey)
+    return x
 end
 
 local function set_param_s(n, v)

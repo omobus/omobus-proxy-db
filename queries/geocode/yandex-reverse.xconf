@@ -3,8 +3,9 @@
     <generator>
   <![CDATA[
 local http = require('httpslib')
-local req = "GET /1.x/?format=json&geocode=$longitude,$latitude&kind=house&results=10 HTTP/1.1\r\nHost: $hostname\r\nUser-Agent: omobusd\r\nConnection: close\r\n\r\n"
+local req = "GET /1.x/?format=json&geocode=$longitude,$latitude&kind=house&results=3&apikey=$apikey HTTP/1.1\r\nHost: $hostname\r\nUser-Agent: omobusd\r\nConnection: close\r\n\r\n"
 local hostname = "geocode-maps.yandex.ru"
+local apikey = require('apikeys').yandex.reverse
 
 local function strrepl(s, f, t)
     return s:replace(string.format("$%s", f), t)
@@ -14,7 +15,9 @@ local function build_request()
     local x = req
     x = strrepl(x, "latitude", _latitude)
     x = strrepl(x, "longitude", _longitude)
-    return strrepl(x, "hostname", hostname)
+    x = strrepl(x, "hostname", hostname)
+    x = strrepl(x, "apikey", apikey)
+    return x
 end
 
 local function distance(la0, lo0, la1, lo1)
