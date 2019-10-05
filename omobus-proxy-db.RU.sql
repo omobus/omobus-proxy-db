@@ -1592,7 +1592,7 @@ delete from oos_types;
 insert into oos_types(oos_type_id, descr, row_no) values('0', 'Мало продукции в наличии (1-2 шт)', 0);
 insert into oos_types(oos_type_id, descr, row_no) values('1', 'Продукт заблокирован для заказа', 1);
 insert into oos_types(oos_type_id, descr, row_no) values('2', 'Виртуальные остатки, а именно товара нет в наличии, но по базе они присутствуют', 2);
-insert into oos_types(oos_type_id, descr, row_no) values('3', 'Продукn заказан или ожидается поставка', 3);
+insert into oos_types(oos_type_id, descr, row_no) values('3', 'Продукт заказан или ожидается поставка', 3);
 insert into oos_types(oos_type_id, descr, row_no) values('4', 'Продукт на складе, требуется мерчендайзинг', 4);
 insert into oos_types(oos_type_id, descr, row_no) values('5', 'Не выяснил(-а) причину Out-of-Stock', 5);
 insert into oos_types(oos_type_id, descr) values('9', 'ДРУГОЕ');
@@ -1822,9 +1822,9 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','discard/body:reject','<html><body>$(u_name) отклонил(-а) исключение <i>$(a_name) $(address)</i> из маршрута на <i>$(route_date)</i>.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','discard/caption:validate','Исключение из маршрута (подтверждение): $(a_name)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','discard/body:validate','<html><body>$(u_name) подвердил(-а) исключение <i>$(a_name) $(address)</i> из маршрута на <i>$(route_date)</i>.</body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','gps_off/caption','ВКЛЮЧИТЕ ДАТЧИК ОПРЕДЕЛЕНИЯ МЕСТОПОЛОЖЕНИЯ');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','gps_off/caption','НЕ ОТКЛЮЧАЙТЕ ДАТЧИК ОПРЕДЕЛЕНИЯ МЕСТОПОЛОЖЕНИЯ');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','gps_off/body', 
-    '<html><body>$(fix_dt) встроенный датчик определения местоположения <b>отключен</b>. ' ||
+    '<html><body>$(fix_dt) зафиксировано <b>отключение</b> датчика определения местоположения или датчик был выключен в момент запуска процедуры контроля перемещений. ' ||
     'Для того, что-бы избежать спорных ситуаций, рекомендуется <i>незамедлительно включить</i> датчик определения местоположения. ' || 
     'Для этого:<br />' ||
     '&nbsp;&nbsp;&nbsp;1. зайдите в настройки планшета;<br />' ||
@@ -1859,7 +1859,8 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
     'Для того, что-бы в дальнейшем избежать возникновение спорных ситуаций, необходимо полностью исключить практику изменения времени на устройстве за исключением ' ||
     'тех случаев, когда данная процедура согласована с Вашим непосредственным руководителем.<br/>' ||
     '<br />'||
-    'ВНИМАНИЕ. В том случае, если Вы не меняли время, необходимо в настройках устройства отключить автоматическую синхронизацию времени и часового пояса по данным сети, для этого:<br/>' ||
+    'ВНИМАНИЕ. В том случае, если Вы не меняли время, необходимо в настройках устройства отключить режим энергосбережения и автоматическую синхронизацию времени и ' ||
+    'часового пояса по данным сети. Отключить автоматическую синхронизацию времени можно следующим образом:<br/>' ||
     '&nbsp;&nbsp;&nbsp;1. зайдите в настройки планшета;<br />' ||
     '&nbsp;&nbsp;&nbsp;2. выберите пункт «Дата и время»;<br />' ||
     '&nbsp;&nbsp;&nbsp;3. отключите «Дата и время сети»;<br />' ||
