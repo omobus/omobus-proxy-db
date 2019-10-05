@@ -18,6 +18,12 @@
 	</xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="bool_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="|yes|no" />
+	</xs:restriction>
+    </xs:simpleType>
+
     <xs:element name="time">
 	<xs:complexType>
 	    <xs:attribute name="vstamp" use="required" type="xs:string" />
@@ -32,6 +38,7 @@
 	    <xs:attribute name="status" use="required" type="status_t" />
 	    <xs:attribute name="msg" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="diff" use="optional" type="int_t" default="" />
+	    <xs:attribute name="interactive" use="optional" type="bool_t" default="" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>

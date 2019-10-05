@@ -3227,7 +3227,8 @@ create table a_time (
     longitude		gps_t 		null,
     status		varchar(8) 	not null check (status in ('time','timezone') and status = lower(status)),
     msg			varchar(512) 	null,
-    diff 		int32_t 	null /* approximate time difference in minutes */
+    diff 		int32_t 	null, /* approximate time difference in minutes */
+    interactive 	bool_t 		null
 );
 
 create index i_user_id_a_time on a_time (user_id);
