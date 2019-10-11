@@ -18,7 +18,7 @@
     ftp.ccc="no"
     ftp.cdc="no"
     pack.limit="500"
-    pack.gc="7"
+    pack.gc="4"
     cache="docs/"
     >
 <xi:include href="../queries/docs/addition.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
