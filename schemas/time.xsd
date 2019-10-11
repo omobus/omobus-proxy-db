@@ -12,15 +12,10 @@
 	</xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="int_t">
-	<xs:restriction base="xs:string">
-	    <xs:pattern value="(|(|\+|\-)[0-9]*)" />
-	</xs:restriction>
-    </xs:simpleType>
-
     <xs:simpleType name="bool_t">
 	<xs:restriction base="xs:string">
-	    <xs:pattern value="|yes|no" />
+	    <xs:enumeration value="yes" />
+	    <xs:enumeration value="no" />
 	</xs:restriction>
     </xs:simpleType>
 
@@ -37,8 +32,8 @@
 	    <xs:attribute name="longitude" use="optional" type="xs:decimal" default="0.0" />
 	    <xs:attribute name="status" use="required" type="status_t" />
 	    <xs:attribute name="msg" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="diff" use="optional" type="int_t" default="" />
-	    <xs:attribute name="interactive" use="optional" type="bool_t" default="" />
+	    <xs:attribute name="diff" use="required" type="xs:integer" />
+	    <xs:attribute name="interactive" use="required" type="bool_t" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>
