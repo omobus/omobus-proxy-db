@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <onsuccess>
   <![CDATA[
-update users set dev_login='%dev_login%'
+update users set dev_login=NIL('%dev_login%'), evaddrs=case when '%dev_login%' = '' then null else array[format('<%dev_login%@%s>',"paramUID"('srv:domain'))]::emails_t end
     where user_id='%user_id%' and (dev_login is null or dev_login <> '%dev_login%');
 
 /* normalize [role] only if user exist in the LDAP: */
