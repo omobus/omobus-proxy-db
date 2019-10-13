@@ -2,6 +2,7 @@
 <kernel 
     module="kern_evmail" 
     smtp.host="127.0.0.1"
+    smtp.port="21025"
     smtp.tls="yes"
     smtp.user="noreply"
     smtp.pwd="0"
