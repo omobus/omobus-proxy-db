@@ -8,6 +8,7 @@
 
     <xs:simpleType name="state_t">
 	<xs:restriction base="xs:string">
+	    <!-- obsolete states: suspended|connecting|disconnecting|unknown -->
 	    <xs:pattern value="suspended|connected|connecting|disconnected|disconnecting|unknown" />
 	</xs:restriction>
     </xs:simpleType>
@@ -33,7 +34,7 @@
 	    <xs:attribute name="longitude" use="optional" type="xs:decimal" default="0.0" />
 	    <xs:attribute name="state" use="required" type="state_t" />
 	    <xs:attribute name="msg" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="background" use="optional" type="bool_t" default="" />
+	    <!-- obsolete: --><xs:attribute name="background" use="optional" type="bool_t" default="" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>
