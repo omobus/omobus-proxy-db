@@ -18,18 +18,14 @@ delete from agreements1
 </begin>
 <check_exist>
   <![CDATA[
-select sum(x) exist from (
-    select count(*) x from agreements1
-	where account_id='%account_id%' and placement_id='%placement_id%' and posm_id='%posm_id%' and b_date='%b_date'
-union
-    select case when '%e_date%' < current_date::date_t then 1 else 0 end x
-) q
+select case when '%e_date%' < current_date::date_t then 1 else 0 end exist
   ]]>
 </check_exist>
 <insert>
   <![CDATA[
 insert into agreements1(account_id, placement_id, posm_id, b_date, e_date, "strict", db_ids)
     values('%account_id%', '%placement_id%', '%posm_id%', '%b_date%', '%e_date%', case when '%strict%'='1' then 1 else 0 end, array['%ErpCode%'])
+on conflict do nothing
   ]]>
 </insert>
 <end>

@@ -21,18 +21,14 @@ delete from my_routes
 </begin>
 <check_exist>
   <![CDATA[
-select sum(x) exist from (
-    select count(*) x from my_routes
-	where user_id = '%user_id%' and p_date = '%p_date%' and account_id = '%account_id%'
-union
-    select case when '%p_date%' <= current_date::date_t then 1 else 0 end x
-) q
+select case when '%p_date%' <= current_date::date_t then 1 else 0 end exist
   ]]>
 </check_exist>
 <insert>
   <![CDATA[
 insert into my_routes (user_id, p_date, account_id, activity_type_id, duration, row_no, db_ids)
     values ('%user_id%', '%p_date%', '%account_id%', NIL('%activity_type_id%','0'), NIL(%duration%), NIL(%row_no%), array['%ErpCode%'])
+on conflict do nothing
   ]]>
 </insert>
 <end>

@@ -25,6 +25,7 @@ select case when ('%b_date%'='' and '%e_date%'='') or '%e_date%' >= current_date
   <![CDATA[
 insert into pmlist (account_id, prod_id, b_date, e_date, db_ids)
     values ('%account_id%', '%prod_id%', '%b_date%', '%e_date%', array['%ErpCode%'])
+on conflict do nothing
   ]]>
 </insert>
 <end>
