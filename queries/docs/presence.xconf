@@ -25,8 +25,8 @@ insert into h_presence(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_logi
 </write_body>
 <write_row>
   <![CDATA[ 
-insert into t_presence(doc_id, prod_id, row_no, facing, stock)
-    values('%doc_id_sys%', '%prod_id%', %row_no%, %facing%, %stock%)
+insert into t_presence(doc_id, prod_id, row_no, facing, stock, scratch)
+    values('%doc_id_sys%', '%prod_id%', %row_no%, %facing%, %stock%, NIL('%scratch%'))
   ]]>
 </write_row>
 <close>
@@ -40,6 +40,7 @@ declare
     n datetime_t;
     f int32_t;
     s int32_t;
+    x date_t;
 begin
 -- **** presence --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
@@ -54,16 +55,16 @@ begin
     /* removes obsolete entires */
     delete from dyn_presences where account_id = '%account_id%' and fix_date = f_date;
     /* recompiles data */
-    for p_id, n, u_id, d_id, f, s in
-	select t.prod_id, h.fix_dt, h.user_id, h.doc_id, t.facing, t.stock from t_presence t left join h_presence h on t.doc_id = h.doc_id
+    for p_id, n, u_id, d_id, f, s, x in
+	select t.prod_id, h.fix_dt, h.user_id, h.doc_id, t.facing, t.stock, t.scratch from t_presence t left join h_presence h on t.doc_id = h.doc_id
 	    where h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
 	order by h.fix_dt
     loop
 	if( (select count(*) from dyn_presences where account_id='%account_id%' and prod_id=p_id and fix_date=f_date) = 0 ) then
-	    insert into dyn_presences(fix_date, account_id, prod_id, facing, stock, fix_dt, user_id, doc_id)
-		values(f_date, '%account_id%', p_id, f, s, n, u_id, d_id);
+	    insert into dyn_presences(fix_date, account_id, prod_id, facing, stock, fix_dt, user_id, doc_id, scratch)
+		values(f_date, '%account_id%', p_id, f, s, n, u_id, d_id, x);
 	else
-	    update dyn_presences set facing = f, stock = s, fix_dt = n, user_id = u_id, doc_id = d_id, updated_ts = current_timestamp
+	    update dyn_presences set facing = f, stock = s, fix_dt = n, user_id = u_id, doc_id = d_id, scratch = x, updated_ts = current_timestamp
 		where account_id = '%account_id%' and prod_id = p_id and fix_date = f_date;
 	end if;
     end loop;
@@ -78,20 +79,6 @@ begin
 	    )
 	) and "_isRecentData" = 1;
 	update dyn_presences set "_isRecentData" = 1 where account_id='%account_id%' and fix_date=f_date;
-
-
-	/* removes obsolete entires */
-delete from j_presences where account_id = '%account_id%' and prod_id in (
-	    select distinct prod_id from dyn_presences where account_id='%account_id%' and fix_date=f_date
-		union /* removes user department products: */
-	    select prod_id from products where brand_id in (
-		select brand_id from (select dep_ids from users where user_id='%user_id_sys%') u
-		    left join brands b on u.dep_ids is null or array_length(u.dep_ids,1) is null or b.dep_id is null or b.dep_id='' or b.dep_id=any(u.dep_ids)
-	    )
-	);
-	/* recompiles data */
-insert into j_presences(account_id, prod_id, facing, stock, fix_dt, user_id, doc_id)
-	    select account_id, prod_id, facing, stock, fix_dt, user_id, doc_id from dyn_presences where account_id='%account_id%' and fix_date=f_date;
     end if;
 end;
 $$;
