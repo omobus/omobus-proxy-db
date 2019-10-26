@@ -5,8 +5,7 @@ select account_id, placement_id, posm_id, strict, b_date, e_date from agreements
     where 
 	/* current: */  (b_date <= current_date::date_t and current_date::date_t <= e_date) or
 	/* obsolete: */ (current_date::date_t > e_date and e_date >= (current_date - 1)::date_t) or
-	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t) or 
-	(b_date = '' and e_date = '')
+	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t)
 order by 1, 2, 3, 5
   ]]>
 </agreements1>
