@@ -4,6 +4,7 @@ create or replace function console.req_addition(rlogin uid_t, cmd code_t, /*attr
 as $BODY$
 declare
     stack text; fcesig text;
+    g uid_t;
 begin
     GET DIAGNOSTICS stack = PG_CONTEXT;
     fcesig := substring(stack from 'function console\.(.*?)\(');
@@ -17,9 +18,11 @@ begin
 	    where doc_id=d_id;
     elsif( cmd = 'reject' ) then
 	update j_additions set hidden=1, updated_ts=current_timestamp
-	    where doc_id=d_id;
+	    where doc_id=d_id
+	returning guid
+	into g;
 	update accounts set hidden=1, locked=0
-	    where account_id=(select guid from h_addition where doc_id=d_id) and approved=0;
+	    where account_id=g and approved=0;
     else
 	raise exception '% doesn''t support [%] command! Accepted commands are [validate|reject].', fcesig, cmd;
     end if;
