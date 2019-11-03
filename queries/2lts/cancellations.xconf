@@ -9,7 +9,7 @@ select
 from (select distinct user_id, p_date from my_routes where current_date-30<=p_date::date and p_date::date<=current_date+15) r
     left join j_cancellations c on c.user_id = r.user_id and c.route_date = r.p_date --and c.hidden = 0
     left join users u on u.user_id = r.user_id
-    left join sysholidays s on s.h_date = r.p_date and u.country_ids is not null and s.country_id = u.country_ids[1]
+    left join sysholidays s on s.h_date = r.p_date and s.country_id = u.country_id
 where not (c.hidden is null and s.h_date is null)
 order by 1, 2
   ]]>
