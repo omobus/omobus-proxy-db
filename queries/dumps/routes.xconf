@@ -13,6 +13,8 @@ select
     quote_csv_string(a.account_id) account_id,
     quote_csv_string(a.code) a_code,
     quote_csv_string(a.descr) a_name,
+    a.locked a_locked,
+    a.hidden a_hidden,
     quote_csv_string(a.address) address,
     quote_csv_string(rc.descr) retail_chain,
     quote_csv_string(rc.ka_code) ka_code,
