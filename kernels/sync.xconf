@@ -160,11 +160,8 @@ order by 1, 2
 </L10n>
 <my_countries>
     <![CDATA[
-select user_id person_id, unnest(country_ids) country_id from users
-    where hidden = 0 and country_ids is not null and cardinality(country_ids) > 0
-union
-select u.user_id person_id, c.country_id from users u, countries c
-    where u.hidden = 0 and c.hidden = 0 and u.country_ids is null
+select user_id person_id, country_id from users 
+    where hidden = 0 and country_id is not null and country_id <> ''
 order by 1, 2
     ]]>
 </my_countries>
