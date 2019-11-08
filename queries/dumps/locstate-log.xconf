@@ -10,7 +10,7 @@ select
     quote_csv_string(x.msg) msg
 from a_gps_state x
     left join users u on u.user_id = x.user_id
-where ("paramUID"('dumps:depth') is null or left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t)
+where left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"(case when "paramUID"('dumps:depth') is null then 'gc:keep_alive' else 'dumps:depth' end))::date_t)
 order by x.fix_dt desc, x.user_id
   ]]>
 </locstate-log>

@@ -31,7 +31,7 @@ select
 from (
     select fix_date, fix_dt, user_id, account_id, training_type_id, tm_id, unnest(contact_ids) contact_id, doc_note from (
 	select left(fix_dt,10) fix_date, fix_dt, user_id, account_id, training_type_id, unnest(tm_ids) tm_id, contact_ids, doc_note from h_training
-	    where "paramUID"('dumps:depth') is null or left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t
+	    where left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"(case when "paramUID"('dumps:depth') is null then 'gc:keep_alive' else 'dumps:depth' end)))::date_t
     ) xz
 ) d
     left join training_types t on t.training_type_id = d.training_type_id

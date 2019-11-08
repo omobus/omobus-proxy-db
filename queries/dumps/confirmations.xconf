@@ -43,7 +43,7 @@ from h_confirmation h
     left join targets t on t.target_id = h.target_id
     left join users z on z.user_id = t.author_id
     left join target_types tt on tt.target_type_id = t.target_type_id
-where "paramUID"('dumps:depth') is null or left(h.fix_dt, 10) >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t
+where left(h.fix_dt, 10) >= ("monthDate_First"(current_date - "paramInteger"(case when "paramUID"('dumps:depth') is null then 'gc:keep_alive' else 'dumps:depth' end)))::date_t
 order by left(h.fix_dt, 10) desc, a.descr, a.address, h.fix_dt, t.b_date, t.subject, h.doc_id
   ]]>
 </confirmations>

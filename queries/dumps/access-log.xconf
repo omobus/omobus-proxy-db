@@ -11,8 +11,7 @@ select
     s.access_ts::datetime_t e_dt, 
     s.closed
 from console.sessions s, users u
-where ("paramUID"('dumps:depth') is null or s.inserted_ts::date >= "monthDate_First"(current_date - "paramInteger"('dumps:depth')))
-    and u.user_id=s.u_id
+where s.inserted_ts::date >= "monthDate_First"(current_date - "paramInteger"(case when "paramUID"('dumps:depth') is null then 'gc:keep_alive' else 'dumps:depth' end)) and u.user_id=s.u_id
 order by s.inserted_ts desc
   ]]>
 </access-log>

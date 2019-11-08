@@ -40,7 +40,7 @@ from dyn_stocks d
     left join regions r on r.region_id = a.region_id
     left join cities c on c.city_id = a.city_id
     left join retail_chains rc on rc.rc_id = a.rc_id
-where "paramUID"('dumps:depth') is null or d.fix_date >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t
+where d.fix_date >= ("monthDate_First"(current_date - "paramInteger"(case when "paramUID"('dumps:depth') is null then 'gc:keep_alive' else 'dumps:depth' end)))::date_t
 order by d.fix_date desc, a.descr, a.address, p.descr, d.fix_dt
   ]]>
 </stocks>

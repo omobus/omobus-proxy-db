@@ -51,6 +51,7 @@ from h_order h
     left join retail_chains rc on a.rc_id = rc.rc_id
     left join regions r on a.region_id = r.region_id
     left join cities c on a.city_id = c.city_id
+where left(h.fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"(case when "paramUID"('dumps:depth') is null then 'gc:keep_alive' else 'dumps:depth' end)))::date_t
 order by h.fix_dt desc, u.descr, a.descr, a.address, h.fix_dt
   ]]>
 </orders>

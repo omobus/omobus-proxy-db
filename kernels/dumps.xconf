@@ -26,6 +26,7 @@
     >
 <queries>
 <xi:include href="../queries/dumps/access-log.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/dumps/accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/action-log.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/advt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/audits.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -39,7 +40,6 @@
 <xi:include href="../queries/dumps/presences.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/presentations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/profile.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/quests.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/routes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -84,6 +84,7 @@ order by user_id
 	<action-log key="user_id" strict="yes" />
 	<locstate-log key="user_id" strict="yes" />
 	<my_habitat key="user_id" strict="yes">
+	    <accounts key="account_id" strict="yes" />
 	    <advt key="account_id" strict="yes" />
 	    <audits key="account_id" strict="yes" />
 	    <checkups key="account_id" strict="yes" />
@@ -95,7 +96,6 @@ order by user_id
 	    <presences key="account_id" strict="yes" />
 	    <presentations key="account_id" strict="yes" />
 	    <prices key="account_id" strict="yes" />
-	    <profile key="account_id" strict="yes" />
 	    <quests key="account_id" strict="yes" />
 	    <reclamations key="account_id" strict="yes" />
 	    <Share-of-Shelf key="account_id" strict="yes" />

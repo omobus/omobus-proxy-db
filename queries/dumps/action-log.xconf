@@ -23,10 +23,10 @@ select
     quote_csv_string(t.descr) activity_type
 from (
     select user_id, fix_dt, 'document' obj_code, doc_type obj_type, duration, rows, doc_no, account_id, activity_type_id from a_user_document
-	where ("paramUID"('dumps:depth') is null or left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t)
+	where left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"(case when "paramUID"('dumps:depth') is null then 'gc:keep_alive' else 'dumps:depth' end))::date_t)
 union
     select user_id, fix_dt, 'report' obj_code, doc_type obj_type, duration, null, null, account_id, activity_type_id from a_user_report
-	where ("paramUID"('dumps:depth') is null or left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t)
+	where left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"(case when "paramUID"('dumps:depth') is null then 'gc:keep_alive' else 'dumps:depth' end))::date_t)
 ) x
     left join activity_types t on t.activity_type_id = x.activity_type_id
     left join users u on u.user_id = x.user_id

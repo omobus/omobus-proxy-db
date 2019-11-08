@@ -26,7 +26,7 @@ select
     d.fix_dt
 from (
     select distinct on (contact_id, account_id, left(fix_dt,10)) doc_id, user_id, account_id, contact_id, fix_dt, sla from h_testing
-	where "paramUID"('dumps:depth') is null or left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"('dumps:depth')))::date_t
+	where left(fix_dt,10) >= ("monthDate_First"(current_date - "paramInteger"(case when "paramUID"('dumps:depth') is null then 'gc:keep_alive' else 'dumps:depth' end)))::date_t
     order by contact_id, account_id, left(fix_dt,10), fix_dt desc
 ) d
     left join users u on u.user_id = d.user_id
