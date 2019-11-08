@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<stat_stocks type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select
+    x.user_id, u.descr u_name, u.dev_login,
+    x.fix_dt,
+    x.inserted_ts,
+    x.account_id, a.code a_code, a.descr a_name, a.address,
+    reg.descr region,
+    c.descr city,
+    a.rc_id, r.descr rc, r.ka_code,
+    p.descr poten,
+    a.chan_id, ch.descr chan,
+    z.prod_id, z.code p_code, z.descr prod, 
+    z.categ_id, f.descr categ,
+    z.brand_id, b.descr brand,
+    x.stock, null /*x.*/scratch,
+    u.executivehead_id head_id, ex.descr head_name
+from dyn_stocks x
+    left join accounts a on a.account_id = x.account_id
+    left join potentials p on a.poten_id = p.poten_id
+    left join channels ch on a.chan_id = ch.chan_id
+    left join retail_chains r on a.rc_id = r.rc_id
+    left join regions reg on a.region_id = reg.region_id
+    left join cities c on a.city_id = c.city_id
+    left join products z on z.prod_id = x.prod_id
+    left join categories f on f.categ_id = z.categ_id
+    left join brands b on b.brand_id = z.brand_id
+    left join users u on u.user_id = x.user_id
+    left join users ex on ex.user_id = u.executivehead_id
+where '%b_date%'<=x.fix_date and x.fix_date<='%e_date%'
+order by x.inserted_ts desc, u.descr, x.doc_id, z.row_no, z.descr
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+local rt = require('rtlib')
+
+rt.main("stocks", true, function(r, n, a)
+    if std.contains({'stock'}, n) then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+  ]]>
+    </generator>
+</stat_stocks>
