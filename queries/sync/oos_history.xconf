@@ -5,7 +5,7 @@ select
     d.fix_date, d.account_id, d.prod_id, t.descr oos_type, d.note, d."_isRecentData" latest 
 from dyn_oos d
     left join oos_types t on t.oos_type_id = d.oos_type_id
-where "paramUID"('oos_history:offset') is null or d.fix_date >= (current_date+"paramInteger"('oos_history:offset'))::date_t
+where d.fix_date >= (current_date+"paramInteger"('oos_history:offset'))::date_t
 order by 2, 3, 1 desc
   ]]>
 </oos_history>
