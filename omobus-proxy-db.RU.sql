@@ -1645,16 +1645,14 @@ insert into reclamation_types(reclamation_type_id, descr) values('2', 'Брак'
 insert into reclamation_types(reclamation_type_id, descr) values('3', 'Истек срок годности');
 
 delete from support;
-insert into support(sup_id, descr, phone, mobile, email, working_hours) 
-    values('0', 'Техническая поддержка OMOBUS', '', '', 'support@omobus.net', 'Пн. - Пят., с 9:00 до 17:00 МСК');
-insert into support(sup_id, descr, phone, mobile, email, working_hours, country_id, row_no) 
-    values('1', 'Дежурный специалист OMOBUS (РФ)', '8-800-333-93-50', '8-800-333-93-50', 'hd@omobus.net', 'Круглосуточно', 'RU', 1);
-insert into support(sup_id, descr, phone, mobile, email, working_hours, country_id, row_no) 
-    values('2', 'Дежурный специалист OMOBUS (Казахстан)', '8-800-333-26-23', '8-800-333-26-23', 'hd@omobus.net', 'Круглосуточно', 'KZ', 2);
-insert into support(sup_id, descr, phone, mobile, email, working_hours, country_id, row_no) 
-    values('3', 'Дежурный специалист OMOBUS (Белоруссия)', '8-8-200-073-00-31', '8-8-200-073-00-31', 'hd@omobus.net', 'Круглосуточно', 'BY', 3);
-insert into support(descr, phone, mobile, email, working_hours)
-    values('Техническая поддержка OMOBUS (резервный адрес)', '', '', 'omobus@mail.ru', 'Пн. - Пят., с 9:00 до 17:00 МСК');
+insert into support(sup_id, descr, email) 
+    values('0', 'Техническая поддержка', 'support@omobus.net');
+insert into support(sup_id, descr, phone, email, country_id, row_no) 
+    values('1', 'Поддержка пользователей', '8-800-333-93-50', 'hd@omobus.net', 'RU', 1);
+insert into support(sup_id, descr, phone, email, country_id, row_no) 
+    values('2', 'Поддержка пользователей', '8-800-100-52-64', 'hd@omobus.net', 'KZ', 2);
+insert into support(sup_id, descr, phone, email, country_id, row_no) 
+    values('3', 'Поддержка пользователей', '8-8-200-073-00-31', 'hd@omobus.net', 'BY', 3);
 
 delete from sysholidays;
 insert into sysholidays(h_date, country_id, descr) values('2019-01-01', 'RU', 'Новогодние каникулы');
