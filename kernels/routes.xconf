@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <kernel module="kern_tasks">
-<cycles ontimeout="yes" onsemaphore="yes">
+<routes ontimeout="yes" onsemaphore="yes">
   <![CDATA[
 do $$
 declare
@@ -123,5 +123,5 @@ begin
 end;
 $$
   ]]>
-</cycles>
+</routes>
 </kernel>
