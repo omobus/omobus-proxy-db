@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel module="kern_tasks">
+<schedules ontimeout="yes" onsemaphore="yes">
+  <![CDATA[
+do $$
+declare
+    weekends int[] 	= array[/*mon:*/0,0,0,0,0,1,/*sun:*/1];
+    open_depth int 	= 7;
+    close_depth int 	= 2;
+    u_id uid_t;
+    c int;
+    d date;
+    x date;
+    t int;
+begin
+    /* open new schedules: */
+    for u_id in select user_id from users where hidden = 0 and role in ('ise','sv') 
+    loop
+	d := current_date + open_depth;
+	select count(*) from schedules 
+	    where user_id = u_id and "monthDate_First"(d)::date_t <= p_date and p_date <= "monthDate_Last"(d)::date_t
+	into c;
+	if c = 0 then
+	    for x in select i::date from generate_series("monthDate_First"(current_date), "monthDate_Last"(current_date), '1 day'::interval) i
+	    loop
+		t := extract(dow from x);
+		if t = 0 then
+		    t := 7;
+		end if;
+		if weekends[t] = 0 then
+		    insert into schedules(user_id, p_date)
+			values(u_id, x);
+		    c := c + 1;
+		end if;
+	    end loop;
+	    raise notice 'opened new calendar for: user_id=%, month=%, workdays=%.', 
+		u_id, extract(month from d), c;
+	end if;
+    end loop;
+
+    /* close tasks: */
+    update schedules set closed = 1 
+	where closed = 0 and p_date <= (current_date + close_depth)::date_t;
+end;
+$$
+  ]]>
+</schedules>
+</kernel>

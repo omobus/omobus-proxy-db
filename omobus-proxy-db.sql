@@ -830,7 +830,7 @@ create trigger trig_updated_ts before update on sysholidays for each row execute
 create table sysparams (
     param_id 		uid_t 		not null primary key,
     param_value 	uid_t 		null,
-    descr 		descr_t 	null,
+    note 		note_t 		null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null
@@ -1030,7 +1030,7 @@ create table agreements2 (
     prod_id 		uid_t 		not null,
     b_date 		date_t 		not null,
     e_date 		date_t 		not null,
-    facing 		int32_t 	not null,
+    facing 		int32_t 	not null check(facing > 0),
     strict 		bool_t 		not null default 1,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -1957,6 +1957,8 @@ create table priorities (
     brand_id 		uid_t 		not null,
     b_date 		date_t 		not null,
     e_date 		date_t 		not null,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
     primary key (country_id, brand_id, b_date)
 );
@@ -2283,7 +2285,7 @@ create table routes (
     account_id 		uid_t 		not null,
     days 		smallint[] 	not null default array[0,0,0,0,0,0,0] check (array_length(days,1)=7),
     weeks 		smallint[] 	not null default array[0,0,0,0] check (array_length(weeks,1)=4),
-    author_id 		uid_t		not null,
+    author_id 		uid_t		null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -2336,6 +2338,24 @@ create table sales_history (
 create index i_db_ids_sales_history on sales_history using GIN (db_ids);
 create trigger trig_updated_ts before update on sales_history for each row execute procedure tf_updated_ts();
 
+create table schedules (
+    user_id 		uid_t 		not null,
+    p_date 		date_t 		not null,
+    -- jobs[1] = 09:00 - 11:00
+    -- jobs[2] = 11:00 - 13:00
+    -- jobs[3] = 14:00 - 16:00
+    -- jobs[4] = 16:00 - 18:00
+    jobs 		hstore[] 	not null default array[''::hstore,''::hstore,''::hstore,''::hstore] check(array_length(jobs,1)=4),
+    closed 		bool_t 		not null default 0,
+    author_id 		uid_t		null,
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    primary key (user_id, p_date)
+);
+
+create trigger trig_updated_ts before update on schedules for each row execute procedure tf_updated_ts();
+
 create table shelf_lifes (
     shelf_life_id 	uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
@@ -2380,11 +2400,8 @@ create table support (
     sup_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
     phone 		phone_t 	null,
-    mobile		phone_t 	null,
-    email 		email_t		null,
-    working_hours 	varchar(32) 	not null,
+    email 		email_t		not null,
     country_id 		country_t 	null,
-    distr_id 		uid_t 		null,
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
@@ -2559,8 +2576,8 @@ create table users (
     pids		uids_t		null,
     descr		descr_t		not null,
     role 		code_t 		null, -- check (role in ('merch','sr','mr','sv','ise','asm','kam','tme') and role = lower(role)),
+    country_id		country_t 	not null default 'RU',
     lang_id 		lang_t 		not null default 'ru',
-    country_ids		countries_t 	null,
     dep_ids		uids_t		null,
     distr_ids		uids_t		null,
     agency_id 		uid_t 		null,
@@ -2582,15 +2599,7 @@ create table users (
     db_ids 		uids_t 		null
 );
 
-create or replace function tf_evaddrs() returns trigger as $$ 
-begin
-    new.evaddrs = array['<' || new.user_id || '@' || "paramUID"('srv:domain') || '>']::emails_t;
-    return new;
-end; 
-$$ language plpgsql;
-
 create index i_db_ids_users on users using GIN (db_ids);
-create trigger trig_evaddrs before insert on users for each row when (new.evaddrs is null) execute procedure tf_evaddrs();
 create trigger trig_updated_ts before update on users for each row execute procedure tf_updated_ts();
 
 create table vf_accounts (
@@ -3099,9 +3108,10 @@ create table a_network (
     satellite_dt 	datetime_t 	null,
     latitude 		gps_t 		null,
     longitude 		gps_t 		null,
+    /*obsolete states: 'suspended','connecting','disconnecting','unknown'*/
     state 		varchar(13) 	not null check (state in ('suspended','connected','connecting','disconnected','disconnecting','unknown') and state = lower(state)),
     msg 		varchar(512)	null,
-    background 		bool_t 		null
+    /*obsolete:*/ background 		bool_t 		null
 );
 
 create index i_user_id_a_network on a_network (user_id);
@@ -4270,6 +4280,7 @@ create table t_presence (
     row_no 		int32_t 	not null check (row_no >= 0),
     facing 		int32_t 	not null check (facing >= 0),
     stock 		int32_t 	not null check (stock >= 0),
+    scratch 		date_t 		null,
     primary key (doc_id, prod_id)
 );
 
@@ -5127,21 +5138,6 @@ create index i_2lts_dyn_oos on dyn_oos (updated_ts);
 
 create trigger trig_updated_ts before update on dyn_oos for each row execute procedure tf_updated_ts();
 
-create table j_presences (
-    account_id 		uid_t 		not null,
-    prod_id 		uid_t 		not null,
-    facing 		int32_t 	not null,
-    stock 		int32_t 	not null,
-    fix_dt 		datetime_t 	not null,
-    user_id 		uid_t 		not null,
-    doc_id 		uid_t 		not null,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts		ts_auto_t 	not null,
-    primary key(account_id, prod_id)
-);
-
-create trigger trig_updated_ts before update on j_presences for each row execute procedure tf_updated_ts();
-
 create table dyn_presences (
     fix_date		date_t 		not null,
     account_id 		uid_t 		not null,
@@ -5151,6 +5147,7 @@ create table dyn_presences (
     fix_dt		datetime_t 	not null,
     user_id 		uid_t 		not null,
     doc_id 		uid_t 		not null,
+    scratch 		date_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts		ts_auto_t 	not null,
     "_isRecentData"	bool_t 		null,
@@ -6214,7 +6211,7 @@ begin
 	r.user_id, r.account_id, r.activity_type_id, mv.t_date p_date, 0 allow_discard, 0 allow_pending, r.p_date pending_date, null color, null bgcolor, 
 	null extra_info, r.row_no, r.duration, 8 "z-index"
     from my_routes r
-	left join syswdmv mv on mv.f_date = r.p_date and (select count(*) from users where user_id=r.user_id and country_ids is not null and mv.country_id = country_ids[1]) > 0
+	left join syswdmv mv on mv.f_date = r.p_date and (select count(*) from users u where u.user_id=r.user_id and mv.country_id = u.country_id) > 0
     where start_date + offsetL <= mv.t_date::date and mv.t_date::date <= start_date + offsetR
 	and (select count(*) from j_user_activities j where j.user_id=r.user_id and j.account_id=r.account_id and j.route_date=mv.f_date and j.b_dt is not null and j.e_dt is not null and j.fix_date/*left(j.b_dt, 10)*/ <> mv.t_date)=0
     loop
@@ -6469,7 +6466,7 @@ union
 	left join j_discards d on d.user_id = r.user_id and d.account_id = r.account_id and d.activity_type_id = r.activity_type_id and d.route_date = r.p_date and d.hidden = 0 and d.validated = 1
 	left join j_pending p on p.user_id = r.user_id and p.account_id = r.account_id and p.activity_type_id = r.activity_type_id and p.route_date = r.p_date and p.hidden = 0
 	left join users u on u.user_id = r.user_id
-	left join sysholidays s on s.h_date = r.p_date and u.country_ids is not null and s.country_id = u.country_ids[1] and s.hidden = 0
+	left join sysholidays s on s.h_date = r.p_date and s.country_id = u.country_id and s.hidden = 0
     where r.p_date>=f_b_date and r.p_date<=f_e_date and (f_user_id is null or r.user_id=f_user_id)
 union /* orphaned routes: */
     select
@@ -6529,13 +6526,17 @@ insert into sysparams values('rules:wd_end', '17:30', 'Show warning if the worki
 insert into sysparams values('rules:power', '90', 'The minimum power (battery life percentage) at the working day begin.');
 
 insert into sysparams values('checkups:offset', '-30', 'How long (in days) j_checkups data is used.');
-insert into sysparams values('presences:offset', '-30', 'How long (in days) empty j_presences data (stock=0 and facing=0) is used.');
 insert into sysparams values('stocks:offset', '-30', 'How long (in days) empty j_stocks data (stock=0) is used.');
 
+insert into sysparams values('advt_history:offset', '-60', 'advt_history left offset in days');
+insert into sysparams values('oos_history:offset', '-60', 'oos_history left offset in days');
 insert into sysparams values('photos_history:offset', '-15', 'photos_history left offset in days.');
+insert into sysparams values('presences_history:offset', '-60', 'presences_history left offset in days');
+insert into sysparams values('prices_history:offset', '-60', 'prices_history left offset in days.');
+insert into sysparams values('quests_history:offset', '-60', 'quests_history left offset in days.');
 insert into sysparams values('route_history:offset:left', '-10', 'route_history left offset in days.');
 insert into sysparams values('route_history:offset:right', '5', 'route_history right offset in days.');
-insert into sysparams values('trainings_history:offset', '-30', 'trainings_history left offset in days.');
+insert into sysparams values('trainings_history:offset', '-60', 'trainings_history left offset in days.');
 
 insert into sysparams values('orders_history:offset', '-10', 'orders_history offset in days.');
 insert into sysparams values('orders_history:alert:color', '13107200', 'orders_history alert text color as rgb integer.');
