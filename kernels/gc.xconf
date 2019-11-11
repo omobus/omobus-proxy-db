@@ -21,6 +21,7 @@ begin
     end loop;
     delete from my_routes where p_date < gc_date;
     delete from routemv where greatest(f_date, t_date) < gc_date;
+    delete from schedules where p_date < gc_date;
     delete from sysstats where fix_date < gc_date;
     delete from targets where e_date < gc_date;
     GET DIAGNOSTICS f = ROW_COUNT;
@@ -38,7 +39,6 @@ begin
     delete from j_user_works where b_dt < gc_date;
     delete from j_wishes where left(fix_dt,10) < gc_date;
 
-/*!*/delete from j_presences where left(fix_dt,10) < gc_date;
 /*!*/delete from j_stocks where left(fix_dt,10) < gc_date;
 
     delete from dyn_advt where fix_date < gc_date;
