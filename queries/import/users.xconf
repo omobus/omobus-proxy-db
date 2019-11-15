@@ -22,7 +22,7 @@ select count(*) from users
 </check_exist>
 <update>
   <![CDATA[
-update users set pids=string_to_array(NIL('%pids%'),','), descr=trim(both from '%descr%'), country_id=NIL('%country_ids%','RU'), dep_ids=string_to_array(NIL('%dep_ids%'),','), distr_ids=string_to_array(NIL('%distr_ids%'),','), agency_id=NIL('%agency_id%'), mobile=NIL('%mobile%'), email=NIL('%email%'), area=NIL('%area%'), props=NIL('%props%')::hstore, hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update users set pids=string_to_array(NIL('%pids%'),','), descr=trim(both from '%descr%'), country_id=NIL('%country_id%','RU'), dep_ids=string_to_array(NIL('%dep_ids%'),','), distr_ids=string_to_array(NIL('%distr_ids%'),','), agency_id=NIL('%agency_id%'), mobile=NIL('%mobile%'), email=NIL('%email%'), area=NIL('%area%'), props=NIL('%props%')::hstore, hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where user_id = '%user_id%'
   ]]>
 </update>
