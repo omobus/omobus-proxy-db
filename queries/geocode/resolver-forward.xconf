@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<forward>
+    <generator>
+  <![CDATA[
+local apikeys = require('apikeys')
+local ya = require('yandex-forward')
+
+local function set_param_s(n, v)
+    set_param(_content, n, v ~= nil and v or "")
+end
+
+local function main()
+    local tb, err
+
+    if apikeys.yandex ~= nil then
+	tb, err = ya.resolve()
+    end
+
+    if err or tb == nil then
+	set_param(_content, "x-latitude", "")
+	set_param(_content, "x-longitude", "")
+	set_param(_content, "x-address", "")
+	set_param(_content, "x-country", "")
+	set_param(_content, "x-region", "")
+	set_param(_content, "x-area", "")
+	set_param(_content, "x-city", "")
+	set_param(_content, "x-street", "")
+	set_param(_content, "x-house", "")
+    else
+	set_param_s("x-latitude", tb.latitude)
+	set_param_s("x-longitude", tb.longitude)
+	set_param_s("x-address", tb.address)
+	set_param_s("x-country", tb.country)
+	set_param_s("x-region", tb.region)
+	set_param_s("x-area", tb.area)
+	set_param_s("x-city", tb.city)
+	set_param_s("x-street", tb.street)
+	set_param_s("x-house", tb.house)
+    end
+end
+
+main()
+  ]]>
+    </generator>
+</forward>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cities templ="%city_id%;%pid%;%ftype%;%descr%;%country_id%;%population%;">
+<cities templ="%city_id%;%pid%;%ftype%;%descr%;%country_id%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from cities
 </check_exist>
 <update>
   <![CDATA[
-update cities set pid=NIL('%pid%'), ftype=0%ftype%, descr=trim(both from '%descr%'), country_id=NIL('%country_id%'), population=NIL(%population%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update cities set pid=NIL('%pid%'), ftype=0%ftype%, descr=trim(both from '%descr%'), country_id=NIL('%country_id%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where city_id = '%city_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into cities (pid, city_id, ftype, descr, country_id, population, hidden, db_ids)
-    values (NIL('%pid%'), '%city_id%', 0%ftype%, trim(both from '%descr%'), NIL('%country_id%'), NIL(%population%), 0, array['%ErpCode%'])
+insert into cities (pid, city_id, ftype, descr, country_id, hidden, db_ids)
+    values (NIL('%pid%'), '%city_id%', 0%ftype%, trim(both from '%descr%'), NIL('%country_id%'), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>

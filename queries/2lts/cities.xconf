@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cities templ="%city_id%;%pid%;%ftype%;%descr%;%country_id%;%population%;">
+<cities templ="%city_id%;%pid%;%ftype%;%descr%;%country_id%;">
   <![CDATA[
-select city_id, pid, ftype, descr, country_id, population from cities
+select city_id, pid, ftype, descr, country_id from cities
     where hidden = 0
 order by 1
   ]]>

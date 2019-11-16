@@ -1,49 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <kernel module="kern_tasks">
-<cities ontimeout="yes" onsemaphore="yes">
-  <![CDATA[
-do $$
-declare
-    a_id uid_t;
-    x0 descr_t; -- x-country
-    x1 descr_t; -- x-region
-    x2 descr_t; -- x-city
-    c_id uid_t;
-    q int = 0;
-begin
-    if( "paramUID"('accounts:city_id') = 'auto' ) then
-	for a_id, x0, x1, x2 in
-	    select x.account_id, x."x-country", trim(lower(x."x-region")), trim(lower(x."x-city")) from geocode_stream x, accounts a
-		where x.latitude is not null and x.longitude is not null and (x."x-city" is not null or x."x-region" is not null) 
-		    and x.account_id=a.account_id and a.hidden=0 and a.city_id is null
-	loop
-	    /* find city */
-	    select city_id from cities x where x.country_id=x0 and trim(lower(x.descr))=x2 and x.ftype=0 and x.hidden=0
-		and (x1=x2 or (select count(*) from cities f where f.city_id=x.pid and trim(lower(f.descr))=x1) = 1)
-	    into c_id;
-	    /* find regions and special areas */
-	    if( c_id is null ) then
-		select city_id from cities where country_id=x0 and (trim(lower(descr))=x1 or trim(lower(descr))=any(string_to_array(x1,' '))) /*and ftype=1*/ and hidden=0
-		    into c_id;
-	    end if;
-
-	    if( c_id is null ) then
-		raise notice 'GC: account_id=% => unable to find city_id (x-country=%; x-region=%; x-city=%)', a_id, x0, x1, x2;
-	    else
-		update accounts set city_id=c_id
-		    where account_id=a_id;
-		--raise notice '% => % (%)', a_id, c_id, x2;
-		q := q + 1;
-	    end if;
-	end loop;
-	if( q > 0 ) then
-	    raise notice 'autofilled [accounts.city_id] for % rows.', q;
-	end if;
-    end if;
-end;
-$$
-  ]]>
-</cities>
 <locations ontimeout="yes" onsemaphore="yes">
   <![CDATA[
 do $$

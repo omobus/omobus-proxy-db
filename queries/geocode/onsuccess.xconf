@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <onsuccess>
   <![CDATA[
-update geocode_stream set latitude=%x-latitude%, longitude=%x-longitude%, content_ts=current_timestamp, "x-address"=NIL('%x-address%'), "x-country"=NIL('%x-country%'), "x-region"=NIL('%x-region%'), "x-area"=NIL('%x-area%'), "x-city"=NIL('%x-city%'), "x-street"=NIL('%x-street%'), "x-house"=NIL('%x-house%')
-    where account_id='%account_id%' and reverse=%reverse%
+do $$
+declare
+    la gps_t;
+    lo gps_t;
+    n_la gps_t = NIL(%x-latitude%);
+    n_lo gps_t = NIL(%x-longitude%);
+begin
+    update geocode_stream set latitude=n_la, longitude=n_lo, content_ts=current_timestamp, "x-address"=NIL('%x-address%'), "x-country"=NIL('%x-country%'), "x-region"=NIL('%x-region%'), "x-area"=NIL('%x-area%'), "x-city"=NIL('%x-city%'), "x-street"=NIL('%x-street%'), "x-house"=NIL('%x-house%')
+	where account_id='%account_id%' and reverse=%reverse%;
+
+    if n_la is not null and n_lo is not null then
+	select latitude, longitude from accounts where account_id='%account_id%'
+	    into la, lo;
+	if la is null or lo is null or la <> n_la or lo <> n_lo then
+	    update accounts set latitude=n_la, longitude=n_lo
+		where account_id='%account_id%';
+	end if;
+    end if;
+end;
+$$;
   ]]>
 </onsuccess>

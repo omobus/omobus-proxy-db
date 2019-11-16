@@ -2,11 +2,11 @@
 <onload>
   <![CDATA[
 /* forward geocoding: */
-select 'yandex' content_code, account_id, reverse, address, null latitude, null longitude from geocode_stream
+select 'forward' content_code, account_id, reverse, address, null latitude, null longitude from geocode_stream
     where (content_ts is null or inserted_ts > content_ts) and reverse = 0 and address is not null and address <> ''
 union
 /* reverse geocoding: */
-select 'yandex-reverse' content_code, account_id, reverse, null address, latitude, longitude from geocode_stream
+select 'reverse' content_code, account_id, reverse, null address, latitude, longitude from geocode_stream
     where (content_ts is null or inserted_ts > content_ts) and reverse = 1 and latitude is not null and longitude is not null
 /* max rows: */
 limit 20

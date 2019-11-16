@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<yandex-reverse>
+<yandex-forward>
   <![CDATA[
 local http = require('httpslib')
-local req = "GET /1.x/?format=json&geocode=$longitude,$latitude&kind=house&results=3&apikey=$apikey HTTP/1.1\r\nHost: $hostname\r\nUser-Agent: omobusd\r\nConnection: close\r\n\r\n"
+local req = "GET /1.x/?format=json&geocode=$address&results=3&apikey=$apikey HTTP/1.1\r\nHost: $hostname\r\nUser-Agent: omobusd\r\nConnection: close\r\n\r\n"
 local hostname = "geocode-maps.yandex.ru"
-local apikey = (require('apikeys').yandex or {}).reverse
+local apikey = (require('apikeys').yandex or {}).forward
 
 local M = {}
+
+local function shielding(s)
+    return s:replace(";", ","):gsub("([^A-Za-z0-9%_%.%-%~])", function(v)
+        return string.upper(string.format("%%%02x", string.byte(v)))
+    end)
+end
 
 local function strrepl(s, f, t)
     return s:replace(string.format("$%s", f), t or '')
@@ -14,42 +20,29 @@ end
 
 local function build_request()
     local x = req
-    x = strrepl(x, "latitude", _latitude)
-    x = strrepl(x, "longitude", _longitude)
+    x = strrepl(x, "address", shielding(_address))
     x = strrepl(x, "hostname", hostname)
     x = strrepl(x, "apikey", apikey)
     return x
 end
 
-local function distance(la0, lo0, la1, lo1)
-    la0 = la0*math.pi/180.0
-    la1 = la1*math.pi/180.0
-    lo0 = lo0*math.pi/180.0
-    lo1 = lo1*math.pi/180.0
-    return 6372795.0 * 
-	math.atan(math.sqrt((math.cos(la1)*math.sin(lo0-lo1)^2)+(math.abs(math.cos(la0)*math.sin(la1)-math.sin(la0)*math.cos(la1)*math.cos(lo0-lo1))^2))
-	    /(math.sin(la0)*math.sin(la1)+math.cos(la0)*math.cos(la1)*math.cos(lo0-lo1)))
-end
-
 local function isValid(x)
-    return x.kind == "house" and x.precision == "exact"
+    return x.kind == "house" and (x.precision == "exact" or x.precision == "number")
 end
 
 local function get_metadata(tb)
-    local obj, dist, z
+    local obj, count
+    count = 0
     if tonumber(tb.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found) > 0 then
 	for i,v in ipairs(tb.response.GeoObjectCollection.featureMember) do
 	    if isValid(v.GeoObject.metaDataProperty.GeocoderMetaData) then
-		for lo, _, la in v.GeoObject.Point.pos:gmatch("([0-9.]+)([ ]*)([0-9.]+)") do
-		    z = distance(la, lo, _latitude, _longitude)
-		    if z ~= nil and (dist == nil or dist > z) then
-			dist = z
-			obj = v.GeoObject.metaDataProperty.GeocoderMetaData
-		    end
-		    break
-		end
+		obj = v.GeoObject
+		count = count + 1
 	    end
 	end
+    end
+    if count ~= 1 then --[[ Ignores not unique address ]]
+	obj = nil
     end
     return obj
 end
@@ -60,17 +53,27 @@ function M.resolve()
     tb, err = http.getJSON(hostname, build_request())
     if err or tb == nil then
 	err = true
-	log_warn(string.format("(yandex) invalid reverse geocoding for account_id=[%s]", _account_id))
+	log_warn(string.format("(yandex) invalid geocoding for account_id=[%s], address=[%s]", _account_id, _address))
     else
 	obj = get_metadata(tb)
 	if obj ~= nil then
+	    local latitude, longitude
 	    res = {}
-	    xobj = obj.AddressDetails.Country
-	    res.address = obj.text
+	    for lo, _, la in obj.Point.pos:gmatch("([0-9.]+)([ ]*)([0-9.]+)") do
+		latitude = la; longitude = lo
+		break
+	    end
+	    if not (latitude == nil or longitude == nil) then
+		res.latitude = latitude
+		res.longitude = longitude
+	    end
+	    xobj = obj.metaDataProperty.GeocoderMetaData
+	    res.address = xobj.text
+	    xobj = xobj.AddressDetails.Country
 	    res.country = xobj.CountryNameCode
-	    if xobj.AdministrativeArea ~= nil then
+	    if xobj.AdministrativeArea ~= nil then 
 		res.region = xobj.AdministrativeArea.AdministrativeAreaName
-		if xobj.AdministrativeArea.SubAdministrativeArea ~= nil then 
+		if xobj.AdministrativeArea.SubAdministrativeArea ~= nil then
 		    xobj = xobj.AdministrativeArea.SubAdministrativeArea
 		    res.area = xobj.SubAdministrativeAreaName
 		else
@@ -91,7 +94,7 @@ function M.resolve()
 	    end
 	else
 	    err = true
-	    log_warn(string.format("(yandex) reverse geocoding data is not available for account_id=[%s]", _account_id))
+	    log_warn(string.format("(yandex) la/lo is not available for account_id=[%s], address=[%s]", _account_id, _address))
 	end
     end
 
@@ -100,4 +103,4 @@ end
 
 return M
   ]]>
-</yandex-reverse>
+</yandex-forward>

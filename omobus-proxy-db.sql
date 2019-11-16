@@ -1189,7 +1189,6 @@ create table cities (
     ftype 		ftype_t 	not null,
     descr 		descr_t 	not null,
     country_id 		uid_t 		not null,
-    population 		int32_t 	null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -5775,7 +5774,7 @@ create table geocode_stream (
     primary key (account_id, reverse)
 );
 
-create or replace function tf_geocode$forward() returns trigger
+create or replace function tf_forward_geocoding() returns trigger
 as $BODY$
 declare
     c int;
@@ -5792,11 +5791,7 @@ begin
 		    values (new.account_id, 0, x);
 		raise notice 'Changed account_id=% address % => %.', old.account_id, old.address, new.address;
 	    end if;
-	    if( "paramUID"('accounts:city_id') = 'auto' ) then
-		update accounts set latitude = null, longitude = null, city_id = null where account_id=new.account_id;
-	    else
-		update accounts set latitude = null, longitude = null where account_id=new.account_id;
-	    end if;
+	    update accounts set latitude = null, longitude = null where account_id=new.account_id;
 	end if;
     else
 	delete from geocode_stream where account_id=new.account_id;
@@ -5815,69 +5810,8 @@ begin
 end;
 $BODY$ language plpgsql;
 
-create or replace function tf_geocode$reverse() returns trigger
-as $BODY$
-declare
-begin
-    if( (select count(*) from geocode_stream where account_id=new.account_id and reverse = 1) = 0 ) then
-	insert into geocode_stream (account_id, reverse, latitude, longitude) values (new.account_id, 1, new.latitude, new.longitude);
-    else
-	update geocode_stream set inserted_ts=current_timestamp, address=null, latitude=new.latitude, longitude=new.longitude, 
-	    "x-address"=null, "x-country"=null, "x-region"=null, "x-area"=null, "x-city"=null, "x-street"=null, "x-house"=null
-	where account_id = new.account_id and reverse = 1;
-    end if;
-    return null;
-end;
-$BODY$ language plpgsql;
-
-create or replace function tf_geocode$results() returns trigger
-as $BODY$
-declare
-    la gps_t;
-    lo gps_t;
-    c_id uid_t;
-begin
-    if( new.account_id is not null and new.latitude is not null and new.longitude is not null ) then
-	select latitude, longitude from accounts where account_id=new.account_id
-	    into la, lo;
-	if( la is null or lo is null or la <> new.latitude or lo <> new.longitude ) then
-	    update accounts set latitude=new.latitude, longitude=new.longitude
-		where account_id=new.account_id;
-
-	    if( "paramUID"('accounts:city_id') = 'auto' and new."x-address" is not null ) then
-		/* find city */
-		select city_id from cities x where x.country_id=new."x-country" and trim(lower(x.descr))=trim(lower(new."x-city")) and x.ftype=0 and x.hidden=0
-		    and (trim(lower(new."x-region"))=trim(lower(new."x-city")) or (select count(*) from cities f where f.city_id=x.pid and trim(lower(f.descr))=trim(lower(new."x-region"))) = 1)
-		into c_id;
-		/* find regions and special areas */
-		if( c_id is null ) then
-		    select city_id from cities where country_id=new."x-country" and (trim(lower(descr))=trim(lower(new."x-region")) or trim(lower(descr))=any(string_to_array(trim(lower(new."x-region")),' '))) /*and ftype=1*/ and hidden=0
-			into c_id;
-		end if;
-		if( c_id is null ) then
-		    raise notice 'account_id=% => unable to find city_id (x-country=%; x-region=%; x-city=%)', 
-			new.account_id, new."x-country", new."x-region", new."x-city";
-		else
-		    update accounts set city_id=c_id
-			where account_id=new.account_id;
-		end if;
-	    end if;
-	end if;
-    end if;
-    return null;
-end;
-$BODY$ language plpgsql;
-
--- accounts -> geocode_stream
 create trigger trig_geocode after insert or update on accounts for each row 
-    execute procedure tf_geocode$forward();
--- h_location --> geocode_stream
-create trigger trig_geocode after insert on h_location for each row 
-    execute procedure tf_geocode$reverse();
--- geocode_stream --> accounts
-create trigger trig_geocode after update on geocode_stream for each row
-    when (new.content_ts is not null and new.content_ts > new.inserted_ts) execute procedure tf_geocode$results();
-
+    execute procedure tf_forward_geocoding();
 
 create table health_stream (
     db_id 		uid_t 		not null primary key,
@@ -6269,24 +6203,6 @@ begin
 end;
 $body$ language plpgsql STABLE;
 
-
-create or replace function normalize_city_name(f_descr text, f_pid uid_t) returns text
-as $$
-declare
-    x text;
-    z uid_t;
-begin
-    if( f_pid is null ) then
-	return f_descr;
-    else 
-	select descr, pid from cities where city_id=f_pid /*and ftype=1*/ into x, z;
-	return normalize_city_name(f_descr || ', ' || coalesce(x,''), z);
-    end if;
-end;
-$$
-language plpgsql STABLE;
-
-
 create or replace function photo_get(blob_id blob_t) returns blob_t
 as $body$
 declare
@@ -6557,5 +6473,3 @@ insert into sysparams values('my_routes:discard', 'false', 'allows discarding of
 
 insert into sysparams values('target:depth', '14', 'default target depth (days).');
 insert into sysparams values('target:multi', 'no', 'set to [yes] for allowing more then one target per document.');
-
-insert into sysparams values('accounts:city_id', 'auto', 'set to [auto] for autofilling accounts.city_id attribute.');

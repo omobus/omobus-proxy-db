@@ -33,6 +33,16 @@ begin
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
 	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
 
+-- *** location --> geocode_stream
+    if( (select count(*) from geocode_stream where account_id='%account_id%' and reverse = 1) = 0 ) then
+	insert into geocode_stream (account_id, reverse, latitude, longitude) 
+	    values ('%account_id%', 1, %latitude%, %longitude%);
+    else
+	update geocode_stream set inserted_ts=current_timestamp, address=null, latitude=%latitude%, longitude=%longitude%,
+	    "x-address"=null, "x-country"=null, "x-region"=null, "x-area"=null, "x-city"=null, "x-street"=null, "x-house"=null
+	where account_id = '%account_id%' and reverse = 1;
+    end if;
+
 -- **** location --> content_stream
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
     perform content_add('a_list', '%user_id_sys%', f_date, f_date);
