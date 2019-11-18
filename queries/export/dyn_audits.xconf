@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dyn_audits templ="%fix_date%;%account_id%;%categ_id%;%audit_criteria_id%;%audit_score_id%;%criteria_wf%;%score_wf%;%score%;%note%;%wf%;%sla%;%photos%;%fix_dt%;%user_id%;">
+  <![CDATA[
+select 
+    x.fix_date, x.account_id, x.categ_id, x.audit_criteria_id, x.audit_score_id, x.criteria_wf, x.score_wf, x.score, x.note, x.wf, x.sla, x.fix_dt, x.user_id,
+    (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(x.photos)) photos
+from dyn_audits x
+    where x.updated_ts >= current_timestamp - '5 days 00:00:00'::interval
+order by 1, 2, 3, 4
+  ]]>
+</dyn_audits>

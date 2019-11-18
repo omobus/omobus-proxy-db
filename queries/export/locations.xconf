@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%latitude%;%longitude%;%accuracy%;%dist%;">
+  <![CDATA[
+select 
+    doc_id, fix_dt, user_id, account_id, latitude, longitude, accuracy, dist
+from h_location
+    where inserted_ts >= current_timestamp - '5 days 00:00:00'::interval
+order by 1
+  ]]>
+</locations>

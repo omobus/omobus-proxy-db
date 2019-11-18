@@ -24,19 +24,52 @@
     >
 <queries>
 <xi:include href="../queries/export/activity_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/additions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/cancellations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/comments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/deletions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/discards.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_advt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_audits.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_checkups.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_oos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_presences.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_quests.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_ratings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_reviews.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_shelfs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/dyn_testings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/locations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/photos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/presentations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/receipts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/revocations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/target_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/trainings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/unsched.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/user_activities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/user_documents.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/user_locations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/user_reports.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/export/user_works.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 
 <!-- **** FILTERS: BEGIN **** -->
 <distributors>
     <![CDATA[
 select distr_id, unnest(db_ids) person_id from distributors
-    /*where "self" = 1*/
-order by 1, 2
+    order by 1, 2
     ]]>
 </distributors>
+<users>
+    <![CDATA[
+select user_id, unnest(db_ids) person_id from users
+    order by 1, 2
+    ]]>
+</users>
 </queries>
 <pack>
     <activity_types />
@@ -46,5 +79,35 @@ order by 1, 2
 	<receipts key="distr_id" />
 	<reclamations key="distr_id" />
     </distributors>
+    <users personalize='ErpCode'>
+	<additions key="user_id" />
+	<cancellations key="user_id" />
+	<comments key="user_id" />
+	<deletions key="user_id" />
+	<discards key="user_id" />
+	<dyn_advt key="user_id" />
+	<dyn_audits key="user_id" />
+	<dyn_checkups key="user_id" />
+	<dyn_oos key="user_id" />
+	<dyn_presences key="user_id" />
+	<dyn_prices key="user_id" />
+	<dyn_quests key="user_id" />
+	<dyn_ratings key="user_id" />
+	<dyn_reviews key="user_id" />
+	<dyn_shelfs key="user_id" />
+	<dyn_stocks key="user_id" />
+	<dyn_testings key="user_id" />
+	<locations key="user_id" />
+	<photos key="user_id" />
+	<presentations key="user_id" />
+	<revocations key="user_id" />
+	<trainings key="user_id" />
+	<unsched key="user_id" />
+	<user_activities key="user_id" />
+	<user_documents key="user_id" />
+	<user_locations key="user_id" />
+	<user_reports key="user_id" />
+	<user_works key="user_id" />
+    </users>
 </pack>
 </kernel>

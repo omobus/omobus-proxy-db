@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<revocations templ="%doc_id%;%doc_type%;%hidden%;">
+  <![CDATA[
+select doc_id, doc_type, hidden from j_revocations
+    where updated_ts >= current_timestamp - '5 days 00:00:00'::interval
+order by 1
+  ]]>
+</revocations>

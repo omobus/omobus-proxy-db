@@ -5,7 +5,7 @@ select
     h.doc_id, h.fix_dt, h.doc_no, h.user_id, h.dev_login, h.account_id, h.distr_id, h.doc_note, h.amount, h.receipt_type_id
 from h_receipt h
     left join j_ttd j on h.doc_id = j.doc_id
-where h.inserted_ts::date >= current_date - 5
+where h.inserted_ts >= current_timestamp - '5 days 00:00:00'::interval
     and (j.status is null or j.status = 'delivered')
 order by h.doc_id
   ]]>

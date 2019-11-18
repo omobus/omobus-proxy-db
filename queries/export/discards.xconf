@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discards templ="%account_id%;%user_id%;%fix_dt%;%activity_type_id%;%route_date%;%discard_type_id%;%note%;%validator_id%;%validated%;%hidden%;">
+  <![CDATA[
+select account_id, user_id, fix_dt, activity_type_id, route_date, discard_type_id, note, validator_id, validated, hidden from j_discards
+    where updated_ts >= current_timestamp - '5 days 00:00:00'::interval
+order by 1, 2, 3, 4, 5
+  ]]>
+</discards>

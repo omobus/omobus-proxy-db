@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dyn_checkups templ="%fix_date%;%account_id%;%placement_id%;%prod_id%;%exist%;%fix_dt%;%user_id%;">
+  <![CDATA[
+select fix_date, account_id, placement_id, prod_id, exist, fix_dt, user_id from dyn_checkups
+    where updated_ts >= current_timestamp - '5 days 00:00:00'::interval
+order by 1, 2, 3, 4
+  ]]>
+</dyn_checkups>

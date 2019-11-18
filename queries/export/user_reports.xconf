@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<user_reports templ="%act_id%;%user_id%;%w_cookie%;%fix_date%;%doc_type%;%duration%;%fix_dt%;%latitude%;%longitude%;%satellite_dt%;%a_cookie%;%account_id%;%activity_type_id%;%employee_id%;">
+  <![CDATA[
+select act_id, user_id, w_cookie, left(fix_dt,10) fix_date, doc_type, duration, fix_dt, latitude, longitude, satellite_dt, a_cookie, account_id, activity_type_id, employee_id from a_user_report
+    where inserted_ts >= current_timestamp - '5 days 00:00:00'::interval
+order by 1
+  ]]>
+</user_reports>

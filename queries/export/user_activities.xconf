@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<user_activities templ="%user_id%;%account_id%;%w_cookie%;%a_cookie%;%activity_type_id%;%fix_date%;%route_date%;%b_dt%;%b_la%;%b_lo%;%b_sat_dt%;%e_dt%;%e_la%;%e_lo%;%e_sat_dt%;%employee_id%;%extra_info%;%docs%;">
+  <![CDATA[
+select user_id, account_id, w_cookie, a_cookie, activity_type_id, fix_date, route_date, b_dt, b_la, b_lo, b_sat_dt, e_dt, e_la, e_lo, e_sat_dt, employee_id, extra_info, docs from j_user_activities
+    where updated_ts >= current_timestamp - '5 days 00:00:00'::interval and fix_date is not null
+order by 1, 2, 3, 4
+  ]]>
+</user_activities>
