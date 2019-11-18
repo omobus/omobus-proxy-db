@@ -13,12 +13,12 @@ delete from agreements1
 update agreements1 set db_ids=array_remove(db_ids,'%ErpCode%')
     where db_ids @> (array['%ErpCode%'])::uids_t;
 delete from agreements1
-    where (db_ids is null or cardinality(db_ids)=0);
+    where '%e_date%' >= current_date::date_t and (db_ids is null or cardinality(db_ids)=0);
   ]]>
 </begin>
 <check_exist>
   <![CDATA[
-select case when '%e_date%' < current_date::date_t then 1 else 0 end exist
+select case when '%e_date%' >= current_date::date_t then 0 else 1 end exist
   ]]>
 </check_exist>
 <insert>

@@ -13,7 +13,7 @@ delete from pmlist
 update pmlist set db_ids=array_remove(db_ids,'%ErpCode%')
     where db_ids @> (array['%ErpCode%'])::uids_t;
 delete from pmlist
-    where (db_ids is null or cardinality(db_ids)=0);
+    where (('%b_date%'='' and '%e_date%'='') or '%e_date%' >= current_date::date_t) and (db_ids is null or cardinality(db_ids)=0);
   ]]>
 </begin>
 <check_exist>
