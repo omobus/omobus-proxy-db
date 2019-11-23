@@ -21,12 +21,7 @@ on conflict do nothing
 </insert>
 <end>
   <![CDATA[
-delete from account_params where distr_id='%ErpCode%';
-insert into account_params(distr_id, account_id, group_price_id, payment_method_id, payment_delay, wareh_ids, db_ids)
-    select x.distr_id, l.f_id, x.group_price_id, x.payment_method_id, x.payment_delay, x.wareh_ids, array['$shadow'] from shadow.account_params x, symlinks l
-	where x.distr_id='%ErpCode%' and l.obj_code='account' and l.distr_id='%ErpCode%' and l.distr_id = x.distr_id and l.t_id=x.account_id;
-
-select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
   ]]>
 </end>
 </account_params>

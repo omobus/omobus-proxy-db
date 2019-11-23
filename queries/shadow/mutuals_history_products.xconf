@@ -21,14 +21,7 @@ on conflict do nothing
 </insert>
 <end>
   <![CDATA[
-delete from mutuals_history_products where distr_id='%ErpCode%';
-insert into mutuals_history_products(distr_id, erp_id, prod_id, pack_id, qty, discount, amount, db_ids)
-    select x.distr_id, x.erp_id, prod.f_id, pack.f_id, x.qty, x.discount, x.amount, array['$shadow'] from shadow.mutuals_history_products x
-	left join symlinks prod on prod.distr_id='%ErpCode%' and prod.obj_code='product' and prod.distr_id=x.distr_id and prod.t_id=x.prod_id
-	left join symlinks pack on pack.distr_id='%ErpCode%' and pack.obj_code='pack' and pack.distr_id=x.distr_id and pack.t_id=x.pack_id
-    where x.distr_id='%ErpCode%' and prod.f_id is not null and pack.f_id is not null;
-
-select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
   ]]>
 </end>
 </mutuals_history_products>

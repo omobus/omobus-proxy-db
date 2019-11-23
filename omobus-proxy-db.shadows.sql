@@ -118,6 +118,22 @@ create table shadow.erp_products (
 
 create trigger trig_updated_ts before update on shadow.erp_products for each row execute procedure tf_updated_ts();
 
+create table shadow.floating_prices (
+    distr_id 		uid_t 		not null,
+    account_id 		uid_t 		not null,
+    prod_id 		uid_t 		not null,
+    pack_id 		uid_t 		not null,
+    price 		currency_t 	not null,
+    b_date 		date_t 		not null,
+    e_date 		date_t 		not null,
+    promo 		bool_t 		null,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    primary key (distr_id, account_id, prod_id, b_date)
+);
+
+create trigger trig_updated_ts before update on shadow.floating_prices for each row execute procedure tf_updated_ts();
+
 create table shadow.group_prices (
     distr_id 		uid_t 		not null,
     group_price_id 	uid_t 		not null,
@@ -219,18 +235,6 @@ create table shadow.products (
 
 create trigger trig_updated_ts before update on shadow.products for each row execute procedure tf_updated_ts();
 
-create table shadow.rdd (
-    distr_id 		uid_t 		not null,
-    obj_code 		code_t 		not null,
-    r_date 		datetimetz_t 	not null,
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    primary key (distr_id, obj_code)
-);
-
-create trigger trig_updated_ts before update on shadow.rdd for each row execute procedure tf_updated_ts();
-
 create table shadow.restrictions (
     distr_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
@@ -238,6 +242,7 @@ create table shadow.restrictions (
     pack_id 		uid_t 		not null,
     min_qty 		numeric_t 	null check (min_qty is null or (min_qty >= 0)),
     max_qty 		numeric_t 	null check (max_qty is null or (max_qty >= 0)),
+    quantum 		numeric_t 	null check (quantum is null or quantum > 0),
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     primary key (distr_id, account_id, prod_id)
@@ -277,6 +282,17 @@ create table shadow.sales_history (
 );
 
 create trigger trig_updated_ts before update on shadow.sales_history for each row execute procedure tf_updated_ts();
+
+create table shadow.shipments (
+    distr_id 		uid_t 		not null,
+    account_id 		uid_t 		not null,
+    d_date 		date_t 		not null,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    primary key (distr_id, account_id, d_date)
+);
+
+create trigger trig_updated_ts before update on shadow.shipments for each row execute procedure tf_updated_ts();
 
 create table shadow.symlinks (
     distr_id 		uid_t 		not null,

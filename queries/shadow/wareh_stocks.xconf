@@ -21,12 +21,7 @@ on conflict do nothing
 </insert>
 <end>
   <![CDATA[
-delete from wareh_stocks where distr_id='%ErpCode%';
-insert into wareh_stocks(distr_id, wareh_id, prod_id, qty, db_ids)
-    select x.distr_id, x.wareh_id, l.f_id, x.qty, array['$shadow'] from shadow.wareh_stocks x, symlinks l
-	where x.distr_id='%ErpCode%' and l.obj_code='product' and l.distr_id='%ErpCode%' and l.distr_id=x.distr_id and l.t_id=x.prod_id;
-
-select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
   ]]>
 </end>
 </wareh_stocks>

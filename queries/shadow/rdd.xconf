@@ -8,34 +8,30 @@ select count(*) from data_stream
 </verification>
 <begin>
   <![CDATA[
-update shadow.rdd set hidden=1
+update rdd set hidden=1
     where distr_id='%ErpCode%' and hidden=0
   ]]>
 </begin>
 <check_exist>
   <![CDATA[
-select count(*) from shadow.rdd
+select count(*) from rdd
     where obj_code='%obj_code%' and distr_id='%ErpCode%'
   ]]>
 </check_exist>
 <update>
   <![CDATA[
-update shadow.rdd set r_date=trim(both from '%value%'), hidden=0
+update rdd set r_date=trim(both from '%value%'), hidden=0, db_ids=array_append(db_ids, array['$shadow'])
     where obj_code='%obj_code%' and distr_id='%ErpCode%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into shadow.rdd (distr_id, obj_code, r_date, hidden)
-    values ('%ErpCode%', '%obj_code%', trim(both from '%value%'), 0)
+insert into rdd (distr_id, obj_code, r_date, hidden, db_ids)
+    values ('%ErpCode%', '%obj_code%', trim(both from '%value%'), 0, array['$shadow'])
   ]]>
 </insert>
 <end>
   <![CDATA[
-delete from rdd where distr_id='%ErpCode%';
-insert into rdd(distr_id, wareh_id, descr, hidden, inserted_ts, updated_ts, db_ids)
-    select distr_id, wareh_id, descr, hidden, inserted_ts, updated_ts, array['$shadow'] from shadow.rdd where distr_id='%ErpCode%' and obj_code in ('debts:date','mutuals:date');
-
 select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
   ]]>
 </end>

@@ -32,11 +32,7 @@ insert into shadow.warehouses (distr_id, wareh_id, descr, hidden)
 </insert>
 <end>
   <![CDATA[
-delete from warehouses where distr_id='%ErpCode%';
-insert into warehouses(distr_id, wareh_id, descr, hidden, inserted_ts, updated_ts, db_ids)
-    select distr_id, wareh_id, descr, hidden, inserted_ts, updated_ts, array['$shadow'] from shadow.warehouses where distr_id='%ErpCode%';
-
-select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
+select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
   ]]>
 </end>
 </warehouses>
