@@ -2,6 +2,9 @@
 <mutuals_history templ="%distr_id%;%account_id%;%erp_id%;%erp_no%;%erp_dt%;%amount%;%incoming%;%unpaid%;%color%;%bgcolor%;%extra_info%;" empty="no">
   <![CDATA[
 select distr_id, account_id, erp_id, erp_no, erp_dt, amount, incoming, unpaid, color, bgcolor, extra_info from mutuals_history
-    order by 1, 2, 5 desc
+    union
+select x.distr_id, l.f_id, x.erp_id, x.erp_no, x.erp_dt, x.amount, x.incoming, x.unpaid, null, null, x.extra_info from shadow.mutuals_history x, symlinks l
+    where l.obj_code='account' and l.distr_id = x.distr_id and l.t_id=x.account_id
+order by 1, 2, 5 desc
   ]]>
 </mutuals_history>

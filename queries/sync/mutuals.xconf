@@ -3,6 +3,9 @@
   <![CDATA[ 
 select distr_id, account_id, mutual from mutuals
     where mutual <> 0
+	union
+select x.distr_id, l.f_id, x.mutual from shadow.mutuals x, symlinks l
+    where l.obj_code='account' and l.distr_id = x.distr_id and l.t_id=x.account_id and x.mutual <> 0
 order by 1, 2
   ]]>
 </mutuals>

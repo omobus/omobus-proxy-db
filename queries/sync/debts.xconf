@@ -3,6 +3,9 @@
   <![CDATA[ 
 select distr_id, account_id, debt from debts
     where debt > 0
-order by 1
+	union
+select x.distr_id, l.f_id, x.debt from shadow.debts x, symlinks l
+    where l.obj_code='account' and l.distr_id = x.distr_id and l.t_id=x.account_id and x.debt > 0
+order by 1, 2
   ]]>
 </debts>

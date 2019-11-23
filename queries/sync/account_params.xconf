@@ -2,6 +2,9 @@
 <account_params templ="%distr_id%;%account_id%;%group_price_id%;%payment_method_id%;%payment_delay%;%wareh_ids%;" empty="no">
   <![CDATA[
 select distr_id, account_id, group_price_id, payment_method_id, payment_delay, array_to_string(wareh_ids,',') wareh_ids from account_params
-    order by distr_id, account_id
+    union
+select x.distr_id, l.f_id account_id, x.group_price_id, x.payment_method_id, x.payment_delay, array_to_string(x.wareh_ids,',') wareh_ids from shadow.account_params x, symlinks l
+    where l.obj_code='account' and l.distr_id = x.distr_id and l.t_id=x.account_id
+order by distr_id, account_id
   ]]>
 </account_params>

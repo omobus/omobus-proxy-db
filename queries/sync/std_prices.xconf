@@ -2,6 +2,12 @@
 <std_prices templ="%distr_id%;%prod_id%;%pack_id%;%price%;" empty="no">
   <![CDATA[
 select distr_id, prod_id, pack_id, price from std_prices
-    order by 1, 2
+    union
+select x.distr_id, prod.f_id, coalesce(pack.f_id,z.pack_id,'x'), x.price from shadow.std_prices x
+    left join symlinks prod on prod.obj_code='product' and prod.distr_id=x.distr_id and prod.t_id=x.prod_id
+    left join symlinks pack on pack.obj_code='pack' and pack.distr_id=x.distr_id and pack.t_id=x.pack_id
+    left join packs z on z.prod_id=prod.f_id and z.pack=1
+where prod.f_id is not null
+order by 1, 2
   ]]>
 </std_prices>

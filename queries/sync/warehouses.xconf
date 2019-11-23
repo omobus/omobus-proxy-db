@@ -3,6 +3,9 @@
   <![CDATA[ 
 select distr_id, wareh_id, descr from warehouses
     where hidden = 0
+	union
+select distr_id, wareh_id, descr from shadow.warehouses 
+    where hidden = 0
 order by descr
   ]]>
 </warehouses>
