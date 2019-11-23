@@ -39,7 +39,7 @@ declare
     u_id uid_t;
     d_id uid_t;
     n datetime_t;
-    x_note note_t;
+    x_note t_oos.note%TYPE;
 begin
 -- **** oos --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
