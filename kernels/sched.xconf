@@ -21,7 +21,7 @@ begin
 	    where user_id = u_id and "monthDate_First"(d)::date_t <= p_date and p_date <= "monthDate_Last"(d)::date_t
 	into c;
 	if c = 0 then
-	    for x in select i::date from generate_series("monthDate_First"(current_date), "monthDate_Last"(current_date), '1 day'::interval) i
+	    for x in select i::date from generate_series("monthDate_First"(d), "monthDate_Last"(d), '1 day'::interval) i
 	    loop
 		t := extract(dow from x);
 		if t = 0 then
