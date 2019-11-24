@@ -1041,7 +1041,7 @@ create table agreements2 (
 create index i_db_ids_agreements2 on agreements2 using GIN (db_ids);
 create trigger trig_updated_ts before update on agreements2 for each row execute procedure tf_updated_ts();
 
-create table asp_types ( /* Addition-Sales-Place */
+create table asp_types ( /* Addition-Sales-Places */
     asp_type_id 	uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
     row_no 		int32_t 	null, -- ordering
