@@ -2,7 +2,7 @@
 <quests_history templ="%fix_date%;%account_id%;%qname_id%;%qrow_id%;%value%;%latest%;" empty="no">
   <![CDATA[ 
 select fix_date, account_id, qname_id, qrow_id, value, "_isRecentData" latest from dyn_quests
-    where fix_date >= (current_date+"paramInteger"('questss_history:offset'))::date_t
+    where fix_date >= (current_date+"paramInteger"('quests_history:offset'))::date_t
 order by 2, 3, 4, 1 desc
   ]]>
 </quests_history>
