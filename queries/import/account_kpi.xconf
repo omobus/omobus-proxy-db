@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<account_kpi templ="%kpi_id%;%account_id%;%descr0%;%descr1%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from account_prices
+    where "_isAlienData" = 1 and db_ids = (array['%ErpCode%'])::uids_t;
+update account_prices set db_ids=array_remove(db_ids,'%ErpCode%')
+    where "_isAlienData" = 1 and db_ids @> (array['%ErpCode%'])::uids_t;
+delete from account_prices
+    where "_isAlienData" = 1 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[
+insert into account_kpi (kpi_id, account_id, descr0, descr1, db_ids, "_isAlienData") 
+    values ('%kpi_id%', '%account_id%', '%descr0%', '%descr1%', array['%ErpCode%'], 1)
+on conflict do nothing
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</account_kpi>

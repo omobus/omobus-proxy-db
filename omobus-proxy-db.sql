@@ -930,9 +930,12 @@ create table account_kpi (
     descr1 		descr_t 	not null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null, /* KPI from the external sources */
     primary key (account_id, kpi_id)
 );
 
+create index i_db_ids_account_kpi on account_kpi using GIN (db_ids);
 create trigger trig_updated_ts before update on account_kpi for each row execute procedure tf_updated_ts();
 
 create table account_params (
@@ -1669,9 +1672,12 @@ create table my_kpi (
     descr1 		descr_t 	not null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null, /* KPI from the external sources */
     primary key (user_id, kpi_id)
 );
 
+create index i_db_ids_my_kpi on my_kpi using GIN (db_ids);
 create trigger trig_updated_ts before update on my_kpi for each row execute procedure tf_updated_ts();
 
 create table my_regions (
@@ -1932,8 +1938,7 @@ create table pos_materials ( /* Point-of-Sale and Point-of-Purchase materials */
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null, /* pos_material from the external sources */
-    "_dataTimestamp" 	datetime_t 	null
+    "_isAlienData" 	bool_t 		null /* pos_material from the external sources */
 );
 
 create index i_db_ids_pos_materials on pos_materials using GIN (db_ids);
