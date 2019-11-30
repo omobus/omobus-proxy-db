@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<account_kpi templ="%kpi_id%;%account_id%;%descr0%;%descr1%;">
+<account_kpi templ="%account_id%;%kpi_id%;%descr0%;%descr1%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
