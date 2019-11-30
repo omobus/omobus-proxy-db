@@ -4248,6 +4248,45 @@ create index i_rev_cookie_h_photo on h_photo (rev_cookie);
 
 create trigger trig_lock_update before update on h_photo for each row execute procedure tf_lock_update();
 
+create table h_posm (
+    doc_id		uid_t		not null primary key default doc_id(),
+    inserted_ts		ts_auto_t	not null,
+    inserted_node	hostname_t	not null,
+    dev_pack		int32_t		not null,
+    doc_no		uid_t		not null,
+    dev_id		devid_t		not null,
+    dev_login		uid_t		not null,
+    user_id		uid_t		not null,
+    account_id		uid_t		not null,
+    fix_dt		datetime_t	not null,
+    created_dt		datetime_t	not null,
+    created_gps_dt	datetime_t	null,
+    created_gps_la	gps_t		null,
+    created_gps_lo	gps_t		null,
+    closed_dt		datetime_t	not null,
+    closed_gps_dt	datetime_t	null,
+    closed_gps_la	gps_t		null,
+    closed_gps_lo	gps_t		null,
+    w_cookie		uid_t		not null,
+    a_cookie		uid_t		not null,
+    doc_note		note_t		null,
+    activity_type_id	uid_t		not null,
+    placement_id 	uid_t		not null,
+    posm_id		uid_t		not null,
+    photo		blob_t		not null,
+    rev_cookie 		uid_t 		null
+);
+
+create index i_fix_date_h_posm on h_posm (left(fix_dt,10));
+create index i_doc_no_h_posm on h_posm (doc_no);
+create index i_account_id_h_posm on h_posm (account_id);
+create index i_user_id_h_posm on h_posm (user_id);
+create index i_exist_h_posm on h_posm (user_id, dev_pack, dev_id, fix_dt);
+create index i_2lts_h_posm on h_posm (inserted_ts);
+create index i_rev_cookie_h_posm on h_posm (rev_cookie);
+
+create trigger trig_lock_update before update on h_posm for each row execute procedure tf_lock_update();
+
 create table h_presence (
     doc_id 		uid_t 		not null primary key default doc_id(),
     inserted_ts 	ts_auto_t 	not null,
