@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pos_materials templ="%posm_id%;%descr%;%placement_ids%;%chan_ids%;%image%;%delim%;" empty="no">
+<pos_materials templ="%posm_id%;%descr%;%brand_ids%;%placement_ids%;%chan_ids%;%image%;%delim%;" empty="no">
   <![CDATA[ 
 select 
     1 _xz, 
@@ -7,6 +7,7 @@ select
     format('[%s]', brand_id) posm_id, null pid, 
     1 ftype, 
     descr, 
+    null brand_ids,
     null placement_ids, 
     null chan_ids, 
     null::blob_t image, 
@@ -24,6 +25,7 @@ select
     null pid, 
     1 ftype, 
     'multi-brand' descr, 
+    null brand_ids,
     null placement_ids, 
     null chan_ids, 
     null::blob_t image, 
@@ -39,6 +41,7 @@ select
     case when f = 0 then null when brand_ids is null or cardinality(brand_ids) <> 1 then '[multi]' else format('[%s]', brand_ids[1]) end pid, 
     0 ftype,
     descr, 
+    array_to_string(brand_ids,',') brand_ids, 
     array_to_string(placement_ids,',') placement_ids, 
     array_to_string(chan_ids,',') chan_ids, 
     image, 
