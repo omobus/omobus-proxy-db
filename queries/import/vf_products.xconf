@@ -19,7 +19,7 @@ delete from vf_products
 <insert>
   <![CDATA[ 
 insert into vf_products (account_id, vf_id, prod_id, row_no, db_ids)
-    values ('%account_id%', '%vf_id%', '%prod_id%', NIL(%row_no%), array['%ErpCode%'])
+    values ('%account_id%', masquerading('%vf_id%','%ErpCode%'), '%prod_id%', NIL(%row_no%), array['%ErpCode%'])
 on conflict do nothing
   ]]>
 </insert>

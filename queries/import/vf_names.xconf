@@ -17,19 +17,19 @@ update vf_names set hidden=1, db_ids=null
 <check_exist>
   <![CDATA[
 select count(*) from vf_names 
-    where vf_id='%vf_id%'
+    where vf_id=masquerading('%vf_id%','%ErpCode%')
   ]]>
 </check_exist>
 <update>
   <![CDATA[
 update vf_names set descr=trim(both from '%descr%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
-    where vf_id='%vf_id%'
+    where vf_id=masquerading('%vf_id%','%ErpCode%')
   ]]>
 </update>
 <insert>
   <![CDATA[ 
 insert into vf_names (vf_id, descr, row_no, hidden, db_ids)
-    values ('%vf_id%', trim(both from '%descr%'), NIL(%row_no%), 0, array['%ErpCode%'])
+    values (masquerading('%vf_id%','%ErpCode%'), trim(both from '%descr%'), NIL(%row_no%), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>

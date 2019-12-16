@@ -3,7 +3,7 @@
 <verification>
   <![CDATA[
 select count(*) from data_stream
-    where (s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%') or "paramUID"('accounts:city_id') = 'auto'
+    where (s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%')
   ]]>
 </verification>
 <begin>

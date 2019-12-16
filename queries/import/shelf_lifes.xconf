@@ -9,7 +9,7 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 update shelf_lifes set db_ids=array_remove(db_ids,'%ErpCode%')
-    where hidden=0 and where db_ids @> (array['%ErpCode%'])::uids_t;
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
 update shelf_lifes set hidden=1, db_ids=null
     where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
   ]]>

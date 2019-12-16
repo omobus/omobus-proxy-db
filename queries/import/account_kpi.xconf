@@ -8,11 +8,11 @@ select count(*) from data_stream
 </verification>
 <begin>
   <![CDATA[
-delete from account_prices
+delete from account_kpi
     where "_isAlienData" = 1 and db_ids = (array['%ErpCode%'])::uids_t;
-update account_prices set db_ids=array_remove(db_ids,'%ErpCode%')
+update account_kpi set db_ids=array_remove(db_ids,'%ErpCode%')
     where "_isAlienData" = 1 and db_ids @> (array['%ErpCode%'])::uids_t;
-delete from account_prices
+delete from account_kpi
     where "_isAlienData" = 1 and (db_ids is null or cardinality(db_ids)=0);
   ]]>
 </begin>

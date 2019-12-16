@@ -28,8 +28,8 @@ update warehouses set descr=trim(both from '%descr%'), hidden=0, db_ids=array_ap
 </update>
 <insert>
   <![CDATA[
-insert into warehouses (distr_id, wareh_id, descr, hidden)
-    values ('%distr_id%', '%wareh_id%', trim(both from '%descr%'), 0)
+insert into warehouses (distr_id, wareh_id, descr, hidden, db_ids)
+    values ('%distr_id%', '%wareh_id%', trim(both from '%descr%'), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>
