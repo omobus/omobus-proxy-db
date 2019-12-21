@@ -460,6 +460,14 @@ end;
 $body$
 language plpgsql STABLE;
 
+create or replace function "L10n_format_a"(f_lang_id lang_t, f_obj_code code_t, f_obj_id uid_t, f_obj_attr uid_t) returns text as
+$body$
+begin
+    return "L10n_format_a"(f_lang_id, f_obj_code, f_obj_id, f_obj_attr, null::text[], null::text);
+end;
+$body$
+language plpgsql STABLE;
+
 create or replace function "L"(arg timestamp with time zone) returns datetimetz_t
 as $body$
 begin
@@ -2219,7 +2227,7 @@ create table reminders (
     e_date 		date_t 		not null,
     permanent 		bool_t 		not null default 0,
     user_ids 		uids_t		not null,
-    author_id 		uid_t 		not null,
+    author_id 		uid_t 		null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null
@@ -2355,6 +2363,7 @@ create table schedules (
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
+    alarm_ts 		ts_t 		null,
     primary key (user_id, p_date)
 );
 
