@@ -41,6 +41,7 @@
 <xi:include href="../queries/docs/order.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/pending.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/photo.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/docs/posm.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/presence.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/presentation.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/price.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
