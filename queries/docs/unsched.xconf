@@ -31,7 +31,7 @@ declare
 begin
 -- **** unsched --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, inserted_node, dev_pack, doc_code)
-	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%server_hostname%', '%dev_pack%', 'h_%doc_code_sys%');
+	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%server_hostname%', '%dev_pack%', %doc_code_sys%');
 
 -- **** unsched --> content_stream
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
