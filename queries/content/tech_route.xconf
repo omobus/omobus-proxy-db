@@ -294,6 +294,23 @@ where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
 order by h.fix_dt
   ]]>
 	</photos>
+	<posms>
+  <![CDATA[
+select
+    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, 
+    g.descr placement, 
+    m.descr posm, 
+    h.doc_note, 
+    h.photo::varchar blob_id,
+    case when rev.doc_id is null then null else 1 end revoked
+from h_posm h
+    left join placements g on g.placement_id = h.placement_id
+    left join pos_materials m on m.posm_id = h.posm_id
+    left join j_revocations rev on rev.doc_id = h.doc_id
+where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
+order by h.fix_dt
+  ]]>
+	</posms>
 	<presences_L0>
   <![CDATA[
 select doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration from h_presence
@@ -865,6 +882,13 @@ tb.photos = rt.groups(_photos, "account_id", function(r, n, a)
     if n == "photo_params" then
 	r[n] = std.split(a, '|')
     elseif std.contains({'duration','revoked'}, n) then
+	r[n] = tonumber(a)
+    else
+	r[n] = a
+    end
+end)
+tb.posms = rt.groups(_posms, "account_id", function(r, n, a) 
+    if std.contains({'duration','revoked'}, n) then
 	r[n] = tonumber(a)
     else
 	r[n] = a
