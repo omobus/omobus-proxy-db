@@ -90,6 +90,7 @@
 <xi:include href="../queries/sync/plu_codes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/pmlist.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/pos_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/posms_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/potentials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/presences_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/prices_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -447,6 +448,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<photos_history role="asm,ise,kam,sv,tme" key="account_id" strict="yes" />
 	<plu_codes key="account_id" strict="yes" />
 	<pmlist key="account_id" />
+	<posms_history role="asm,ise,kam,sv,tme" key="account_id" strict="yes" />
 	<presences_history key="account_id" strict="yes" />
 	<prices_history key="account_id" strict="yes" />
 	<quests_history key="account_id" strict="yes" />
@@ -472,7 +474,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<vf_products key="account_id" />
     </accounts>
     <brands>
-	<photos_history key="brand_id" strict="yes" />
+	<photos_history key="brand_id" />
 	<priorities key="brand_id" strict="yes" />
 	<products key="brand_id" />
     </brands>
@@ -511,6 +513,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <pos_materials hierarchy="posm_id">
 	<advt_history key="posm_id" strict="yes" />
 	<agreements1 key="posm_id" strict="yes" />
+	<posms_history key="posm_id" strict="yes" />
     </pos_materials>
     <quest_names>
 	<quests_history key="qname_id" Xstrict="yes" />

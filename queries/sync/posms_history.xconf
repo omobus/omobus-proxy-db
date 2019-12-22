@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<posms_history templ="%account_id%;%fix_dt%;%placement_id%;%posm_id%;%note%;%photo%;" empty="no">
+  <![CDATA[
+select
+    h.account_id, 
+    h.fix_dt,
+    h.placement_id, 
+    h.posm_id, 
+    h.doc_note note, 
+    coalesce(t."thumb800",h.photo) photo
+from (
+    select account_id, max(left(fix_dt,10)) fix_date from h_posm
+	where left(fix_dt, 10)>=(current_date+"paramInteger"('posms_history:offset'))::date_t 
+    group by account_id
+) x
+    left join h_posm h on x.account_id = h.account_id and x.fix_date = left(h.fix_dt,10)
+    left join j_revocations r on r.doc_id = h.doc_id
+    left join thumbnail_stream t on t.photo = h.photo
+where r.doc_id is null
+order by h.account_id, left(h.fix_dt,10) desc, h.fix_dt
+  ]]>
+</posms_history>

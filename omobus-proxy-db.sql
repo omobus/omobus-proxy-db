@@ -6497,25 +6497,26 @@ insert into sysparams values('rules:power', '90', 'The minimum power (battery li
 insert into sysparams values('checkups:offset', '-30', 'How long (in days) j_checkups data is used.');
 insert into sysparams values('stocks:offset', '-30', 'How long (in days) empty j_stocks data (stock=0) is used.');
 
-insert into sysparams values('advt_history:offset', '-60', 'advt_history left offset in days');
-insert into sysparams values('oos_history:offset', '-60', 'oos_history left offset in days');
-insert into sysparams values('photos_history:offset', '-15', 'photos_history left offset in days.');
-insert into sysparams values('presences_history:offset', '-60', 'presences_history left offset in days');
-insert into sysparams values('prices_history:offset', '-60', 'prices_history left offset in days.');
-insert into sysparams values('quests_history:offset', '-60', 'quests_history left offset in days.');
-insert into sysparams values('route_history:offset:left', '-10', 'route_history left offset in days.');
-insert into sysparams values('route_history:offset:right', '5', 'route_history right offset in days.');
-insert into sysparams values('trainings_history:offset', '-60', 'trainings_history left offset in days.');
+insert into sysparams values('advt_history:offset', '-60', 'The maximum depth of the advt_history in days');
+insert into sysparams values('oos_history:offset', '-60', 'The maximum depth of the oos_history in days');
+insert into sysparams values('photos_history:offset', '-15', 'The maximum depth of the photos_history in days.');
+insert into sysparams values('posms_history:offset', '-15', 'The maximum depth of the posms_history in days.');
+insert into sysparams values('presences_history:offset', '-60', 'The maximum depth of the presences_history in days');
+insert into sysparams values('prices_history:offset', '-60', 'The maximum depth of the prices_history in days.');
+insert into sysparams values('quests_history:offset', '-60', 'The maximum depth of the quests_history in days.');
+insert into sysparams values('route_history:offset:left', '-10', 'The maximum depth of the route_history in days.');
+insert into sysparams values('route_history:offset:right', '5', 'The maximum depth of the route_history right offset in days.');
+insert into sysparams values('trainings_history:offset', '-60', 'The maximum depth of the trainings_history in days.');
 
-insert into sysparams values('orders_history:offset', '-10', 'orders_history offset in days.');
+insert into sysparams values('orders_history:offset', '-10', 'The maximum depth of the orders_history in days.');
 insert into sysparams values('orders_history:alert:color', '13107200', 'orders_history alert text color as rgb integer.');
 insert into sysparams values('orders_history:alert:bgcolor', '16116715', 'orders_history alert bgcolor as rgb integer.');
 
-insert into sysparams values('reclamations_history:offset', '-10', 'reclamations_history offset in days.');
+insert into sysparams values('reclamations_history:offset', '-10', 'The maximum depth of the reclamations_history in days.');
 insert into sysparams values('reclamations_history:alert:color', '13107200', 'reclamations_history alert text color as rgb integer.');
 insert into sysparams values('reclamations_history:alert:bgcolor', '16116715', 'reclamations_history alert bgcolor as rgb integer.');
 
-insert into sysparams values('my_routes:offset:left', '-1', 'my_routes left offset in days.');
+insert into sysparams values('my_routes:offset:left', '-1', 'The maximum deph of the my_routes in days.');
 insert into sysparams values('my_routes:offset:right', '5', 'my_routes right offset in days.');
 insert into sysparams values('my_routes:pending:depth', '7', 'my_routes pending depth in days.');
 insert into sysparams values('my_routes:pending:color', '1704061', 'my_routes pending color as rgb integer value.');
