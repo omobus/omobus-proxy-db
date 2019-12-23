@@ -109,7 +109,7 @@ begin
 	return null;
     end if;
 
-    select ltrim(doc_code,'h_') from j_docs where doc_id = (opt).doc_id 
+    select doc_code from j_docs where doc_id = (opt).doc_id 
 	into d_code;
     if d_code is null then
 	raise exception '% invalid input attribute!', fcesig;
@@ -122,6 +122,11 @@ begin
 	select h.account_id, u.lang_id, target_id, "renewable" from h_confirmation h, users u
 	    where doc_id = (opt).doc_id and h.user_id=u.user_id
 	into a_id, u_lang, t_pid, t_re;
+    elsif d_code = 'posm' then
+	select h.account_id, u.lang_id, photo from h_posm h, users u
+	    where doc_id = (opt).doc_id and h.user_id=u.user_id
+	into a_id, u_lang, blob_id;
+	t_re := 1;
     else
 	raise exception '% invalid input attribute!', fcesig;
     end if;
