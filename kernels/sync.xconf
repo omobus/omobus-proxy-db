@@ -228,14 +228,20 @@ select null chan_id, pl_id fid from planograms where chan_ids is null and hidden
 order by 1, 2
     ]]>
 </my_planograms>
-<my_pos_materials>
+<my_pos_materialsL1>
     <![CDATA[
 select unnest(chan_ids) chan_id, posm_id fid from pos_materials where chan_ids is not null and hidden=0
     union
 select null chan_id, posm_id fid from pos_materials where chan_ids is null and hidden=0
 order by 1, 2
     ]]>
-</my_pos_materials>
+</my_pos_materialsL1>
+<my_pos_materialsL2>
+    <![CDATA[
+select unnest(brand_ids) brand_id, posm_id fid from pos_materials where hidden=0
+    order by 1, 2
+    ]]>
+</my_pos_materialsL2>
 <!--
 <my_productsL0>
      <![CDATA[
@@ -342,7 +348,6 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<departments key="dep_id" />
 	<info_materials key="dep_id" />
 	<planograms key="dep_id" />
-	<pos_materials key="dep_id" />
 	<targets key="dep_id" />
 	<training_materials key="dep_id" />
 	<training_types key="dep_id" />
@@ -431,9 +436,9 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<my_planograms key="chan_id">
 	    <planograms key="fid" />
 	</my_planograms>
-	<my_pos_materials key="chan_id">
+	<my_pos_materialsL1 key="chan_id">
 	    <pos_materials key="fid" />
-	</my_pos_materials>
+	</my_pos_materialsL1>
 	<my_routes key="account_id" strict="yes" />
 	<my_targets key="account_id" strict="yes">
 	    <targets key="target_id" strict="yes" />
@@ -475,6 +480,9 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     </accounts>
     <brands>
 	<photos_history key="brand_id" />
+	<my_pos_materialsL2  key="brand_id">
+	    <pos_materials key="fid" />
+	</my_pos_materialsL2>
 	<priorities key="brand_id" strict="yes" />
 	<products key="brand_id" />
     </brands>

@@ -13,7 +13,6 @@ select
     null::blob_t image, 
     1 delim, 
     null country_id, 
-    dep_id,
     row_no
 from brands
 where hidden = 0 and brand_id in (select brand_ids[1] from pos_materials where hidden = 0 and brand_ids is not null and cardinality(brand_ids) = 1)
@@ -31,7 +30,6 @@ select
     null::blob_t image, 
     1 delim, 
     null country_id, 
-    null dep_id,
     null row_no
 	union
 select
@@ -47,7 +45,6 @@ select
     image, 
     0 delim, 
     country_id, 
-    dep_id,
     null row_no
 from pos_materials, (select count(*) f from pos_materials where hidden = 0 and brand_ids is not null and cardinality(brand_ids) = 1) a
     where hidden = 0 and (
