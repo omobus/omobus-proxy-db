@@ -1270,6 +1270,7 @@ create trigger trig_updated_ts before update on contacts for each row execute pr
 create table countries (
     country_id 		country_t 	not null primary key,
     descr 		descr_t 	not null,
+    row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null
