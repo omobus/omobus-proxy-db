@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<countries templ="%country_id%;%descr%;">
+<countries templ="%country_id%;%descr%;%row_no%;">
   <![CDATA[
-select country_id, descr from countries
+select country_id, descr, row_no from countries
     where hidden = 0
 order by 1
   ]]>
