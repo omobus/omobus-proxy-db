@@ -1,4 +1,4 @@
-/* Copyright (c) 2006 - 2019 omobus-proxy-db authors, see the included COPYRIGHT file. */
+/* Copyright (c) 2006 - 2020 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
 delete from activity_types;
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable)

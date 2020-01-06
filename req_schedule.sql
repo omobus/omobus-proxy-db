@@ -1,4 +1,4 @@
-/* Copyright (c) 2006 - 2019 omobus-proxy-db authors, see the included COPYRIGHT file. */
+/* Copyright (c) 2006 - 2020 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
 create or replace function console.req_schedule(_login uid_t, _uid uid_t, _p_date date_t, _num int, _attrs hstore) returns int
 as $BODY$

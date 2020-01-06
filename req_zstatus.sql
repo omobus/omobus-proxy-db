@@ -1,4 +1,4 @@
-/* Copyright (c) 2006 - 2019 omobus-proxy-db authors, see the included COPYRIGHT file. */
+/* Copyright (c) 2006 - 2020 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
 create or replace function console.req_zstatus(rlogin uid_t, cmd code_t, cookie uuid, note note_t) returns int
 as $BODY$

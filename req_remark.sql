@@ -1,4 +1,4 @@
-/* Copyright (c) 2006 - 2019 omobus-proxy-db authors, see the included COPYRIGHT file. */
+/* Copyright (c) 2006 - 2020 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
 create or replace function console.req_remark(rlogin uid_t, cmd code_t, _doc_id uid_t, _remark_type_id uid_t, _note note_t) returns int
 as $BODY$
