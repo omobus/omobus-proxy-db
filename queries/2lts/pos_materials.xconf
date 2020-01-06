@@ -2,7 +2,7 @@
 <pos_materials templ="%posm_id%;%descr%;%brand_ids%;%placement_ids%;%chan_ids%;%country_id%;%b_date%;%e_date%;">
   <![CDATA[
 select posm_id, descr, array_to_string(brand_ids,',') brand_ids, array_to_string(placement_ids,',') placement_ids, array_to_string(chan_ids,',') chan_ids, country_id, b_date, e_date from pos_materials
-    where hidden = 0
+    where hidden = 0 and country_id <> '' and cardinality(brand_ids) > 0
 order by 1
   ]]>
 </pos_materials>
