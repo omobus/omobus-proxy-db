@@ -52,7 +52,7 @@ from pos_materials, (select count(*) f from pos_materials where hidden = 0 and b
 	/* obsolete: */ (current_date::date_t > e_date and e_date >= (current_date - 1)::date_t) or
 	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t) or
 	(b_date is null and e_date is null)
-    )
+    ) and country_id is not null and trim(country_id) <> ''
 order by _xz, row_no, descr
   ]]>
 </pos_materials>
