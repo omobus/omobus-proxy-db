@@ -1,8 +1,8 @@
-# Copyright (c) 2006 - 2019 omobus-agent-db authors, see the included COPYRIGHT file.
+# Copyright (c) 2006 - 2020 omobus-agent-db authors, see the included COPYRIGHT file.
 
 PACKAGE_NAME 	= omobus-proxy-db
-PACKAGE_VERSION = 3.4.61
-COPYRIGHT 	= Copyright (c) 2006 - 2019 ak obs, ltd. <info@omobus.net>
+PACKAGE_VERSION = 3.4.62
+COPYRIGHT 	= Copyright (c) 2006 - 2020 ak obs, ltd. <info@omobus.net>
 SUPPORT 	= Support and bug reports: <support@omobus.net>
 AUTHOR		= Author: Igor Artemov <i_artemov@omobus.net>
 BUGREPORT	= support@omobus.net
