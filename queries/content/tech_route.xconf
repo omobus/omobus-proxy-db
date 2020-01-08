@@ -543,8 +543,16 @@ order by h.fix_dt, h.doc_id
   <![CDATA[
 select 
     u.dev_login, u.descr u_name, u.area, u.email, u.mobile, ex.descr head_name, a.descr agency,
-    (select array_to_string(array_agg(descr::text),'|') from distributors where distr_id = any(u.distr_ids)) distributors,
-    (select array_to_string(array_agg(descr::text),'|') from departments where dep_id = any(u.dep_ids)) departments,
+    (
+	select array_to_string(array_agg(descr::text),'; ') from distributors aa,
+	    (select uu distr_id, row_number() over() rowno from unnest(u.distr_ids) uu) bb
+	where aa.distr_id=bb.distr_id order by min(bb.rowno)
+    ) distributors,
+    (
+	select array_to_string(array_agg(descr::text),'; ') from departments aa,
+	    (select uu dep_id, row_number() over() rowno from unnest(u.dep_ids) uu) bb
+	where aa.dep_id=bb.dep_id order by min(bb.rowno)
+    ) departments,
     (s.packets).count packets_count,
     (s.packets).fix_time packets_time,
     s.gps_violations,
