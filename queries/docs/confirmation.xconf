@@ -56,10 +56,10 @@ begin
     perform content_add('targets_compliance', '', '', '');
 
 -- **** confirmation --> mail_stream
-    if( auth_id is not null and auth_id <> '%user_id_sys%' ) then
-	select subject, body, author_id from targets where target_id = '%target_id%' 
-	    into x_sub, x_body, auth_id;
+    select subject, body, author_id from targets where target_id = '%target_id%' 
+	into x_sub, x_body, auth_id;
 
+    if( auth_id is not null and auth_id <> '%user_id_sys%' ) then
 	select descr, address from accounts where account_id = '%account_id%'
 	    into a_name, a_address;
 
