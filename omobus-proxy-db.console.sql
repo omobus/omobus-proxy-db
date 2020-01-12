@@ -8,6 +8,7 @@ create table console.requests (
     req_id 		uid_t 		not null primary key default nextval('console.seq_requests'),
     req_login 		uid_t 		not null,
     req_type 		code_t 		not null,
+    req_dt 		datetime_t 	null,
     status 		code_t 		not null,
     attrs 		hstore 		null,
     inserted_ts 	ts_auto_t 	not null
