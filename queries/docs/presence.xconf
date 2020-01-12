@@ -50,6 +50,7 @@ begin
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
     perform content_add('a_list', '%user_id_sys%', f_date, f_date);
     perform content_add('tech_presences', '%user_id_sys%', f_date, f_date);
+    perform content_add('stat_presences', '', "monthDate_First"(f_date)::date_t, "monthDate_Last"(f_date)::date_t);
 
 -- **** presence --> dyn_presences, j_presences
     /* removes obsolete entires */
