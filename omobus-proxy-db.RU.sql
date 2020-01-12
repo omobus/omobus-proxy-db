@@ -16,7 +16,7 @@ insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limi
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, hidden, row_no)
     values('6', 'Повторное посещение', 'Выполнение повторного визита к клиенту из планового маршрута. Не влияет на выполнение планов по посещениям.', 1, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t, 1, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, important)
-    values('7', 'Срочное посещение', 'Срочный визит в торговую точку для устранения нарушений, выявленных в ходе контрольного посещения (аудита).', 1, 1, 1, 0, 1);
+    values('7', 'Срочное посещение', 'Срочный визит в торговую точку для устранения выявленных нарушений. Не влияет на выполнение планов по посещениям.', 1, 1, 1, 0, 1);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, row_no, roles, hidden)
     values('8', 'Свободное посещение', 'Плановый визит к клиенту.', 1, 1, 1, 1, 0, array['merch','mr','ksr','sr']::uids_t, 1);
 
@@ -27,13 +27,6 @@ insert into addition_types(addition_type_id, descr) values('2', 'Только у
 insert into addition_types(addition_type_id, descr) values('3', 'Оставил ПРАЙС');
 insert into addition_types(addition_type_id, descr) values('4', 'Отказался');
 insert into addition_types(addition_type_id, descr) values('5', 'Зайти позже');
-
-delete from agencies;
-insert into agencies(agency_id, descr) values('itm', 'ITM Group');
-insert into agencies(agency_id, descr) values('lotsman', 'Lotsman');
-insert into agencies(agency_id, descr) values('lt', 'Лидер-Тим');
-insert into agencies(agency_id, descr) values('ms', 'Мерчендайзинг Сервис');
-insert into agencies(agency_id, descr) values('action', 'Action');
 
 delete from attributes;
 insert into attributes(descr) values('Продукты');
@@ -476,9 +469,11 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','my_routes','','pending','Необходимо выполнить до $(e_date) (включительно).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','my_routes','','pending/today','Сегодня <b>последний день</b> действия отложенного посещения. Не забудьте посетить данного клиента и зафиксировать все требуемые данные.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','orders_history','','extra','Тип: $(type). Склад: $(wareh). Доставка: <b>$(delivery_date)</b> ($(delivery_note)). $(note)');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','audit','Необходимо срочно устранить замечания, выявленные в ходе аудита размещения продукции от $(fix_date) в $(a_name) $(address) (<i>автор: $(u_name)</i>).');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','audit','$(u_name) запросил(-а) срочное устрание замечаний, выявленных в ходе аудита размещения продукции от $(fix_date) в $(a_name) $(address).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','joint_route/caption','Результаты совместного маршрута');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','joint_route/body', 'ИТОГОВАЯ ОЦЕНКА от $(fix_date): <b>$(sla)%</b><br/>Автор: $(u_name)<br/><br/><i>(сильные стороны обучаемого)</i><br/>$(note0)<br/><br/><i>(области для развития)</i><br/>$(note1)<br/><br/><i>(рекомендации для развития)</i><br/>$(note2)');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','photo','$(u_name) запросил(-а) срочное устрание замечаний, выявленных в ходе контроля фотографии т/места от $(fix_date) в $(a_name) $(address)).');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','posm','$(u_name) запросил(-а) срочное устрание замечаний, выявленных в ходе контроля фотографии PoS/PoP материала от $(fix_date) в $(a_name) $(address).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','sched/caption','Планировщик рабочего времени');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','sched/coaching:today','Сегодня, $(date) у Вас запланированы следующие полевые обучения:<br/><br/>$(timeline).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','sched/coaching:tomorrow','Завтра, $(date) у Вас запланированы следующие полевые обучения:<br/><br/>$(timeline).');
@@ -514,4 +509,6 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','posm','На основе фотографии PoS/PoP материала, <i>$(fix_date)</i> была поставлена задача:<br/><br/>$(msg)<br/><br/>Автор: <b>$(u_name)</b>.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','shelf','Текущее выполнение цели по SOS (доля полки) - <b>$(sos)%</b>, необходимо увеличить представленность на полке.<br/><br/>Дата: $(fix_date).<br/>Автор: <b>$(u_name)</b>.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','urgent','','audit','Устранение замечаний, выявленных в ходе аудита размещения продукции от $(fix_date) (автор: $(u_name)).');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','urgent','','photo','Устранение замечаний, выявленных в ходе контроля фотографии т/места от $(fix_date) (автор: $(u_name)).');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','urgent','','posm','Устранение замечаний, выявленных в ходе контроля фотографии PoS/PoP материала от $(fix_date) (автор: $(u_name)).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','urgent','','target','Приоритетное выполнение задач, поставленных $(fix_date) (автор: $(u_name)).');
