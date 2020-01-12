@@ -13,6 +13,7 @@
 <xi:include href="../queries/content/stat_orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/stat_photos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/stat_posms.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/stat_presences.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/stat_presentations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/stat_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/stat_promos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
