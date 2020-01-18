@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <my_accounts templ="%account_id%;" empty="no">
   <![CDATA[
-select m.user_id person_id, m.account_id from my_accounts m
-    left join accounts a on a.account_id=m.account_id
+select m.user_id person_id, m.account_id from my_accounts m, accounts a
+    where a.account_id = m.account_id
 order by m.user_id, a.descr
   ]]> 
 </my_accounts>
