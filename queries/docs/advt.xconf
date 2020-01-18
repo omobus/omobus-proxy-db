@@ -75,8 +75,10 @@ begin
 	update dyn_advt set "_isRecentData" = null where account_id='%account_id%' and posm_id in (
 	    select distinct posm_id from dyn_advt where account_id='%account_id%' and fix_date=f_date
 		union /* removes user department POS materials: */
-	    select posm_id from pos_materials p, users u where u.user_id='%user_id_sys%' and 
-		(p.dep_id is null or u.dep_ids is null or p.dep_id=any(u.dep_ids))
+	    select p.posm_id from users u, brands b, pos_materials p
+		where u.user_id='%user_id_sys%' and 
+		    (u.dep_ids is null or array_length(u.dep_ids,1) is null or b.dep_id is null or b.dep_id='' or b.dep_id=any(u.dep_ids)) and
+		    b.brand_id=any(p.brand_ids)
 	) and "_isRecentData" = 1;
 	update dyn_advt set "_isRecentData" = 1 where account_id='%account_id%' and fix_date=f_date;
     end if;
