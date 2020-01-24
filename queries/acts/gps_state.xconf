@@ -29,8 +29,12 @@ do $$
 declare
     f_date date_t default left('%fix_dt%',10);
     f_time time_t default substring('%fix_dt%', 12, 5);
+    r bool_t default 0;
     xz bool_t default 0;
 begin
+    select "rules:gps_off" from users where user_id='%user_id_sys%'
+	into r;
+
 -- **** gps_state --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, inserted_node, dev_pack, act_code)
 	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
@@ -38,7 +42,7 @@ begin
 -- **** gps_pos --> sysstats
     perform sysstat_add('%user_id_sys%', f_date, f_time);
 
-    if( '%state%' = 'off' and '%msg%' = '' ) then
+    if( '%state%' = 'off' and '%msg%' = '' and r = 0 ) then
 	update sysstats set gps_violations = gps_violations + 1
 	    where user_id='%user_id_sys%' and fix_date=f_date;
 	xz := 1;
@@ -53,7 +57,7 @@ begin
     end if;
 
 -- **** gps_state --> mail_stream
-    if( xz = 1 and current_date = f_date::date and (select gps_violations from sysstats where user_id='%user_id_sys%' and fix_date=f_date) = 1 and (select "rules:gps_off" from users where user_id='%user_id_sys%') = 0 ) then
+    if( xz = 1 and abs(current_date - f_date::date) <= 1 and (select gps_violations from sysstats where user_id='%user_id_sys%' and fix_date=f_date) = 1 ) then
 	perform evmail_add('%user_id_sys%','gps_off/caption','gps_off/body',2::smallint /*high*/,array['fix_dt',"L"('%fix_dt%'::datetime_t)]);
 
 	/*** send GPS violation alart to the executive head email ***/
