@@ -10,6 +10,9 @@ ExecStartPre=/bin/mkdir -m 0755 -p /var/run/omobus.d
 ExecStartPre=/bin/chown omobus:omobus /var/run/omobus.d
 ExecStart=/usr/local/sbin/omobusd gc -x -u omobus -g omobus -p /var/run/omobus.d/omobus-gc.pid
 ExecStop=/bin/kill -s USR1 $MAINPID
+#RemainAfterExit=no
+#Restart=on-failure
+#RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
