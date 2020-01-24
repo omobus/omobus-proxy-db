@@ -118,42 +118,8 @@ begin
 	    select 4, u.descr, jobs[4]->'employee_id' from schedules x, users u 
 		where x.user_id = u_id and p_date = tomorrow::date_t and jobs[4]->'type' = 'coaching' and jobs[4]->'employee_id' = u.user_id
 	loop
-	    ar := array_append(ar, format('&bull;&nbsp;&nbsp;%s - %s: %s', timeline[num][1], timeline[num][2], u_name));
+	    ar := array_append(ar, format('&bull; %s - %s: %s', timeline[num][1], timeline[num][2], trim(u_name)));
 	    insert into ".t1"(f1, f2, f3) values(u_id, num, e_id);
-	end loop;
-
-	if ar is not null then
-	    re_id := md5(format('tommorow_%s_%s',u_id,tomorrow));
-
-	    if (select count(*) from reminders where reminder_id = re_id) = 0 then
-		select lang_id from users where user_id = u_id
-		    into u_lang;
-		sd := format('%s %s %s', 
-			extract(day from tomorrow)::text, 
-			"L10n_format_a"(u_lang,'month_name',extract(month from tomorrow)::text,'genitive'),
-			extract(year from tomorrow)::text
-		);
-		insert into reminders(reminder_id, subject, body, b_date, e_date, author_id, user_ids)
-		    values(re_id, 
-			"L10n_format_a"(u_lang,'reminder','','sched/caption'), 
-			"L10n_format_a"(u_lang,'reminder','','sched/coaching:tomorrow',array['date',sd,'timeline',array_to_string(ar,';<br/>')]),
-			today::date_t,
-			today::date_t,
-			null,
-			array[u_id::text]
-		    );
-		raise notice '(head) [user_id=%] => added [tomorrow] reminded [reminder_id=%] at [%].', u_id, re_id, today::date_t;
-	    end if;
-	end if;
-    end loop;
-
-    for u_id in select distinct f3 from ".t1"
-    loop
-	ar := null;
-
-	for num, u_name in select x.f2, u.descr from ".t1" x, users u where x.f3 = u_id and u.user_id = x.f1
-	loop
-	    ar := array_append(ar, format('&bull;&nbsp;&nbsp;%s - %s: %s', timeline[num][1], timeline[num][2], u_name));
 	end loop;
 
 	if ar is not null then
@@ -171,7 +137,57 @@ begin
 		insert into reminders(reminder_id, subject, body, b_date, e_date, author_id, user_ids)
 		    values(re_id, 
 			"L10n_format_a"(u_lang,'reminder','','sched/caption'), 
-			"L10n_format_a"(u_lang,'reminder','','sched/coaching:tomorrow',array['date',sd,'timeline',array_to_string(ar,';<br/>')]),
+			"L10n_format_a"(u_lang,'reminder','','sched/coaching:head:tomorrow',array['date',sd,'timeline',array_to_string(ar,';<br/>')]),
+			today::date_t,
+			today::date_t,
+			null,
+			array[u_id::text]
+		    );
+		raise notice '(head) [user_id=%] => added [tomorrow] reminded [reminder_id=%] at [%].', u_id, re_id, today::date_t;
+	    end if;
+
+	    re_id := md5(format('today_%s_%s',u_id,today));
+
+	    if (select count(*) from reminders where reminder_id = re_id) = 0 then
+		insert into reminders(reminder_id, subject, body, b_date, e_date, author_id, user_ids)
+		    values(re_id, 
+			"L10n_format_a"(u_lang,'reminder','','sched/caption'), 
+			"L10n_format_a"(u_lang,'reminder','','sched/coaching:head:today',array['date',sd,'timeline',array_to_string(ar,';<br/>')]),
+			tomorrow::date_t,
+			tomorrow::date_t,
+			null,
+			array[u_id::text]
+		    );
+		raise notice '(head) [user_id=%] => added [today] reminded [reminder_id=%] at [%].', u_id, re_id, tomorrow::date_t;
+	    end if;
+	end if;
+    end loop;
+
+    for u_id in select distinct f3 from ".t1"
+    loop
+	ar := null;
+
+	for num, u_name in select x.f2, u.descr from ".t1" x, users u where x.f3 = u_id and u.user_id = x.f1
+	loop
+	    ar := array_append(ar, format('&bull; %s - %s: %s', timeline[num][1], timeline[num][2], trim(u_name)));
+	end loop;
+
+	if ar is not null then
+	    select lang_id from users where user_id = u_id
+		into u_lang;
+	    sd := format('%s %s %s', 
+		    extract(day from tomorrow)::text, 
+		    "L10n_format_a"(u_lang,'month_name',extract(month from tomorrow)::text,'genitive'),
+		    extract(year from tomorrow)::text
+	    );
+
+	    re_id := md5(format('tommorow_%s_%s',u_id,tomorrow));
+
+	    if (select count(*) from reminders where reminder_id = re_id) = 0 then
+		insert into reminders(reminder_id, subject, body, b_date, e_date, author_id, user_ids)
+		    values(re_id, 
+			"L10n_format_a"(u_lang,'reminder','','sched/caption'), 
+			"L10n_format_a"(u_lang,'reminder','','sched/coaching:staff:tomorrow',array['date',sd,'timeline',array_to_string(ar,';<br/>')]),
 			today::date_t,
 			today::date_t,
 			null,
@@ -186,7 +202,7 @@ begin
 		insert into reminders(reminder_id, subject, body, b_date, e_date, author_id, user_ids)
 		    values(re_id, 
 			"L10n_format_a"(u_lang,'reminder','','sched/caption'), 
-			"L10n_format_a"(u_lang,'reminder','','sched/coaching:today',array['date',sd,'timeline',array_to_string(ar,';<br/>')]),
+			"L10n_format_a"(u_lang,'reminder','','sched/coaching:staff:today',array['date',sd,'timeline',array_to_string(ar,';<br/>')]),
 			tomorrow::date_t,
 			tomorrow::date_t,
 			null,
