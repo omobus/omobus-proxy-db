@@ -20,7 +20,7 @@ select * from doc_id()
 <write_body>
   <![CDATA[
 insert into h_addition (doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, user_id, w_cookie, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, doc_note, number, addition_type_id, account, address, legal_address, chan_id, attr_ids, guid, blobs)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', '%doc_note%', '%number%', '%addition_type_id%', '%account%', '%address%', '%legal_address%', NIL('%chan_id%'), case '%attr_ids%' when '' then null else string_to_array('%attr_ids%',',') end, NIL('%guid%'), %blobs%)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', '%doc_note%', '%number%', '%addition_type_id%', '%account%', '%address%', '%legal_address%', NIL('%chan_id%'), string_to_array(NIL('%attr_ids%'),','), NIL('%guid%'), %blobs%)
   ]]>
 </write_body>
 <write_blob>
@@ -47,8 +47,8 @@ begin
     if( (select count(*) from accounts where account_id='%guid%') > 0 ) then
 	raise notice 'ATTENTION: new account with GUID=%guid% already exist.';
     else
-	insert into accounts(account_id, descr, address, chan_id, approved, extra_info, latitude, longitude, hidden)
-	    values('%guid%', '%account%', '%address%', NIL('%chan_id%'), 0, NIL('%doc_note%'), NIL(%created_gps_la%), NIL(%created_gps_lo%), 0);
+	insert into accounts(account_id, descr, address, chan_id, approved, attr_ids, extra_info, latitude, longitude, hidden)
+	    values('%guid%', '%account%', '%address%', NIL('%chan_id%'), 0, string_to_array(NIL('%attr_ids%'),','), NIL('%doc_note%'), NIL(%created_gps_la%), NIL(%created_gps_lo%), 0);
     end if;
 
 -- **** addition --> thumbnail_stream
