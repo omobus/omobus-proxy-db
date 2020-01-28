@@ -4,7 +4,7 @@
 	<L>
   <![CDATA[
 select 
-    h.doc_id, h.fix_dt, h.inserted_ts, h.account_id, a.code a_code, a.descr a_name, a.address, p.code p_code, p.descr prod, t.qty stock/*, t.scratch*/
+    h.doc_id, h.fix_dt, h.inserted_ts, h.account_id, a.code a_code, a.descr a_name, a.address, p.code p_code, p.descr prod, t.qty stock, t.scratch
 from t_stock t
     left join h_stock h on h.doc_id = t.doc_id
     left join accounts a on a.account_id = h.account_id

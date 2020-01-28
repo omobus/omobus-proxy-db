@@ -463,7 +463,7 @@ order by fix_dt
 	<stocks_L1>
   <![CDATA[
 select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.stock, t.scratch from (
-	select doc_id, row_no, prod_id, qty stock, null scratch from t_stock where doc_id in (
+	select doc_id, row_no, prod_id, qty stock, scratch from t_stock where doc_id in (
 	    select doc_id from h_stock where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
     ) t
