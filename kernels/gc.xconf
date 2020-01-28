@@ -46,8 +46,6 @@ begin
     delete from j_user_works where b_dt < gc_date;
     delete from j_wishes where left(fix_dt,10) < gc_date;
 
-/*!*/delete from j_stocks where left(fix_dt,10) < gc_date;
-
     delete from dyn_advt where fix_date < gc_date;
     delete from dyn_audits where fix_date < gc_date;
     delete from dyn_checkups where fix_date < gc_date;
