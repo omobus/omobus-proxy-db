@@ -4879,6 +4879,7 @@ create table t_stock (
     prod_id 		uid_t 		not null,
     row_no 		int32_t 	not null check (row_no >= 0),
     qty 		int32_t 	not null,
+    scratch 		date_t 		null,
     primary key (doc_id, prod_id)
 );
 
@@ -5319,20 +5320,6 @@ create index i_2lts_dyn_shelfs on dyn_shelfs (updated_ts);
 
 create trigger trig_updated_ts before update on dyn_shelfs for each row execute procedure tf_updated_ts();
 
-create table j_stocks (
-    account_id 		uid_t 		not null,
-    prod_id 		uid_t 		not null,
-    stock 		int32_t 	not null,
-    fix_dt 		datetime_t 	not null,
-    user_id 		uid_t 		not null,
-    doc_id 		uid_t 		not null,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts		ts_auto_t 	not null,
-    primary key(account_id, prod_id)
-);
-
-create trigger trig_updated_ts before update on j_stocks for each row execute procedure tf_updated_ts();
-
 create table dyn_stocks (
     fix_date		date_t 		not null,
     account_id 		uid_t 		not null,
@@ -5341,6 +5328,7 @@ create table dyn_stocks (
     fix_dt 		datetime_t 	not null,
     user_id 		uid_t 		not null,
     doc_id 		uid_t 		not null,
+    scratch 		date_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     "_isRecentData"	bool_t 		null,
@@ -6495,7 +6483,6 @@ insert into sysparams values('rules:wd_end', '17:30', 'Show warning if the worki
 insert into sysparams values('rules:power', '90', 'The minimum power (battery life percentage) at the working day begin.');
 
 insert into sysparams values('checkups:offset', '-30', 'How long (in days) j_checkups data is used.');
-insert into sysparams values('stocks:offset', '-30', 'How long (in days) empty j_stocks data (stock=0) is used.');
 
 insert into sysparams values('advt_history:offset', '-60', 'The maximum depth of the advt_history in days');
 insert into sysparams values('oos_history:offset', '-60', 'The maximum depth of the oos_history in days');
@@ -6506,6 +6493,7 @@ insert into sysparams values('prices_history:offset', '-60', 'The maximum depth 
 insert into sysparams values('quests_history:offset', '-60', 'The maximum depth of the quests_history in days.');
 insert into sysparams values('route_history:offset:left', '-10', 'The maximum depth of the route_history in days.');
 insert into sysparams values('route_history:offset:right', '5', 'The maximum depth of the route_history right offset in days.');
+insert into sysparams values('stocks_history:offset', '-60', 'The maximum depth of the stocks_history in days');
 insert into sysparams values('trainings_history:offset', '-60', 'The maximum depth of the trainings_history in days.');
 
 insert into sysparams values('orders_history:offset', '-10', 'The maximum depth of the orders_history in days.');
