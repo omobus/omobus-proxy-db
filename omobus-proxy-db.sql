@@ -800,7 +800,6 @@ create table symlinks (
     obj_code 		code_t 		not null, -- (product|account|user|...)
     f_id 		uid_t 		not null,
     t_id 		uid_t 		not null,
-    extra_info 		note_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
@@ -2338,9 +2337,6 @@ create table sales_history (
     amount_r 		currency_t 	null,
     pack_r_id 		uid_t 		null,
     qty_r 		numeric_t 	null,
-    color 		color_t 	null,
-    bgcolor 		color_t 	null,
-    extra_info 		note_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
