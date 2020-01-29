@@ -6,7 +6,7 @@ do $$
 declare
     weekends int[] 	= array[/*mon:*/0,0,0,0,0,1,/*sun:*/1];
     open_depth int 	= 7;
-    close_depth int 	= 2;
+    close_depth int 	= 1;
     today date 		= current_date;
     u_id uid_t;
     c int;
