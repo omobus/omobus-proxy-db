@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<symlinks templ="%obj_code%;%f_id%;%t_id%;%extra_info%;">
+<symlinks templ="%obj_code%;%f_id%;%t_id%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -14,8 +14,8 @@ delete from shadow.symlinks
 </begin>
 <insert>
   <![CDATA[
-insert into shadow.symlinks (distr_id, obj_code, f_id, t_id, extra_info)
-    values ('%ErpCode%', '%obj_code%', '%f_id%', '%t_id%', '%extra_info%')
+insert into shadow.symlinks (distr_id, obj_code, f_id, t_id)
+    values ('%ErpCode%', '%obj_code%', '%f_id%', '%t_id%')
 on conflict do nothing
   ]]>
 </insert>

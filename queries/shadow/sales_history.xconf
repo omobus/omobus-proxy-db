@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<sales_history templ="%account_id%;%prod_id%;%s_date%;%amount_c%;%pack_c_id%;%qty_c%;%amount_r%;%pack_r_id%;%qty_r%;%extra_info%;">
+<sales_history templ="%account_id%;%prod_id%;%s_date%;%amount_c%;%pack_c_id%;%qty_c%;%amount_r%;%pack_r_id%;%qty_r%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -11,15 +11,15 @@ select count(*) from data_stream
 delete from shadow.sales_history
     where distr_id='%ErpCode%';
 
-prepare "shadow.salesplan"(varchar, varchar, varchar, numeric, varchar, numeric, numeric, varchar, numeric, varchar) as 
-    insert into shadow.sales_history(distr_id, account_id, prod_id, s_date, amount_c, pack_c_id, qty_c, amount_r, pack_r_id, qty_r, extra_info)
-	values('%ErpCode%', $1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+prepare "shadow.salesplan"(varchar, varchar, varchar, numeric, varchar, numeric, numeric, varchar, numeric) as 
+    insert into shadow.sales_history(distr_id, account_id, prod_id, s_date, amount_c, pack_c_id, qty_c, amount_r, pack_r_id, qty_r)
+	values('%ErpCode%', $1, $2, $3, $4, $5, $6, $7, $8, $9)
     on conflict do nothing;
   ]]>
 </begin>
 <insert>
   <![CDATA[
-execute "shadow.salesplan"('%account_id%', '%prod_id%', '%s_date%', NIL(%amount_c%), NIL('%pack_c_id%'), NIL(%qty_c%), NIL(%amount_r%), NIL('%pack_r_id%'), NIL(%qty_r%), '%extra_info%')
+execute "shadow.salesplan"('%account_id%', '%prod_id%', '%s_date%', NIL(%amount_c%), NIL('%pack_c_id%'), NIL(%qty_c%), NIL(%amount_r%), NIL('%pack_r_id%'), NIL(%qty_r%))
   ]]>
 </insert>
 <end>

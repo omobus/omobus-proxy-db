@@ -273,9 +273,6 @@ create table shadow.sales_history (
     amount_r 		currency_t 	null,
     pack_r_id 		uid_t 		null,
     qty_r 		numeric_t 	null,
-    color 		color_t 	null,
-    bgcolor 		color_t 	null,
-    extra_info 		note_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     primary key (distr_id, account_id, prod_id, s_date)
@@ -299,7 +296,6 @@ create table shadow.symlinks (
     obj_code 		code_t 		not null, -- (product|account|user|...)
     f_id 		uid_t 		not null,
     t_id 		uid_t 		not null,
-    extra_info 		note_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     primary key(distr_id, obj_code, f_id)
