@@ -50,7 +50,7 @@ begin
 
     if( c = 0 ) then
 	insert into mail_stream (rcpt_to, cap, msg)
-	    values (string_to_array("paramUID"('srv:bcc'),','), format('OMOBUS: Ticket #%s (user_id: %s)', t_id, u_id), 
+	    values (string_to_array("paramText"('srv:push'),','), format('OMOBUS: Ticket #%s (user_id: %s)', t_id, u_id), 
 		format(E'Registered a new unclosed ticket #%s (user_id: %s): %s.\r\n%s', t_id, u_id, d, n));
     end if;
 

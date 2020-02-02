@@ -5,7 +5,7 @@
 do $$
 declare
     d interval = '08:00:00'::interval;
-    e emails_t = string_to_array("paramUID"('srv:bcc'),',');
+    e emails_t = string_to_array("paramText"('srv:push'),',');
     x text = "paramUID"('db:id');
     b uid_t;
     ts ts_t;

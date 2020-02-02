@@ -716,7 +716,8 @@ declare
     v uid_t;
     x uid_t;
 begin
-    select param_id, param_value from sysparams where param_id=code and hidden=0 into x,v;
+    select param_id, param_value from sysparams where param_id=code and hidden=0 
+	into x, v;
     if( x is null ) then
 	raise exception 'The % parameter does not exist.', code;
     end if;
@@ -730,9 +731,11 @@ as
 $body$
 declare
     v int32_t;
+    x uid_t;
 begin
-    select param_value::int32_t from sysparams where param_id=code and hidden=0 into v;
-    if( v is null ) then
+    select param_id, param_value::int32_t from sysparams where param_id=code and hidden=0 
+	into x, v;
+    if( x is null ) then
 	raise exception 'The % parameter does not exist.', code;
     end if;
     return v;
@@ -745,10 +748,28 @@ as
 $body$
 declare
     v int32_t;
+    x uid_t;
 begin
-    select case when lower(param_value)='yes' or lower(param_value)='true' or param_value='1' then 1 else 0 end from sysparams 
-	where param_id=code and hidden=0 into v;
-    if( v is null ) then
+    select param_id, "toBoolean"(param_value) from sysparams where param_id=code and hidden=0 
+	into x, v;
+    if( x is null ) then
+	raise exception 'The % parameter does not exist.', code;
+    end if;
+    return v;
+end;
+$body$
+language plpgsql STABLE;
+
+create or replace function "paramText"(code uid_t) returns text
+as
+$body$
+declare
+    v text;
+    x uid_t;
+begin
+    select param_id, param_value from sysparams where param_id=code and hidden=0 
+	into x, v;
+    if( x is null ) then
 	raise exception 'The % parameter does not exist.', code;
     end if;
     return v;
@@ -836,7 +857,7 @@ create trigger trig_updated_ts before update on sysholidays for each row execute
 
 create table sysparams (
     param_id 		uid_t 		not null primary key,
-    param_value 	uid_t 		null,
+    param_value 	text 		null,
     note 		note_t 		null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
@@ -6464,8 +6485,8 @@ $body$ language sql STABLE;
 
 insert into sysparams values('db:created_ts', current_timestamp, 'Database creation datetime.');
 insert into sysparams values('db:id', 'PRI', 'Database unique ID.');
-insert into sysparams values('srv:bcc', 'OMOBUS Support Team <support@omobus.net>', 'Blind carbon copy email address');
 insert into sysparams values('srv:domain', 'omobus.local', 'Server domain name.');
+insert into sysparams values('srv:push', '<3874a923-189a-4b95-b65c-b55a3809e35e@push.omobus.net>', 'Server alert notification address.');
 insert into sysparams values('gc:keep_alive', '155', 'How many days the data will be hold from cleaning.');
 insert into sysparams values('dumps:depth', null, 'Dumps depth (days).');
 insert into sysparams values('executive_head', null, 'Executive head role name or null if direct head is executive head. After change it is necessary to execute: [update users set executivehead_id=my_executivehead(user_id) where hidden=0].');

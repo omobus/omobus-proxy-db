@@ -45,7 +45,7 @@ begin
 	update health_stream set health = '%timestamp%', alarm = null
 	    where db_id = '%ErpCode%';
 	insert into mail_stream (rcpt_to, cap, msg)
-	    values (string_to_array("paramUID"('srv:bcc'),','), format('OMOBUS: LTS storage (%s: %s)', "paramUID"('db:id'), '%ErpCode%'),
+	    values (string_to_array("paramText"('srv:push'),','), format('OMOBUS: LTS storage (%s: %s)', "paramUID"('db:id'), '%ErpCode%'),
 		format('LTS database health has been restored (Last data at %s).', '%timestamp%'));
 	raise notice 'LTS database health has been restored (db_id = %, health = %).', '%ErpCode%', '%timestamp%';
     else
