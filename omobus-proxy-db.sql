@@ -2047,7 +2047,7 @@ create table quest_names (
     descr 		descr_t 	not null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null
+    updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null
 );
 
@@ -3787,7 +3787,7 @@ create table h_conference (
     w_cookie 		uid_t 		not null,
     doc_note 		note_t 		null,
     venue 		descr_t 	not null,
-    address 		address_t 	not null
+    address 		address_t 	not null,
     title 		descr_t 	not null,
     b_date 		date_t 		not null,
     e_date 		date_t 		not null
