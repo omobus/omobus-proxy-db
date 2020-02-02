@@ -3790,7 +3790,7 @@ create table h_conference (
     address 		address_t 	not null
     title 		descr_t 	not null,
     b_date 		date_t 		not null,
-    e_date 		date_t 		not null,
+    e_date 		date_t 		not null
 );
 
 create index i_fix_date_h_conference on h_conference (left(fix_dt,10));
@@ -5503,7 +5503,7 @@ create table j_docs (
     a_cookie 		uid_t 		null,
     account_id 		uid_t 		null,
     activity_type_id 	uid_t 		null,
-    employee_id 	uid_t 		null,
+    employee_id 	uid_t 		null
 );
 
 create index i_fix_date_j_docs on j_docs (left(fix_dt,10));
