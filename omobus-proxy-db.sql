@@ -3188,7 +3188,7 @@ create table a_power (
     state		varchar(8) 	not null check (state in ('on','off','unknown') and state = lower(state)),
     battery_life 	INT2  		not null default 255 check (battery_life between 0 and 100 or battery_life = 255),
     temperature 	numeric(4,1) 	null,
-    voltage 		numeric(6,3) 	null,
+    voltage 		numeric(8,3) 	null,
     tech 		varchar(16) 	null,
     power_save 		bool_t 		null,
     idle 		bool_t 		null,
@@ -4894,10 +4894,12 @@ create table h_stock (
 create table t_stock (
     doc_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
+    manuf_date 		date_t 		not null,
     row_no 		int32_t 	not null check (row_no >= 0),
     qty 		int32_t 	not null,
+    expired 		bool_t  	not null default 0,
     scratch 		date_t 		null,
-    primary key (doc_id, prod_id)
+    primary key (doc_id, prod_id, manuf_date)
 );
 
 create index i_fix_date_h_stock on h_stock (left(fix_dt,10));
@@ -5341,7 +5343,9 @@ create table dyn_stocks (
     fix_date		date_t 		not null,
     account_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
+    manuf_date 		date_t 		not null,
     stock 		int32_t 	not null,
+    expired 		bool_t  	not null default 0,
     fix_dt 		datetime_t 	not null,
     user_id 		uid_t 		not null,
     doc_id 		uid_t 		not null,
@@ -5349,7 +5353,7 @@ create table dyn_stocks (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     "_isRecentData"	bool_t 		null,
-    primary key(fix_date, account_id, prod_id)
+    primary key(fix_date, account_id, prod_id, manuf_date)
 );
 
 create index i_2lts_dyn_stocks on dyn_stocks (updated_ts);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shelf_lifes templ="%shelf_life_id%;%descr%;" empty="no">
+<shelf_lifes templ="%shelf_life_id%;%descr%;%days%;" empty="no">
   <![CDATA[ 
-select shelf_life_id, descr from shelf_lifes
+select shelf_life_id, descr, days from shelf_lifes
     where hidden = 0
 order by descr
   ]]>

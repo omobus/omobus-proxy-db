@@ -16,7 +16,7 @@ select
     z.prod_id, z.code p_code, z.descr prod, 
     z.categ_id, f.descr categ,
     z.brand_id, b.descr brand,
-    x.stock, x.scratch,
+    x.manuf_date, x.stock, x.scratch,
     u.executivehead_id head_id, ex.descr head_name
 from dyn_stocks x
     left join accounts a on a.account_id = x.account_id
