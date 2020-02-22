@@ -125,6 +125,9 @@
 <xi:include href="../queries/2lts/users.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/user_works.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/warehouses.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/wishes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/wish_days.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/wish_weeks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 </queries>
 <pack>
     <_timestamp />
@@ -229,5 +232,8 @@
     <users />
     <user_works />
     <warehouses />
+    <wishes />
+    <wish_days />
+    <wish_weeks />
 </pack>
 </kernel>
