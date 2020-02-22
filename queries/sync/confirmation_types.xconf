@@ -3,6 +3,6 @@
   <![CDATA[ 
 select confirmation_type_id, array_to_string(target_type_ids,',') target_type_ids, descr, min_note_length, photo_needed from confirmation_types
     where hidden = 0
-order by confirmation_type_id
+order by row_no, descr, confirmation_type_id
   ]]>
 </confirmation_types>
