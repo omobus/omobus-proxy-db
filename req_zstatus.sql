@@ -59,7 +59,7 @@ begin
 	    format('zstatus/body:%s', case when _cmd = 'reject' then _cmd else _cmd || (case when _note is null then '1' else '0' end) end), 
 	    case when _cmd = 'reject' then 2::smallint /*high*/ else 3::smallint /*normal*/ end, 
 	    array['a_name',a_name,'address',a_address,'fix_date',"L"(f_date),'u_name',case when author_name is null then lower(_login) else author_name end,
-		'a_type',lower(a_type),'_note',_note]
+		'a_type',lower(a_type),'note',_note]
 	);
     end if;
 
