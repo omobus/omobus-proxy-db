@@ -5844,27 +5844,28 @@ declare
 begin
     x := (select array_to_string(array_agg(trim(z)),', ') from unnest(string_to_array(trim((string_to_array(trim(new.address),'('))[1]), ',')) z where trim(z)<>'');
 
-    if( TG_OP = 'UPDATE') then
-	/* geocode changed address: */
-	if( ltrim(rtrim(old.address)) <> ltrim(rtrim(new.address)) and new.ftype = 0 ) then 
-	    delete from geocode_stream where account_id=new.account_id;
-	    if( new.address is not null and ltrim(rtrim(new.address)) <> '' and x <> '' ) then
-		insert into geocode_stream (account_id, reverse, address) 
-		    values (new.account_id, 0, x);
-		raise notice 'Changed account_id=% address % => %.', old.account_id, old.address, new.address;
+    if( new.latitude is null or new.longitude is null or (new.latitude = 0 and new.longitude = 0) ) then
+	if( TG_OP = 'UPDATE') then
+	    /* geocode changed address: */
+	    if( ltrim(rtrim(old.address)) <> ltrim(rtrim(new.address)) and new.ftype = 0 ) then 
+		delete from geocode_stream where account_id=new.account_id;
+		if( new.address is not null and ltrim(rtrim(new.address)) <> '' and x <> '' ) then
+		    insert into geocode_stream (account_id, reverse, address) 
+			values (new.account_id, 0, x);
+		end if;
+		update accounts set latitude = null, longitude = null where account_id=new.account_id;
 	    end if;
-	    update accounts set latitude = null, longitude = null where account_id=new.account_id;
-	end if;
-    else
-	delete from geocode_stream where account_id=new.account_id;
-	/* geocode new address: */
-	if( new.account_id is not null and new.ftype = 0 and new.address is not null and ltrim(rtrim(new.address))<>'' and x <> '' ) then
-	    if( new.latitude is null or new.longitude is null or (new.latitude=0 and new.longitude=0) ) then
-		insert into geocode_stream (account_id, reverse, address) 
-		    values (new.account_id, 0, x);
-	    else
-		insert into geocode_stream (account_id, reverse, latitude, longitude, address) 
-		    values (new.account_id, 1, new.latitude, new.longitude, x);
+	else
+	    delete from geocode_stream where account_id=new.account_id;
+	    /* geocode new address: */
+	    if( new.account_id is not null and new.ftype = 0 and new.address is not null and ltrim(rtrim(new.address))<>'' and x <> '' ) then
+		if( new.latitude is null or new.longitude is null or (new.latitude=0 and new.longitude=0) ) then
+		    insert into geocode_stream (account_id, reverse, address) 
+			values (new.account_id, 0, x);
+		else
+		    insert into geocode_stream (account_id, reverse, latitude, longitude, address) 
+			values (new.account_id, 1, new.latitude, new.longitude, x);
+		end if;
 	    end if;
 	end if;
     end if;
