@@ -72,6 +72,7 @@ profile->attrs = yes
 profile->cash_register = yes
 profile->contact = yes
 profile->equipment = yes
+stock->parts = yes
 
 # The end of the %%filename%%.
   ]]>
