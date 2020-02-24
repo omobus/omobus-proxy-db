@@ -185,6 +185,7 @@ insert into placements(placement_id, descr, row_no) values('1', 'Полка на
 insert into placements(placement_id, descr, row_no) values('2', 'Бренд-полка', 2);
 insert into placements(placement_id, descr, row_no) values('3', 'Дополнительное место продаж', 3);
 insert into placements(placement_id, descr) values('4', 'Горячая (прикассовая) зона');
+insert into placements(placement_id, descr) values('5', 'Shopping area (Торговый зал)');
 
 delete from rating_scores;
 insert into rating_scores(rating_score_id, descr, score, wf) values('0', '<b>Оценка: 0 баллов</b> (имеются серьезные недостатки)', 0, 0);
@@ -312,8 +313,12 @@ insert into testing_scores(testing_score_id, descr, score, wf) values('1', '<b>�
 insert into testing_scores(testing_score_id, descr, score, wf) values('2', '<b>Оценка: 2 балла</b> (недостатки не обнаружены)', 2, 1);
 
 delete from training_types;
-insert into training_types(training_type_id, descr, personal) values('0', 'Индивидуальное', 1);
+insert into training_types(training_type_id, descr) values('0', 'Индивидуальное');
 insert into training_types(training_type_id, descr) values('1', 'Фармкружок');
+
+delete from unsched_types;
+insert into unsched_types(unsched_type_id, descr) values('0', 'Собрание в офисе');
+insert into unsched_types(unsched_type_id, descr) values('1', 'Посещение склада дистрибьютора');
 
 delete from wish_days;
 insert into wish_days(wish_day_id, descr, days, row_no) values('mon', 'Понедельник', array[1,0,0,0,0,0,0], 1);
