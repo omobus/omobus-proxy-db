@@ -134,7 +134,7 @@ local function main()
 	    set_param(_content, "latitude", "null")
 	    set_param(_content, "longitude", "null")
 	    set_param(_content, "changeable", "null")
-	    set_param(_content, "source", "null")
+	    set_param(_content, "source", "fake")
 	end
     end
 end
