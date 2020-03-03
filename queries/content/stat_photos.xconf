@@ -21,7 +21,8 @@ select
     h.photo::varchar blob_id, 
     array_to_string((select array_agg(replace(descr,'|',' ')) from photo_params where photo_param_id=any(h.photo_param_ids)),'|') photo_params,
     u.executivehead_id head_id, ex.descr head_name,
-    case when rev.doc_id is null then null else 1 end revoked
+    case when rev.doc_id is null then null else 1 end revoked,
+    ts.guid::varchar "ref"
 from h_photo h
     left join accounts a on a.account_id = h.account_id
     left join potentials p on p.poten_id = a.poten_id
@@ -35,6 +36,7 @@ from h_photo h
     left join users u on u.user_id = h.user_id
     left join users ex on ex.user_id = u.executivehead_id
     left join j_revocations rev on rev.doc_id = h.doc_id
+    left join thumbnail_stream ts on ts.photo = h.photo
 where '%b_date%'<=left(h.fix_dt, 10) and left(h.fix_dt, 10)<='%e_date%'
 order by h.inserted_ts desc, u.descr
   ]]>

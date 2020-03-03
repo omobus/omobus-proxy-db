@@ -14,7 +14,7 @@ select
     a.rc_id, r.descr rc, r.ka_code,
     p.descr poten,
     a.chan_id, ch.descr chan,
-    t.target_id, t.subject, t.body, t.b_date, t.e_date, t.image::text blob_id,
+    t.target_id, t.subject, t.body, t.b_date, t.e_date, t.image::text blob_id, ts.guid::varchar "ref",
     tt.descr target_type, 
     h.confirmation_type_id, f.descr confirm, 
     h.doc_note,
@@ -41,6 +41,7 @@ from h_confirmation h
     left join users u on u.user_id = h.user_id
     left join users ex on ex.user_id = u.executivehead_id
     left join users z on z.user_id = t.author_id
+    left join thumbnail_stream ts on ts.photo = h.photo
 where '%b_date%'<=left(h.fix_dt, 10) and left(h.fix_dt, 10)<='%e_date%'
 order by h.inserted_ts desc, u.descr
   ]]>
