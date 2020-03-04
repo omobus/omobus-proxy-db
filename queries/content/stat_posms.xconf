@@ -19,7 +19,7 @@ select
     array_to_string(m.brand_ids,',') brand_id, case when m.brand_ids is null or cardinality(m.brand_ids) = 1 then b.descr else
 	(select array_to_string(array_agg(descr::text),', ') from brands where brand_id=any(m.brand_ids)) end brand,
     h.doc_note, 
-    h.photo::varchar blob_id, 
+    h.photo::varchar blob_id, ts.guid::varchar "ref", 
     u.executivehead_id head_id, ex.descr head_name,
     case when rev.doc_id is null then null else 1 end revoked
 from h_posm h
@@ -35,6 +35,7 @@ from h_posm h
     left join users u on u.user_id = h.user_id
     left join users ex on ex.user_id = u.executivehead_id
     left join j_revocations rev on rev.doc_id = h.doc_id
+    left join thumbnail_stream ts on ts.photo = h.photo
 where '%b_date%'<=left(h.fix_dt, 10) and left(h.fix_dt, 10)<='%e_date%'
 order by h.inserted_ts desc, u.descr
   ]]>

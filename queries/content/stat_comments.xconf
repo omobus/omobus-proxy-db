@@ -16,7 +16,7 @@ select
     a.chan_id, ch.descr chan,
     h.comment_type_id, t.descr comment_type, 
     h.doc_note, 
-    h.photo::varchar blob_id, 
+    h.photo::varchar blob_id, ts.guid::varchar "ref",
     u.executivehead_id head_id, ex.descr head_name
 from h_comment h
     left join accounts a on a.account_id = h.account_id
@@ -28,6 +28,7 @@ from h_comment h
     left join comment_types t on t.comment_type_id = h.comment_type_id
     left join users u on u.user_id = h.user_id
     left join users ex on ex.user_id = u.executivehead_id
+    left join thumbnail_stream ts on ts.photo = h.photo
 where '%b_date%'<=left(h.fix_dt, 10) and left(h.fix_dt, 10)<='%e_date%'
 order by h.inserted_ts desc, u.descr
   ]]>

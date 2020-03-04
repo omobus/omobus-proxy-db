@@ -19,12 +19,11 @@ select
 	(select array_to_string(array_agg(descr::text),', ') from brands where brand_id=any(m.brand_ids)) end brand,
     h.participants, 
     h.doc_note, 
-    h.photos, 
+    array_to_string(h.photos,',') photos, 
+    (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(h.photos)) refs,
     u.executivehead_id head_id, ex.descr head_name
 from (
-    select 
-	doc_id, fix_dt, inserted_ts, user_id, account_id, participants, unnest(tm_ids) tm_id, doc_note, array_to_string(photos,',') photos
-    from h_presentation
+    select doc_id, fix_dt, inserted_ts, user_id, account_id, participants, unnest(tm_ids) tm_id, doc_note, photos from h_presentation
 	where '%b_date%'<=left(fix_dt, 10) and left(fix_dt, 10)<='%e_date%'
 ) h
     left join accounts a on a.account_id = h.account_id
@@ -44,7 +43,7 @@ order by h.inserted_ts desc, u.descr, h.doc_id, b.row_no, b.descr, m.descr
     <generator>
   <![CDATA[
 local std = require('stdlib')
-require('rtlib').main("presentations", true, function(r, n, a) r[n] = std.contains({'photos'}, n) and std.split(a, ',') or a; end)
+require('rtlib').main("presentations", true, function(r, n, a) r[n] = std.contains({'photos','refs'}, n) and std.split(a, ',') or a; end)
   ]]>
     </generator>
 </stat_presentations>
