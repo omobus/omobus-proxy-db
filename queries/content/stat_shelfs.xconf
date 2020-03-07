@@ -19,7 +19,8 @@ select
     round(100*h.soa_target,0) soa_target,
     round(100*h.sos,1) sos,
     round(100*h.soa,1) soa,
-    array_to_string(h.photos,'|') photos,
+    array_to_string(h.photos,',') photos,
+    (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(h.photos)) refs,
     u.executivehead_id head_id, ex.descr head_name
 from (
     select distinct on (categ_id, account_id, left(fix_dt,10))
@@ -67,8 +68,8 @@ tb.rows = rt.rows(_L0, true, function(r, n, a)
     if n == "row_id" then
 	r.brands = {}
 	idx[a] = r.brands
-    elseif std.contains({'photos'}, n) then
-	r[n] = std.split(a, '|')
+    elseif std.contains({'photos','refs'}, n) then
+	r[n] = std.split(a, ',')
     elseif std.contains({'sos_target','soa_target','sos','soa'}, n) then
 	r[n] = tonumber(a)
     else

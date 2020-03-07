@@ -16,7 +16,8 @@ select
     a.chan_id, ch.descr chan,
     h.categ_id, x.descr categ,
     round(100*h.sla,1) sla,
-    array_to_string(h.photos,'|') photos,
+    array_to_string(h.photos,',') photos,
+    (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(h.photos)) refs,
     u.executivehead_id head_id, ex.descr head_name
 from (
     select distinct on (categ_id, account_id, left(fix_dt,10))
@@ -41,7 +42,7 @@ order by h.inserted_ts desc, u.descr
 	<L1>
   <![CDATA[
 select
-    format('%s:%s:%s', d.fix_date, d.account_id, d.categ_id) row_id, x.descr, d.score, d.note
+    format('%s:%s:%s', d.fix_date, d.account_id, d.categ_id) row_id, x.descr, d.score, d.score_wf wf, d.note
 from dyn_audits d
     left join audit_criterias x on x.audit_criteria_id = d.audit_criteria_id
 where '%b_date%' <= d.fix_date and d.fix_date <= '%e_date%'
@@ -63,8 +64,8 @@ tb.e_date = _e_date
 tb.rows = rt.rows(_L0, true, function(r, n, a)
     if n == "row_id" then
 	r.criterias = {}; idx[a] = r.criterias
-    elseif std.contains({'photos'}, n) then
-	r[n] = std.split(a, '|')
+    elseif std.contains({'photos','refs'}, n) then
+	r[n] = std.split(a, ',')
     elseif std.contains({'sla'}, n) then
 	r[n] = tonumber(a)
     else
