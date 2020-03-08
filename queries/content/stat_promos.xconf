@@ -16,6 +16,7 @@ select
     a.chan_id, ch.descr chan,
     h.categ_id, k.descr categ,
     h.brand_id, b.descr brand,
+    m.manuf_id, m.descr manuf,
     array_to_string(h.promo_type_ids,',') promo_type_ids,
     h.doc_note, 
     array_to_string(h.photos,',') photos, 
@@ -24,6 +25,7 @@ select
 from h_promo h
     left join categories k on k.categ_id = h.categ_id
     left join brands b on b.brand_id = h.brand_id
+    left join manufacturers m on m.manuf_id = b.manuf_id
     left join accounts a on a.account_id = h.account_id
     left join potentials p on a.poten_id = p.poten_id
     left join channels ch on a.chan_id = ch.chan_id

@@ -41,7 +41,7 @@ from h_confirmation h
     left join users u on u.user_id = h.user_id
     left join users ex on ex.user_id = u.executivehead_id
     left join users z on z.user_id = t.author_id
-    left join thumbnail_stream ts on ts.photo = h.photo
+    left join thumbnail_stream ts on ts.photo = t.image
 where '%b_date%'<=left(h.fix_dt, 10) and left(h.fix_dt, 10)<='%e_date%'
 order by h.inserted_ts desc, u.descr
   ]]>
