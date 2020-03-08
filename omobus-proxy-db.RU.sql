@@ -183,9 +183,9 @@ delete from placements;
 insert into placements(placement_id, descr, row_no) values('0', 'ПОЛКА (основная выкладка)', 0);
 insert into placements(placement_id, descr, row_no) values('1', 'Полка на торце', 1);
 insert into placements(placement_id, descr, row_no) values('2', 'Бренд-полка', 2);
-insert into placements(placement_id, descr, row_no) values('3', 'Дополнительное место продаж', 3);
-insert into placements(placement_id, descr) values('4', 'Горячая (прикассовая) зона');
-insert into placements(placement_id, descr) values('5', 'Shopping area (Торговый зал)');
+insert into placements(placement_id, descr, row_no) values('3', 'ДМП', 3);
+insert into placements(placement_id, descr) values('4', 'Прикассовая зона');
+insert into placements(placement_id, descr) values('5', 'Торговый зал');
 
 delete from rating_scores;
 insert into rating_scores(rating_score_id, descr, score, wf) values('0', '<b>Оценка: 0 баллов</b> (имеются серьезные недостатки)', 0, 0);
@@ -201,6 +201,9 @@ insert into reclamation_types(reclamation_type_id, descr) values('0', 'Повр�
 insert into reclamation_types(reclamation_type_id, descr) values('1', 'Нарушение комплектации');
 insert into reclamation_types(reclamation_type_id, descr) values('2', 'Брак');
 insert into reclamation_types(reclamation_type_id, descr) values('3', 'Истек срок годности');
+
+delete from remark_types;
+insert into remark_types(remark_type_id, descr) values('0', 'Приложенное фото не соответствует поставленной задаче');
 
 delete from support;
 insert into support(sup_id, descr, email) 
@@ -451,9 +454,10 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/body:validate','<html><body>$(u_name) подвердил(-а) включение <i>$(a_name) $(address)</i> в маршрут.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/caption:accept','Посещение принято');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/caption:reject','Посещение отклонено');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/body:accept0','<html><body>$(u_name) принял(-а) $(a_type) <i>$(a_name) $(address)</i> от <i>$(fix_date)</i>. Дополнительная информация:<br/><br/><b>$(note)</b><br/></body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/body:accept1','<html><body>$(u_name) принял(-а) $(a_type) <i>$(a_name) $(address)</i> от <i>$(fix_date)</i>.</body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/body:reject','<html><body>$(u_name) отклонил(-а) $(a_type) <i>$(a_name) $(address)</i> от <i>$(fix_date)</i>. Указана следующая причина:<br/><br/><b>$(note)</b><br/></body></html>');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/body:staff:accept0','<html><body>$(u_name) принял(-а) $(a_type) <i>$(a_name) $(address)</i> от <i>$(fix_date)</i>. Дополнительная информация:<br/><br/><b>$(note)</b><br/></body></html>');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/body:staff:accept1','<html><body>$(u_name) принял(-а) $(a_type) <i>$(a_name) $(address)</i> от <i>$(fix_date)</i>.</body></html>');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/body:staff:reject','<html><body>$(u_name) отклонил(-а) $(a_type) <i>$(a_name) $(address)</i> от <i>$(fix_date)</i>. Указана следующая причина:<br/><br/><b>$(note)</b><br/></body></html>');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/body:head:reject','<html><body>$(u_name) отклонил(-а) $(a_type) <i>$(a_name) $(address)</i>, которое выполнил(-а) $(performer_name) <i>$(fix_date)</i>. Указана следующая причина:<br/><br/><b>$(note)</b><br/></body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','TTD/caption:order','Заказ продукции $(doc_no) (доставлен)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','TTD/caption:reclamation','Возврат продукции $(doc_no) (доставлен)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','TTD/body:accepted','<html><body>Дистрибьютор подтвердил получение документа $(doc_no). Номер(-а) документа(-ов) в учетной системе дистрибьютора: <b>$(erp_no)</b>.</body></html>');

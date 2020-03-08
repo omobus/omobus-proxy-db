@@ -9,6 +9,8 @@ declare
     hs hstore;
     author_name descr_t;
     u_id uid_t;
+    u_name descr_t;
+    head_id uid_t;
     a_name descr_t;
     a_address address_t;
     a_type descr_t;
@@ -42,9 +44,8 @@ begin
 	    where j.guid = _cookie and j.account_id = a.account_id and j.activity_type_id = t.activity_type_id
 	into u_id, a_name, a_address, a_type, p_date, f_date;
 
-	select descr from users 
-	    where user_id = _login
-	into author_name;
+	select descr from users where user_id = _login
+	    into author_name;
 
 	if( f_date is not null ) then
 	    perform content_add('tech_route', u_id, f_date, f_date);
@@ -56,11 +57,39 @@ begin
 	perform evmail_add(
 	    u_id, 
 	    format('zstatus/caption:%s', _cmd), 
-	    format('zstatus/body:%s', case when _cmd = 'reject' then _cmd else _cmd || (case when _note is null then '1' else '0' end) end), 
+	    format('zstatus/body:staff:%s', case when _cmd = 'reject' then _cmd else _cmd || (case when _note is null then '1' else '0' end) end), 
 	    case when _cmd = 'reject' then 2::smallint /*high*/ else 3::smallint /*normal*/ end, 
-	    array['a_name',a_name,'address',a_address,'fix_date',"L"(f_date),'u_name',case when author_name is null then lower(_login) else author_name end,
-		'a_type',lower(a_type),'note',_note]
+	    array[
+		'a_name', a_name,
+		'address', a_address,
+		'fix_date', "L"(f_date),
+		'u_name', case when author_name is null then lower(_login) else author_name end,
+		'a_type', lower(a_type),
+		'note', _note
+	    ]
 	);
+
+	if( _cmd = 'reject' ) then
+	    select executivehead_id, descr from users where user_id = u_id
+		into head_id, u_name;
+	    if( head_id <> _login ) then
+		perform evmail_add(
+		    head_id, 
+		    'zstatus/caption:reject', 
+		    'zstatus/body:head:reject',
+		    3::smallint /*normal*/, 
+		    array[
+			'a_name', a_name,
+			'address', a_address,
+			'fix_date', "L"(f_date),
+			'performer_name', u_name,
+			'u_name', case when author_name is null then lower(_login) else author_name end,
+			'a_type', lower(a_type),
+			'note',_note
+		    ]
+		);
+	    end if;
+	end if;
     end if;
 
     hs := hstore(array['guid',_cookie::varchar]);
