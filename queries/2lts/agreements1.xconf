@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<agreements1 templ="%account_id%;%placement_id%;%posm_id%;%b_date%;%e_date%;%strict%;">
+<agreements1 templ="%account_id%;%placement_id%;%posm_id%;%b_date%;%e_date%;%strict%;%cookie%;">
   <![CDATA[
-select account_id, placement_id, posm_id, b_date, e_date, strict from agreements1
+select account_id, placement_id, posm_id, b_date, e_date, strict, cookie from agreements1
     where e_date >= "LTS_aging_L"()::date_t
 order by 1, 2, 3, 4
   ]]>

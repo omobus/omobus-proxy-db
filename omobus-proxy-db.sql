@@ -1047,6 +1047,7 @@ create table agreements1 (
     b_date 		date_t 		not null,
     e_date 		date_t 		not null,
     strict 		bool_t 		not null default 1,
+    cookie 		uid_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
