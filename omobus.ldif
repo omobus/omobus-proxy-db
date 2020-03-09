@@ -78,7 +78,7 @@ uidNumber: 902
 ErpCode: CODE-ERP-00
 exchangeStatus: enabled
 FTPStatus: enabled
-userPassword:: MA==
+userPassword: 0
 
 dn: uid=mls,ou=cids,ou=data,dc=omobus,dc=local
 objectClass: omobusMaintainPoint
@@ -86,7 +86,7 @@ objectClass: top
 objectClass: omobusAccount
 cn: Mozilla Location Service database mirror
 uid: mls
-userPassword:: MzY3NTIzRGtibm01RnA2
+userPassword: 367523Dkbnm5Fp6
 ErpCode: MLS
 exchangeStatus: enabled
 
@@ -96,7 +96,7 @@ objectClass: top
 objectClass: omobusAccount
 cn: OpenCellID database mirror
 uid: ocid
-userPassword:: aGpibmZoUm84RGskcnlqZnE=
+userPassword: hjbnfhRo8Dk$ryjfq
 ErpCode: OCID
 exchangeStatus: enabled
 
@@ -114,7 +114,7 @@ uidNumber: 902
 ErpCode: 0
 exchangeStatus: enabled
 FTPStatus: enabled
-userPassword:: MA==
+userPassword: 0
 
 dn: uid=point1,ou=core,ou=data,dc=omobus,dc=local
 objectClass: posixAccount
@@ -130,7 +130,7 @@ uidNumber: 902
 ErpCode: CODE-ERP-01
 exchangeStatus: disabled
 FTPStatus: enabled
-userPassword:: MQ==
+userPassword: 1
 
 dn: uid=d1,ou=distributors,ou=data,dc=omobus,dc=local
 objectClass: posixAccount
@@ -147,7 +147,7 @@ ErpCode: 0
 exchangeStatus: enabled
 FTPStatus: enabled
 syncEncoding: utf-8
-userPassword:: MA==
+userPassword: 0
 
 dn: uid=d2,ou=distributors,ou=data,dc=omobus,dc=local
 objectClass: posixAccount
@@ -164,7 +164,7 @@ ErpCode: CODE-ERP-01
 exchangeStatus: enabled
 FTPStatus: enabled
 groupName: agent
-userPassword:: MA==
+userPassword: 0
 
 dn: uid=manuf@d3,ou=distributors,ou=data,dc=omobus,dc=local
 objectClass: omobusMaintainPoint
@@ -172,7 +172,7 @@ objectClass: top
 objectClass: omobusAccount
 cn:: 0JTQmNGB0YLRgNC40LHRjNGO0YLQvtGAIDM=
 uid: manuf@d3
-userPassword:: MA==
+userPassword: 0
 ErpCode: d3
 exchangeStatus: enabled
 groupName: gateway
@@ -200,6 +200,12 @@ objectClass: organizationalUnit
 objectClass: top
 ou: asm
 description: Area Sales (or InStore) managers
+
+dn: ou=cdm,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: cdm
+description: Customer development manager
 
 dn: ou=ise,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
@@ -262,15 +268,15 @@ objectClass: omobusMail
 cn: MR:1
 gidNumber: 905
 homeDirectory: /var/ftp/users/mr/xz_mr_1
-mailStatus: enabled
 uid: xz_mr_1
 uidNumber: 902
 consoleStatus: enabled
 ErpId: mr01
-exchangeStatus: disabled
+exchangeStatus: enabled
 FTPStatus: enabled
 groupName: mr
-userPassword:: MQ==
+mailStatus: enabled
+userPassword: 1
 
 dn: uid=xz_sr_1,ou=sr,ou=users,dc=omobus,dc=local
 objectClass: posixAccount
@@ -282,7 +288,6 @@ objectClass: omobusMail
 cn: SR:1
 gidNumber: 905
 homeDirectory: /var/ftp/users/sr/xz_sr_1
-mailStatus: enabled
 uid: xz_sr_1
 uidNumber: 902
 consoleStatus: enabled
@@ -290,8 +295,9 @@ ErpId: sr01
 exchangeStatus: disabled
 FTPStatus: enabled
 groupName: sr
+mailStatus: enabled
 orderUnavailableProducts: yes
-userPassword:: MQ==
+userPassword: 1
 
 dn: uid=xz_sv_1,ou=sv,ou=users,dc=omobus,dc=local
 objectClass: posixAccount
@@ -303,7 +309,6 @@ objectClass: omobusMail
 cn: SV:1
 gidNumber: 905
 homeDirectory: /var/ftp/users/sv/xz_sv_1
-mailStatus: enabled
 uid: xz_sv_1
 uidNumber: 902
 consoleStatus: enabled
@@ -311,7 +316,8 @@ ErpId: sv01
 exchangeStatus: disabled
 FTPStatus: enabled
 groupName: sv
-userPassword:: MQ==
+mailStatus: enabled
+userPassword: 1
 
 dn: uid=xz_asm_1,ou=asm,ou=users,dc=omobus,dc=local
 objectClass: posixAccount
@@ -323,7 +329,6 @@ objectClass: omobusMail
 cn: ASM:1
 gidNumber: 905
 homeDirectory: /var/ftp/users/asm/xz_asm_1
-mailStatus: enabled
 uid: xz_asm_1
 uidNumber: 902
 consoleStatus: enabled
@@ -332,7 +337,28 @@ ErpId: asm01
 exchangeStatus: enabled
 FTPStatus: enabled
 groupName: asm
-userPassword:: MQ==
+mailStatus: enabled
+userPassword: 1
+
+dn: uid=xz_cdm_1,ou=cdm,ou=users,dc=omobus,dc=local
+objectClass: posixAccount
+objectClass: top
+objectClass: account
+objectClass: PureFTPdUser
+objectClass: omobusUser
+objectClass: omobusMail
+cn: CDM:1
+gidNumber: 905
+homeDirectory: /var/ftp/users/ksr/xz_cdm_1
+uid: xz_cdm_1
+uidNumber: 902
+consoleStatus: disabled
+ErpId: cdm01
+exchangeStatus: disabled
+FTPStatus: disabled
+groupName: cdm
+mailStatus: disabled
+userPassword: 1
 
 dn: uid=xz_ise_1,ou=ise,ou=users,dc=omobus,dc=local
 objectClass: posixAccount
@@ -344,7 +370,6 @@ objectClass: omobusMail
 cn: ISE:1
 gidNumber: 905
 homeDirectory: /var/ftp/users/ise/xz_ise_1
-mailStatus: enabled
 uid: xz_ise_1
 uidNumber: 902
 consoleStatus: enabled
@@ -352,7 +377,8 @@ ErpId: ise01
 exchangeStatus: disabled
 FTPStatus: enabled
 groupName: ise
-userPassword:: MQ==
+mailStatus: enabled
+userPassword: 1
 
 dn: uid=xz_kam_1,ou=kam,ou=users,dc=omobus,dc=local
 objectClass: posixAccount
@@ -364,7 +390,6 @@ objectClass: omobusMail
 cn: KAM:1
 gidNumber: 905
 homeDirectory: /var/ftp/users/kam/xz_kam_1
-mailStatus: enabled
 uid: xz_kam_1
 uidNumber: 902
 consoleStatus: enabled
@@ -372,7 +397,8 @@ ErpId: kam01
 exchangeStatus: disabled
 FTPStatus: enabled
 groupName: kam
-userPassword:: MQ==
+mailStatus: enabled
+userPassword: 1
 
 dn: uid=xz_ksr_1,ou=ksr,ou=users,dc=omobus,dc=local
 objectClass: posixAccount
@@ -384,7 +410,6 @@ objectClass: omobusMail
 cn: KSR:1
 gidNumber: 905
 homeDirectory: /var/ftp/users/ksr/xz_ksr_1
-mailStatus: disabled
 uid: xz_ksr_1
 uidNumber: 902
 consoleStatus: disabled
@@ -392,7 +417,8 @@ ErpId: ksr01
 exchangeStatus: disabled
 FTPStatus: disabled
 groupName: ksr
-userPassword:: MQ==
+mailStatus: disabled
+userPassword: 1
 
 dn: uid=xz_tme_1,ou=tme,ou=users,dc=omobus,dc=local
 objectClass: omobusUser
@@ -408,7 +434,7 @@ uidNumber: 902
 consoleStatus: enabled
 ErpId: tme01
 groupName: tme
-userPassword:: MQ==
+userPassword: 1
 
 dn: uid=dev9,ou=_dev,ou=users,dc=omobus,dc=local
 objectClass: posixAccount
@@ -420,15 +446,15 @@ objectClass: omobusMail
 cn: Dev/9
 gidNumber: 905
 homeDirectory: /var/ftp/users/_test/dev9
-mailStatus: enabled
 uid: dev9
 uidNumber: 902
 ErpId: dev9
 exchangeStatus: enabled
 FTPStatus: enabled
 groupName: sr
+mailStatus: enabled
 syncErpId: sr01
-userPassword:: MA==
+userPassword: 0
 
 dn: uid=xz_m_1,ou=merch,ou=users,dc=omobus,dc=local
 objectClass: posixAccount
@@ -440,7 +466,6 @@ objectClass: omobusMail
 cn: Merch:1
 gidNumber: 905
 homeDirectory: /var/ftp/users/merch/xz_m_1
-mailStatus: enabled
 uid: xz_m_1
 uidNumber: 902
 consoleStatus: enabled
@@ -449,7 +474,8 @@ ErpId: m01
 exchangeStatus: enabled
 FTPStatus: enabled
 groupName: merch
-userPassword:: MQ==
+mailStatus: enabled
+userPassword: 1
 
 dn: uid=john_doe,ou=admins,ou=users,dc=omobus,dc=local
 objectClass: posixAccount
@@ -466,7 +492,7 @@ consoleStatus: enabled
 dumpsStatus: enabled
 FTPStatus: enabled
 groupName: admins
-userPassword:: MA==
+userPassword: 0
 
 dn: uid=exim,ou=services,dc=omobus,dc=local
 objectClass: posixAccount
@@ -477,8 +503,7 @@ gidNumber: 905
 homeDirectory: /dev/null
 uid: exim
 uidNumber: 902
-userPassword:: e1NTSEF9WkVQcktyL3FaNXVKUk50ZmtDU0w4eGdLdUx1ZnBiQk8rdEZnNmc9P
- Q==
+userPassword: {SSHA}ZEPrKr/qZ5uJRNtfkCSL8xgKuLufpbBO+tFg6g==
 
 dn: uid=dovecot,ou=services,dc=omobus,dc=local
 objectClass: posixAccount
@@ -489,8 +514,7 @@ gidNumber: 905
 homeDirectory: /dev/null
 uid: dovecot
 uidNumber: 902
-userPassword:: e1NTSEF9WkVQcktyL3FaNXVKUk50ZmtDU0w4eGdLdUx1ZnBiQk8rdEZnNmc9P
- Q==
+userPassword: {SSHA}ZEPrKr/qZ5uJRNtfkCSL8xgKuLufpbBO+tFg6g==
 
 dn: uid=omobusd,ou=services,dc=omobus,dc=local
 objectClass: posixAccount
@@ -501,8 +525,7 @@ gidNumber: 905
 homeDirectory: /var/lib/omobus.d
 uid: omobusd
 uidNumber: 902
-userPassword:: e1NTSEF9dkhOUmxBbkdYZEs2U1lZNjlWY2kwWlpDaUgwMEw3MVpKYlduQkE9P
- Q==
+userPassword: {SSHA}vHNRlAnGXdK6SYY69Vci0ZZCiH00L71ZJbWnBA==
 
 dn: uid=lighttpd,ou=services,dc=omobus,dc=local
 objectClass: posixAccount
@@ -513,8 +536,7 @@ gidNumber: 905
 homeDirectory: /dev/null
 uid: lighttpd
 uidNumber: 902
-userPassword:: e1NTSEF9WkVQcktyL3FaNXVKUk50ZmtDU0w4eGdLdUx1ZnBiQk8rdEZnNmc9P
- Q==
+userPassword: {SSHA}ZEPrKr/qZ5uJRNtfkCSL8xgKuLufpbBO+tFg6g==
 
 dn: uid=pure-ftpd,ou=services,dc=omobus,dc=local
 objectClass: posixAccount
@@ -525,8 +547,7 @@ gidNumber: 905
 homeDirectory: /dev/null
 uid: pure-ftpd
 uidNumber: 902
-userPassword:: e1NTSEF9T2ZUZlJ2RkpDaEFTcTlLZzJueGhhb1JNaGlSbWo1b0hhNHBUNWc9P
- Q==
+userPassword: {SSHA}OfTfRvFJChASq9Kg2nxhaoRMhiRmj5oHa4pT5g==
 
 dn: uid=omobus-scgid,ou=services,dc=omobus,dc=local
 objectClass: posixAccount
@@ -537,8 +558,7 @@ gidNumber: 905
 homeDirectory: /var/lib/omobus-scgi.d
 uid: omobus-scgid
 uidNumber: 902
-userPassword:: e1NTSEF9dkhOUmxBbkdYZEs2U1lZNjlWY2kwWlpDaUgwMEw3MVpKYlduQkE9P
- Q==
+userPassword: {SSHA}vHNRlAnGXdK6SYY69Vci0ZZCiH00L71ZJbWnBA==
 
 dn: uid=noreply,ou=system-users,dc=omobus,dc=local
 objectClass: account
@@ -548,8 +568,8 @@ objectClass: omobusMail
 cn: Mailbox for sending notifications
 gidNumber: 905
 homeDirectory: /var/lib/omobus.d
-mailStatus: enabled
 uid: noreply
 uidNumber: 902
-userPassword:: MA==
+mailStatus: enabled
+userPassword: 0
 
