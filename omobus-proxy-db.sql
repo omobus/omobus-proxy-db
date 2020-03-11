@@ -5590,6 +5590,7 @@ create table j_user_activities (
     e_sat_dt 		datetime_t 	null,
     extra_info 		note_t 		null,
     docs 		int32_t 	null,
+    dev_login 		uid_t 		null,
     zstatus 		varchar(8) 	null check(zstatus in ('accepted','rejected') and zstatus = lower(zstatus)),
     znote 		note_t 		null,
     inserted_ts 	ts_auto_t 	not null,
