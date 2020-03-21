@@ -299,6 +299,26 @@ begin
         end if;
     end if;
 
+
+    if d_code in ('photo','posm') then
+	perform evmail_add(
+	    uid, 
+	    'target/caption', 
+	    format('target/body:%s',d_code), 
+	    3::smallint /*normal*/, 
+	    array[
+		'subject',(_opt).sub,
+		'body',(_opt).msg,
+		'u_name',author_name,
+		'a_name',a_name,
+		'address',a_address,
+		'fix_dt',"L"(_reqdt),
+		'b_date',"L"(current_date),
+		'e_date',"L"(current_date + "paramInteger"('target:depth'))
+	    ]
+	);
+    end if;
+
     perform content_add('targets_compliance', '', '', '');
 
     hs := hstore(array['target_id',tid]);
