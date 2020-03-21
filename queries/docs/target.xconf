@@ -78,7 +78,7 @@ begin
 		    ar := array_append(ar, x_id::varchar);
 		end if;
 
-		perform evmail_add(x_evaddrs, x_lang, 'target/caption', 'target/body', 2::smallint /*high*/, array[
+		perform evmail_add(x_evaddrs, x_lang, 'target/caption', 'target/body:new', 2::smallint /*high*/, array[
 		    'subject',trim('%subject%'),'body',trim('%doc_note%'),
 		    'activity_type',t_name,
 		    'u_name',u_name,
@@ -98,7 +98,7 @@ begin
 	    select distinct user_id from my_accounts where account_id='%account_id%'
 	) and hidden=0
 	loop
-	    perform evmail_add(x_evaddrs, x_lang, 'target/caption', 'target/body', 3::smallint /*normal*/, array[
+	    perform evmail_add(x_evaddrs, x_lang, 'target/caption', 'target/body:new', 3::smallint /*normal*/, array[
 		'subject',trim('%subject%'),'body',trim('%doc_note%'),
 		'activity_type',t_name,
 		'u_name',u_name,
