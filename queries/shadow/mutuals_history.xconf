@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mutuals_history templ="%account_id%;%erp_id%;%erp_no%;%erp_dt%;%amount%;%incoming%;%unpaid%;%extra_info%;">
+<mutuals_history templ="%account_id%;%erp_id%;%erp_no%;%erp_dt%;%amount%;%incoming%;%unpaid%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -14,8 +14,8 @@ delete from shadow.mutuals_history
 </begin>
 <insert>
   <![CDATA[ 
-insert into shadow.mutuals_history (distr_id, account_id, erp_id, erp_no, erp_dt, amount, incoming, unpaid, extra_info)
-    values ('%ErpCode%', '%account_id%', '%erp_id%', '%erp_no%', '%erp_dt%', %amount%, %incoming%, NIL(%unpaid%), '%extra_info%')
+insert into shadow.mutuals_history (distr_id, account_id, erp_id, erp_no, erp_dt, amount, incoming, unpaid)
+    values ('%ErpCode%', '%account_id%', '%erp_id%', '%erp_no%', '%erp_dt%', %amount%, %incoming%, NIL(%unpaid%))
 on conflict do nothing
   ]]>
 </insert>
