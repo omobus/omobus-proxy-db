@@ -45,20 +45,20 @@
 	    <xs:attribute name="model" use="required" type="xs:string" />
 	    <xs:attribute name="manufacturer" use="required" type="xs:string" />
 	    <xs:attribute name="fingerprint" use="required" type="xs:string" />
-	    <xs:attribute name="imei" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="imeisv" use="optional" type="xs:string" default="" />
+<!-- OBSOLETE: --><xs:attribute name="imei" use="optional" type="xs:string" default="" />
+<!-- OBSOLETE: --><xs:attribute name="imeisv" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="spn" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="sim_serial" use="optional" type="xs:string" default="" />
+<!-- OBSOLETE: --><xs:attribute name="sim_serial" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="sim_state" use="required" type="sim_state_t" />
 	    <xs:attribute name="phone_type" use="required" type="radio_type_t" />
-	    <xs:attribute name="phone_number" use="optional" type="xs:string" default="" />
+<!-- OBSOLETE: --><xs:attribute name="phone_number" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="network_operator" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="uptime" use="required" type="xs:integer" />
 	    <xs:attribute name="myuid" use="required" type="xs:integer" />
 	    <xs:attribute name="cpu_abis" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="cpu_cores" use="required" type="xs:integer" />
 	    <xs:attribute name="heap_size" use="required" type="xs:integer" />
-	    <xs:attribute name="gps" use="optional" type="bool_t" default="no" />
+	    <xs:attribute name="gps" use="optional" type="bool_t" default="" />
 	    <xs:attribute name="screen_inches" use="required" type="xs:decimal" />
 	    <xs:attribute name="screen_density" use="required" type="xs:integer" />
 	    <xs:attribute name="screen_height" use="required" type="xs:integer" />
