@@ -16,14 +16,19 @@ select
 	when 'a_bluetooth' then
 	    (select state from a_bluetooth where j.act_id=act_id)
 	when 'a_device' then
-	    (select os_name || ' ' || os_version || case when su is null then '' else ' *** ROOTED ***' end || ', ' || 
-		manufacturer || ' ' || model || ', IMEI: ' || coalesce(array_to_string(imei,' '),'-') || ', IMEI/SV: ' || 
-		coalesce(imeisv,'-') || ', SIM: ' || sim_state || ', SPN: ' || coalesce(spn,'-') || ', Phone: ' || coalesce(phone_number,'-') || 
-		', uptime: ' || round(uptime/60000, 0) || ' min., CPU ABI''s: ' || coalesce(cpu_abis,'-') || ', CPU cores: ' || cpu_cores || 
-		', Heap: ' || round(heap_size/1048576.0, 2) || ' MiB., GPS: ' || case gps when 1 then 'yes' else '*** N/A ***' end || 
-		', Screen: ' || screen_inches || '", ' || screen_height || 'X' || screen_width || ' (' || screen_density || 
-		' dpi), Small width: ' || round(160*least(screen_width,screen_height)/screen_density,1) || ' dp., vstamp: ' ||
-		coalesce(vstamp,'-')
+	    (select 
+		os_name || ' ' || os_version || case when su is null then '' else ' *** ROOTED ***' end || ', ' || manufacturer || ' ' || model || 
+		format(', SIM: %s', sim_state) ||
+		case when spn is null then '' else format(', SPN: %s', spn) end ||
+		case when network_operator is null then '' else format(', Network: %s', network_operator) end ||
+		format(', uptime: %s min.', round(uptime/60000, 0)) ||
+		format(', CPU ABI: %s', coalesce(cpu_abis,'-')) ||
+		format(', CPU cores: %s', cpu_cores) ||
+		format(', Heap: %s MiB', round(heap_size/1048576.0, 2)) ||
+		format(', GPS: %s', case when gps is null then '*** N/P ***' when gps = 1 then 'yes' else '*** N/A ***' end ) ||
+		format(', Screen: %s inches %sX%s (%s dpi)', screen_inches, screen_height, screen_width, screen_density) ||
+		format(', Small width: %s dp.', round(160*least(screen_width,screen_height)/screen_density,1)) ||
+		format(', vstamp: %s', coalesce(vstamp,'-'))
 	    from a_device where j.act_id=act_id)
 	when 'a_exchange' then
 	    (select status || ' (' || mode || ':' || packets || (case when corrupted is null or corrupted=0 then '' else ('; corrupted: ' || corrupted) end) || ')' || 
