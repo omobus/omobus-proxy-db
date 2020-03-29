@@ -36,7 +36,7 @@ insert into users(user_id, pids, descr, role, country_id, dep_ids, distr_ids, ag
   <![CDATA[
 delete from users where trim(user_id)='' and hidden = 0;
 update users set pids=array_remove(pids, user_id::varchar) where pids is not null and pids @> array[user_id::varchar] and hidden = 0; /* fixed invalid hiererchy */
-update users set pids=null where array_length(pids, 1) is null or array_length(pids, 1) = 0 and hidden = 0;
+update users set pids=null where pids is not null and cardinality(pids) = 0 and hidden = 0;
 update users set executivehead_id=my_executivehead(user_id) where hidden = 0;
 
 insert into ".content"(content_code, user_id, b_date, e_date) values('tech', '', current_date::date_t, current_date::date_t)
