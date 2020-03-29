@@ -19,8 +19,8 @@ select * from act_id()
 </create>
 <write_body>
   <![CDATA[
-insert into a_device (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, os_name, os_version, model, manufacturer, fingerprint, imei, imeisv, spn, sim_serial, sim_state, phone_type, phone_number, network_operator, uptime, myuid, cpu_abis, cpu_cores, heap_size, gps, screen_inches, screen_density, screen_height, screen_width, su, kernel, vstamp)
-    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%os_name%', '%os_version%', '%model%', '%manufacturer%', '%fingerprint%', string_to_array(NIL('%imei%'),','), NIL('%imeisv%'), NIL('%spn%'), NIL('%sim_serial%'), '%sim_state%', '%phone_type%', NIL('%phone_number%'), NIL('%network_operator%'), %uptime%, %myuid%, '%cpu_abis%', %cpu_cores%, %heap_size%, "toBoolean"('%gps%'), %screen_inches%, %screen_density%, %screen_height%, %screen_width%, NIL('%su%'), NIL('%kernel%'), '%vstamp%')
+insert into a_device (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, os_name, os_version, model, manufacturer, fingerprint, spn, sim_state, phone_type, network_operator, uptime, myuid, cpu_abis, cpu_cores, heap_size, gps, screen_inches, screen_density, screen_height, screen_width, su, kernel, vstamp)
+    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%os_name%', '%os_version%', '%model%', '%manufacturer%', '%fingerprint%', NIL('%spn%'), '%sim_state%', '%phone_type%', NIL('%network_operator%'), %uptime%, %myuid%, '%cpu_abis%', %cpu_cores%, %heap_size%, "toBoolean"('%gps%'), %screen_inches%, %screen_density%, %screen_height%, %screen_width%, NIL('%su%'), NIL('%kernel%'), '%vstamp%')
   ]]>
 </write_body>
 <close>

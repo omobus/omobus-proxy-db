@@ -39,7 +39,6 @@ create domain emails_t as varchar(254) array /*check(value is null or (char_leng
 create domain ftype_t as int2 default 0 not null check (value between 0 and 1);
 create domain gps_t as numeric(10,6);
 create domain hostname_t as varchar(255);
-create domain imei_t as varchar(16) array;
 create domain int32_t as integer;
 create domain int64_t as bigint;
 create domain month_t as varchar(7);
@@ -1642,9 +1641,6 @@ create table mutuals_history (
     amount 		currency_t 	not null,
     incoming 		bool_t 		not null,
     unpaid 		currency_t 	null,
-    color 		color_t 	null,
-    bgcolor 		color_t 	null,
-    extra_info 		note_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
@@ -2836,18 +2832,14 @@ create table a_device (
     satellite_dt 	datetime_t	null,
     latitude 		gps_t		null,
     longitude 		gps_t		null,
-    imei 		imei_t 		null,
-    imeisv 		code_t 		null,
     os_name		varchar(7) 	not null check (os_name in ('android') and os_name = lower(os_name)),
     os_version		code_t 		not null,
     model		descr_t		not null,
     manufacturer	descr_t		not null,
     fingerprint		descr_t		not null,
     spn			descr_t		null,
-    sim_serial		descr_t		null,
     sim_state		varchar(12)	not null check (sim_state in ('absent','locked','pin_required','puk_required','ready','unknown') and sim_state = lower(sim_state)),
     phone_type		varchar(4)	not null check (phone_type in ('cdma','gsm','sip','none') and phone_type = lower(phone_type)),
-    phone_number	phone_t		null,
     network_operator	descr_t		null,
     uptime		int64_t		not null,
     myuid		int32_t		not null,
