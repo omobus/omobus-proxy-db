@@ -20,9 +20,22 @@ select
     t.inserted_ts, t.updated_ts
 from (
     select target_id, account_id, max(inserted_ts) inserted_ts from (
+/* only operative targets (from mobile devices and web-console photos/posms/confirmations reports): */
+	select target_id, account_ids[1] account_id, null::ts_t inserted_ts from targets
+	    where "immutable" = 1 and rows = 1 and author_id is not null and account_ids is not null and cardinality(account_ids) = 1 and ("_isAlienData" is null or "_isAlienData" = 0)
+		union
+	select target_id, account_id, max(inserted_ts) from h_confirmation
+	    where target_id in (
+		select target_id from targets 
+		    where "immutable" = 1 and rows = 1 and author_id is not null and account_ids is not null and cardinality(account_ids) = 1 and ("_isAlienData" is null or "_isAlienData" = 0)
+	    )
+	group by target_id, account_id
+
+/* everyone targets:
 	select target_id, expand_accounts(account_ids, region_ids, city_ids, rc_ids, chan_ids, poten_ids) account_id, null::ts_t inserted_ts from targets
 	    union
 	select target_id, account_id, max(inserted_ts) from h_confirmation group by target_id, account_id
+*/
     ) q group by target_id, account_id
 ) x
     left join targets t on x.target_id = t.target_id 
