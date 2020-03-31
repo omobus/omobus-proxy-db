@@ -2956,7 +2956,7 @@ create table a_gps_state (
     user_id 		uid_t 		not null,
     fix_dt 		datetime_t 	not null,
     provider 		varchar(8) 	not null check (provider in ('gps','network') and provider = lower(provider)),
-    state		varchar(16)	not null check (state in ('off','on','failed','available','unavailable','out_of_service') and state = lower(state)),
+    state		varchar(16)	not null check (state in ('off','on','failed','not_permitted') and state = lower(state)),
     msg 		varchar(512) 	null
 );
 
