@@ -28,6 +28,7 @@ select
 		format(', GPS: %s', case when gps is null then '*** N/P ***' when gps = 1 then 'yes' else '*** N/A ***' end ) ||
 		format(', Screen: %s inches %sX%s (%s dpi)', screen_inches, screen_height, screen_width, screen_density) ||
 		format(', Small width: %s dp.', round(160*least(screen_width,screen_height)/screen_density,1)) ||
+		case when kernel is null then '' else format(', Kernel: %s', kernel) end ||
 		format(', vstamp: %s', coalesce(vstamp,'-'))
 	    from a_device where j.act_id=act_id)
 	when 'a_exchange' then
