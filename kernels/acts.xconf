@@ -21,7 +21,6 @@
     pack.gc="4"
     cache="acts/"
     >
-<xi:include href="../queries/acts/account.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/airplane.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/applog.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/bluetooth.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
