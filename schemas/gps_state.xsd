@@ -8,7 +8,7 @@
 
     <xs:simpleType name="state_t">
 	<xs:restriction base="xs:string">
-	    <xs:pattern value="on|off|failed|available|unavailable|out_of_service" />
+	    <xs:pattern value="on|off|failed|not_permitted" />
 	</xs:restriction>
     </xs:simpleType>
 
