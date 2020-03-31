@@ -2728,29 +2728,6 @@ create trigger trig_updated_ts before update on wish_weeks for each row execute 
 
 -- **** Activities ****
 
-create table a_account (
-    act_id 		uid_t 		not null primary key default act_id(),
-    inserted_ts 	ts_auto_t 	not null,
-    inserted_node 	hostname_t 	not null,
-    dev_pack 		int32_t 	not null,
-    dev_id 		devid_t 	not null,
-    dev_login 		uid_t 		not null,
-    user_id 		uid_t 		not null,
-    fix_dt 		datetime_t 	not null,
-    satellite_dt 	datetime_t 	null,
-    latitude 		gps_t 		null,
-    longitude 		gps_t 		null,
-    status 		varchar(7) 	not null check (status in ('added','removed') and status = lower(status)),
-    "name" 		varchar(64) 	not null,
-    "type" 		varchar(128) 	not null
-);
-
-create index i_user_id_a_account on a_account (user_id);
-create index i_fix_date_a_account on a_account (left(fix_dt,10));
-create index i_exist_a_account on a_account (user_id, dev_pack, dev_id, fix_dt);
-
-create trigger trig_lock_update before update on a_account for each row execute procedure tf_lock_update();
-
 create table a_airplane (
     act_id 		uid_t 		not null primary key default act_id(),
     inserted_ts 	ts_auto_t 	not null,
