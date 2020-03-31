@@ -9,8 +9,6 @@ select
     case when j.latitude = 0 then null else j.latitude end latitude,
     case when j.longitude = 0 then null else j.longitude end longitude,
     case act_code 
-	when 'a_account' then
-	    (select format('%s %s (%s)', status, "name", "type") from a_account where j.act_id=act_id)
 	when 'a_airplane' then
 	    (select state from a_airplane where j.act_id=act_id)
 	when 'a_bluetooth' then
