@@ -486,7 +486,6 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_hist
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','contact','Новый контакт: $(surname) $(name).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','deletion', 'Заявка на удаление: $(doc_note).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','equipment','Новое т/оборудование: $(equipment_type), serial: $(serial_number).');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','extra', 'Доля доп/места $(placement): $(soe)%.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','orders', 'Заказано продуктов: $(rows) на сумму <b>$(amount)</b>.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','oos', 'Выявление причин Out-of-Stock.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','photo', 'Фото $(placement) $(brand) $(photo_type) ($(rows) шт.).');

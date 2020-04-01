@@ -3993,50 +3993,6 @@ create index i_exist_h_equipment on h_equipment (user_id, dev_pack, dev_id, fix_
 
 create trigger trig_lock_update before update on h_equipment for each row execute procedure tf_lock_update();
 
-/*[deprecated]*/ create table h_extra ( /* Share-of-Extra-Placements */
-    doc_id		uid_t 		not null primary key default doc_id(),
-    inserted_ts		ts_auto_t 	not null,
-    inserted_node	hostname_t 	not null,
-    dev_pack		int32_t 	not null,
-    doc_no		uid_t 		not null,
-    dev_id		devid_t 	not null,
-    dev_login		uid_t 		not null,
-    user_id		uid_t 		not null,
-    account_id		uid_t 		not null,
-    fix_dt		datetime_t 	not null,
-    created_dt 		datetime_t 	not null,
-    created_gps_dt	datetime_t 	null,
-    created_gps_la	gps_t 		null,
-    created_gps_lo	gps_t 		null,
-    closed_dt		datetime_t 	not null,
-    closed_gps_dt	datetime_t 	null,
-    closed_gps_la	gps_t 		null,
-    closed_gps_lo	gps_t 		null,
-    w_cookie		uid_t 		not null,
-    a_cookie		uid_t 		not null,
-    activity_type_id	uid_t 		not null,
-    rows		int32_t 	not null,
-    placement_id 	uid_t 		not null,
-    soe 		numeric(6,5)	null check(soe between 0.0 and 1.0)
-);
-
-/*[deprecated]*/ create table t_extra (
-    doc_id		uid_t 		not null,
-    row_no		int32_t 	not null check (row_no >= 0),
-    manuf_id		uid_t 		not null,
-    qty 		int32_t 	null check (qty >= 0),
-    primary key (doc_id, manuf_id)
-);
-
-create index i_fix_date_h_extra on h_extra (left(fix_dt,10));
-create index i_doc_no_h_extra on h_extra (doc_no);
-create index i_account_id_h_extra on h_extra (account_id);
-create index i_user_id_h_extra on h_extra (user_id);
-create index i_exist_h_extra on h_extra (user_id, dev_pack, dev_id, fix_dt);
-
-create trigger trig_lock_update before update on h_extra for each row execute procedure tf_lock_update();
-create trigger trig_lock_update before update on t_extra for each row execute procedure tf_lock_update();
-
 create table h_location (
     doc_id 		uid_t 		not null primary key default doc_id(),
     inserted_ts 	ts_auto_t 	not null,
@@ -5142,24 +5098,6 @@ create table dyn_checkups (
 create index i_2lts_dyn_checkups on dyn_checkups (updated_ts);
 
 create trigger trig_updated_ts before update on dyn_checkups for each row execute procedure tf_updated_ts();
-
-create table dyn_extras (
-    fix_date		date_t 		not null,
-    account_id 		uid_t 		not null,
-    placement_id 	uid_t 		not null,
-    manuf_id 		uid_t 		not null,
-    qty 		int32_t 	not null check (qty >= 0),
-    soe 		numeric(6,5)	null check(soe between 0.0 and 1.0),
-    fix_dt		datetime_t 	not null,
-    user_id 		uid_t 		not null,
-    doc_id 		uid_t 		not null,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts		ts_auto_t 	not null,
-    "_isRecentData"	bool_t 		null,
-    primary key(fix_date, account_id, placement_id, manuf_id)
-);
-
-create trigger trig_updated_ts before update on dyn_extras for each row execute procedure tf_updated_ts();
 
 create table dyn_oos (
     fix_date		date_t 		not null,

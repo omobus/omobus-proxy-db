@@ -49,7 +49,6 @@ begin
     delete from dyn_advt where fix_date < gc_date;
     delete from dyn_audits where fix_date < gc_date;
     delete from dyn_checkups where fix_date < gc_date;
-    delete from dyn_extras where fix_date < gc_date;
     delete from dyn_oos where fix_date < gc_date;
     delete from dyn_presences where fix_date < gc_date;
     delete from dyn_prices where fix_date < gc_date;
@@ -61,6 +60,7 @@ begin
     delete from dyn_testings where fix_date < gc_date;
 
     delete from a_airplane where left(fix_dt,10) < gc_date;
+    delete from a_applog where left(fix_dt,10) < gc_date;
     delete from a_bluetooth where left(fix_dt,10) < gc_date;
     delete from a_device where left(fix_dt,10) < gc_date;
     delete from a_exchange where left(fix_dt,10) < gc_date;
@@ -73,6 +73,7 @@ begin
     delete from a_heap_trace where left(fix_dt,10) < gc_date;
     delete from a_lifecycle where left(fix_dt,10) < gc_date;
     delete from a_network where left(fix_dt,10) < gc_date;
+    delete from a_package where left(fix_dt,10) < gc_date;
     delete from a_power where left(fix_dt,10) < gc_date;
     delete from a_sms where left(fix_dt,10) < gc_date;
     delete from a_statfs where left(fix_dt,10) < gc_date;
@@ -111,10 +112,6 @@ begin
     delete from h_discard where left(fix_dt,10) < gc_date;
     delete from h_dismiss where left(fix_dt,10) < gc_date;
     delete from h_equipment where left(fix_dt,10) < gc_date;
-    for i in select doc_id from h_extra where left(fix_dt,10) < gc_date loop
-	delete from t_extra where doc_id = i;
-	delete from h_extra where doc_id = i;
-    end loop;
     delete from h_location where left(fix_dt,10) < gc_date;
     for i in select doc_id from h_oos where left(fix_dt,10) < gc_date loop
 	delete from t_oos where doc_id = i;

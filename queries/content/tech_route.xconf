@@ -210,28 +210,6 @@ where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
 order by h.fix_dt
   ]]>
 	</confirmations>
-	<extras_L0>
-  <![CDATA[
-select
-    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, x.descr placement, 
-    round(100*h.soe,1) soe
-from h_extra h
-    left join placements x on x.placement_id = h.placement_id
-where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
-order by h.fix_dt, x.row_no, x.descr
-  ]]>
-	</extras_L0>
-	<extras_L1>
-  <![CDATA[
-select t.doc_id, t.row_no, x.descr, t.qty from (
-	select doc_id, row_no, manuf_id, qty from t_extra where doc_id in (
-	    select doc_id from h_extra where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
-	)
-    ) t 
-    left join manufacturers x on x.manuf_id = t.manuf_id
-order by t.doc_id, t.row_no, x.descr
-  ]]>
-	</extras_L1>
 	<oos_L0>
   <![CDATA[
 select doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration from h_oos
@@ -812,24 +790,6 @@ tb.confirmations = rt.groups(_confirmations, "account_id", function(r, n, a)
 	r[n] = std.split(a, ',')
     else
 	r[n] = a
-    end
-end)
-rt.foreach(_extras_L1, function(q, i, cols)
-    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
-    if r ~= nil then
-	local x = {}
-	for j = 0, cols-1 do
-	    local n = rowset_colname(q, j)
-	    local a = rowset_value(q, i, j)
-	    if a ~= nil and n ~= "doc_id" then
-		if std.contains({'row_no','qty'}, n) then
-		    x[n] = tonumber(a)
-		else
-		    x[n] = a
-		end
-	    end
-	end
-	table.insert(r, x)
     end
 end)
 idx = {}; tb.oos = rt.groups(_oos_L0, "account_id", function(r, n, a)

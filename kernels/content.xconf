@@ -32,7 +32,6 @@
 <xi:include href="../queries/content/tech_checkups.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/tech_comments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/tech_confirmations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/content/tech_extras.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/tech_oos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/tech_orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/tech_photos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

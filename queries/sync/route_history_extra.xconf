@@ -72,14 +72,6 @@ from h_equipment h
     left join equipment_types t on t.equipment_type_id=h.equipment_type_id
 where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right')) and h.exist=0
 
-/* extra */ union
-select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['placement',lower(t.descr),'soe',round(100.0*h.soe,1)::varchar]) extra_info
-from h_extra h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='extra'
-    left join placements t on t.placement_id=h.placement_id
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
-
 /* oos */ union 
 select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
