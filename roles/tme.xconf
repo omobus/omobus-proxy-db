@@ -48,10 +48,10 @@ logs->wakeup = 360
 push->wakeup = 10
 power->wakeup = 60
 statfs->wakeup = 60
-sync->wakeup = 40
+sync->wakeup = 20
 traffic->wakeup = 60
 traffic->read_timeout = 15
-upd->wakeup = 240
+upd->wakeup = 40
 
 terminals = logo support watermark title user gps work route reminders account location kpi targets route_history sales_history stats delim presence stock price advt shelf photo delim comment target testing contact equipment deletion unsched delim products planograms pos_materials info_materials notice docs sync version
 sync->outdated = 8
