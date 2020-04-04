@@ -40,7 +40,6 @@ gpsmon->wakeup = 5
 gpsmon->read_timeout = 4
 gpsmon->empty = yes
 gpsmon->max_accuracy = 15
-gpsmon->celltower_delay = 50
 logs->wakeup = 360
 push->wakeup = 10
 power->wakeup = 60
