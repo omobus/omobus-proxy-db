@@ -2814,16 +2814,11 @@ create table a_device (
     model		descr_t		not null,
     manufacturer	descr_t		not null,
     fingerprint		descr_t		not null,
-    spn			descr_t		null,
-    sim_state		varchar(12)	not null check (sim_state in ('absent','locked','pin_required','puk_required','ready','unknown') and sim_state = lower(sim_state)),
-    phone_type		varchar(4)	not null check (phone_type in ('cdma','gsm','sip','none') and phone_type = lower(phone_type)),
-    network_operator	descr_t		null,
     uptime		int64_t		not null,
     myuid		int32_t		not null,
     cpu_abis 		descr_t 	null,
     cpu_cores		int32_t		not null,
     heap_size		int64_t		not null,
-    gps 		bool_t 		null,
     screen_inches 	numeric(3,1)  	not null,
     screen_density 	int32_t 	not null,
     screen_height 	int32_t 	not null,
@@ -2933,7 +2928,7 @@ create table a_gps_state (
     user_id 		uid_t 		not null,
     fix_dt 		datetime_t 	not null,
     provider 		varchar(8) 	not null check (provider in ('gps','network') and provider = lower(provider)),
-    state		varchar(16)	not null check (state in ('off','on','failed','not_permitted') and state = lower(state)),
+    state 		varchar(16) 	not null check (state in ('off','on','failed','not_permitted') and state = lower(state)),
     msg 		varchar(512) 	null
 );
 
@@ -3009,6 +3004,24 @@ create index i_fix_date_a_gsm_trace on a_gsm_trace (left(fix_dt,10));
 create index i_daily_a_gsm_trace on a_gsm_trace (user_id, left(fix_dt,10)); /* especially for getting daily data */
 
 create trigger trig_lock_update before update on a_gsm_trace for each row execute procedure tf_lock_update();
+
+create table a_gsm_state (
+    act_id 		uid_t 		not null primary key default act_id(),
+    inserted_ts 	ts_auto_t 	not null,
+    inserted_node 	hostname_t 	not null,
+    dev_pack 		int32_t 	not null,
+    dev_id 		devid_t 	not null,
+    dev_login 		uid_t 		not null,
+    user_id 		uid_t 		not null,
+    fix_dt 		datetime_t 	not null,
+    sim_state		varchar(12)	not null check (sim_state in ('absent','locked','pin_required','puk_required','ready','unknown') and sim_state = lower(sim_state))
+);
+
+create index i_user_id_a_gsm_state on a_gps_state (user_id);
+create index i_fix_date_a_gsm_state on a_gps_state (left(fix_dt,10));
+create index i_exist_a_gsm_state on a_gps_state (user_id, dev_pack, dev_id, fix_dt);
+
+create trigger trig_lock_update before update on a_gsm_state for each row execute procedure tf_lock_update();
 
 create table a_heap (
     act_id 		uid_t 		not null primary key default act_id(),

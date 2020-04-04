@@ -39,7 +39,7 @@ begin
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, inserted_node, dev_pack, act_code)
 	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
 
--- **** gps_pos --> sysstats
+-- **** gps_state --> sysstats
     perform sysstat_add('%user_id_sys%', f_date, f_time);
 
     if( '%state%' = 'off' and '%msg%' = '' and r = 0 ) then
