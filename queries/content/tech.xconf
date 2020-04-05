@@ -7,7 +7,6 @@ select
     u.user_id, u.descr u_name, u.user_id code, u.dev_login, u.area, 
     exch_sync_success_total, exch_sync_success_time,
     exch_docs_success_total, exch_docs_success_time, 
-    pos_exist, pos_time,
     wd_begin::time_t, wd_end::time_t, case when (wd_end - wd_begin) > (time '0:0:1' - time '0:0:1') then (wd_end - wd_begin)::time_t else '' end wd_duration,
     acts_total, acts_time, 
     docs_total, docs_time, 
@@ -30,7 +29,7 @@ from users u
     left join (select user_id, count(act_id) exch_docs_success_total, substring(max(fix_dt), 12, 5)::time_t exch_docs_success_time from a_exchange
 	    where left(fix_dt, 10) = '%b_date%' and mode = 'docs' and status = 'success' group by user_id
 	) d on u.user_id = d.user_id
-    left join (select user_id, count(act_id) pos_exist, substring(max(fix_dt), 12, 5)::time_t pos_time from a_gps_pos p
+    left join (select user_id, count(act_id) pos_exist from a_gps_pos p
 	    where left(fix_dt, 10) = '%b_date%' and (latitude<>0 or longitude<>0) group by user_id
 	) g on u.user_id = g.user_id
     left join (select user_id, substring(min(fix_dt), 12, 5)::time wd_begin from a_user_work
@@ -58,7 +57,7 @@ order by u.descr
   <![CDATA[
 local std = require('stdlib')
 require('rtlib').main("tech", true, function(r, n, a)
-    if std.contains({'exch_sync_success_total','exch_docs_success_total','pos_exist','acts_total','docs_total','pause','dist'}, n) then
+    if std.contains({'exch_sync_success_total','exch_docs_success_total','acts_total','docs_total','pause','dist'}, n) then
 	r[n] = tonumber(a)
     else
 	r[n] = a
