@@ -41,7 +41,6 @@ acts->wakeup = 15
 docs->wakeup = 10
 gpsmon->wakeup = 5
 gpsmon->read_timeout = 4
-gpsmon->empty = yes
 gpsmon->max_accuracy = 15
 logs->wakeup = 360
 push->wakeup = 10
