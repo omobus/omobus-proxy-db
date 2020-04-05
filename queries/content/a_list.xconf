@@ -44,11 +44,11 @@ select
 	    (select 'state: ' || state || ', provider: ' || provider || case when msg is null or msg = '' then '' else ' [' || msg || ']' end
 		from a_gps_state where j.act_id=act_id)
 	when 'a_gsm_pos' then
-	    (select 'gsm control point: mcc=' || mcc || ' mnc=' ||mnc || ' cid=' || cid || ' lac=' || lac || ' ta=' || ta || 
-		' asu=' || asu || ' rxlev=' || rxlev
+	    (select 'gsm control point: ' || upper(radio) || ' mcc=' || mcc || ' mnc=' ||mnc || ' cid=' || cid || ' lac=' || lac || ' asu=' || asu ||
+		' (ta=' || ta || ' rxlev=' || rxlev || ')'
 	    from a_gsm_pos where j.act_id=act_id)
 	when 'a_gsm_state' then
-	    (select 'sim_state: ' || sim_state 
+	    (select format('SIM#0: %s SIM#1: %s', sim0_state, sim1_state)
 		from a_gsm_state where j.act_id=act_id)
 	when 'a_lifecycle' then
 	    (select case when facility='os' then format('%s system (reason: %s)', state, coalesce(extra,'-'))

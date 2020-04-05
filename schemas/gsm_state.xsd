@@ -22,7 +22,8 @@
 	    <xs:attribute name="satellite_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
 	    <xs:attribute name="latitude" use="optional" type="xs:decimal" default="0.0" />
 	    <xs:attribute name="longitude" use="optional" type="xs:decimal" default="0.0" />
-	    <xs:attribute name="sim_state" use="required" type="state_t" />
+	    <xs:attribute name="sim0_state" use="required" type="state_t" />
+	    <xs:attribute name="sim1_state" use="required" type="state_t" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>

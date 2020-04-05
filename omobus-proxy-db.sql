@@ -3014,12 +3014,14 @@ create table a_gsm_state (
     dev_login 		uid_t 		not null,
     user_id 		uid_t 		not null,
     fix_dt 		datetime_t 	not null,
-    sim_state		varchar(12)	not null check (sim_state in ('absent','locked','pin_required','puk_required','ready','unknown') and sim_state = lower(sim_state))
+    sim0_state		varchar(12)	not null check (sim0_state in ('absent','locked','pin_required','puk_required','ready','unknown') and sim0_state = lower(sim0_state)),
+    sim1_state		varchar(12)	not null check (sim1_state in ('absent','locked','pin_required','puk_required','ready','unknown') and sim1_state = lower(sim1_state))
 );
 
-create index i_user_id_a_gsm_state on a_gps_state (user_id);
-create index i_fix_date_a_gsm_state on a_gps_state (left(fix_dt,10));
-create index i_exist_a_gsm_state on a_gps_state (user_id, dev_pack, dev_id, fix_dt);
+
+create index i_user_id_a_gsm_state on a_gsm_state (user_id);
+create index i_fix_date_a_gsm_state on a_gsm_state (left(fix_dt,10));
+create index i_exist_a_gsm_state on a_gsm_state (user_id, dev_pack, dev_id, fix_dt);
 
 create trigger trig_lock_update before update on a_gsm_state for each row execute procedure tf_lock_update();
 
