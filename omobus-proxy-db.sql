@@ -413,7 +413,7 @@ declare
     lo0 gps_t default 0;
     dist int32_t default 0;
 begin
-    for la, lo in select latitude, longitude from a_gps_pos where user_id=uid and left(fix_dt,10)=d
+    for la, lo in select latitude, longitude from a_gps_trace/*pos*/ where user_id=uid and left(fix_dt,10)=d
 	and (latitude <> 0 or longitude <> 0 ) 
 	and (b_time is null or b_time <= substring(fix_dt, 12, 5)) and (e_time is null or substring(fix_dt, 12, 5) <= e_time) 
 	order by fix_dt
