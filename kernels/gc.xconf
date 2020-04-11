@@ -105,7 +105,6 @@ begin
 	delete from h_checkup where doc_id = i;
     end loop;
     delete from h_comment where left(fix_dt,10) < gc_date;
-    delete from h_conference where left(fix_dt,10) < gc_date;
     delete from h_confirmation where left(fix_dt,10) < gc_date and target_id not in (select target_id from targets);
     delete from h_contact where left(fix_dt,10) < gc_date;
     delete from h_deletion where left(fix_dt,10) < gc_date;

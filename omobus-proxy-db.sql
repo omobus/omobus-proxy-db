@@ -3751,40 +3751,6 @@ create index i_2lts_h_comment on h_comment (inserted_ts);
 
 create trigger trig_lock_update before update on h_comment for each row execute procedure tf_lock_update();
 
-create table h_conference (
-    doc_id 		uid_t 		not null primary key default doc_id(),
-    inserted_ts 	ts_auto_t 	not null,
-    inserted_node 	hostname_t 	not null,
-    dev_pack 		int32_t 	not null,
-    doc_no 		uid_t 		not null,
-    dev_id 		devid_t 	not null,
-    dev_login 		uid_t 		not null,
-    user_id 		uid_t 		not null,
-    fix_dt 		datetime_t 	not null,
-    created_dt 		datetime_t 	not null,
-    created_gps_dt 	datetime_t 	null,
-    created_gps_la 	gps_t 		null,
-    created_gps_lo 	gps_t 		null,
-    closed_dt 		datetime_t 	not null,
-    closed_gps_dt 	datetime_t 	null,
-    closed_gps_la 	gps_t 		null,
-    closed_gps_lo 	gps_t 		null,
-    w_cookie 		uid_t 		not null,
-    doc_note 		note_t 		null,
-    venue 		descr_t 	not null,
-    address 		address_t 	not null,
-    title 		descr_t 	not null,
-    b_date 		date_t 		not null,
-    e_date 		date_t 		not null
-);
-
-create index i_fix_date_h_conference on h_conference (left(fix_dt,10));
-create index i_doc_no_h_conference on h_conference (doc_no);
-create index i_user_id_h_conference on h_conference (user_id);
-create index i_exist_h_conference on h_conference (user_id, dev_pack, dev_id, fix_dt);
-
-create trigger trig_lock_update before update on h_conference for each row execute procedure tf_lock_update();
-
 create table h_confirmation (
     doc_id 		uid_t 		not null primary key default doc_id(),
     inserted_ts 	ts_auto_t 	not null,

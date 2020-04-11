@@ -43,7 +43,6 @@
 <xi:include href="../queries/2lts/cities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/comments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/comment_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<!--<xi:include href="../queries/2lts/conferences.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />-->
 <xi:include href="../queries/2lts/confirmation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/confirmations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/contacts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -150,7 +149,6 @@
     <cities />
     <comments />
     <comment_types />
-<!--    <conferences />-->
     <confirmation_types />
     <confirmations />
     <contacts />

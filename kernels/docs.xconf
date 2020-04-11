@@ -28,7 +28,6 @@
 <xi:include href="../queries/docs/canceling.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/checkup.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/comment.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/docs/conference.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/confirmation.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/contact.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/deletion.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
