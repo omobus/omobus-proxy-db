@@ -3179,6 +3179,7 @@ create table a_power (
     idle 		bool_t 		null,
     usb 		bool_t 		null,
     action 		uid_t 		null,
+    appidle 		bool_t 		null,
     satellite_dt 	datetime_t 	null,
     latitude 		gps_t 		null,
     longitude 		gps_t		null

@@ -69,9 +69,10 @@ select
 	    (select state || ' (' || case when battery_life=255 then '-' else (battery_life||'%') end || case when voltage>0 then (', '||voltage||' V') else '' end || 
 		    case when temperature>0 then (', '||temperature||' °C') else '' end || case when tech is not null and tech<>'' then (', '||tech) else '' end || ')' || 
 		    case when action is not null and action<>'' then (', '||action) else '' end ||
-		    case when power_save=1 then ', *** POWER SAVE ***' else '' end ||
 		    case when usb=1 then ', *** USB ***' else '' end ||
-		    case when idle=1 then ', *** IDLE ***' else '' end
+		    case when power_save=1 then ', *** POWER SAVE ***' else '' end ||
+		    case when idle=1 then ', * IDLE *' else '' end
+		    case when appidle=1 then ', *** APPIDLE ***' else '' end
 		from a_power where j.act_id=act_id)
 	when 'a_sms' then
 	    (select 'SMS ' || case when sender is null then '[*]' else sender end || ' -> ' || case when receiver is null then '[*]' else receiver end || 

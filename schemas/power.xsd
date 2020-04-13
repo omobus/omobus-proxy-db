@@ -38,6 +38,7 @@
 	    <xs:attribute name="usb" use="optional" type="bool_t" default="" />
 	    <xs:attribute name="power_save" use="optional" type="bool_t" default="" />
 	    <xs:attribute name="idle" use="optional" type="bool_t" default="" />
+	    <xs:attribute name="appidle" use="optional" type="bool_t" default="" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>
