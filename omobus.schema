@@ -8,7 +8,7 @@ attributetype ( 1.3.6.1.4.1.33158.11.3.200 NAME 'ErpId'
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
 
 attributetype ( 1.3.6.1.4.1.33158.11.3.201 NAME 'department'
-	DESC 'OMOBUS: filtering data by department ID (omobus-proxy-db row is dep_id)'
+	DESC 'OMOBUS: filtering data by department ID (omobus-proxy-db row is dep_ids)'
 	EQUALITY caseIgnoreMatch
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
 
@@ -31,6 +31,11 @@ attributetype ( 1.3.6.1.4.1.33158.11.3.205 NAME 'orderUnavailableProducts'
 	DESC 'OMOBUS: shown unavailable products in the order document (format: yes|no)'
 	EQUALITY caseIgnoreMatch
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.206 NAME 'country'
+	DESC 'OMOBUS: filtering data by department ID (omobus-proxy-db row is countdy_id)'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
 
 attributetype ( 1.3.6.1.4.1.33158.11.3.207 NAME 'syncErpId'
 	DESC 'OMOBUS: impersonation'
@@ -136,7 +141,8 @@ objectclass ( 1.3.6.1.4.1.33158.11.2.1 NAME 'omobusUser'
 	      IMEI $ beginWorkingTime $ endWorkingTime $ 
 	      transportServers $ terminalList $ serviceList $ orderUnavailableProducts $
 	      distributor $ agency $ 
-	      department
+	      department $
+	      country
 	    ) )
 
 objectclass ( 1.3.6.1.4.1.33158.11.2.2 NAME 'omobusMaintainPoint' 
