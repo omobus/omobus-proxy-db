@@ -3178,8 +3178,7 @@ create table a_power (
     power_save 		bool_t 		null,
     idle 		bool_t 		null,
     usb 		bool_t 		null,
-    action 		uid_t 		null,
-    appidle 		bool_t 		null,
+    ibo 		bool_t 		null, /* IgnoringBatteryOptimizations */
     satellite_dt 	datetime_t 	null,
     latitude 		gps_t 		null,
     longitude 		gps_t		null

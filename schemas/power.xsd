@@ -33,12 +33,11 @@
 	    <xs:attribute name="battery_life" use="optional" type="xs:integer" default="255" />
 	    <xs:attribute name="temperature" use="optional" type="xs:decimal" default="0" />
 	    <xs:attribute name="voltage" use="optional" type="xs:decimal" default="0" />
-	    <xs:attribute name="action" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="tech" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="usb" use="optional" type="bool_t" default="" />
 	    <xs:attribute name="power_save" use="optional" type="bool_t" default="" />
 	    <xs:attribute name="idle" use="optional" type="bool_t" default="" />
-	    <xs:attribute name="appidle" use="optional" type="bool_t" default="" />
+	    <xs:attribute name="ibo" use="optional" type="bool_t" default="" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>
