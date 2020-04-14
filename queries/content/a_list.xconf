@@ -71,7 +71,7 @@ select
 		    case when usb=1 then ', *** USB ***' else '' end ||
 		    case when power_save=1 then ', *** POWER SAVE ***' else '' end ||
 		    case when idle=1 and ibo=1 then ', IDLE, IgnoringBatteryOptimizations' else '' end ||
-		    case when idle=1 and ibo=0 then ', *** IDLE ***' else '' end ||
+		    case when idle=1 and ibo=0 then ', *** IDLE ***' else '' end
 		from a_power where j.act_id=act_id)
 	when 'a_sms' then
 	    (select 'SMS ' || case when sender is null then '[*]' else sender end || ' -> ' || case when receiver is null then '[*]' else receiver end || 
