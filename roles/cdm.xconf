@@ -39,6 +39,7 @@ docs->wakeup = 10
 gpsmon->wakeup = 5
 gpsmon->read_timeout = 4
 gpsmon->max_accuracy = 15
+network->onconnected = push sync
 logs->wakeup = 360
 push->wakeup = 10
 statfs->wakeup = 60
