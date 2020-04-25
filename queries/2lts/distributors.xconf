@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<distributors templ="%distr_id%;%pid%;%descr%;%country_id%;">
+<distributors templ="%distr_id%;%descr%;%country_id%;">
   <![CDATA[
-select distr_id, pid, descr, country_id from distributors
+select distr_id, descr, country_id from distributors
     where hidden = 0
 order by 1
   ]]>

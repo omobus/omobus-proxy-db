@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<retail_chains templ="%rc_id%;%pid%;%descr%;%ka_code%;%country_id%;">
+<retail_chains templ="%rc_id%;%descr%;%ka_code%;%country_id%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from retail_chains
 </check_exist>
 <update>
   <![CDATA[
-update retail_chains set pid=NIL('%pid%'), descr=trim(both from '%descr%'), ka_code=NIL('%ka_code%'), country_id=NIL('%country_id%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update retail_chains set descr=trim(both from '%descr%'), ka_code=NIL('%ka_code%'), country_id=NIL('%country_id%','RU'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where rc_id = '%rc_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into retail_chains (rc_id, pid, descr, ka_code, country_id, hidden, db_ids)
-    values ('%rc_id%', NIL('%pid%'), trim(both from '%descr%'), NIL('%ka_code%'), NIL('%country_id%'), 0, array['%ErpCode%'])
+insert into retail_chains (rc_id, descr, ka_code, country_id, hidden, db_ids)
+    values ('%rc_id%', trim(both from '%descr%'), NIL('%ka_code%'), NIL('%country_id%','RU'), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>

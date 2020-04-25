@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<distributors templ="%distr_id%;%pid%;%descr%;%country_id%;">
+<distributors templ="%distr_id%;%descr%;%country_id%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from distributors
 </check_exist>
 <update>
   <![CDATA[
-update distributors set descr=trim(both from '%descr%'), pid=NIL('%pid%'), country_id=NIL('%country_id%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update distributors set descr=trim(both from '%descr%'), country_id=NIL('%country_id%','RU'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where distr_id = '%distr_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into distributors (distr_id, descr, pid, country_id, hidden, db_ids)
-    values ('%distr_id%', trim(both from '%descr%'), NIL('%pid%'), NIL('%country_id%'), 0, array['%ErpCode%'])
+insert into distributors (distr_id, descr, country_id, hidden, db_ids)
+    values ('%distr_id%', trim(both from '%descr%'), NIL('%country_id%','RU'), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>

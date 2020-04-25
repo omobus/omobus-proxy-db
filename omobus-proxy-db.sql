@@ -1373,9 +1373,8 @@ create trigger trig_updated_ts before update on discounts for each row execute p
 
 create table distributors (
     distr_id 		uid_t 		not null primary key default man_id(),
-    pid 		uid_t 		null,
     descr 		descr_t 	not null,
-    country_id 		uid_t 		null,
+    country_id 		uid_t 		not null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -2278,10 +2277,9 @@ create trigger trig_updated_ts before update on restrictions for each row execut
 
 create table retail_chains (
     rc_id		uid_t		not null primary key default man_id(),
-    pid 		uid_t 		null,
     descr 		descr_t 	not null,
     ka_code		code_t		null,	/* Key Account: NKA, KA, ... */
-    country_id 		uid_t 		null,
+    country_id 		uid_t 		not null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
