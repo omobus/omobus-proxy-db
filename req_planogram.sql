@@ -54,7 +54,7 @@ begin
 	hs := hs || hstore(array['country_id',(_opt).country_id]);
 	hs := hs || hstore(array['brand_ids',array_to_string((_opt).brand_ids,',')]);
 	if( (_opt).rc_id is not null ) then
-	    hs := hs || hstore(array['rc_id',array_to_string((_opt).rc_id,',')]);
+	    hs := hs || hstore(array['rc_id',(_opt).rc_id]);
 	end if;
 	if( (_opt).chan_ids is not null ) then
 	    hs := hs || hstore(array['chan_ids',array_to_string((_opt).chan_ids,',')]);
