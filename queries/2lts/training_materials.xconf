@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<training_materials templ="%tm_id%;%descr%;%brand_ids%;">
+<training_materials templ="%tm_id%;%descr%;%brand_ids%;%country_id%;%b_date%;%e_date%;">
   <![CDATA[
-select tm_id, descr, array_to_string(brand_ids,',') brand_ids from training_materials
+select tm_id, descr, array_to_string(brand_ids,',') brand_ids, country_id, b_date, e_date from training_materials
     where hidden = 0
 order by 1
   ]]>
