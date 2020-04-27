@@ -1520,10 +1520,9 @@ create table info_materials (
     rc_id 		uid_t 		null,
     chan_ids 		uids_t 		null,
     dep_id 		uid_t		null,
-    country_id 		country_t 	null,
-    b_date 		date_t 		not null default current_date,
+    country_id 		country_t 	not null,
+    b_date 		date_t 		null,
     e_date 		date_t 		null,
-    row_no 		int32_t 	null, -- ordering
     author_id 		uid_t 		not null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
