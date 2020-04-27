@@ -273,6 +273,14 @@ select r.user_id person_id, r.reminder_id from (select unnest(user_ids) user_id,
 order by r.user_id, r.reminder_id
   ]]>
 </my_reminders>
+<my_training_materials>
+    <![CDATA[
+select null brand_id, tm_id from training_materials where hidden=0 and brand_ids is null or cardinality(brand_ids) = 0
+    union
+select unnest(brand_ids) brand_id, tm_id from training_materials where hidden=0 and brand_ids is not null or cardinality(brand_ids) > 0
+    order by 1, 2
+    ]]>
+</my_training_materials>
 <!--
 <my_vfs>
     <![CDATA[
@@ -283,7 +291,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 -->
 <!-- **** FILTERS: END **** -->
 </queries>
-<pack Xstrict="yes" Xtrace="yes">
+<pack strict="yes" trace="yes">
     <activity_types personalize="groupName" />
     <addition_types />
     <attributes />
@@ -330,7 +338,8 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <my_accounts personalize="ErpId" />
     <my_jobs personalize="ErpId" />
     <my_countries personalize="ErpId">
-	<info_materials key="country_id" />
+	<distributors key="country_id" strict="yes" />
+	<info_materials key="country_id" strict="yes" />
 	<my_productsL1 key="country_id">
 	    <products key="fid" />
 	</my_productsL1>
@@ -340,8 +349,9 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<planograms key="country_id" />
 	<pos_materials key="country_id" />
 	<priorities key="country_id" />
+	<retail_chains key="country_id" strict="yes" />
 	<support key="country_id" />
-	<training_materials key="country_id" />
+	<training_materials key="country_id" strict="yes" />
     </my_countries>
     <my_departments personalize="ErpId">
 	<brands key="dep_id" />
@@ -483,6 +493,9 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<my_pos_materialsL2  key="brand_id">
 	    <pos_materials key="fid" />
 	</my_pos_materialsL2>
+	<my_training_materials key="brand_id">
+	    <training_materials key="tm_id" />
+	</my_training_materials>
 	<priorities key="brand_id" strict="yes" />
 	<products key="brand_id" />
     </brands>

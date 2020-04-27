@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<training_materials templ="%tm_id%;%descr%;%blob%;%content_type%;%brand_ids%;" empty="no">
+<training_materials templ="%tm_id%;%descr%;%brand_ids%;%blob%;%content_type%;%b_date%;%e_date%;" empty="no">
   <![CDATA[ 
-select tm_id, descr, blob, content_type, array_to_string(brand_ids,',') brand_ids, dep_id, country_id from training_materials
-    where hidden = 0
-order by descr
+select 
+    tm_id, 
+    descr, 
+    blob, 
+    content_type, 
+    array_to_string(brand_ids,',') brand_ids, 
+    b_date, 
+    e_date, 
+    country_id
+from training_materials
+    where hidden = 0 and blob is not null and (
+	/* current: */  (b_date <= current_date::date_t and current_date::date_t <= e_date) or
+	/* obsolete: */ (current_date::date_t > e_date and e_date >= (current_date - 1)::date_t) or
+	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t) or
+	(b_date is null and e_date is null)
+    ) and country_id is not null and trim(country_id) <> ''
+order by descr, tm_id
   ]]>
 </training_materials>

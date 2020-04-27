@@ -2,7 +2,12 @@
 <info_materials templ="%infom_id%;%descr%;%rc_id%;%chan_ids%;%blob%;%content_type%;" empty="no">
   <![CDATA[ 
 select infom_id, descr, blob, content_type, rc_id, array_to_string(chan_ids,',') chan_ids, dep_id, country_id from info_materials
-    where hidden = 0 and (b_date is null or b_date<=current_date::date_t) and (e_date is null or current_date::date_t<=e_date)
-order by row_no, descr
+    where hidden = 0 and blob is not null and (
+	/* current: */  (b_date <= current_date::date_t and current_date::date_t <= e_date) or
+	/* obsolete: */ (current_date::date_t > e_date and e_date >= (current_date - 1)::date_t) or
+	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t) or
+	(b_date is null and e_date is null)
+    ) and country_id is not null and trim(country_id) <> ''
+order by descr, infom_id
   ]]>
 </info_materials>
