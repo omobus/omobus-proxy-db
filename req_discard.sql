@@ -1,6 +1,7 @@
 /* Copyright (c) 2006 - 2020 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
-create or replace function console.req_discard(rlogin uid_t, cmd code_t, /*attrs:*/ a_id uid_t, u_id uid_t, p_date date_t, t_id uid_t) returns int
+create or replace function console.req_discard(rlogin uid_t, _reqdt datetime_t, cmd code_t, /*attrs:*/ a_id uid_t, u_id uid_t, t_id uid_t, p_date date_t) 
+    returns int
 as $BODY$
 declare
     stack text; fcesig text;
@@ -30,11 +31,20 @@ begin
     select descr, address from accounts where account_id=a_id
 	into a_name, a_address;
 
-    perform evmail_add(u_id, 'discard/caption:'||cmd, 'discard/body:'||cmd, case when cmd = 'reject' then 2::smallint /*high*/ else 3::smallint /*normal*/ end, array[
-	'a_name',a_name,'address',a_address,'route_date',"L"(p_date),'u_name',case when auth is null then lower(rlogin) else auth end]);
+    perform evmail_add(u_id, 
+	'discard/caption:'||cmd, 
+	'discard/body:'||cmd, 
+	case when cmd = 'reject' then 2::smallint /*high*/ else 3::smallint /*normal*/ end, 
+	array[
+	    'a_name',a_name,
+	    'address',a_address,
+	    'route_date',"L"(p_date),
+	    'u_name',case when auth is null then lower(rlogin) else auth end
+	]
+    );
 
-    insert into console.requests(req_login, req_type, status, attrs)
-	values(rlogin, fcesig, cmd, hstore(array['account_id',a_id,'user_id',u_id,'route_date',p_date,'activity_type_id',t_id]));
+    insert into console.requests(req_login, req_type, req_dt, status, attrs)
+	values(rlogin, fcesig, _reqdt, cmd, hstore(array['account_id',a_id,'user_id',u_id,'route_date',p_date,'activity_type_id',t_id]));
 
     return 0;
 end;

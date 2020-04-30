@@ -1,6 +1,6 @@
 /* Copyright (c) 2006 - 2020 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
-create or replace function console.req_deletion(rlogin uid_t, cmd code_t, /*attrs:*/ a_id uid_t) returns int
+create or replace function console.req_deletion(rlogin uid_t, _reqdt datetime_t, cmd code_t, /*attrs:*/ a_id uid_t) returns int
 as $BODY$
 declare
     stack text; fcesig text;
@@ -52,8 +52,8 @@ begin
 	end if;
     end loop;
 
-    insert into console.requests(req_login, req_type, status, attrs)
-	values(rlogin, fcesig, cmd, hstore(array['account_id',a_id]));
+    insert into console.requests(req_login, req_type, req_dt, status, attrs)
+	values(rlogin, fcesig, _reqdt, cmd, hstore(array['account_id',a_id]));
 
     return 0;
 end;

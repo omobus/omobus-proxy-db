@@ -39,8 +39,13 @@ begin
 	perform evmail_add(
 	    _uid, 
 	    'wish/caption:'||_cmd, 
-	    'wish/body:'||_cmd, case when _cmd = 'reject' then 2::smallint /*high*/ else 3::smallint /*normal*/ end, 
-	    array['a_name',a_name,'address',a_address,'u_name',case when auth is null then lower(_login) else auth end]
+	    'wish/body:'||_cmd, 
+	    case when _cmd = 'reject' then 2::smallint /*high*/ else 3::smallint /*normal*/ end, 
+	    array[
+		'a_name',a_name,
+		'address',a_address,
+		'u_name',case when auth is null then lower(_login) else auth end
+	    ]
 	);
     end if;
 
