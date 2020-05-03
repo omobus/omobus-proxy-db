@@ -13,15 +13,15 @@ select
     pause, 
     case when pause=0 and pos_exist>0 then mileage(u.user_id, '%b_date%') else null end dist,
     (
-	select array_to_string(array_agg(descr::text),'; ') from distributors aa, 
+	select array_to_string(array_agg(descr::text),'|') from distributors aa, 
 	    (select uu distr_id, row_number() over() rowno from unnest(u.distr_ids) uu) bb
 	where aa.distr_id=bb.distr_id order by min(bb.rowno)
-    ) distrs,
+    ) distributors,
     (
-	select array_to_string(array_agg(descr::text),'; ') from departments aa, 
+	select array_to_string(array_agg(descr::text),'|') from departments aa, 
 	    (select uu dep_id, row_number() over() rowno from unnest(u.dep_ids) uu) bb
 	where aa.dep_id=bb.dep_id order by min(bb.rowno)
-    ) deps
+    ) departments
 from users u
     left join (select user_id, count(act_id) exch_sync_success_total, substring(max(fix_dt), 12, 5)::time_t exch_sync_success_time from a_exchange
 	    where left(fix_dt, 10) = '%b_date%' and mode = 'sync' and status = 'success' group by user_id
@@ -59,6 +59,8 @@ local std = require('stdlib')
 require('rtlib').main("tech", true, function(r, n, a)
     if std.contains({'exch_sync_success_total','exch_docs_success_total','acts_total','docs_total','pause','dist'}, n) then
 	r[n] = tonumber(a)
+    elseif std.contains({'distributors','departments'}, n) then
+	r[n] = std.split(a, '|')
     else
 	r[n] = a
     end
