@@ -35,6 +35,11 @@ select
     r.b_dt, r.e_dt, datediff(r.b_dt, r.e_dt) duration,
     r.latitude, r.longitude, distance(a.latitude, a.longitude, r.latitude, r.longitude) dist,
     r.latitude_e, r.longitude_e, distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) dist_e,
+    case 
+	when r.closed = 1 and t.strict = 1 and r.b_dt is not null and r.e_dt is not null and r.b_dt < r.e_dt then
+	    mileage(r.user_id, '%b_date%', substring(r.b_dt, 12, 5), substring(r.e_dt, 12, 5))
+	else null
+    end mileage,
     r.extra_info,
     r.docs,
     c.descr chan, p.descr poten,
@@ -50,11 +55,6 @@ from user_routes('%user_id%', '%b_date%', '%e_date%', 1::bool_t) r
 order by r.b_dt, r.row_no
   ]]>
 	</route>
-	<distance_traveled>
-  <![CDATA[
-select mileage('%user_id%', '%b_date%') dist
-  ]]>
-	</distance_traveled>
 	<additions>
   <![CDATA[
 select 
@@ -556,17 +556,37 @@ select
     "paramInteger"('rules:max_duration') "rules:max_duration",
     "paramInteger"('rules:max_distance') "rules:max_distance",
     w0.fix_dt wd_begin,
-    case when w0.fix_dt > w1.fix_dt then null else w1.fix_dt end wd_end
+    case when w0.fix_dt > w1.fix_dt then null else w1.fix_dt end wd_end,
+    case 
+	when (s.packets).count > 0 then 
+	    mileage(u.user_id, '%b_date%') 
+	else null 
+    end wd_mileage,
+    case 
+	when (s.packets).count > 0 and r.b_time is not null and r.e_time is not null then 
+	    mileage(u.user_id, '%b_date%', r.b_time, r.e_time) 
+	else null 
+    end rd_mileage
 from users u
     left join agencies a on a.agency_id = u.agency_id
     left join users ex on ex.user_id = u.executivehead_id
     left join sysstats s on s.fix_date='%b_date%' and s.user_id=u.user_id
     left join (
-	select user_id,  min(fix_dt) fix_dt from a_user_work where user_id='%user_id%' and left(fix_dt, 10) = '%b_date%' and state='begin' group by user_id
+	select user_id, min(fix_dt) fix_dt from a_user_work 
+	    where user_id='%user_id%' and left(fix_dt, 10) = '%b_date%' and state='begin' 
+	group by user_id
     ) w0 on u.user_id = w0.user_id
     left join (
-	select user_id,  max(fix_dt) fix_dt from a_user_work where user_id='%user_id%' and left(fix_dt, 10) = '%b_date%' and state='end' group by user_id
+	select user_id, max(fix_dt) fix_dt from a_user_work 
+	    where user_id='%user_id%' and left(fix_dt, 10) = '%b_date%' and state='end' 
+	group by user_id
     ) w1 on u.user_id = w1.user_id
+    left join (
+	select j.user_id, substring(min(j.b_dt), 12, 5) b_time, substring(max(j.e_dt), 12, 5) e_time from j_user_activities j, activity_types t
+	    where j.user_id='%user_id%' and j.fix_date='%b_date%' and j.b_dt is not null and j.e_dt is not null 
+		and j.activity_type_id = t.activity_type_id and t.strict = 1
+	group by j.user_id
+    ) r on u.user_id = r.user_id
 where u.user_id='%user_id%'
   ]]>
 	</stats>
@@ -605,12 +625,6 @@ local std = require('stdlib')
 local rt = require('rtlib')
 local tb, idx = {}, {}
 local ptr
-
-function distance_traveled()
-    local dist, rows, cols = 0, rowset_rows(_distance_traveled), rowset_cols(_distance_traveled)
-    if rows > 0 and cols > 0 then dist = tonumber(rowset_value(_distance_traveled, 0, 0, "0")) end
-    return dist
-end
 
 tb.code = "tech_route"
 tb.user_id = _user_id
@@ -680,7 +694,6 @@ tb.my_accounts = rt.idx(_my_accounts, "account_id", function(r, n, a)
 	r[n] = a;
     end
 end)
-tb.distance_traveled = distance_traveled()
 
 if tb.trace ~= nil and #tb.trace > 0 then
     local v = tb.trace[#tb.trace]
@@ -1168,6 +1181,7 @@ if rowset_rows(_stats) > 0 then
     tb.wd = {}
     tb.wd.b = rowset_value(_stats, 0, rowset_colid(_stats, "wd_begin"))
     tb.wd.e = rowset_value(_stats, 0, rowset_colid(_stats, "wd_end"))
+    tb.wd.mileage = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "wd_mileage")))
 end
 if rowset_rows(_traffics) > 0 then
     tb.traffics = {}
@@ -1240,6 +1254,7 @@ if tb.route ~= nil and #tb.route > 0 then
 	    tb.rd.indoor = tb.rd.indoor + v.duration
 	end
     end
+    tb.rd.mileage = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "rd_mileage")))
 end
 
 
