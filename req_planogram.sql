@@ -75,7 +75,8 @@ begin
 end;
 $BODY$ language plpgsql;
 
-create or replace function console.req_planogram(_login uid_t, _reqdt datetime_t, /*attrs:*/ _name descr_t, _data blob_t) returns int
+create or replace function console.req_planogram(_login uid_t, _reqdt datetime_t, /*attrs:*/ _name descr_t, _data blob_t, _content_type text) 
+    returns int
 as $BODY$
 declare
     stack text; fcesig text;
@@ -90,8 +91,8 @@ begin
 	raise exception '% invalid input attribute!', fcesig;
     end if;
 
-    insert into planograms(descr, country_id, brand_ids, image, author_id)
-	values(_name, '', '{}'::uids_t, _data, _login)
+    insert into planograms(descr, country_id, brand_ids, "blob", content_type, author_id)
+	values(_name, '', '{}'::uids_t, _data, _content_type, _login)
     returning pl_id
     into xid;
     GET DIAGNOSTICS rv = ROW_COUNT;
@@ -99,6 +100,7 @@ begin
     hs := hstore(array['pl_id',xid]);
     hs := hs || hstore(array['descr',_name]);
     hs := hs || hstore(array['data_oid',_data::text]);
+    hs := hs || hstore(array['content_type',_content_type]);
     hs := hstore(array['__rv',rv::text]);
 
     insert into console.requests(req_login, req_type, req_dt, status, attrs)

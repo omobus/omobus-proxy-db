@@ -1515,7 +1515,7 @@ create trigger trig_updated_ts before update on highlights for each row execute 
 create table info_materials (
     infom_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
-    blob 		blob_t 		not null,
+    "blob" 		blob_t 		not null,
     content_type 	varchar(32) 	not null default 'application/pdf',
     rc_id 		uid_t 		null,
     chan_ids 		uids_t 		null,
@@ -1911,7 +1911,8 @@ create trigger trig_updated_ts before update on placements for each row execute 
 create table planograms (
     pl_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
-    image 		blob_t 		not null,
+    "blob" 		blob_t 		not null,
+    content_type 	varchar(32) 	not null default 'image/jpeg',
     brand_ids 		uids_t 		not null,
     rc_id 		uid_t 		null,
     chan_ids 		uids_t 		null,
@@ -1956,7 +1957,8 @@ create trigger trig_updated_ts before update on pmlist for each row execute proc
 create table pos_materials ( /* Point-of-Sale and Point-of-Purchase materials */
     posm_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
-    image 		blob_t 		not null,
+    "blob" 		blob_t 		not null,
+    content_type 	varchar(32) 	not null default 'image/jpeg',
     brand_ids 		uids_t 		not null,
     placement_ids 	uids_t 		null,
     chan_ids 		uids_t 		null,
@@ -2549,7 +2551,7 @@ create trigger trig_updated_ts before update on tickets for each row execute pro
 create table training_materials (
     tm_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
-    blob 		blob_t 		not null,
+    "blob" 		blob_t 		not null,
     content_type 	varchar(32) 	not null default 'application/pdf',
     brand_ids 		uids_t 		null,
     country_id		country_t 	not null,

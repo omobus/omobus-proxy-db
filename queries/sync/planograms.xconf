@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<planograms templ="%pl_id%;%descr%;%rc_id%;%chan_ids%;%image%;%delim%;" empty="no">
+<planograms templ="%pl_id%;%descr%;%rc_id%;%chan_ids%;%blob%;%content_type%;%delim%;" empty="no">
   <![CDATA[ 
 select 
     0 _xz, 
@@ -11,7 +11,8 @@ select
     null brand_ids,
     null rc_id, 
     null chan_ids, 
-    null::blob_t image, 
+    null::blob_t blob, 
+    null::varchar content_type,
     1 delim, 
     null country_id
 from brands
@@ -27,7 +28,8 @@ select
     null brand_ids,
     null rc_id, 
     null chan_ids, 
-    null::blob_t image, 
+    null::blob_t blob, 
+    null::varchar content_type,
     1 delim, 
     null country_id
 	union
@@ -41,11 +43,12 @@ select
     array_to_string(brand_ids,',') brand_ids,
     rc_id, 
     array_to_string(chan_ids,',') chan_ids, 
-    image, 
+    blob, 
+    content_type,
     0 delim, 
     country_id
 from planograms, (select count(*) f from planograms where hidden = 0 and brand_ids is not null and cardinality(brand_ids) = 1) a
-    where hidden = 0 and image is not null and cardinality(brand_ids) > 0 and (
+    where hidden = 0 and blob is not null and cardinality(brand_ids) > 0 and (
 	/* current: */  (b_date <= current_date::date_t and current_date::date_t <= e_date) or
 	/* obsolete: */ (current_date::date_t > e_date and e_date >= (current_date - 1)::date_t) or
 	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t) or
