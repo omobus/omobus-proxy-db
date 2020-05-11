@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <accounts templ="%pid%;%account_id%;%ftype%;%code%;%descr%;%address%;%rc_id%;%chan_id%;%poten_id%;%cash_register%;%latitude%;%longitude%;%attr_ids%;%approved%;%locked%;%hidden%;%ownerless%;%extra_info%;">
   <![CDATA[
-select case when ftype=0 then account_id else null end fid, null lang_id,
+select case when ftype=0 then account_id else null end fid, 
     account_id, pid, descr, ftype, code, locked, address, latitude, longitude, chan_id, poten_id, rc_id, cash_register, array_to_string(attr_ids, ',') attr_ids, extra_info, approved, hidden, ownerless
 from accounts
 where 
@@ -19,31 +19,6 @@ where
 	    )
 	)
     )
-
-/* Localized accounts */ union
-
-select case when ftype=0 then account_id else null end fid, i.lang_id,
-    a.account_id, a.pid, coalesce(i0.str, a.descr) descr, a.ftype, a.code, a.locked, coalesce(i1.str, a.address) address, a.latitude, a.longitude, a.chan_id, a.poten_id, a.rc_id, a.cash_register, array_to_string(a.attr_ids, ',') attr_ids, a.extra_info, a.approved, a.hidden, a.ownerless 
-from (select distinct lang_id, obj_id from "L10n" where obj_code='account' and obj_attr in ('descr','address')) i
-    left join accounts a on i.obj_id=a.account_id and a.hidden=0
-    left join "L10n" i0 on i0.lang_id=i.lang_id and i0.obj_code='account' and i0.obj_attr='descr' and i0.obj_id=a.account_id
-    left join "L10n" i1 on i1.lang_id=i.lang_id and i1.obj_code='account' and i1.obj_attr='address' and i1.obj_id=a.account_id
-where a.account_id is not null and
-    /* allows only approved accounts: */
-    --a.approved = 1 and
-    (
-    a.hidden = 0 
-    /* deleted accounts: */
-    or (a.hidden = 1 and a.account_id in (
-	    select distinct account_id from j_user_activities where fix_date >= (current_date + "paramInteger"('route_history:offset:left'))::date_t
-		union
-	    select distinct account_id from my_routes where p_date >= (current_date + "paramInteger"('route_history:offset:left'))::date_t
-		union
-	    select distinct account_id from h_pending where left(fix_dt,10) >= (current_date + "paramInteger"('my_routes:pending:depth'))::date_t
-	    )
-	)
-    )
-
-order by ftype desc, lang_id nulls last, descr, address
+order by ftype desc, descr, address
   ]]>
 </accounts>

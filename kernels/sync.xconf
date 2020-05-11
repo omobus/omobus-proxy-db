@@ -330,9 +330,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <wish_days />
     <wish_weeks />
     <L10n personalize="ErpId">
-	<accounts key="lang_id" group="account_id" collapse="no" />
 	<cycle_dates key="lang_id" />
-	<products key="lang_id" group="prod_id" collapse="no" />
 	<route_history_extra key="lang_id" />
     </L10n>
     <my_accounts personalize="ErpId" />
