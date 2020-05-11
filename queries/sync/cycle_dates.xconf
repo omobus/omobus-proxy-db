@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<cycle_dates templ="%date%;%descr%;" empty="no">
-  <![CDATA[
-select a::date_t "date", r.descr, r.lang_id from generate_series(current_date + "paramInteger"('my_routes:offset:left'), current_date + "paramInteger"('my_routes:offset:right'), '1 day') a, explain_cycle_date(a::date) r
-    order by 1
-  ]]> 
-</cycle_dates>

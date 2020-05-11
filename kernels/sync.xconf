@@ -46,7 +46,6 @@
 <xi:include href="../queries/sync/comment_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/confirmation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/contacts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/cycle_dates.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/debts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/delivery_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/departments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -330,7 +329,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <wish_days />
     <wish_weeks />
     <L10n personalize="ErpId">
-	<cycle_dates key="lang_id" />
+	<orders_history key="lang_id" />
 	<route_history_extra key="lang_id" />
     </L10n>
     <my_accounts personalize="ErpId" />

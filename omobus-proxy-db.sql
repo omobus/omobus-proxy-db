@@ -325,34 +325,6 @@ begin
 end;
 $body$ language plpgsql IMMUTABLE;
 
-create or replace function explain_cycle_date(d date_t) returns table(lang_id lang_t, descr descr_t)
-as $BODY$
-declare
-    s date;
-    c int32_t;
-    o int;
-    w int;
-    x int;
-begin
-    select b_date::date, cycle_no from route_cycles where b_date<= d and d <= e_date and hidden = 0
-	into s, c;
-    if( s is not null ) then
-	o := d::date - s;
-	w := o/7;
-	x := o - w*7;
-	for lang_id, descr in select a.lang_id, format(a.str, x+1, w+1, c) from "L10n" a where obj_code='route_cycles'
-	loop
-	    return next;
-	end loop;
-    end if;
-end;
-$BODY$ language plpgsql STABLE;
-
-create or replace function explain_cycle_date(d date) returns table(lang_id lang_t, descr descr_t)
-as $BODY$ 
-    select a.lang_id, a.descr from explain_cycle_date(d::date_t) a
-$BODY$ language sql STABLE;
-
 create or replace function format_a(fmt text, ar text array) returns text as
 $body$
 declare

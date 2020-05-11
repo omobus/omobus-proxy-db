@@ -466,7 +466,7 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','TTD/body:delivered','<html><body>Документ $(doc_no) успешно доставлен дистрибьютору.<br/><br/>ВНИМАНИЕ. Дальнейшее состояние документа уточняйте у сотрудников дистрибьютора.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','my_routes','','pending','Необходимо выполнить до $(e_date) (включительно).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','my_routes','','pending/today','Сегодня <b>последний день</b> действия отложенного посещения. Не забудьте посетить данного клиента и зафиксировать все требуемые данные.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','orders_history','','extra','Тип: $(type). Склад: $(wareh). Доставка: <b>$(delivery_date)</b> ($(delivery_note)). $(note)');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','orders_history','','extra','Тип: $(type). Склад: $(wareh). Доставка: <b>$(delivery_date)</b>$(delivery_note). $(note).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','audit','$(u_name) запросил(-а) срочное устрание замечаний, выявленных в ходе аудита размещения продукции от $(fix_date) в $(a_name) $(address).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','joint_route/caption','Результаты совместного маршрута');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','joint_route/body', 'ИТОГОВАЯ ОЦЕНКА от $(fix_date): <b>$(sla)%</b><br/>Автор: $(u_name)<br/><br/><i>(сильные стороны обучаемого)</i><br/>$(note0)<br/><br/><i>(области для развития)</i><br/>$(note1)<br/><br/><i>(рекомендации для развития)</i><br/>$(note2)');
@@ -478,7 +478,6 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder',
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','sched/coaching:staff:tomorrow','Завтра, $(date) $(u_name) запланировал(-а) провести с Вами <b>полевое обучение</b>. В случае невозможности участия в полевом обучении, не забудьте проинформировать руководителя об этом.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','sched/coaching:staff:today','Сегодня, $(date) $(u_name) запланировал(-а) провести с Вами <b>полевое обучение</b>. В случае невозможности участия в полевом обучении, не забудьте проинформировать руководителя об этом.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','target','$(u_name) затребовал приоритетное выполнение задач, поставленных $(fix_date) в $(a_name) $(address).');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_cycles','','','%1$s день %2$s недели %3$s цикла');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','advt','Наличие рекламных материалов.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','audit','Аудит категории $(categ): $(sla)%.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','checkups','Осмотр т/зала или склада.');

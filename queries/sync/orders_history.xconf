@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <orders_history templ="%doc_id%;%erp_id%;%user_id%;%account_id%;%doc_no%;%fix_dt%;%amount%;%erp_no%;%erp_dt%;%erp_amount%;%status%;%color%;%bgcolor%;%extra_info%;" empty="no">
   <![CDATA[
-select 
+select z.lang_id,
     h.doc_id, e.erp_id, h.user_id, h.account_id, h.doc_no doc_no, h.fix_dt, h.amount, e.erp_no, e.erp_dt, e.amount erp_amount, e.status, 
     case when round(e.amount, 0) != round(h.amount, 0) then "paramInteger"('orders_history:alert:color'::uid_t) else null end color, 
     case when round(e.amount, 0) != round(h.amount, 0) then "paramInteger"('orders_history:alert:bgcolor'::uid_t) else null end bgcolor, 
-    "L10n_format_a"(u.lang_id, 'orders_history', '', 'extra', array['type',t.descr,'wareh',w.descr,'delivery_date',"L"(h.delivery_date),'delivery_note',NIL(h.delivery_note),'note',h.doc_note]) extra_info
+    format_a(z.str,array['type',t.descr,'wareh',w.descr,'delivery_date',"L"(h.delivery_date),'delivery_note',coalesce(' '||NIL(trim(h.delivery_note)),''),'note',h.doc_note]) extra_info
 from h_order h
     left join order_types t on t.order_type_id = h.order_type_id
     left join users u on h.user_id=u.user_id
     left join warehouses w on w.wareh_id = h.wareh_id and w.distr_id = h.distr_id
     left join (select distinct on(doc_id) * from erp_docs where doc_type in ('order','contract')
         order by doc_id, erp_dt desc) e on e.doc_id = h.doc_id
+    left join "L10n" z on z.obj_code='orders_history' and z.obj_attr=''
 where left(fix_dt, 10) >= (current_date + "paramInteger"('orders_history:offset'::uid_t))::date_t
 order by left(h.fix_dt, 10) desc, h.fix_dt, h.doc_id
   ]]>
