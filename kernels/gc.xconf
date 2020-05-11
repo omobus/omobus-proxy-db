@@ -168,15 +168,15 @@ begin
     delete from h_unsched where left(fix_dt,10) < gc_date;
     delete from h_wish where left(fix_dt,10) < gc_date;
 
-    delete from mail_stream where inserted_ts::date_t < gc_date;
-    delete from pt_stream where inserted_ts::date_t < gc_date;
-    delete from thumbnail_stream where inserted_ts::date_t < gc_date and photo in (select orphanTHUMB());
-
+    delete from blob_stream where inserted_ts::date_t < gc_date;
     delete from content_stream where e_date < gc_date and e_date != '';
     delete from "content_stream.ghost" where e_date < gc_date and e_date != '';
     if( f > 0 ) then
 	perform content_add('targets_compliance', '', '', '');
     end if;
+    delete from mail_stream where inserted_ts::date_t < gc_date;
+    delete from pt_stream where inserted_ts::date_t < gc_date;
+    delete from thumbnail_stream where inserted_ts::date_t < gc_date and photo in (select orphanTHUMB());
 
     raise notice 'deleted rows before %.', gc_date;
 
