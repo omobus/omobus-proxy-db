@@ -34,6 +34,10 @@ update h_addition set photos=array_append(photos::OID[], $1:blob::OID)
 do $$
 declare
     f_date date_t default left('%fix_dt%',10);
+    x bool_t default 0;
+    rcpt_to emails_t;
+    u_name descr_t;
+    u_lang lang_t;
 begin
 -- *** addition -> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, inserted_node, dev_pack, doc_code)
@@ -49,6 +53,25 @@ begin
     else
 	insert into accounts(account_id, descr, address, chan_id, approved, attr_ids, extra_info, latitude, longitude, hidden)
 	    values('%guid%', '%account%', '%address%', NIL('%chan_id%'), 0, string_to_array(NIL('%attr_ids%'),','), NIL('%doc_note%'), NIL(%created_gps_la%), NIL(%created_gps_lo%), 0);
+	x := 1;
+    end if;
+
+-- **** addition --> mail_stream
+    if( x = 1 ) then
+        select descr from users where user_id='%user_id_sys%' into u_name;
+
+	for rcpt_to, u_lang in select evaddrs, lang_id from users where user_id<>'%user_id_sys%' and user_id in (
+		select pids[1] from users where user_id='%user_id_sys%' and pids[1] is not null
+		    union
+		select executivehead_id from users where user_id='%user_id_sys%' and executivehead_id is not null
+	    ) and hidden=0 and evaddrs is not null and array_length(evaddrs, 1) > 0
+	loop
+	    perform evmail_add(rcpt_to, u_lang, 'addition/caption:new', 'addition/body:notice', 3::smallint /*normal*/, array[
+		'u_name',u_name,
+		'fix_dt',"L"('%fix_dt%'::datetime_t),
+		'a_name','%account%','address','%address%'
+		]);
+        end loop;
     end if;
 
 -- **** addition --> thumbnail_stream
