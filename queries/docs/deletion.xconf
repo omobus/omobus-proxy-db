@@ -96,6 +96,7 @@ begin
 	    raise notice 'account already deleted: user_id=%user_id_sys%, account_id=%account_id%.';
 	else
 	    update accounts set hidden = 1 where account_id = '%account_id%';
+	    update j_additions set hidden = 1 where guid = '%account_id%' and hidden = 0;
 	    raise notice 'unapproved account deleted: user_id=%user_id_sys%, account_id=%account_id%.';
 	end if;
     end if;
