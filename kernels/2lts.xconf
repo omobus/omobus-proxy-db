@@ -21,6 +21,7 @@
     pack.level="6"
     cache="2lts/"
     diff="yes"
+    files="19990"
     >
 <queries>
 <xi:include href="../queries/2lts/_timestamp.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
