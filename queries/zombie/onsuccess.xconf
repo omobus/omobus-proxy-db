@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <onsuccess>
   <![CDATA[
-update users set dev_login=NIL('%dev_login%'), evaddrs=case when '%dev_login%' = '' then null else array[format('<%dev_login%@%s>',"paramUID"('srv:domain'))]::emails_t end
-    where user_id='%user_id%' and (dev_login is null or dev_login <> '%dev_login%');
+do $$
+declare
+    x int;
+begin
+    update users set dev_login=NIL('%dev_login%'), evaddrs=case when '%dev_login%' = '' then null else array[format('<%dev_login%@%s>',"paramUID"('srv:domain'))]::emails_t end
+	where user_id='%user_id%' and coalesce(dev_login,'') <> trim('%dev_login%');
+    GET DIAGNOSTICS x = ROW_COUNT;
+    if x > 0 then
+	insert into ".sesparams" values('%user_id%') on conflict do nothing;
+    end if;
 
 /* normalize [role] only if user exist in the LDAP: */
-update users set role='%role%'
-    where user_id='%user_id%' and (role is null or role <> '%role%') and '' <> '%role%';
+    update users set role='%role%'
+	where user_id='%user_id%' and coalesce(role,'') <> '%role%';
+    GET DIAGNOSTICS x = ROW_COUNT;
+    if x > 0 then
+	insert into ".sesparams" values('%user_id%') on conflict do nothing;
+    end if;
 
 /* send notification: */
-insert into mail_stream(rcpt_to, cap, msg, priority, content)
-    select string_to_array(NIL('%rcpt_to%'),','), '%msg_cap%', '%msg_body%', 1, '%msg_content%' where NIL('%msg_content%') is not null and NIL('%rcpt_to%') is not null
+    insert into mail_stream(rcpt_to, cap, msg, priority, content)
+	select string_to_array(NIL('%rcpt_to%'),','), '%msg_cap%', '%msg_body%', 1, '%msg_content%' where NIL('%msg_content%') is not null and NIL('%rcpt_to%') is not null;
+end;
+$$;
   ]]>
 </onsuccess>

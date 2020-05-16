@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <kernel module="kern_content" threads="4">
+<xi:include href="../queries/zombie/trig_before.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/zombie/onload.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/zombie/onsuccess.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/zombie/trig_after.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <trig_after>
   <![CDATA[
-select content_add('tech', '', current_date::date_t, current_date::date_t);
+do $$
+declare
+    x int;
+begin
+    select count(*) from ".sesparams"
+	into x;
+
+    if x > 0 then
+	perform content_add('tech', '', current_date::date_t, current_date::date_t);
+	raise notice 'Updated % user(-s).', x;
+    end if;
+end;
+$$;
   ]]>
 </trig_after>
