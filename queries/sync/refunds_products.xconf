@@ -2,6 +2,7 @@
 <refunds_products templ="%account_id%;%prod_id%;%percentage%;" empty="no">
   <![CDATA[
 select account_id, prod_id, percentage from refunds_products
-    order by 1, 2
+    where percentage > 0
+order by 1, 2
   ]]>
 </refunds_products>

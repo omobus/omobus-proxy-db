@@ -2,6 +2,7 @@
 <refunds templ="%account_id%;%percentage%;%attention%;" empty="no">
   <![CDATA[
 select account_id, percentage, attention from refunds
-    order by 1
+    where percentage > 0
+order by 1
   ]]>
 </refunds>
