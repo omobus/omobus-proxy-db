@@ -124,4 +124,32 @@ end;
 $$
   ]]>
 </routes>
+<ownerless ontimeout="yes" onsemaphore="yes">
+  <![CDATA[
+do $$
+declare
+    t1 int;
+    t2 int;
+begin
+    update accounts set ownerless = 1 where hidden = 0 and approved = 1 and ownerless = 0 and account_id not in (
+	select distinct account_id from my_accounts
+	    union
+	select distinct account_id from my_routes where p_date >= "monthDate_First"(current_date)::date_t
+    );
+    GET DIAGNOSTICS t1 = ROW_COUNT;
+
+    update accounts set ownerless = 0 where hidden = 0 and approved = 1 and ownerless = 1 and account_id in (
+	select distinct account_id from my_accounts
+	    union
+	select distinct account_id from my_routes where p_date >= "monthDate_First"(current_date)::date_t
+    );
+    GET DIAGNOSTICS t2 = ROW_COUNT;
+
+    if t1 > 0 or t2 > 0 then
+	raise notice 'ownerless: fixed % rows.', t1 + t2;
+    end if;
+end;
+$$
+  ]]>
+</ownerless>
 </kernel>
