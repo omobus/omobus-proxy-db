@@ -1424,18 +1424,6 @@ create table erp_products (
 create index i_db_ids_erp_products on erp_products using GIN (db_ids);
 create trigger trig_updated_ts before update on erp_products for each row execute procedure tf_updated_ts();
 
-/*[deprecated]*/ create table extras (
-    account_id 		uid_t 		not null,
-    placement_id 	uid_t 		not null,
-    manuf_ids 		uids_t 		not null,
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    primary key(account_id, placement_id)
-);
-
-create trigger trig_updated_ts before update on extras for each row execute procedure tf_updated_ts();
-
 create table floating_prices (
     distr_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
