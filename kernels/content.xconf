@@ -49,6 +49,7 @@
 <xi:include href="../queries/content/tech_targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/tech_testings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/tech_trainings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/content/time.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 </content>
 <libs>
 <xi:include href="../queries/content/libs/stdlib.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

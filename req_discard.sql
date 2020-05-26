@@ -31,6 +31,9 @@ begin
     select descr, address from accounts where account_id=a_id
 	into a_name, a_address;
 
+    perform content_add('route_compliance', '', p_date, p_date);
+    perform content_add('time', '', "monthDate_First"(p_date), "monthDate_Last"(p_date));
+
     perform evmail_add(u_id, 
 	'discard/caption:'||cmd, 
 	'discard/body:'||cmd, 

@@ -27,21 +27,23 @@ select
 	    (select uu dep_id, row_number() over() rowno from unnest(u.dep_ids) uu) bb
 	where aa.dep_id=bb.dep_id order by min(bb.rowno)
     ) departments,
-    r.scheduled, 
-    r.closed, 
-    r.canceled, 
-    r.other, 
-    (select count(*) from (select account_id from h_pending where user_id=u.user_id and route_date='%b_date%' group by account_id) px) pending, 
-    (select count(*) from (select account_id from h_discard where user_id=u.user_id and route_date='%b_date%' group by account_id) dx) discarded, 
-    r1.rd_begin, 
-    r1.rd_end, 
-    r1.rd_duration, 
-    r1.duration, 
-    r1.warn_min_duration, 
-    r1.warn_max_duration, 
-    r1.warn_max_distance, 
+    nullif(r.scheduled,0) scheduled, 
+    nullif(r.closed,0) closed, 
+    nullif(r.canceled,0) canceled, 
+    nullif(r.other,0) other, 
+    nullif(r.pending,0) pending, 
+    nullif(r.discarded,0) discarded, 
+    r1.route_begin, 
+    r1.route_end, 
+    case when r1.route_begin is null or r1.route_end is null then null else r1.route_duration end route_duration,
+    case when r1.route_begin is null or r1.route_end is null then null else r1.instore_duration end instore_duration,
+    nullif(r1.warn_min_duration,0) warn_min_duration, 
+    nullif(r1.warn_max_duration,0) warn_max_duration, 
+    nullif(r1.warn_max_distance,0) warn_max_distance, 
+    nullif(r1.accepted,0) accepted, 
+    nullif(r1.rejected,0) rejected, 
     r.canceling_note,
-    case when r.closed > 0 or r.other > 0 then mileage(u.user_id, '%b_date%', substring(r1.rd_begin, 12, 5), substring(r1.rd_end, 12, 5)) else null end mileage,
+    case when r.closed > 0 or r.other > 0 then mileage(u.user_id, '%b_date%', substring(r1.route_begin, 12, 5), substring(r1.route_end, 12, 5)) else null end mileage,
     case when s.packets is not null and (s.packets).count > 0 then 1 else 0 end alive, 
     s.gps_violations, 
     s.tm_violations, 
@@ -67,14 +69,28 @@ select
     u."rules:wd_begin", 
     u."rules:wd_end"
 from users u
-    left join users e on e.user_id=u.executivehead_id/*(select my_executivehead(u.user_id))*/
+    left join users e on e.user_id=u.executivehead_id
     left join sysstats s on s.fix_date='%b_date%' and s.user_id=u.user_id
 /* routes & pendings activities: */
     left join (
-	select user_id, count(route) scheduled, count(route*closed) closed, count(route*canceled) canceled, count(closed)-count(route*closed) other,
+	select 
+	    user_id, 
+	    count(route) scheduled, 
+	    count(route*closed) closed, 
+	    count(closed)-count(route*closed) other,
+	    count(pending) pending, 
+	    count(discarded) discarded, 
+	    count(route*canceled) canceled, 
 	    min(canceling_note) canceling_note
 	from (
-	    select user_id, route_date, route, closed, canceled, b_dt, e_dt,
+	    select 
+		user_id, 
+		route_date, 
+		route, 
+		closed, 
+		pending, 
+		discarded, 
+		canceled,
 		case canceled when 1 then
 		    case when c.canceling_type_id is null then '-'
 			else c.descr end || case when r.canceling_note is null or r.canceling_note='' then '' else ' (' || r.canceling_note || ')' end
@@ -84,33 +100,47 @@ from users u
 	    from user_routes(null, '%b_date%', '%b_date%', 1::bool_t) r
 		left join activity_types t on t.activity_type_id = r.activity_type_id
 		left join canceling_types c on c.canceling_type_id = r.canceling_type_id
-		left join accounts a on a.account_id = r.account_id
-	    where strict = 1
+	    where t.strict = 1
 	) r
 	    group by user_id
     ) r on r.user_id=u.user_id
 /* only current day activities: */
     left join (
-	select user_id, min(b_dt) rd_begin, max(e_dt) rd_end, to_char(max(e_dt)::timestamp-min(b_dt)::timestamp, 'HH24:MI') rd_duration,
-	    to_char(sum(duration), 'HH24:MI') duration, sum(warn_min_duration) warn_min_duration, sum(warn_max_duration) warn_max_duration,
-	    sum(warn_max_distance) warn_max_distance
+	select 
+	    user_id, 
+	    min(b_dt) route_begin, 
+	    max(e_dt) route_end, 
+	    datediff(min(b_dt), max(e_dt)) route_duration,
+	    sum(duration) instore_duration, 
+	    sum(warn_min_duration) warn_min_duration, 
+	    sum(warn_max_duration) warn_max_duration,
+	    sum(warn_max_distance) warn_max_distance,
+	    count(accepted) accepted,
+	    count(rejected) rejected
 	from (
-	    select user_id, route_date, b_dt, e_dt, e_dt::timestamp - b_dt::timestamp duration,
+	    select 
+		user_id, 
+		route_date, 
+		b_dt, 
+		e_dt, 
+		datediff(b_dt,e_dt) duration,
 		case when datediff(r.b_dt, r.e_dt) < "paramInteger"('rules:min_duration') then 1 else 0 end warn_min_duration,
 		case when datediff(r.b_dt, r.e_dt) > "paramInteger"('rules:max_duration') then 1 else 0 end warn_max_duration,
 		case when distance(a.latitude, a.longitude, r.latitude, r.longitude) > "paramInteger"('rules:max_distance') or
 		    distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) > "paramInteger"('rules:max_distance')
-		then 1 else 0 end warn_max_distance
+		then 1 else 0 end warn_max_distance,
+		case when zstatus='accepted' then 1 else null end accepted,
+		case when zstatus='rejected' then 1 else null end rejected
 	    from user_routes(null, '%b_date%', '%b_date%', 1::bool_t) r
 		left join activity_types t on t.activity_type_id = r.activity_type_id
 		left join canceling_types c on c.canceling_type_id = r.canceling_type_id
 		left join accounts a on a.account_id = r.account_id
-	    where (closed is null or closed = 0 or (closed = 1 and '%b_date%' = e_dt::date_t)) and strict = 1
+	    where (r.closed is null or r.closed = 0 or (r.closed = 1 and '%b_date%' = r.e_dt::date_t)) and t.strict = 1
 	) r
 	    group by user_id
     ) r1 on r1.user_id=u.user_id
 
-where u.hidden=0 and (u.role not in ('sv','ise','kam','asm','tme') or (u.role in ('sv','ise','kam','asm','tme') and r.user_id is not null))
+where u.hidden=0 and (u.role not in ('asm','kam','ise','sv','tme') or (u.role in ('asm','kam','ise','sv','tme') and r.user_id is not null))
 order by u.descr, u.user_id
   ]]>
 	</L>
@@ -141,21 +171,18 @@ tb.rows = rt.rows(_L, false, function(r, n, a)
 	    r.violations["gps"] = tonumber(a)
 	elseif n == "tm_violations" then
 	    r.violations["tm"] = tonumber(a)
-	elseif std.contains({'distr_ids'}, n) then 
-	    r[n] = std.split(a, ',')
 	elseif n == "power_begin" then
 	    r.power["begin"] = tonumber(a)
 	elseif n == "power_end" then
 	    r.power["end"] = tonumber(a)
 	elseif n == "chargings" then
 	    r.power["chargings"] = tonumber(a)
-	elseif n == "alive" then
-	    r[n] = tonumber(a)
 	elseif n == "rules:wd_begin" then
 	    r.rules.wd["begin"] = a
 	elseif n == "rules:wd_end" then
 	    r.rules.wd["end"] = a
-	elseif std.contains({'scheduled','closed','canceled','other','pending','discarded'}, n) then 
+	elseif std.contains({'alive','scheduled','closed','canceled','other','pending','discarded','accepted','rejected',
+		'warn_min_duration','warn_max_duration','warn_max_distance','route_duration','instore_duration','mileage'}, n) then 
 	    r[n] = tonumber(a)
 	elseif std.contains({'distributors','departments'}, n) then
 	    r[n] = std.split(a, '|')

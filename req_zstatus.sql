@@ -49,9 +49,13 @@ begin
 
 	if( f_date is not null ) then
 	    perform content_add('tech_route', u_id, f_date, f_date);
+	    perform content_add('route_compliance', '', f_date, f_date);
+	    perform content_add('time', '', "monthDate_First"(f_date), "monthDate_Last"(f_date));
 	end if;
 	if( p_date is not null and (f_date is null or f_date <> p_date) ) then
 	    perform content_add('tech_route', u_id, p_date, p_date);
+	    perform content_add('route_compliance', '', p_date, p_date);
+	    perform content_add('time', '', "monthDate_First"(p_date), "monthDate_Last"(p_date));
 	end if;
 
 	perform evmail_add(

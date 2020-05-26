@@ -29,6 +29,7 @@ begin
 	end if;
 	perform content_add('tech_route', u_id, r, r);
 	perform content_add('route_compliance', '', r, r);
+	perform content_add('time', '', "monthDate_First"(r), "monthDate_Last"(r));
     end loop;
 
     perform evmail_add(
@@ -85,6 +86,7 @@ begin
 
     perform content_add('tech_route', u_id, p_date, p_date);
     perform content_add('route_compliance', '', p_date, p_date);
+    perform content_add('time', '', "monthDate_First"(p_date), "monthDate_Last"(p_date));
 
     perform evmail_add(
 	u_id, 

@@ -45,6 +45,7 @@ insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_d
     perform content_add('tech_route', '%user_id_sys%', '%route_date%', '%route_date%');
     perform content_add('a_list', '%user_id_sys%', f_date, f_date);
     perform content_add('route_compliance', '', '%route_date%', '%route_date%');
+    perform content_add('time', '', "monthDate_First"('%route_date%'), "monthDate_Last"('%route_date%'));
 end;
 $$;
   ]]>

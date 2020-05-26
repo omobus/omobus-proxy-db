@@ -53,7 +53,10 @@ begin
     perform content_add('tech', '', f_date, f_date);
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
     perform content_add('a_list', '%user_id_sys%', f_date, f_date);
-    perform content_add('route_compliance', '', f_date, f_date);
+    if( xz = 1 ) then
+	perform content_add('route_compliance', '', f_date, f_date);
+	perform content_add('time', '', "monthDate_First"(f_date), "monthDate_Last"(f_date));
+    end if;
 
 -- **** time --> mail_stream
     if( xz = 1 and abs(current_date - f_date::date) <= 1 and (select tm_violations from sysstats where user_id='%user_id_sys%' and fix_date=f_date) = 1 ) then
