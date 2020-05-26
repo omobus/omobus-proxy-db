@@ -68,6 +68,7 @@
 <xi:include href="../queries/2lts/dyn_testings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/equipment_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/equipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/holidays.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/job_titles.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/kinds.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/manufacturers.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -174,6 +175,7 @@
     <dyn_testings />
     <equipment_types />
     <equipments />
+    <holidays />
     <job_titles />
     <kinds />
     <manufacturers />

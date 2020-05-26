@@ -2,15 +2,9 @@
 <cancellations templ="%user_id%;%route_date%;%canceling_type_id%;%note%;%hidden%;">
   <![CDATA[
 select 
-    r.user_id, r.p_date route_date, 
-    case when s.h_date is not null then null else c.canceling_type_id end canceling_type_id,
-    case when s.h_date is not null then s.descr else c.note end note,
-    c.hidden
-from (select distinct user_id, p_date from my_routes where current_date-30<=p_date::date and p_date::date<=current_date+15) r
-    left join j_cancellations c on c.user_id = r.user_id and c.route_date = r.p_date --and c.hidden = 0
-    left join users u on u.user_id = r.user_id
-    left join sysholidays s on s.h_date = r.p_date and s.country_id = u.country_id
-where not (c.hidden is null and s.h_date is null)
+    user_id, route_date, canceling_type_id, note, hidden
+from j_cancellations
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2
   ]]>
 </cancellations>
