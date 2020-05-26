@@ -109,7 +109,7 @@ insert into discard_types(discard_type_id, descr) values('2', 'Больше не
 insert into discard_types(discard_type_id, descr) values('3', 'Дебиторская задолженность');
 
 delete from distributors;
-insert into distributors(distr_id, descr) values('0', 'Рогов и Копытин, ЗАО');
+insert into distributors(distr_id, descr, country_id) values('0', 'Рогов и Копытин, ЗАО', 'RU');
 
 delete from issues;
 insert into issues(descr, extra_info, row_no) values('Установка мобильного приложения на планшет',
