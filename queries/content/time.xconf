@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<time type="application/json" Xcompress="gz" compress_level="9">
+<time type="application/json" compress="gz" compress_level="9">
     <queries>
 	<rules>
   <![CDATA[
 select
+    array_to_string("paramIntegerArray"('rules:wdays'),',') wdays, 
     "paramInteger"('rules:min_duration') min_duration,
     "paramInteger"('rules:max_duration') max_duration,
     "paramInteger"('rules:max_distance') max_distance,
@@ -14,95 +15,107 @@ select
 	<days>
   <![CDATA[
 select 
-    user_id,
-    route_date, 
-    min(b_dt) route_begin, 
-    max(e_dt) route_end, 
-    nullif(datediff(min(b_dt),max(e_dt)),0) duration,
-    nullif(sum(instore_duration),0) instore_duration,
-    nullif(count(route),0) scheduled, 
-    nullif(count(route*closed),0) closed, 
-    nullif(count(pending),0) pending, 
-    nullif(count(discarded),0) discarded, 
-    nullif(count(route*canceled),0) canceled, 
-    nullif(count(closed)-count(route*closed),0) other,
-    min(canceling_note) canceling_note,
-    nullif(count(accepted),0) accepted,
-    nullif(count(rejected),0) rejected,
-    nullif(count(warn_min_duration),0) warn_min_duration,
-    nullif(count(warn_max_duration),0) warn_max_duration,
-    nullif(count(warn_max_distance),0) warn_max_distance,
-/*case
-	when min(b_dt) is not null and max(e_dt) is not null then
-	    nullif(mileage(user_id, route_date),0)
-	else null
-    end total_mileage,
-    case
-	when min(b_dt) is not null and max(e_dt) is not null and count(closed) > 1 then
-	    nullif(mileage(user_id, route_date, substring(min(b_dt), 12, 5), substring(max(e_dt), 12, 5)),0)
-	else null
-    end route_mileage*/
-    case
-	when min(b_dt) is not null and max(e_dt) is not null and count(closed) > 1 then
-	    nullif(mileage(user_id, route_date, substring(min(b_dt), 12, 5), substring(max(e_dt), 12, 5)),0)
-	else null
-    end mileage
+    z.*,
+    case when s.packets is not null and (s.packets).count > 0 then 1 else 0 end alive,
+    s.gps_violations,
+    s.tm_violations,
+    case 
+	when z.scheduled > 0 then 1
+	when mvt.t_date is not null and (
+		(coalesce(u."rules:wdays","paramIntegerArray"('rules:wdays')))[extract(dow from mvt.f_date::date)] = 1
+		    or
+		(coalesce(u."rules:wdays","paramIntegerArray"('rules:wdays')))[extract(dow from mvt.t_date::date)] = 1
+	    ) then 1
+	when mvf.f_date is not null then 0
+	else (coalesce(u."rules:wdays","paramIntegerArray"('rules:wdays')))[extract(dow from z.route_date::date)]
+    end wday,
+    mvt.descr wdaymv
 from (
     select 
 	user_id,
-	case when ((route is null or route = 0) and closed = 1) or route_date is null
-	    then coalesce(left(b_dt,10),left(e_dt,10))
-	    else route_date 
-	end route_date, 
-	case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10))))
-		and left(b_dt,10)=left(e_dt,10)
-	    then b_dt
+	route_date, 
+	min(b_dt) route_begin, 
+	max(e_dt) route_end, 
+	nullif(datediff(min(b_dt),max(e_dt)),0) route_duration,
+	nullif(sum(instore_duration),0) instore_duration,
+	nullif(count(route),0) scheduled, 
+	nullif(count(route*closed),0) closed, 
+	nullif(count(pending),0) pending, 
+	nullif(count(discarded),0) discarded, 
+	nullif(count(route*canceled),0) canceled, 
+	nullif(count(closed)-count(route*closed),0) other,
+	min(canceling_note) canceling_note,
+	nullif(count(accepted),0) accepted,
+	nullif(count(rejected),0) rejected,
+	nullif(count(warn_min_duration),0) warn_min_duration,
+	nullif(count(warn_max_duration),0) warn_max_duration,
+	nullif(count(warn_max_distance),0) warn_max_distance,
+	case
+	    when min(b_dt) is not null and max(e_dt) is not null and count(closed) > 1 then
+		nullif(mileage(user_id, route_date, substring(min(b_dt), 12, 5), substring(max(e_dt), 12, 5)),0)
 	    else null
-	end b_dt, 
-	case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10))))
-		and left(b_dt,10)=left(e_dt,10)
-	    then e_dt
-	    else null
-	end e_dt, 
-	case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10))))
-		and left(b_dt,10)=left(e_dt,10)	
-	    then datediff(b_dt, e_dt)
-	    else null
-	end instore_duration,
-	route, 
-	closed, 
-	canceled, 
-	pending,
-	discarded,
-	case canceled when 1 then
-	    case 
-		when c.canceling_type_id is null then r.canceling_note
-		when NIL(r.canceling_note) is null then c.descr
-		else format('%s: %s', c.descr, r.canceling_note)
-	    end
-	else
-	    null
-	end canceling_note,
-	case when zstatus='accepted' then 1 else null end accepted,
-	case when zstatus='rejected' then 1 else null end rejected,
-	case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10)))) 
-	    and datediff(r.b_dt, r.e_dt) < "paramInteger"('rules:min_duration') 
-	then 1 else null end warn_min_duration,
-	case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10)))) 
-	    and datediff(r.b_dt, r.e_dt) > "paramInteger"('rules:max_duration') 
-	then 1 else null end warn_max_duration,
-	case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10)))) 
-	    and (distance(a.latitude, a.longitude, r.latitude, r.longitude) > "paramInteger"('rules:max_distance') or
-		distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) > "paramInteger"('rules:max_distance'))
-	then 1 else null end warn_max_distance
-    from user_routes(null, '%b_date%', '%e_date%', 1::bool_t) r
-	left join activity_types t on t.activity_type_id = r.activity_type_id
-	left join canceling_types c on c.canceling_type_id = r.canceling_type_id
-	left join accounts a on a.account_id = r.account_id
-    where t.strict = 1
-) r
-group by user_id, route_date
-order by user_id, route_date
+	end mileage
+    from (
+	select 
+	    user_id,
+	    case when ((route is null or route = 0) and closed = 1) or route_date is null
+		then coalesce(left(b_dt,10),left(e_dt,10))
+		else route_date 
+	    end route_date, 
+	    case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10))))
+		    and left(b_dt,10)=left(e_dt,10)
+		then b_dt
+		else null
+	    end b_dt, 
+	    case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10))))
+		    and left(b_dt,10)=left(e_dt,10)
+		then e_dt
+		else null
+	    end e_dt, 
+	    case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10))))
+		    and left(b_dt,10)=left(e_dt,10)
+		then datediff(b_dt, e_dt)
+		else null
+	    end instore_duration,
+	    route, 
+	    closed, 
+	    canceled, 
+	    pending,
+	    discarded,
+	    case canceled when 1 then
+		case 
+		    when c.canceling_type_id is null then r.canceling_note
+		    when NIL(r.canceling_note) is null then c.descr
+		    else format('%s: %s', c.descr, r.canceling_note)
+		end
+	    else
+		null
+	    end canceling_note,
+	    case when zstatus='accepted' then 1 else null end accepted,
+	    case when zstatus='rejected' then 1 else null end rejected,
+	    case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10)))) 
+		and datediff(r.b_dt, r.e_dt) < "paramInteger"('rules:min_duration') 
+	    then 1 else null end warn_min_duration,
+	    case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10)))) 
+		and datediff(r.b_dt, r.e_dt) > "paramInteger"('rules:max_duration') 
+	    then 1 else null end warn_max_duration,
+	    case when closed=1 and (route is null or route=0 or (route=1 and route_date=coalesce(left(b_dt,10),left(e_dt,10)))) 
+		and (distance(a.latitude, a.longitude, r.latitude, r.longitude) > "paramInteger"('rules:max_distance') or
+		    distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) > "paramInteger"('rules:max_distance'))
+	    then 1 else null end warn_max_distance
+	from user_routes(null, '%b_date%', '%e_date%', 1::bool_t) r
+	    left join activity_types t on t.activity_type_id = r.activity_type_id
+	    left join canceling_types c on c.canceling_type_id = r.canceling_type_id
+	    left join accounts a on a.account_id = r.account_id
+	where t.strict = 1
+    ) r
+    group by user_id, route_date
+) z
+    left join users u on u.user_id = z.user_id
+    left join syswdmv mvf on mvf.country_id = u.country_id and mvf.f_date = z.route_date
+    left join syswdmv mvt on mvt.country_id = u.country_id and mvt.t_date = z.route_date
+    left join sysstats s on s.fix_date = z.route_date and s.user_id = z.user_id
+order by z.user_id, z.route_date
   ]]>
 	</days>
 	<accounts>
@@ -112,13 +125,12 @@ select
     x.account_id, a.code a_code, a.descr, a.address,
     c.descr chan_name,
     p.descr poten_name,
-    x.route,
     k1.rows v,
     k2.rows vwv /*visited-without-violations*/
 from (
-    select distinct user_id, account_id, 1 route from my_routes where '%b_date%' <= p_date and p_date <= '%e_date%'
+    select distinct user_id, account_id from my_routes where '%b_date%' <= p_date and p_date <= '%e_date%'
 	union
-    select user_id, account_id, null route from my_accounts 
+    select user_id, account_id from my_accounts 
 ) x
     left join accounts a on a.account_id = x.account_id
     left join channels c on a.chan_id = c.chan_id
@@ -167,8 +179,11 @@ select
 	    (select uu dep_id, row_number() over() rowno from unnest(u.dep_ids) uu) bb
 	where aa.dep_id=bb.dep_id order by min(bb.rowno)
     ) departments,
+    u.email,
+    u.mobile,
     e.user_id head_id, e.descr head_name,
 /* personal rules: */
+    array_to_string(u."rules:wdays",',') "rules:wdays",
     u."rules:wd_begin",
     u."rules:wd_end"
 from users u
@@ -187,9 +202,26 @@ order by u.descr, u.user_id
 local std = require('stdlib')
 local rt = require('rtlib')
 local tb = {}
+local tonum = function(ar)
+    local x = {}
+    for i, v in ipairs(ar) do
+	table.insert(x, tonumber(v))
+    end
+    return x
+end
 local days = rt.groups(_days, "user_id", function(r, n, a)
-    if std.contains({'duration','instore_duration','scheduled','closed','canceled','other','pending','discarded',
-	    'accepted','rejected','warn_min_duration','warn_max_duration','warn_max_distance','mileage'}, n) then
+    if n == "gps_violations" then
+	if r.violations == nil then
+	    r.violations = {}
+	end
+	r.violations["gps"] = tonumber(a)
+    elseif n == "tm_violations" then
+	if r.violations == nil then
+	    r.violations = {}
+	end
+	r.violations["tm"] = tonumber(a)
+    elseif std.contains({'alive','route_duration','instore_duration','scheduled','closed','canceled','other','pending','discarded',
+	    'accepted','rejected','warn_min_duration','warn_max_duration','warn_max_distance','mileage','wday'}, n) then
 	r[n] = tonumber(a)
     else
 	r[n] = a
@@ -215,6 +247,11 @@ tb.rows = rt.rows(_users, false, function(r, n, a)
 	r[n] = a
 	r.days = days[a]
 	r.accounts = accounts[a]
+    elseif n == "rules:wdays" then
+	if r.rules == nil then
+	    r.rules = {}
+	end
+	r.rules["wdays"] = tonum(std.split(a, ',', tonumber))
     elseif n == "rules:wd_begin" then
 	if r.rules == nil then
 	    r.rules = { wd = {} }
@@ -234,11 +271,12 @@ tb.rows = rt.rows(_users, false, function(r, n, a)
     end
 end)
 
-tb.rules.duration["min"] = tonumber(rowset_value(_rules, 0, rowset_colid(_rules, "min_duration")));
-tb.rules.duration["max"] = tonumber(rowset_value(_rules, 0, rowset_colid(_rules, "max_duration")));
-tb.rules.distance["max"] = tonumber(rowset_value(_rules, 0, rowset_colid(_rules, "max_distance")));
-tb.rules.wd["begin"] = rowset_value(_rules, 0, rowset_colid(_rules, "wd_begin"));
-tb.rules.wd["end"] = rowset_value(_rules, 0, rowset_colid(_rules, "wd_end"));
+tb.rules.wdays = tonum(std.split(rowset_value(_rules, 0, rowset_colid(_rules, "wdays")), ',', tonumber))
+tb.rules.duration["min"] = tonumber(rowset_value(_rules, 0, rowset_colid(_rules, "min_duration")))
+tb.rules.duration["max"] = tonumber(rowset_value(_rules, 0, rowset_colid(_rules, "max_duration")))
+tb.rules.distance["max"] = tonumber(rowset_value(_rules, 0, rowset_colid(_rules, "max_distance")))
+tb.rules.wd["begin"] = rowset_value(_rules, 0, rowset_colid(_rules, "wd_begin"))
+tb.rules.wd["end"] = rowset_value(_rules, 0, rowset_colid(_rules, "wd_end"))
 
 set_param(_content, "rows", rowset_rows(_users))
 write_stream(_content, json.encode(tb))
