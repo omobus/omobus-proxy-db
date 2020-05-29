@@ -53,7 +53,7 @@ begin
 	if( arg is null or arg < 1 or arg > 7 ) then
 	    raise exception '% invalid day number!', fcesig;
 	else
-	    select coalesce("rules:wdays"/*, 5-days work week: array[1,1,1,1,1,0,0]*/) from users where user_id = (attrs).user_id
+	    select coalesce("rules:wdays","paramIntegerArray"('rules:wdays')) from users where user_id = (attrs).user_id
 		into u_wdays;
 	    if( u_wdays is null or u_wdays[arg] = 1 ) then
 		update routes set author_id=rlogin, days[arg] = 1

@@ -720,6 +720,23 @@ end;
 $body$
 language plpgsql STABLE;
 
+create or replace function "paramIntegerArray"(code uid_t) returns int array
+as
+$body$
+declare
+    v int array;
+    x uid_t;
+begin
+    select param_id, param_value::int[] from sysparams where param_id=code and hidden=0 
+	into x, v;
+    if( x is null ) then
+	raise exception 'The % parameter does not exist.', code;
+    end if;
+    return v;
+end;
+$body$
+language plpgsql STABLE;
+
 create or replace function "paramBoolean"(code uid_t) returns bool_t
 as
 $body$
@@ -832,6 +849,23 @@ create table sysholidays (
 
 create trigger trig_updated_ts before update on sysholidays for each row execute procedure tf_updated_ts();
 
+create or replace function tf_sysholidays() returns trigger as
+$body$
+begin
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'tech_route' and user_id in (
+	    select user_id from users where country_id = new.country_id
+	) and b_date = new.h_date and e_date = new.h_date;
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'route_compliance' 
+	and b_date = new.h_date and e_date = new.h_date;
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'time' 
+	and b_date = "monthDate_First"(new.h_date)::date_t and e_date = "monthDate_Last"(new.h_date)::date_t;
+    return null;
+end;
+$body$
+language 'plpgsql';
+
+create trigger trig_update_content after insert or update on sysholidays for each row execute procedure tf_sysholidays();
+
 create table sysparams (
     param_id 		uid_t 		not null primary key,
     param_value 	text 		null,
@@ -855,6 +889,27 @@ create table syswdmv (
 );
 
 create trigger trig_updated_ts before update on syswdmv for each row execute procedure tf_updated_ts();
+
+create or replace function tf_syswdmv() returns trigger as
+$body$
+begin
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'tech_route' and user_id in (
+	    select user_id from users where country_id = new.country_id
+	) and ((b_date = new.f_date and e_date = new.f_date) or (b_date = new.t_date and e_date = new.t_date));
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'route_compliance' 
+	and ((b_date = new.f_date and e_date = new.f_date) or (b_date = new.t_date and e_date = new.t_date));
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'time' 
+	and (
+	    (b_date = "monthDate_First"(new.f_date)::date_t and e_date = "monthDate_Last"(new.f_date)::date_t) 
+		or
+	    (b_date = "monthDate_First"(new.t_date)::date_t and e_date = "monthDate_Last"(new.t_date)::date_t)
+	);
+    return null;
+end;
+$body$
+language 'plpgsql';
+
+create trigger trig_update_content after insert or update on syswdmv for each row execute procedure tf_syswdmv();
 
 
 -- **** System statistics ****
@@ -6354,6 +6409,7 @@ insert into sysparams values('dumps:depth', null, 'Dumps depth (days).');
 insert into sysparams values('executive_head', null, 'Executive head role name or null if direct head is executive head. After change it is necessary to execute: [update users set executivehead_id=my_executivehead(user_id) where hidden=0].');
 insert into sysparams values('lang', 'ru', 'Default language.');
 
+insert into sysparams values('rules:wdays', '{1,1,1,1,1,0,0}', 'The woking day list as array of flags for each week day starting monday.');
 insert into sysparams values('rules:min_duration', '5', 'The minimum duration of the activity (in minutes).');
 insert into sysparams values('rules:max_duration', '90', 'The maximum duration of the activity (in minutes).');
 insert into sysparams values('rules:max_distance', '200', 'The maximum allowable distance to the account at the start of the activity (in meters).');
