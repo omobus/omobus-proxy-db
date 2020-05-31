@@ -136,17 +136,17 @@ from (
     left join channels c on a.chan_id = c.chan_id
     left join potentials p on a.poten_id = p.poten_id
     left join (
-	select j.account_id, count(j.account_id) "rows" from j_user_activities j, activity_types t
+	select j.user_id, j.account_id, count(j.account_id) "rows" from j_user_activities j, activity_types t
 	    where coalesce(j.route_date,j.fix_date) is not null
 		and coalesce(j.route_date,j.fix_date) >= '%b_date%'
 		and coalesce(j.route_date,j.fix_date) <= '%e_date%'
 		and j.activity_type_id = t.activity_type_id
 		and j.b_dt is not null and j.e_dt is not null
 		and t.strict = 1
-	group by j.account_id
-    ) k1 on a.account_id = k1.account_id and k1.rows > 0
+	group by j.user_id, j.account_id
+    ) k1 on a.account_id = k1.account_id and x.user_id = k1.user_id and k1.rows > 0
     left join (
-	select j.account_id, count(j.account_id) "rows" from j_user_activities j, activity_types t, accounts a
+	select j.user_id, j.account_id, count(j.account_id) "rows" from j_user_activities j, activity_types t, accounts a
 	    where coalesce(j.route_date,j.fix_date) is not null
 		and coalesce(j.route_date,j.fix_date) >= '%b_date%'
 		and coalesce(j.route_date,j.fix_date) <= '%e_date%'
@@ -158,8 +158,8 @@ from (
 		and j.account_id = a.account_id
 		and distance(a.latitude, a.longitude, j.b_la, j.b_lo) <= "paramInteger"('rules:max_distance')
 		and distance(a.latitude, a.longitude, j.e_la, j.e_lo) <= "paramInteger"('rules:max_distance')
-	group by j.account_id
-    ) k2 on a.account_id = k2.account_id and k2.rows > 0
+	group by j.user_id, j.account_id
+    ) k2 on a.account_id = k2.account_id and x.user_id = k2.user_id and k2.rows > 0
 where a.account_id is not null
 order by x.user_id, a.descr, a.address, a.account_id
   ]]>
