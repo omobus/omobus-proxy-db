@@ -290,7 +290,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 -->
 <!-- **** FILTERS: END **** -->
 </queries>
-<pack strict="yes" trace="yes">
+<pack strict="yes" Xtrace="yes">
     <activity_types personalize="groupName" />
     <addition_types />
     <attributes />
