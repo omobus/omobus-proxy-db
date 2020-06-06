@@ -7,7 +7,8 @@ select
     u.user_id, u.descr u_name, u.user_id code, u.dev_login, u.area, 
     exch_sync_success_total, exch_sync_success_time,
     exch_docs_success_total, exch_docs_success_time, 
-    wd_begin::time_t, wd_end::time_t, case when (wd_end - wd_begin) > (time '0:0:1' - time '0:0:1') then (wd_end - wd_begin)::time_t else '' end wd_duration,
+    w0.fix_dt wd_begin,
+    case when w0.fix_dt > w1.fix_dt then null else w1.fix_dt end wd_end,
     acts_total, acts_time, 
     docs_total, docs_time, 
     pause, 
@@ -32,12 +33,12 @@ from users u
     left join (select user_id, count(act_id) pos_exist from a_gps_pos p
 	    where left(fix_dt, 10) = '%b_date%' and (latitude<>0 or longitude<>0) group by user_id
 	) g on u.user_id = g.user_id
-    left join (select user_id, substring(min(fix_dt), 12, 5)::time wd_begin from a_user_work
+    left join (select user_id, min(fix_dt) fix_dt from a_user_work
 	    where left(fix_dt, 10) = '%b_date%' and state='begin' group by user_id
-	) w on u.user_id = w.user_id
-    left join (select user_id, substring(max(fix_dt), 12, 5)::time wd_end from a_user_work
+	) w0 on u.user_id = w0.user_id
+    left join (select user_id, max(fix_dt) fix_dt from a_user_work
 	    where left(fix_dt, 10) = '%b_date%' and state='end' group by user_id
-	) o on u.user_id = o.user_id
+	) w1 on u.user_id = w1.user_id
     left join (select user_id, ceil(count(*)/2.0) acts_total, substring(max(fix_dt), 12, 5)::time_t acts_time from a_user_activity
 	    where left(fix_dt,10) = '%b_date%' group by user_id
 	) c on u.user_id = c.user_id
