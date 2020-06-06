@@ -5619,6 +5619,7 @@ create table content_stream (
     user_id 		uid_t 		not null,
     b_date 		date_t 		not null,
     e_date 		date_t 		not null,
+    inserted_ts 	ts_auto_t 	not null,
     content_ts 		ts_t 		null,
     content_code 	code_t 		not null,
     content_type 	varchar(32) 	null,
