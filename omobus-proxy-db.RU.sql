@@ -229,6 +229,7 @@ insert into sysholidays(h_date, country_id, descr) values('2020-05-04', 'RU', '�
 insert into sysholidays(h_date, country_id, descr) values('2020-05-05', 'RU', 'Новогодние каникулы (перенос с 5 января на 5 мая)');
 insert into sysholidays(h_date, country_id, descr) values('2020-05-10', 'RU', 'День Победы (перенос с 9 мая на 11 мая)');
 insert into sysholidays(h_date, country_id, descr) values('2020-06-12', 'RU', 'День России');
+insert into sysholidays(h_date, country_id, descr) values('2020-06-24', 'RU', 'Указ Президента РФ 63428 от 29 мая 2020 года.');
 insert into sysholidays(h_date, country_id, descr) values('2020-11-04', 'RU', 'День народного единства');
 
 insert into sysholidays(h_date, country_id, descr) values('2020-01-01', 'KZ', 'Новый год');
