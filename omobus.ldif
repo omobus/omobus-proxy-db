@@ -46,12 +46,6 @@ objectClass: top
 ou: lts
 description: Data to the omobus-lts-db storages
 
-dn: ou=cids,ou=data,dc=omobus,dc=local
-objectClass: organizationalUnit
-objectClass: top
-ou: cids
-description: CellTowers databases
-
 dn: ou=core,ou=data,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
@@ -79,26 +73,6 @@ ErpCode: CODE-ERP-00
 exchangeStatus: enabled
 FTPStatus: enabled
 userPassword: 0
-
-dn: uid=mls,ou=cids,ou=data,dc=omobus,dc=local
-objectClass: omobusMaintainPoint
-objectClass: top
-objectClass: omobusAccount
-cn: Mozilla Location Service database mirror
-uid: mls
-userPassword: 367523Dkbnm5Fp6
-ErpCode: MLS
-exchangeStatus: enabled
-
-dn: uid=ocid,ou=cids,ou=data,dc=omobus,dc=local
-objectClass: omobusMaintainPoint
-objectClass: top
-objectClass: omobusAccount
-cn: OpenCellID database mirror
-uid: ocid
-userPassword: hjbnfhRo8Dk$ryjfq
-ErpCode: OCID
-exchangeStatus: enabled
 
 dn: uid=point0,ou=core,ou=data,dc=omobus,dc=local
 objectClass: posixAccount
