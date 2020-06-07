@@ -3,7 +3,6 @@
   <![CDATA[
 select 'resolver' content_code, mcc, mnc, cid, lac from celltower_stream 
     where content_ts is null or data_ts > content_ts
---order by data_ts desc
 limit 10
   ]]>
 </onload>

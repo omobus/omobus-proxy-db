@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resolver>
-    <queries>
-	<L>
-  <![CDATA[
-select source, latitude, longitude, changeable, 1 row_no from syscellids where source='OCID' and mcc=%mcc% and mnc=%mnc% and cid=%cid% and lac=%lac%
-    union
-select source, latitude, longitude, changeable, 2 row_no from syscellids where source='MLS' and mcc=%mcc% and mnc=%mnc% and cid=%cid% and lac=%lac%
-order by row_no
-limit 1
-  ]]>
-	</L>
-    </queries>
     <generator>
   <![CDATA[
 local SLAXML = require 'slaxdom'
@@ -120,22 +109,12 @@ end
 
 local function main()
     if resolveUsingYandexService() ~= true then
-	local rows = rowset_rows(_L)
-
-	if rows >= 1 then
-	    local source = rowset_value(_L, 0, rowset_colid(_L, "source"))
-	    set_param(_content, "latitude", rowset_value(_L, 0, rowset_colid(_L, "latitude")))
-	    set_param(_content, "longitude", rowset_value(_L, 0, rowset_colid(_L, "longitude")))
-	    set_param(_content, "changeable", rowset_value(_L, 0, rowset_colid(_L, "changeable")))
-	    set_param(_content, "source", source)
-	    log_msg(string.format("mcc=%s, mnc=%s, cid=%s, lac=%s resolved using %s database", 
-		_mcc, _mnc, _cid, _lac, source))
-	else
-	    set_param(_content, "latitude", "null")
-	    set_param(_content, "longitude", "null")
-	    set_param(_content, "changeable", "null")
-	    set_param(_content, "source", "fake")
-	end
+	set_param(_content, "latitude", "null")
+	set_param(_content, "longitude", "null")
+	set_param(_content, "changeable", "null")
+	set_param(_content, "source", "fake")
+	log_msg(string.format("mcc=%s, mnc=%s, cid=%s, lac=%s resolved using %s service (la/lo values set as [null])",
+	    _mcc, _mnc, _cid, _lac, "fake"))
     end
 end
 
