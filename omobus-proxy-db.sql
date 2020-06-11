@@ -6135,7 +6135,7 @@ declare
    x uid_t;
 begin
     if( root > 0 and (_ar is null or not(my_id = any(_ar))) ) then
-	_ar := array_append(_ar::text[], u::text);
+	_ar := array_append(_ar::text[], my_id::text);
 	return next my_id;
     end if;
 
