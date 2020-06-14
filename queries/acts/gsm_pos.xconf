@@ -68,6 +68,7 @@ begin
 	    raise notice 'added new cell tower: mcc=%, mnc=%, cid=%, lac=%.', x_mcc, x_mnc, x_cid, x_lac;
 	elseif( (current_date - x_ts::date) > 180 ) then
 	    update celltower_stream set data_ts=current_timestamp, source=null where mcc=x_mcc and mnc=x_mnc and cid=x_cid and lac=x_lac;
+	    raise notice 'required updating cell tower: mcc=%, mnc=%, cid=%, lac=%.', x_mcc, x_mnc, x_cid, x_lac;
 	end if;
     end loop;
 end;

@@ -53,8 +53,8 @@ begin
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
     perform content_add('a_list', '%user_id_sys%', f_date, f_date);
     if( xz = 1 ) then
-	perform content_add('route_compliance', '', f_date, f_date);
-	perform content_add('time', '', "monthDate_First"(f_date), "monthDate_Last"(f_date));
+	perform content_update('route_compliance', '', f_date, f_date);
+	perform content_update('time', '', "monthDate_First"(f_date), "monthDate_Last"(f_date));
     end if;
 
 -- **** gps_state --> mail_stream
