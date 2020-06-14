@@ -43,7 +43,7 @@ select
     nullif(r1.accepted,0) accepted, 
     nullif(r1.rejected,0) rejected, 
     r.canceling_note,
-    case when r.closed > 0 or r.other > 0 then mileage(u.user_id, '%b_date%', substring(r1.route_begin, 12, 5), substring(r1.route_end, 12, 5)) else null end mileage,
+    case when r.closed > 0 or r.other > 0 then mileage_get(u.user_id, '%b_date%', substring(r1.route_begin, 12, 5), substring(r1.route_end, 12, 5)) else null end mileage,
     case when s.packets is not null and (s.packets).count > 0 then 1 else 0 end alive, 
     s.gps_violations, 
     s.tm_violations, 

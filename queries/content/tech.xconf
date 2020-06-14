@@ -12,7 +12,7 @@ select
     acts_total, acts_time, 
     docs_total, docs_time, 
     pause, 
-    case when pause=0 and pos_exist>0 then mileage(u.user_id, '%b_date%') else null end dist,
+    case when pause=0 and pos_exist>0 then mileage_get(u.user_id, '%b_date%') else null end dist,
     (
 	select array_to_string(array_agg(descr::text),'|') from distributors aa, 
 	    (select uu distr_id, row_number() over() rowno from unnest(u.distr_ids) uu) bb

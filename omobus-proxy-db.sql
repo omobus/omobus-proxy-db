@@ -376,46 +376,6 @@ end;
 $body$
 language plpgsql IMMUTABLE;
 
-create or replace function mileage(uid uid_t, d date_t, b_time time_t, e_time time_t) returns int32_t
-as $BODY$
-declare
-    la gps_t default 0;
-    lo gps_t default 0;
-    la0 gps_t default 0;
-    lo0 gps_t default 0;
-    dist int32_t default 0;
-begin
-    for la, lo in 
-	select latitude, longitude from (
-	    select latitude, longitude, fix_dt from a_gps_trace
-		where user_id=uid and left(fix_dt,10)=d and (latitude <> 0 or longitude <> 0 ) 
-		    and (b_time is null or b_time <= substring(fix_dt, 12, 5)) and (e_time is null or substring(fix_dt, 12, 5) <= e_time) 
-		union
-	    select latitude, longitude, fix_dt from a_gps_pos
-		where user_id=uid and left(fix_dt,10)=d and (latitude <> 0 or longitude <> 0 ) 
-		    and (b_time is null or b_time <= substring(fix_dt, 12, 5)) and (e_time is null or substring(fix_dt, 12, 5) <= e_time) 
-	) x order by fix_dt
-    loop
-	if( la0 <> 0 or lo0 <> 0 ) then
-	    dist := dist + distance(la0, lo0, la, lo);
-	end if;
-	la0 := la;
-	lo0 := lo;
-    end loop;
-    return dist;
-exception 
-    when numeric_value_out_of_range then 
-	return -1;
-end;
-$BODY$ language plpgsql STABLE;
-
-create or replace function mileage(uid uid_t, d date_t) returns int32_t
-as $BODY$
-begin
-    return mileage(uid, d, null, null);
-end;
-$BODY$ language plpgsql STABLE;
-
 create or replace function "L10n_format_a"(f_lang_id lang_t, f_obj_code code_t, f_obj_id uid_t, f_obj_attr uid_t, ar text array, def text) returns text as
 $body$
 declare
@@ -917,7 +877,7 @@ create table sysstats (
 create trigger trig_updated_ts before update on sysstats for each row execute procedure tf_updated_ts();
 
 create or replace function sysstat_add(f_user_id uid_t, f_date date_t, f_time time_t) returns int
-as $BODU$
+as $BODY$
 begin
     if( (select count(*) from sysstats where user_id=f_user_id and fix_date=f_date) > 0 ) then
 	update sysstats set packets=row(case when (packets).fix_time is null or (packets).fix_time < f_time then f_time else (packets).fix_time end, (packets).count + 1)
@@ -929,7 +889,7 @@ begin
 
     return 1;
 end;
-$BODU$ language plpgsql;
+$BODY$ language plpgsql;
 
 
 -- **** Manuals ****
@@ -5627,49 +5587,66 @@ create table "content_stream.ghost" (
 
 create index i_content_code_content_stream on content_stream (content_code);
 
-create or replace function content_add(f_content_code code_t, f_user_id uid_t, f_b_date date_t, f_e_date date_t) returns int
-as $BODU$
-declare
-    count int;
+create or replace function content_add(_content_code code_t, _user_id uid_t, _b_date date_t, _e_date date_t) returns int
+as $BODY$
 begin
-    if( (select count(*) from content_stream where user_id=f_user_id and b_date=f_b_date and e_date=f_e_date and content_code=f_content_code) = 0 ) then
+    if( (select count(*) from content_stream where user_id = _user_id and b_date = _b_date and e_date = _e_date and content_code = _content_code) = 0 ) then
 	insert into content_stream(user_id, b_date, e_date, content_code)
-	    values(f_user_id, f_b_date, f_e_date, f_content_code)
+	    values(_user_id, _b_date, _e_date, _content_code)
 	on conflict do nothing;
     end if;
     insert into "content_stream.ghost"(user_id, b_date, e_date, content_code)
-	values(f_user_id, f_b_date, f_e_date, f_content_code)
+	values(_user_id, _b_date, _e_date, _content_code)
     on conflict on constraint "content_stream.ghost_pkey" do update set data_ts = current_timestamp;
 
     return 1;
 end;
-$BODU$ language plpgsql;
+$BODY$ language plpgsql;
 
-create or replace function content_add(f_content_code code_t, f_user_id uid_t, f_b_date date, f_e_date date) returns int
-as $BODU$
+create or replace function content_add(_content_code code_t, _user_id uid_t, _b_date date, _e_date date) returns int
+as $BODY$
 begin
-    return content_add(f_content_code, f_user_id, f_b_date::date_t, f_e_date::date_t);
+    return content_add(_content_code, _user_id, _b_date::date_t, _e_date::date_t);
 end;
-$BODU$ language plpgsql;
+$BODY$ language plpgsql;
 
-create or replace function content_get(f_content_code code_t, f_user_id uid_t, f_b_date date_t, f_e_date date_t) returns table(
+create or replace function content_update(_content_code code_t, _user_id uid_t, _b_date date_t, _e_date date_t) returns int
+as $BODY$
+declare
+    c int;
+begin
+    update "content_stream.ghost" set data_ts = current_timestamp
+	where user_id = _user_id and b_date = _b_date and e_date = _e_date and content_code = _content_code;
+    GET DIAGNOSTICS c = ROW_COUNT;
+    return c;
+end;
+$BODY$ language plpgsql;
+
+create or replace function content_update(_content_code code_t, _user_id uid_t, _b_date date, _e_date date) returns int
+as $BODY$
+begin
+    return content_update(_content_code, _user_id, _b_date::date_t, _e_date::date_t);
+end;
+$BODY$ language plpgsql;
+
+create or replace function content_get(_content_code code_t, _user_id uid_t, _b_date date_t, _e_date date_t) returns table(
     content_ts ts_t,
     content_type VARCHAR(32),
     content_compress VARCHAR(6),
     content_blob blob_t
 ) as $BODY$
     select content_ts, content_type, content_compress, content_blob from content_stream
-	where content_ts is not null and content_blob is not null and user_id=f_user_id and b_date=f_b_date and e_date=f_e_date and content_code=f_content_code;
+	where content_ts is not null and content_blob is not null and user_id=_user_id and b_date=_b_date and e_date=_e_date and content_code=_content_code;
 $BODY$ language sql STABLE;
 
-create or replace function content_get(f_content_code code_t, f_user_id uid_t, f_b_date date, f_e_date date) returns table(
+create or replace function content_get(_content_code code_t, _user_id uid_t, _b_date date, _e_date date) returns table(
     content_ts ts_t,
     content_type VARCHAR(32),
     content_compress VARCHAR(6),
     content_blob blob_t
 ) as $BODY$
     select content_ts, content_type, content_compress, content_blob from content_stream
-	where content_ts is not null and content_blob is not null and user_id=f_user_id and b_date=f_b_date::date_t and e_date=f_e_date::date_t and content_code=f_content_code;
+	where content_ts is not null and content_blob is not null and user_id=_user_id and b_date=_b_date::date_t and e_date=_e_date::date_t and content_code=_content_code;
 $BODY$ language sql STABLE;
 
 
@@ -5866,6 +5843,148 @@ begin
     return evmail_add(rcpt_to, u_lang, l10n_cap, l10n_body, priority, ar);
 end;
 $body$ language plpgsql;
+
+
+create table mileage_stream (
+    user_id 		uid_t 		not null,
+    fix_date 		date_t 		not null,
+    inserted_ts 	ts_auto_t 	not null,
+    content_ts 		ts_t 		null,
+    data 		hstore 		null,
+    primary key (user_id, fix_date)
+);
+
+create table "mileage_stream.ghost" (
+    user_id 		uid_t 		not null,
+    fix_date 		date_t 		not null,
+    data_ts 		ts_auto_t 	not null,
+    primary key (user_id, fix_date)
+);
+
+create or replace function mileage_add(_user_id uid_t, _fix_date date_t) returns int
+as $BODY$
+begin
+    if( (select count(*) from mileage_stream where user_id=_user_id and fix_date=_fix_date) = 0 ) then
+	insert into mileage_stream(user_id, fix_date)
+	    values(_user_id, _fix_date)
+	on conflict do nothing;
+    end if;
+    insert into "mileage_stream.ghost"(user_id, fix_date)
+	values(_user_id, _fix_date)
+    on conflict on constraint "mileage_stream.ghost_pkey" do update set data_ts = current_timestamp;
+
+    return 1;
+end;
+$BODY$ language plpgsql;
+
+create or replace function mileage_add(_user_id uid_t, _fix_date date) returns int
+as $BODY$
+begin
+    return mileage_add(_user_id, _fix_date::date_t);
+end;
+$BODY$ language plpgsql;
+
+create or replace function mileage_update(_user_id uid_t, _fix_date date_t) returns int
+as $BODY$
+declare
+    c int;
+begin
+    update "mileage_stream.ghost" set data_ts = current_timestamp
+	where user_id = _user_id and fix_date = _fix_date;
+    GET DIAGNOSTICS c = ROW_COUNT;
+    return c;
+end;
+$BODY$ language plpgsql;
+
+create or replace function mileage_update(_user_id uid_t, _fix_date date) returns int
+as $BODY$
+begin
+    return mileage_update(_user_id, _fix_date::date_t);
+end;
+$BODY$ language plpgsql;
+
+create or replace function mileage_calc(uid uid_t, d date_t, b_time time_t, e_time time_t) returns int32_t
+as $BODY$
+declare
+    la gps_t default 0;
+    lo gps_t default 0;
+    la0 gps_t default 0;
+    lo0 gps_t default 0;
+    dist int32_t default 0;
+begin
+    for la, lo in 
+	select latitude, longitude from (
+	    select latitude, longitude, fix_dt from a_gps_trace
+		where user_id=uid and left(fix_dt,10)=d and (latitude <> 0 or longitude <> 0 ) 
+		    and (b_time is null or b_time <= substring(fix_dt, 12, 5)) and (e_time is null or substring(fix_dt, 12, 5) <= e_time) 
+		union
+	    select latitude, longitude, fix_dt from a_gps_pos
+		where user_id=uid and left(fix_dt,10)=d and (latitude <> 0 or longitude <> 0 ) 
+		    and (b_time is null or b_time <= substring(fix_dt, 12, 5)) and (e_time is null or substring(fix_dt, 12, 5) <= e_time) 
+	) x order by fix_dt
+    loop
+	if( la0 <> 0 or lo0 <> 0 ) then
+	    dist := dist + distance(la0, lo0, la, lo);
+	end if;
+	la0 := la;
+	lo0 := lo;
+    end loop;
+    return dist;
+exception 
+    when numeric_value_out_of_range then 
+	return -1;
+end;
+$BODY$ language plpgsql STABLE;
+
+create or replace function mileage_calc(uid uid_t, d date_t) returns int32_t
+as $BODY$
+begin
+    return mileage_calc(uid, d, null, null);
+end;
+$BODY$ language plpgsql STABLE;
+
+create or replace function mileage_get(_user_id uid_t, _fix_date date_t, _b_time time_t, _e_time time_t) returns int32_t
+as $BODY$
+declare 
+    x int32_t;
+begin
+    select (data->(trim(format('%s %s',coalesce(_b_time,''),coalesce(_e_time,'')))))::int32_t from mileage_stream 
+	where user_id = _user_id and fix_date = _fix_date
+    into x;
+    if x is null then
+	if _b_time is null and _e_time is null then
+	    raise notice '[mileahe_stream] does not contain data for user_id=%, fix_date=%.',
+		_user_id, _fix_date;
+	else
+	    raise notice '[mileahe_stream] does not contain data for user_id=%, fix_date=%, b_time=%, e_time=%.',
+		_user_id, _fix_date, _b_time, _e_time;
+	end if;
+	x := mileage_calc(_user_id, _fix_date, _b_time, _e_time);
+    end if;
+    return x;
+end;
+$BODY$ language plpgsql STABLE;
+
+create or replace function mileage_get(_user_id uid_t, _fix_date date, _b_time time_t, _e_time time_t) returns int32_t
+as $BODY$
+begin
+    return mileage_get(_user_id, _fix_date, _b_time, _e_time);
+end;
+$BODY$ language plpgsql STABLE;
+
+create or replace function mileage_get(_user_id uid_t, _fix_date date_t) returns int32_t
+as $BODY$
+begin
+    return mileage_get(_user_id, _fix_date, null, null);
+end;
+$BODY$ language plpgsql STABLE;
+
+create or replace function mileage_get(_user_id uid_t, _fix_date date) returns int32_t
+as $BODY$
+begin
+    return mileage_get(_user_id, _fix_date, null, null);
+end;
+$BODY$ language plpgsql STABLE;
 
 
 create table pt_stream (

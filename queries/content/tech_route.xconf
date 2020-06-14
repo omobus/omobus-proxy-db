@@ -37,7 +37,7 @@ select
     r.latitude_e, r.longitude_e, distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) dist_e,
     case 
 	when r.closed = 1 and t.strict = 1 and r.b_dt is not null and r.e_dt is not null and r.b_dt < r.e_dt then
-	    mileage(r.user_id, '%b_date%', substring(r.b_dt, 12, 5), substring(r.e_dt, 12, 5))
+	    mileage_get(r.user_id, '%b_date%', substring(r.b_dt, 12, 5), substring(r.e_dt, 12, 5))
 	else null
     end mileage,
     r.extra_info,
@@ -559,12 +559,12 @@ select
     case when w0.fix_dt > w1.fix_dt then null else w1.fix_dt end wd_end,
     case 
 	when (s.packets).count > 0 then 
-	    mileage(u.user_id, '%b_date%') 
+	    mileage_get(u.user_id, '%b_date%') 
 	else null 
     end wd_mileage,
     case 
 	when (s.packets).count > 0 and r.b_time is not null and r.e_time is not null then 
-	    mileage(u.user_id, '%b_date%', r.b_time, r.e_time) 
+	    mileage_get(u.user_id, '%b_date%', r.b_time, r.e_time) 
 	else null 
     end rd_mileage
 from users u

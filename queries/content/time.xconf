@@ -52,7 +52,7 @@ from (
 	nullif(count(warn_max_distance),0) warn_max_distance,
 	case
 	    when min(b_dt) is not null and max(e_dt) is not null and count(closed) > 1 then
-		nullif(mileage(user_id, route_date, substring(min(b_dt), 12, 5), substring(max(e_dt), 12, 5)),0)
+		nullif(mileage_get(user_id, route_date, substring(min(b_dt), 12, 5), substring(max(e_dt), 12, 5)),0)
 	    else null
 	end mileage
     from (
