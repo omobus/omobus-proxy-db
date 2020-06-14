@@ -2585,6 +2585,7 @@ create table users (
     "rules:wdays" 	smallint[] 	null check (array_length("rules:wdays",1)=7),
     "rules:wd_begin" 	time_t 		null,
     "rules:wd_end" 	time_t 		null,
+    "rules:timing" 	time_t 		null,
     "rules:gps_off" 	bool_t 		not null default 0,
     "rules:tm_change" 	bool_t 		not null default 0,
     evaddrs		emails_t 	null,
@@ -6522,6 +6523,7 @@ insert into sysparams values('rules:max_duration', '90', 'The maximum duration o
 insert into sysparams values('rules:max_distance', '200', 'The maximum allowable distance to the account at the start of the activity (in meters).');
 insert into sysparams values('rules:wd_begin', '09:30', 'Show warning if the working day begins later than rules:wd_begin.');
 insert into sysparams values('rules:wd_end', '17:30', 'Show warning if the working day ends early than rules:wd_end.');
+insert into sysparams values('rules:timing', '06:00', 'Minimal route day duration.');
 insert into sysparams values('rules:power', '90', 'The minimum power (battery life percentage) at the working day begin.');
 
 insert into sysparams values('checkups:offset', '-30', 'How long (in days) j_checkups data is used.');
