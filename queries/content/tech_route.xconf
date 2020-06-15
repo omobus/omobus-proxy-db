@@ -36,8 +36,9 @@ select
     r.latitude, r.longitude, distance(a.latitude, a.longitude, r.latitude, r.longitude) dist,
     r.latitude_e, r.longitude_e, distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) dist_e,
     case 
-	when r.closed = 1 and t.strict = 1 and r.b_dt is not null and r.e_dt is not null and r.b_dt < r.e_dt then
-	    mileage_get(r.user_id, '%b_date%', substring(r.b_dt, 12, 5), substring(r.e_dt, 12, 5))
+	when r.closed = 1 and t.strict = 1 and r.b_dt is not null and r.e_dt is not null and r.b_dt < r.e_dt 
+	    and left(r.b_dt,10) = '%b_date%' and left(r.e_dt,10) = '%e_date%' 
+	then mileage_get(r.user_id, '%b_date%', substring(r.b_dt, 12, 5), substring(r.e_dt, 12, 5))
 	else null
     end mileage,
     r.extra_info,

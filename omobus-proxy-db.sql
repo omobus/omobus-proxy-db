@@ -5953,14 +5953,16 @@ begin
 	where user_id = _user_id and fix_date = _fix_date
     into x;
     if x is null then
-	if _b_time is null and _e_time is null then
-	    raise notice '[mileahe_stream] does not contain data for user_id=%, fix_date=%.',
-		_user_id, _fix_date;
-	else
-	    raise notice '[mileahe_stream] does not contain data for user_id=%, fix_date=%, b_time=%, e_time=%.',
-		_user_id, _fix_date, _b_time, _e_time;
-	end if;
 	x := mileage_calc(_user_id, _fix_date, _b_time, _e_time);
+	if x > 0 then
+	    if _b_time is null and _e_time is null then
+		raise notice '[mileage_stream] does not contain data for user_id=%, fix_date=%.',
+		    _user_id, _fix_date;
+	    else
+		raise notice '[mileage_stream] does not contain data for user_id=%, fix_date=%, b_time=%, e_time=%.',
+		    _user_id, _fix_date, _b_time, _e_time;
+	    end if;
+	end if;
     end if;
     return x;
 end;
