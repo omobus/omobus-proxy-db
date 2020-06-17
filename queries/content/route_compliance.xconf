@@ -89,7 +89,7 @@ from users u
 		route, 
 		closed, 
 		pending, 
-		discarded, 
+		case when closed=1 then null else discarded end discarded,
 		canceled,
 		case canceled when 1 then
 		    case when c.canceling_type_id is null then '-'
@@ -121,8 +121,8 @@ from users u
 	    select 
 		user_id, 
 		route_date, 
-		b_dt, 
-		e_dt, 
+		case when closed = 1 and b_dt is not null and e_dt is not null then b_dt else null end b_dt, 
+		case when closed = 1 and b_dt is not null and e_dt is not null then e_dt else null end e_dt, 
 		datediff(b_dt,e_dt) duration,
 		case when datediff(r.b_dt, r.e_dt) < "paramInteger"('rules:min_duration') then 1 else 0 end warn_min_duration,
 		case when datediff(r.b_dt, r.e_dt) > "paramInteger"('rules:max_duration') then 1 else 0 end warn_max_duration,

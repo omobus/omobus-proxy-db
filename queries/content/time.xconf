@@ -82,7 +82,7 @@ from (
 	    closed, 
 	    canceled, 
 	    pending,
-	    discarded,
+	    case when closed=1 then null else discarded end discarded,
 	    case canceled when 1 then
 		case 
 		    when c.canceling_type_id is null then r.canceling_note

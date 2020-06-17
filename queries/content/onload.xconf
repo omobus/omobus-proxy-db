@@ -45,7 +45,7 @@ select content_code, user_id, b_date, e_date, data_ts from (
 	    and s.b_date < current_date::date_t 
 	    and s.content_code in ('tech','route_compliance')
     order by s.e_date desc, d.data_ts desc
-    limit 3
+    limit 10
 ) x1
 
 /* future content: */
