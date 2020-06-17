@@ -5948,13 +5948,14 @@ create or replace function mileage_get(_user_id uid_t, _fix_date date_t, _b_time
 as $BODY$
 declare 
     x int32_t;
+    f timestamp;
 begin
-    select (data->(trim(format('%s %s',coalesce(_b_time,''),coalesce(_e_time,'')))))::int32_t from mileage_stream 
+    select (data->(trim(format('%s %s',coalesce(_b_time,''),coalesce(_e_time,'')))))::int32_t, content_ts from mileage_stream 
 	where user_id = _user_id and fix_date = _fix_date
-    into x;
+    into x, f;
     if x is null then
 	x := mileage_calc(_user_id, _fix_date, _b_time, _e_time);
-	if x > 0 then
+	if x > 0 and (f is null or (current_timestamp > f and (current_timestamp - f) > '00:55:00'::interval)) then
 	    if _b_time is null and _e_time is null then
 		raise notice '[mileage_stream] does not contain data for user_id=%, fix_date=%.',
 		    _user_id, _fix_date;

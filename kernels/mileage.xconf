@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <kernel module="kern_tasks">
+<!-- rebuilds mileage warm cached data. -->
 <mileage ontimeout="yes" onsemaphore="yes">
   <![CDATA[
 do $$
@@ -14,14 +15,6 @@ declare
     z1 time_t;
     t int;
 begin
-    create temporary table if not exists ".content"(
-	user_id uid_t not null,
-	b_date date_t not null,
-	e_date date_t not null,
-	content_code code_t not null,
-	primary key (user_id, b_date, e_date, content_code)
-    );
-
     for u, d in 
 	select m.user_id, m.fix_date from mileage_stream m, "mileage_stream.ghost" g
 	    where m.user_id = g.user_id and m.fix_date = g.fix_date and (m.content_ts is null or g.data_ts >= m.content_ts)
@@ -29,6 +22,7 @@ begin
     loop
 	z0 := NIL();
 	z1 := NIL();
+	t := 0;
 
 	/*total mileage: */
 	hs := hstore(array['', (mileage_calc(u, d))::text]);
@@ -37,47 +31,28 @@ begin
 	for x0, x1 in 
 	    select substring(j.b_dt, 12, 5), substring(j.e_dt, 12, 5) from j_user_activities j, activity_types t
 		where j.user_id = u and j.fix_date is not null and j.fix_date = d and j.activity_type_id = t.activity_type_id and t.strict = 1
-		    and j.b_dt is not null and j.e_dt is not null
+		    and j.b_dt is not null and j.e_dt is not null and left(j.b_dt,10) = d and left(j.e_dt,10) = d
 	    order by j.b_dt, j.e_dt
 	loop
 	    z0 := coalesce(z0, x0);
 	    z1 := x1;
 	    hs := hs || hstore(array[format('%s %s', x0, x1), (mileage_calc(u, d, x0, x1))::text]);
-raise notice '% % (1) % %', u, d, x0, x1;
+	    t := t + 1;
 	end loop;
 
 	/* route mileage */
-	if z0 is not null and z1 is not null then
+	if z0 is not null and z1 is not null and t > 1 then
 	    hs := hs || hstore(array[format('%s %s', z0, z1), (mileage_calc(u, d, z0, z1))::text]);
-raise notice '% % (2) % %', u, d, z0, z1;
 	end if;
 
 	update mileage_stream set data = hs, content_ts = current_timestamp
 	    where user_id = u and fix_date = d;
-
-	insert into ".content"(content_code, user_id, b_date, e_date) values('tech', '', d, d)
-	    on conflict do nothing;
-	insert into ".content"(content_code, user_id, b_date, e_date) values('tech_route', u, d, d)
-	    on conflict do nothing;
-	insert into ".content"(content_code, user_id, b_date, e_date) values('route_compliance', '', d, d)
-	    on conflict do nothing;
-	insert into ".content"(content_code, user_id, b_date, e_date) values('time', '', "monthDate_First"(d), "monthDate_Last"(d))
-	    on conflict do nothing;
 
 	c := c + 1;
     end loop;
 
     if c > 0 then
 	raise notice '[mileage_stream] % mileage row(s) updated.', c;
-    end if;
-
-    c := 0;
-    for t in select content_add(content_code, user_id, b_date, e_date) from ".content"
-    loop
-	c := c + 1;
-    end loop;
-    if( c > 0 ) then
-	raise notice '[content_stream] % row(s) require updating.', c;
     end if;
 end;
 $$
