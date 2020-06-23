@@ -6529,7 +6529,7 @@ insert into sysparams values('rules:wd_end', '17:30', 'Show warning if the worki
 insert into sysparams values('rules:timing', '06:00', 'Minimal route day duration.');
 insert into sysparams values('rules:power', '90', 'The minimum power (battery life percentage) at the working day begin.');
 
-insert into sysparams values('checkups:offset', '-30', 'How long (in days) j_checkups data is used.');
+insert into sysparams values('checkups:offset', '-30', 'How long (in days) empty data from the dyn_checkups is used.');
 
 insert into sysparams values('advt_history:offset', '-60', 'The maximum depth of the advt_history in days');
 insert into sysparams values('oos_history:offset', '-60', 'The maximum depth of the oos_history in days');
