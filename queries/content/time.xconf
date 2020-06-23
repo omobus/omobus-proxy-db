@@ -157,8 +157,8 @@ from (
 		and j.activity_type_id = t.activity_type_id
 		and t.strict = 1
 		and j.account_id = a.account_id
-		and distance(a.latitude, a.longitude, j.b_la, j.b_lo) <= "paramInteger"('rules:max_distance')
-		and distance(a.latitude, a.longitude, j.e_la, j.e_lo) <= "paramInteger"('rules:max_distance')
+		and coalesce(distance(a.latitude, a.longitude, j.b_la, j.b_lo),0) <= "paramInteger"('rules:max_distance')
+		and coalesce(distance(a.latitude, a.longitude, j.e_la, j.e_lo),0) <= "paramInteger"('rules:max_distance')
 	group by j.user_id, j.account_id
     ) k2 on a.account_id = k2.account_id and x.user_id = k2.user_id and k2.rows > 0
 where a.account_id is not null
