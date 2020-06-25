@@ -4,7 +4,7 @@
 	<L>
   <![CDATA[
 select 
-    u.user_id, u.descr u_name, u.user_id code, u.dev_login, u.area, 
+    u.user_id, u.descr u_name, u.dev_login, u.area, 
     exch_sync_success_total, exch_sync_success_time,
     exch_docs_success_total, exch_docs_success_time, 
     w0.fix_dt wd_begin,
