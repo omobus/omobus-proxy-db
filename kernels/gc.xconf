@@ -41,6 +41,8 @@ begin
     delete from j_discards where left(fix_dt,10) < gc_date;
     delete from j_docs where left(fix_dt,10) < gc_date;
     delete from j_remarks where doc_id not in (select doc_id from h_confirmation);
+    delete from j_revocations where updated_ts::date_t < gc_date;
+    delete from j_ttd where updated_ts::date_t < gc_date;
     delete from j_user_activities where coalesce(b_dt,e_dt) < gc_date;
     delete from j_user_joints where b_dt < gc_date;
     delete from j_user_works where b_dt < gc_date;
