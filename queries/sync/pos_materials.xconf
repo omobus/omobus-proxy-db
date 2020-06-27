@@ -1,54 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pos_materials templ="%posm_id%;%descr%;%brand_ids%;%placement_ids%;%chan_ids%;%blob%;%content_type%;%delim%;" empty="no">
+<pos_materials templ="%posm_id%;%descr%;%brand_ids%;%placement_ids%;%chan_ids%;%blob%;%content_type%;" empty="no">
   <![CDATA[ 
-select 
-    1 _xz, 
-    null fid, 
-    format('[%s]', brand_id) posm_id, null pid, 
-    1 ftype, 
-    descr, 
-    null brand_ids,
-    null placement_ids, 
-    null chan_ids, 
-    null::blob_t blob,
-    null::varchar content_type,
-    1 delim, 
-    null country_id, 
-    row_no
-from brands
-where hidden = 0 and brand_id in (select brand_ids[1] from pos_materials where hidden = 0 and brand_ids is not null and cardinality(brand_ids) = 1)
-	union
-select 
-    0 _xz, 
-    null fid, 
-    '[multi]' posm_id, 
-    null pid, 
-    1 ftype, 
-    'multi-brand' descr, 
-    null brand_ids,
-    null placement_ids, 
-    null chan_ids, 
-    null::blob_t blob,
-    null::varchar content_type,
-    1 delim, 
-    null country_id, 
-    null row_no
-	union
 select
-    2 _xz, 
-    posm_id fid, 
     posm_id, 
-    case when f = 0 then null when brand_ids is null or cardinality(brand_ids) <> 1 then '[multi]' else format('[%s]', brand_ids[1]) end pid, 
-    0 ftype,
     descr, 
     array_to_string(brand_ids,',') brand_ids, 
     array_to_string(placement_ids,',') placement_ids, 
     array_to_string(chan_ids,',') chan_ids, 
     blob,
     content_type,
-    0 delim, 
-    country_id, 
-    null row_no
+    country_id
 from pos_materials, (select count(*) f from pos_materials where hidden = 0 and brand_ids is not null and cardinality(brand_ids) = 1) a
     where hidden = 0 /*and blob is not null*/ and cardinality(brand_ids) > 0 and (
 	/* current: */  (b_date <= current_date::date_t and current_date::date_t <= e_date) or
@@ -56,6 +17,6 @@ from pos_materials, (select count(*) f from pos_materials where hidden = 0 and b
 	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t) or
 	(b_date is null and e_date is null)
     ) and country_id is not null and trim(country_id) <> ''
-order by _xz, row_no, descr, posm_id
+order by descr, posm_id
   ]]>
 </pos_materials>

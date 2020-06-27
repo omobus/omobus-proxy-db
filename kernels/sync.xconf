@@ -219,25 +219,31 @@ select null chan_id, infom_id from info_materials where chan_ids is null and hid
 order by 1, 2
     ]]>
 </my_info_materials>
-<my_planograms>
+<my_planogramsL1>
     <![CDATA[
-select unnest(chan_ids) chan_id, pl_id fid from planograms where chan_ids is not null and hidden=0
+select unnest(chan_ids) chan_id, pl_id from planograms where chan_ids is not null and hidden=0
     union
-select null chan_id, pl_id fid from planograms where chan_ids is null and hidden=0
+select null chan_id, pl_id from planograms where chan_ids is null and hidden=0
 order by 1, 2
     ]]>
-</my_planograms>
+</my_planogramsL1>
+<my_planogramsL2>
+    <![CDATA[
+select unnest(brand_ids) brand_id, pl_id from planograms where hidden=0
+    order by 1, 2
+    ]]>
+</my_planogramsL2>
 <my_pos_materialsL1>
     <![CDATA[
-select unnest(chan_ids) chan_id, posm_id fid from pos_materials where chan_ids is not null and hidden=0
+select unnest(chan_ids) chan_id, posm_id from pos_materials where chan_ids is not null and hidden=0
     union
-select null chan_id, posm_id fid from pos_materials where chan_ids is null and hidden=0
+select null chan_id, posm_id from pos_materials where chan_ids is null and hidden=0
 order by 1, 2
     ]]>
 </my_pos_materialsL1>
 <my_pos_materialsL2>
     <![CDATA[
-select unnest(brand_ids) brand_id, posm_id fid from pos_materials where hidden=0
+select unnest(brand_ids) brand_id, posm_id from pos_materials where hidden=0
     order by 1, 2
     ]]>
 </my_pos_materialsL2>
@@ -343,8 +349,8 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<my_quests key="country_id">
 	    <quest_rows key="fid" />
 	</my_quests>
-	<planograms key="country_id" />
-	<pos_materials key="country_id" />
+	<planograms key="country_id" strict="yes" />
+	<pos_materials key="country_id" strict="yes" />
 	<priorities key="country_id" />
 	<retail_chains key="country_id" strict="yes" />
 	<support key="country_id" />
@@ -354,9 +360,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<brands key="dep_id" />
 	<departments key="dep_id" />
 	<info_materials key="dep_id" />
-	<planograms key="dep_id" />
 	<targets key="dep_id" />
-	<training_materials key="dep_id" />
 	<training_types key="dep_id" />
     </my_departments>
 <!--
@@ -440,11 +444,11 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<my_info_materials key="chan_id">
 	    <info_materials key="infom_id" />
 	</my_info_materials>
-	<my_planograms key="chan_id">
-	    <planograms key="fid" />
-	</my_planograms>
+	<my_planogramsL1 key="chan_id">
+	    <planograms key="pl_id" />
+	</my_planogramsL1>
 	<my_pos_materialsL1 key="chan_id">
-	    <pos_materials key="fid" />
+	    <pos_materials key="posm_id" />
 	</my_pos_materialsL1>
 	<my_routes key="account_id" strict="yes" />
 	<my_targets key="account_id" strict="yes">
@@ -486,13 +490,16 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<vf_products key="account_id" />
     </accounts>
     <brands>
-	<photos_history key="brand_id" />
+	<my_planogramsL2 key="brand_id">
+	    <planograms key="pl_id" />
+	</my_planogramsL2>
 	<my_pos_materialsL2  key="brand_id">
-	    <pos_materials key="fid" />
+	    <pos_materials key="posm_id" />
 	</my_pos_materialsL2>
 	<my_training_materials key="brand_id">
 	    <training_materials key="tm_id" />
 	</my_training_materials>
+	<photos_history key="brand_id" />
 	<priorities key="brand_id" strict="yes" />
 	<products key="brand_id" />
     </brands>
@@ -527,8 +534,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<vf_products key="prod_id" strict="yes" />
 	<wareh_stocks key="prod_id" strict="yes" />
     </products>
-    <planograms hierarchy="pl_id" />
-    <pos_materials hierarchy="posm_id">
+    <pos_materials>
 	<advt_history key="posm_id" strict="yes" />
 	<agreements1 key="posm_id" strict="yes" />
 	<posms_history key="posm_id" strict="yes" />
