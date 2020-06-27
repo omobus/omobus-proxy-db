@@ -2844,7 +2844,7 @@ create table a_gps_pos (
     accuracy 		double_t 	not null,
     altitude 		double_t 	not null,
     bearing 		double_t 	not null,
-    speed 		double_t 	not null,
+    speed 		double_t 	not null, /* in meters/second over ground */
     seconds 		int32_t 	null,
     provider 		varchar(8) 	null check (provider in ('gps','network') and provider = lower(provider)),
     satellites 		int32_t 	null
