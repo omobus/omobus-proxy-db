@@ -333,7 +333,6 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <training_types />
     <unsched_types />
     <wish_days />
-    <wish_weeks />
     <L10n personalize="ErpId">
 	<orders_history key="lang_id" />
 	<route_history_extra key="lang_id" />
@@ -362,6 +361,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<info_materials key="dep_id" />
 	<targets key="dep_id" />
 	<training_types key="dep_id" />
+	<wish_weeks key="dep_id" />
     </my_departments>
 <!--
     <my_dbs personalize="ErpId">
