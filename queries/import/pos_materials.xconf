@@ -22,13 +22,13 @@ select count(*) from pos_materials
 </check_exist>
 <update>
   <![CDATA[
-update pos_materials set descr='%descr%', image=resolve_blob_stream('//%uid%/%image%'), brand_ids=string_to_array(NIL('%brand_ids%'),','), placement_ids=string_to_array(NIL('%placement_ids%'),','), chan_ids=string_to_array(NIL('%chan_ids%'),','), country_id=NIL('%country_id%','RU'), b_date=NIL('%b_date%'), e_date=NIL('%e_date%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update pos_materials set descr='%descr%', "blob"=resolve_blob_stream('//%uid%/%image%'), brand_ids=string_to_array(NIL('%brand_ids%'),','), placement_ids=string_to_array(NIL('%placement_ids%'),','), chan_ids=string_to_array(NIL('%chan_ids%'),','), country_id=NIL('%country_id%','RU'), b_date=NIL('%b_date%'), e_date=NIL('%e_date%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where posm_id = '%posm_id%' and "_isAlienData" = 1
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into pos_materials (posm_id, descr, image, brand_ids, placement_ids, chan_ids, country_id, b_date, e_date, hidden, db_ids, "_isAlienData") 
+insert into pos_materials (posm_id, descr, "blob", brand_ids, placement_ids, chan_ids, country_id, b_date, e_date, hidden, db_ids, "_isAlienData") 
     values ('%posm_id%', '%descr%', resolve_blob_stream('//%uid%/%image%'), string_to_array(NIL('%brand_ids%'),','), string_to_array(NIL('%placement_ids%'),','), string_to_array(NIL('%chan_ids%'),','), NIL('%country_id%','RU'), NIL('%b_date%'), NIL('%e_date%'), 0, array['%ErpCode%'], 1)
   ]]>
 </insert>
