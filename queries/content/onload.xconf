@@ -14,7 +14,9 @@ select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_str
 	and (s.content_ts is null or (s.content_ts is not null and d.data_ts >= s.content_ts))
 	and s.user_id = ''
 	and s.b_date <> ''
+	and s.e_date <= ("monthDate_Last"(current_date + 2))::date_t
 	and not s.content_code in ('tech','route_compliance')
+	/* temporary (delete after 2021-05-01): */ and (not s.content_code in ('time') or s.b_date >= '2020-06-01')
 
 union
 /* analitics reports: */

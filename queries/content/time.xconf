@@ -130,8 +130,8 @@ select
     k2.rows vwv /*visited-without-violations*/
 from (
     select distinct user_id, account_id from my_routes where '%b_date%' <= p_date and p_date <= '%e_date%'
-	union
-    /* ??????? remove ????? */ select user_id, account_id from my_accounts 
+--	union
+--    /* ??????? remove ????? */ select user_id, account_id from my_accounts 
 ) x
     left join accounts a on a.account_id = x.account_id
     left join channels c on a.chan_id = c.chan_id
