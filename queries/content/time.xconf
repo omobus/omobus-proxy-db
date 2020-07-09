@@ -131,7 +131,7 @@ select
 from (
     select distinct user_id, account_id from my_routes where '%b_date%' <= p_date and p_date <= '%e_date%'
 --	union
---    /* ??????? remove ????? */ select user_id, account_id from my_accounts 
+--    select user_id, account_id from my_accounts 
 ) x
     left join accounts a on a.account_id = x.account_id
     left join channels c on a.chan_id = c.chan_id
@@ -189,11 +189,13 @@ select
     u."rules:wd_end",
     u."rules:timing"
 from users u
-    left join users e on e.user_id=u.executivehead_id
+    left join users e on e.user_id = u.executivehead_id
 where u.user_id in (
     select distinct user_id from my_routes where '%b_date%' <= p_date and p_date <= '%e_date%'
-	union
-    select user_id from my_accounts 
+--	union
+--    select user_id from my_accounts 
+) and u.user_id in (
+    select distinct user_id from sysstats where '%b_date%' <= fix_date and fix_date <= '%e_date%'
 )
 order by u.descr, u.user_id
   ]]>
