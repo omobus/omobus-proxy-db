@@ -6535,8 +6535,8 @@ insert into sysparams values('checkups:offset', '-30', 'How long (in days) empty
 
 insert into sysparams values('advt_history:offset', '-60', 'The maximum depth of the advt_history in days');
 insert into sysparams values('oos_history:offset', '-60', 'The maximum depth of the oos_history in days');
-insert into sysparams values('photos_history:offset', '-15', 'The maximum depth of the photos_history in days.');
-insert into sysparams values('posms_history:offset', '-15', 'The maximum depth of the posms_history in days.');
+insert into sysparams values('photos_history:offset', '-2', 'The maximum depth of the photos_history in days.');
+insert into sysparams values('posms_history:offset', '-2', 'The maximum depth of the posms_history in days.');
 insert into sysparams values('presences_history:offset', '-60', 'The maximum depth of the presences_history in days');
 insert into sysparams values('prices_history:offset', '-60', 'The maximum depth of the prices_history in days.');
 insert into sysparams values('quests_history:offset', '-60', 'The maximum depth of the quests_history in days.');
