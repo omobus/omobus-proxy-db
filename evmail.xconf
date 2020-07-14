@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<omobusd timeout="90" semaphore="evmail">
+<omobusd timeout="30" semaphore="evmail">
     <xi:include href="connections/proxy-db.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
     <xi:include href="transactions/write_forced_commit.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
     <xi:include href="kernels/evmail.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
