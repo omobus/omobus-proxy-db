@@ -19,7 +19,7 @@ select
     quote_csv_string(r.descr) region, 
     quote_csv_string(c.descr) city,
     d.contact_id,
-    quote_csv_string(t.name || ' ' || t.surname) contact_name,
+    quote_csv_string(t.name || ' ' || trim(coalesce(t.surname,''))) contact_name,
     round(100*d.sla,1) sla, 
     quote_csv_string(j.descr) job_title,
     quote_csv_string(e.descr) head_name,

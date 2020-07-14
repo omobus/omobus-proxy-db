@@ -23,7 +23,7 @@ select
     quote_csv_string(m.descr) tm_name,
     quote_csv_string(case when m.brand_ids is null or cardinality(m.brand_ids) = 1 then b.descr else
 	(select array_to_string(array_agg(descr::text),', ') from brands where brand_id=any(m.brand_ids)) end) brand,
-    quote_csv_string(z.name || ' ' || z.surname) contact_name,
+    quote_csv_string(trim(z.name || ' ' || coalesce(z.surname,''))) contact_name,
     quote_csv_string(j.descr) job_title,
     quote_csv_string(d.doc_note) note,
     quote_csv_string(e.descr) head_name,
