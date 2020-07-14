@@ -84,8 +84,8 @@ begin
 -- **** testing --> contacts
     if( f_date >= (select max(fix_dt::date_t) from h_testing where contact_id='%contact_id%' group by contact_id) ) then
 	if( (select count(*) from contacts where contact_id='%contact_id%') = 0 ) then
-	    insert into contacts(contact_id, account_id, name, patronymic, surname, job_title_id, author_id, hidden)
-		values('%contact_id%', '%account_id%', '', '', '', '', '%user_id_sys%', 1);
+	    insert into contacts(contact_id, account_id, name, job_title_id, author_id, hidden)
+		values('%contact_id%', '%account_id%', '', '', '%user_id_sys%', 1);
 	    raise notice '(testing) added new contact [%contact_id%]';
 	end if;
     end if;

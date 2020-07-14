@@ -54,8 +54,8 @@ begin
 -- **** testing --> contacts
     foreach c_id in array string_to_array('%contact_ids%',',') loop
 	if( (select count(*) from contacts where contact_id=c_id) = 0 ) then
-	    insert into contacts(contact_id, account_id, name, patronymic, surname, job_title_id, author_id, hidden)
-		values(c_id, '%account_id%', '', '', '', '', '%user_id_sys%', 1);
+	    insert into contacts(contact_id, account_id, name, job_title_id, author_id, hidden)
+		values(c_id, '%account_id%', '', '', '%user_id_sys%', 1);
 	    raise notice '(training) added new contact [%]', c_id;
 	end if;
     end loop;

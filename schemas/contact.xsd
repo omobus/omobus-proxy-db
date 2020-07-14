@@ -43,7 +43,7 @@
 	    <xs:attribute name="closed_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
 	    <xs:attribute name="contact_id" use="required" type="uid_t" />
 	    <xs:attribute name="name" use="required" type="xs:string" />
-	    <xs:attribute name="surname" use="required" type="xs:string" />
+	    <xs:attribute name="surname" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="patronymic" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="job_title_id" use="required" type="uid_t" />
 	    <xs:attribute name="phone" use="optional" type="xs:string" default="" />
