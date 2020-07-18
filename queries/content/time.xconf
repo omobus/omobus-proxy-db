@@ -55,7 +55,8 @@ from (
 	    when min(b_dt) is not null and max(e_dt) is not null and count(closed) > 1 then
 		nullif(mileage_get(user_id, route_date, substring(min(b_dt), 12, 5), substring(max(e_dt), 12, 5)),0)
 	    else null
-	end mileage
+	end mileage,
+	nullif(mileage_get(user_id, route_date),0) total_mileage
     from (
 	select 
 	    user_id,
@@ -225,7 +226,7 @@ local days = rt.groups(_days, "user_id", function(r, n, a)
 	end
 	r.violations["tm"] = tonumber(a)
     elseif std.contains({'alive','route_duration','instore_duration','scheduled','closed','canceled','other','pending','discarded',
-	    'accepted','rejected','warn_min_duration','warn_max_duration','warn_max_distance','mileage','wday'}, n) then
+	    'accepted','rejected','warn_min_duration','warn_max_duration','warn_max_distance','mileage','total_mileage','wday'}, n) then
 	r[n] = tonumber(a)
     else
 	r[n] = a
