@@ -297,6 +297,13 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 <!-- **** FILTERS: END **** -->
 </queries>
 <pack strict="yes" Xtrace="yes">
+    <!-- role: BEGIN -->
+    <photos_history role="asm,ise,kam,sv,tme" />
+    <posms_history role="asm,ise,kam,sv,tme" />
+    <rating_criterias role="asm,ise,sv" />
+    <rating_scores role="asm,ise,sv" />
+    <ratings_history role="asm,ise,sv" />
+    <!-- role: END -->
     <activity_types personalize="groupName" />
     <addition_types />
     <attributes />
@@ -323,8 +330,8 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <placements />
     <potentials />
     <promo_types />
-    <rating_criterias hierarchy="rating_criteria_id" role="asm,ise,sv" />
-    <rating_scores role="asm,ise,sv" />
+    <rating_criterias hierarchy="rating_criteria_id" />
+    <rating_scores />
     <reclamation_types />
     <shelf_lifes />
     <testing_criterias hierarchy="testing_criteria_id" />
@@ -359,6 +366,8 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<brands key="dep_id" />
 	<departments key="dep_id" />
 	<info_materials key="dep_id" />
+	<oos_types key="dep_id" />
+	<rating_criterias key="dep_id" />
 	<targets key="dep_id" />
 	<training_types key="dep_id" />
 	<wish_weeks key="dep_id" />
@@ -412,7 +421,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	</my_habitat>
 -->
 	<orders_history key="user_id" strict="yes" />
-	<ratings_history key="user_id" strict="yes" role="asm,ise,sv" />
+	<ratings_history key="user_id" strict="yes" />
 	<reclamations_history key="user_id" strict="yes" />
 	<route_history key="user_id" strict="yes">
 	    <route_history_extra key="a_cookie" strict="yes" />
@@ -461,10 +470,10 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<orders_history key="account_id" strict="yes" />
 	<oos_history key="account_id" strict="yes" />
 	<permitted_returns key="account_id" strict="yes" />
-	<photos_history role="asm,ise,kam,sv,tme" key="account_id" strict="yes" />
+	<photos_history key="account_id" strict="yes" />
 	<plu_codes key="account_id" strict="yes" />
 	<!--<pmlist key="account_id" />-->
-	<posms_history role="asm,ise,kam,sv,tme" key="account_id" strict="yes" />
+	<posms_history key="account_id" strict="yes" />
 	<presences_history key="account_id" strict="yes" />
 	<prices_history key="account_id" strict="yes" />
 	<quests_history key="account_id" strict="yes" />
