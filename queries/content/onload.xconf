@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <onload>
   <![CDATA[
-/* actual content: */
+/* actual daily contents: */
 select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_stream s, "content_stream.ghost" d
     where s.user_id=d.user_id and s.b_date=d.b_date and s.e_date=d.e_date and s.content_code=d.content_code 
 	and (s.content_ts is null or (s.content_ts is not null and d.data_ts >= s.content_ts))
-	and (s.b_date = current_date::date_t or s.b_date = (current_date+1)::date_t or s.b_date <> s.e_date)
+	and (s.b_date = current_date::date_t or s.b_date = (current_date+1)::date_t /*or s.b_date <> s.e_date*/)
 
 union
-/* monthly reports: */
+/* actual monthly contents: */
 select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_stream s, "content_stream.ghost" d
     where s.user_id=d.user_id and s.b_date=d.b_date and s.e_date=d.e_date and s.content_code=d.content_code 
 	and (s.content_ts is null or (s.content_ts is not null and d.data_ts >= s.content_ts))
@@ -19,7 +19,7 @@ select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_str
 	/* temporary (delete after 2021-05-01): */ and (not s.content_code in ('time') or s.b_date >= '2020-06-01')
 
 union
-/* analitics reports: */
+/* analitic contents: */
 select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_stream s, "content_stream.ghost" d
     where s.user_id=d.user_id and s.b_date=d.b_date and s.e_date=d.e_date and s.content_code=d.content_code 
 	and (s.content_ts is null or (s.content_ts is not null and d.data_ts >= s.content_ts))
@@ -28,7 +28,7 @@ select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_str
 	and not s.content_code in ('tech','route_compliance')
 
 union
-/* obsolete content: */
+/* obsolete contents: */
 select content_code, user_id, b_date, e_date, data_ts from (
     select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_stream s, "content_stream.ghost" d
 	where s.user_id=d.user_id and s.b_date=d.b_date and s.e_date=d.e_date and s.content_code=d.content_code 
@@ -50,7 +50,7 @@ select content_code, user_id, b_date, e_date, data_ts from (
     limit 10
 ) x1
 
-/* future content: */
+/* future contents: */
 union
 select content_code, user_id, b_date, e_date, data_ts from (
     select s.content_code, s.user_id, s.b_date, s.e_date, d.data_ts from content_stream s, "content_stream.ghost" d
