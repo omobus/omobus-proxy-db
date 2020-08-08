@@ -1,18 +1,66 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <kernel module="kern_tasks">
-<routes ontimeout="yes" onsemaphore="yes">
+<set_closed_status ontimeout="yes" onsemaphore="yes">
   <![CDATA[
 do $$
 declare
-    open_depth int default 7;
-    close_depth int default 1;
+    depth int default 5; /* close depth in days */
     c_id uid_t;
-    n_id uid_t;
-    x bool_t;
-    b date;
-    e date;
-    n int32_t;
-    weeks int;
+    b date_t;
+    e date_t;
+    no int32_t;
+begin
+    for c_id, b, e, no in 
+	select cycle_id, b_date, e_date, cycle_no from route_cycles 
+	    where hidden = 0 and (status is null or status != 'closed') and (e_date::date - current_date) <= depth
+	order by b_date
+    loop
+	update route_cycles set status = 'closed'
+	    where cycle_id = c_id and (status is null or status != 'closed');
+
+	raise notice 'cycles: cycle_id=[%] has been closed (cycle_no=[%/%], b_date=[%], e_date=[%]).', 
+	    c_id, no, extract(year from b::date), b, e;
+    end loop;
+end;
+$$
+  ]]>
+</set_closed_status>
+<set_inprogress_status ontimeout="yes" onsemaphore="yes">
+  <![CDATA[
+do $$
+declare
+    depth int default 3; /* inprogress depth in days */
+    c_id uid_t;
+    b date_t;
+    e date_t;
+    no int32_t;
+begin
+    for c_id, b, e, no in 
+	select cycle_id, b_date, e_date, cycle_no from route_cycles 
+	    where hidden = 0 and status is null and (b_date::date - current_date) <= depth
+	order by b_date
+    loop
+	update route_cycles set status = 'inprogress'
+	    where cycle_id = c_id and status is null;
+
+	raise notice 'cycles: cycle_id=[%] has been set as [inprogress] (cycle_no=[%/%], b_date=[%], e_date=[%]).', 
+	    c_id, no, extract(year from b::date), b, e;
+    end loop;
+end;
+$$
+  ]]>
+</set_inprogress_status>
+<compile_route>
+  <![CDATA[
+do $$
+declare
+    "offset" int default 1; /* offset in days for safe route compilation */
+    c_id uid_t;
+    b date_t;
+    e date_t;
+    no int32_t;
+    today date_t default current_date + "offset";
+    x date_t;
     a_id uid_t;
     u_id uid_t;
     ar_days smallint[];
@@ -20,50 +68,60 @@ declare
     i int;
     j int;
     p date_t;
-    tmp uid_t;
+    u1 timestamp;
+    u2 timestamp;
 begin
-    select cycle_id, b_date::date, e_date::date, cycle_no, closed, ceil((e_date::date - b_date::date)::float/7) 
-	from route_cycles where hidden = 0 order by b_date desc limit 1
-    into c_id, b, e, n, x, weeks;
+    select cycle_id, b_date, e_date, cycle_no from route_cycles 
+	where hidden = 0 and today between b_date and e_date and status = 'inprogress'
+    order by b_date desc limit 1
+    into c_id, b, e, no;
 
     if( c_id is null ) then
 	return;
     end if;
 
-    if( close_depth >= (b - current_date) and x = 0 ) then
-	update route_cycles set closed = 1 
-	    where cycle_id = c_id and closed = 0;
+    x := GREATEST(b, today);
 
-	raise notice 'cycles: cycle_id=[%] has been closed (cycle_no = %/%).', 
-	    c_id, n, extract(year from b);
+    create temporary table ".dates"(
+	d date_t not null primary key
+    );
 
--- create my_accounts:
+    for u_id in 
+	select distinct user_id from routes where cycle_id = c_id
+    loop
+	select compiled_ts from route_cycles where cycle_id = c_id
+	    into u1;
+	select max(updated_ts) from routes where cycle_id = c_id and user_id = u_id
+	    into u2;
+
+	if( u1 is not null and u2 <= u1 ) then
+	    continue; /* nothing to compile */
+	end if;
+
+	/* compile my_accounts: */
 	delete from my_accounts
-	    where db_ids = (array['$routes'])::uids_t;
+	    where user_id = u_id and db_ids = (array['$routes'])::uids_t;
 	update my_accounts set db_ids=array_remove(db_ids,'$routes')
-	    where db_ids @> (array['$routes'])::uids_t;
+	    where user_id = u_id and db_ids @> (array['$routes'])::uids_t; /*<*/
 	delete from my_accounts
-	    where (db_ids is null or cardinality(db_ids)=0);
+	    where user_id = u_id and (db_ids is null or cardinality(db_ids)=0);
 	insert into my_accounts(user_id, account_id, db_ids)
 	    select distinct r.user_id, r.account_id, array['$routes'] from routes r, accounts a
-		where r.cycle_id=c_id and r.hidden = 0 and r.account_id = a.account_id and a.hidden = 0;
-	raise notice 'cycles: created my_accounts using routes (cycle_id = %, cycle_no = %/%).', 
-	    c_id, n, extract(year from b);
+		where r.cycle_id=c_id and user_id = u_id and r.hidden = 0 and r.account_id = a.account_id and a.hidden = 0;
+	raise notice 'cycles: [user_id=%] compiled my_accounts using route cycle data (cycle_id=[%], cycle_no=[%/%], b_date=[%], e_date=[%]).', 
+	    u_id, c_id, no, extract(year from b::date), b, e;
 
--- create my_routes:
+	/* compile my_routes: */
 	delete from my_routes 
-	    where p_date >= (case when b >= (current_date + 1) then b else (current_date + 1) end)::date_t
-		and db_ids = (array['$routes'])::uids_t;
+	    where user_id = u_id and p_date >= x and db_ids = (array['$routes'])::uids_t;
 	update my_routes set db_ids=array_remove(db_ids,'$routes')
-	    where p_date >= (case when b >= (current_date + 1) then b else (current_date + 1) end)::date_t
-		and db_ids @> (array['$routes'])::uids_t;
+	    where user_id = u_id and p_date >= x and db_ids @> (array['$routes'])::uids_t; /*<*/
 	delete from my_routes
-	    where p_date >= (case when b >= (current_date + 1) then b else (current_date + 1) end)::date_t
-		and (db_ids is null or cardinality(db_ids)=0);
+	    where user_id = u_id and p_date >= x and (db_ids is null or cardinality(db_ids)=0);
 
-	for u_id, a_id, ar_weeks, ar_days in 
-	    select r.user_id, r.account_id, r.weeks, r.days from routes r, accounts a 
-		where r.cycle_id=c_id and r.hidden = 0 and r.account_id = a.account_id and a.hidden = 0
+	for a_id, ar_weeks, ar_days in 
+	    select r.account_id, r.weeks, r.days from routes r, accounts a 
+		where r.cycle_id=c_id and user_id = u_id and r.hidden = 0 and r.account_id = a.account_id and a.hidden = 0
 	loop
 	    for i in 1..array_length(ar_weeks, 1)
 	    loop
@@ -71,8 +129,8 @@ begin
 		    for j in 1..array_length(ar_days, 1)
 		    loop
 			if( ar_days[j] = 1 ) then
-			    p := b + (j-1) + 7*(i-1);
-			    if( p::date >= (current_date + 1) ) then
+			    p := b::date + (j-1) + 7*(i-1);
+			    if( p >= x ) then
 				insert into my_routes(user_id, account_id, p_date, activity_type_id, db_ids)
 				    values(u_id, a_id, p, '0', array['$routes']);
 			    end if;
@@ -82,48 +140,90 @@ begin
 	    end loop;
 	end loop;
 
-	for p in select generate_series::date_t from generate_series(current_date + 1, (select max(p_date)::date from my_routes), '1 day')
-	loop
-	    for u_id in
-		select distinct user_id from my_routes where p_date = p
+	raise notice 'cycles: [user_id=%] compiled my_routes starting at % using route cycle data (cycle_id=[%], cycle_no=[%/%], b_date=[%], e_date=[%]).', 
+	    u_id, x, c_id, no, extract(year from b::date), b, e;
+
+	for p in 
+	    select generate_series::date_t from generate_series(x::date, (
+		select max(p_date)::date from my_routes where user_id = u_id
 		    union
-		select distinct user_id from content_stream where b_date = p and e_date = p and content_code='tech_route'
-	    loop
+		select max(b_date)::date from content_stream where user_id = u_id and content_code='tech_route'
+	    ), '1 day')
+	loop
+	    if( (select count(account_id) from my_routes where user_id = u_id and p_date = p) != 0 ) then
 		perform content_add('tech_route', u_id, p, p);
-	    end loop;
-	    perform content_add('tech', '', p, p);
-	    raise notice 'cycles: refreshed content_stream tech/route reports at %.', p;
+	    else
+		perform content_update('tech_route', u_id, p, p);
+	    end if;
+	    insert into ".dates"(d) values(p) on conflict do nothing;
 	end loop;
+	raise notice 'cycles: [user_id=%] refreshed content_stream tech_route reports at %.', u_id, p;
+    end loop;
 
-	raise notice 'cycles: created my_routes using routes (cycle_id = %, cycle_no = %/%).', 
-	    c_id, n, extract(year from b);
-    end if; 
+    for p in
+	select d from ".dates"
+    loop
+	perform content_add('tech', '', p, p);
+	raise notice 'cycles: refreshed content_stream tech reports.';
+    end loop;
 
--- clone routes:
-    if( open_depth >= (e - current_date) ) then
-	n := case when extract(year from b) = extract(year from (e + 1)) then (n + 1) else 1 end; 
-	b := e + 1;
-	e := b + weeks*7 - 1;
-
-	insert into route_cycles(b_date, e_date, cycle_no) 
-	    values(b, e, n) 
-	returning cycle_id 
-	into n_id;
-
-	insert into routes(user_id, cycle_id, account_id, days, weeks, author_id)
-	    select r.user_id, n_id, r.account_id, r.days, r.weeks, r.author_id
-		from routes r, accounts a
-	    where r.cycle_id=c_id and r.hidden=0 and r.account_id = a.account_id and a.hidden = 0;
-
-	raise notice 'cycles: cycle_id=[%] has been opened (b_date = %, e_date = %, cycle_no = %/%).', 
-	    n_id, b, e, n, extract(year from b);
-    end if; 
-
-    update route_cycles set closed = 1 where closed = 0 and current_date >= b_date::date; 
+    update route_cycles set compiled_ts = current_timestamp
+	where cycle_id = c_id;
+    raise notice 'cycles: **** route compiled_ts updated to [%] ****', current_timestamp;
 end;
 $$
   ]]>
-</routes>
+</compile_route>
+<clone_route>
+  <![CDATA[
+do $$
+declare
+    depth int default 7; /* open depth in days */
+    c_id uid_t;
+    n_id uid_t;
+    b date;
+    e date;
+    no int32_t;
+    weeks int;
+    a_id uid_t;
+    u_id uid_t;
+    ar_days smallint[];
+    ar_weeks smallint[];
+    i int;
+    j int;
+    p date_t;
+begin
+    select 
+	cycle_id, b_date, e_date, cycle_no, ceil((e_date::date - b_date::date)::float/7) 
+    from route_cycles 
+    where hidden = 0 and status = 'inprogress' and (e_date::date - current_date) <= depth
+    order by b_date desc limit 1
+    into c_id, b, e, no, weeks;
+
+    if( c_id is null ) then
+	return;
+    end if;
+
+    no := case when extract(year from b::date) = extract(year from (e::date + 1)) then (n + 1) else 1 end; 
+    b := e::date + 1;
+    e := b::date + weeks*7 - 1;
+
+    insert into route_cycles(b_date, e_date, cycle_no) 
+	values(b, e, no) 
+    returning cycle_id 
+    into n_id;
+
+    insert into routes(user_id, cycle_id, account_id, days, weeks, author_id)
+	select r.user_id, n_id, r.account_id, r.days, r.weeks, r.author_id from routes r, accounts a
+	    where r.cycle_id = c_id and r.hidden = 0 and r.account_id = a.account_id and a.hidden = 0;
+
+    raise notice 'cycles: cycle_id=[%] has been opened (b_date =[%], e_date=[%], cycle_no=[%/%]).', 
+	n_id, b, e, n, extract(year from b::date);
+end;
+$$
+  ]]>
+</clone_route>
+<!--
 <ownerless ontimeout="yes" onsemaphore="yes">
   <![CDATA[
 do $$
@@ -152,4 +252,5 @@ end;
 $$
   ]]>
 </ownerless>
+-->
 </kernel>
