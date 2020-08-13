@@ -9,6 +9,10 @@ declare
     auth descr_t;
     a_name descr_t;
     a_address address_t;
+    cid uid_t;
+    tmp bool_t;
+    d int2[];
+    w int2[];
 begin
     GET DIAGNOSTICS stack = PG_CONTEXT;
     fcesig := substring(stack from 'function console\.(.*?)\(');
@@ -24,6 +28,25 @@ begin
 	update j_wishes set validator_id = _login, validated = 1
 	    where account_id = _aid and user_id = _uid and hidden = 0 and validated = 0;
 	GET DIAGNOSTICS updated_rows = ROW_COUNT;
+
+	select cycle_id from route_cycles
+	    where b_date <= _reqdt::date_t and _reqdt::date_t <= e_date and hidden = 0
+	into cid;
+	if( cid is not null ) then
+	    select hidden from routes 
+		where cycle_id = cid and account_id = _aid and user_id = _uid
+	    into tmp;
+	    select d.days, w.weeks from j_wishes j, wish_weeks w, wish_days d
+		where j.account_id = _aid and j.user_id = _uid and j.wish_week_id = w.wish_week_id and j.wish_day_id = d.wish_day_id
+	    into d, w;
+	    if( tmp is null ) then
+		insert into routes(user_id, cycle_id, account_id, days, weeks, author_id)
+		    values(_uid, cid, _aid, d, w, _login);
+	    else/*elsif( tmp = 1 ) then*/
+		update routes set days = d, weeks = w, author_id = _login, hidden = 0
+		    where cycle_id = cid and account_id = _aid and user_id = _uid;
+	    end if;
+	end if;
     elsif( _cmd = 'reject' ) then
 	update j_wishes set hidden = 1
 	    where account_id = _aid and user_id = _uid and hidden = 0;
