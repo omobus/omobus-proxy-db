@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <kernel module="kern_tasks">
-<set_closed_status ontimeout="yes" onsemaphore="yes">
+<set_closed_status>
   <![CDATA[
 do $$
 declare
@@ -25,7 +25,7 @@ end;
 $$
   ]]>
 </set_closed_status>
-<set_inprogress_status ontimeout="yes" onsemaphore="yes">
+<set_inprogress_status>
   <![CDATA[
 do $$
 declare
@@ -54,7 +54,7 @@ $$
   <![CDATA[
 do $$
 declare
-    "offset" int default 1; /* offset in days for safe route compilation */
+    "offset" int default 2; /* offset in days for safe route compilation */
     c_id uid_t;
     b date_t;
     e date_t;
@@ -145,9 +145,11 @@ begin
 
 	for p in 
 	    select generate_series::date_t from generate_series(x::date, (
-		select max(p_date)::date from my_routes where user_id = u_id
-		    union
-		select max(b_date)::date from content_stream where user_id = u_id and content_code='tech_route'
+		select max(p_date)::date from (
+		    select p_date from my_routes where user_id = u_id and p_date >= x
+			union
+		    select b_date from content_stream where user_id = u_id and content_code='tech_route' and b_date >= x
+		) q0
 	    ), '1 day')
 	loop
 	    if( (select count(account_id) from my_routes where user_id = u_id and p_date = p) != 0 ) then
@@ -164,12 +166,14 @@ begin
 	select d from ".dates"
     loop
 	perform content_add('tech', '', p, p);
-	raise notice 'cycles: refreshed content_stream tech reports.';
+	raise notice 'cycles: refreshed content_stream tech reports at %.', p;
     end loop;
 
-    update route_cycles set compiled_ts = current_timestamp
-	where cycle_id = c_id;
-    raise notice 'cycles: **** route compiled_ts updated to [%] ****', current_timestamp;
+    if( (select count(*) from ".dates") != 0 ) then
+	update route_cycles set compiled_ts = current_timestamp
+	    where cycle_id = c_id;
+	raise notice 'cycles: **** route compiled_ts updated to [%] ****', current_timestamp;
+    end if;
 end;
 $$
   ]]>
@@ -223,8 +227,7 @@ end;
 $$
   ]]>
 </clone_route>
-<!--
-<ownerless ontimeout="yes" onsemaphore="yes">
+<ownerless>
   <![CDATA[
 do $$
 declare
@@ -252,5 +255,4 @@ end;
 $$
   ]]>
 </ownerless>
--->
 </kernel>

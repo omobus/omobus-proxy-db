@@ -2258,10 +2258,11 @@ create table route_cycles (
     b_date 		date_t 		not null,
     e_date 		date_t 		not null,
     cycle_no 		int32_t 	not null,
-    closed 		bool_t 		not null default 0,
+    status 		varchar(10) 	check(status in ('closed','inprogress')),
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null
+    updated_ts 		ts_auto_t 	not null,
+    compiled_ts 	ts_t 		null
 );
 
 create trigger trig_updated_ts before update on route_cycles for each row execute procedure tf_updated_ts();
