@@ -3,7 +3,18 @@
     <queries>
 	<my_accounts>
   <![CDATA[
-select q.account_id, a.code a_code, q.route, a.descr, a.address, a.latitude, a.longitude, c.descr chan, p.descr poten, a.cash_register from (
+select 
+    q.account_id, 
+    a.code a_code, 
+    q.route, 
+    a.descr, 
+    a.address, 
+    a.latitude, 
+    a.longitude, 
+    c.descr chan, 
+    p.descr poten, 
+    a.cash_register 
+from (
     select account_id, max(route) route from (
 	select account_id, null route from my_accounts where user_id='%user_id%'
 	    union
@@ -30,7 +41,13 @@ order by fix_dt
 	<route>
   <![CDATA[
 select
-    r.user_id, r.route, r.closed, r.canceled, r.account_id, r.a_cookie, r.row_no sched_no,
+    r.user_id, 
+    r.route, 
+    r.closed, 
+    r.canceled, 
+    r.account_id, 
+    r.a_cookie, 
+    r.row_no sched_no,
     r.activity_type_id, t.descr activity_type, t.strict,
     r.b_dt, r.e_dt, datediff(r.b_dt, r.e_dt) duration,
     r.latitude, r.longitude, distance(a.latitude, a.longitude, r.latitude, r.longitude) dist,
@@ -43,16 +60,14 @@ select
     end mileage,
     r.extra_info,
     r.docs,
-    c.descr chan, p.descr poten,
     x.descr canceling_type, r.canceling_note,
     r.zstatus, r.znote,
     r.guid
 from user_routes('%user_id%', '%b_date%', '%e_date%', 1::bool_t) r
     left join accounts a on a.account_id = r.account_id
-    left join potentials p on p.poten_id = a.poten_id 
-    left join channels c on c.chan_id = a.chan_id
     left join activity_types t on r.activity_type_id = t.activity_type_id
     left join canceling_types x on x.canceling_type_id = r.canceling_type_id
+where a.account_id is not null
 order by r.b_dt, r.row_no
   ]]>
 	</route>
