@@ -40,7 +40,7 @@ update users set pids=null where pids is not null and cardinality(pids) = 0 and 
 update users set executivehead_id=my_executivehead(user_id) where hidden = 0;
 
 update countries set hidden=1 where hidden = 0;
-update countrues set hidden=0 where country_id in (select distinct country_id from users where hidden = 0);
+update countries set hidden=0 where country_id in (select distinct country_id from users where hidden = 0);
 
 insert into ".content"(content_code, user_id, b_date, e_date) values('tech', '', current_date::date_t, current_date::date_t)
     on conflict do nothing;
