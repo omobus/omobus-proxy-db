@@ -191,7 +191,6 @@ order by 1, 2
     ]]>
 </my_dbs>
 -->
-<!--
 <my_habitat>
     <![CDATA[
 select user_id, account_id fid from j_user_activities where fix_date >= (current_date + "paramInteger"('route_history:offset:left'))::date_t
@@ -210,7 +209,6 @@ select user_id, guid fid from j_additions where hidden = 0
 order by 1, 2
     ]]>
 </my_habitat>
--->
 <my_info_materials>
     <![CDATA[
 select unnest(chan_ids) chan_id, infom_id from info_materials where chan_ids is not null and hidden=0
@@ -415,11 +413,9 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	</warehouses>
     </distributors>
     <users hierarchy="user_id" root="ErpId" group="user_id" bruteforce="yes" index="user_id">
-<!--
 	<my_habitat key="user_id">
 	    <accounts key="fid" />
 	</my_habitat>
--->
 	<orders_history key="user_id" strict="yes" />
 	<ratings_history key="user_id" strict="yes" />
 	<reclamations_history key="user_id" strict="yes" />
