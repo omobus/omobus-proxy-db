@@ -13,6 +13,7 @@ declare
     tmp bool_t;
     d int2[];
     w int2[];
+    ts ts_t;
 begin
     GET DIAGNOSTICS stack = PG_CONTEXT;
     fcesig := substring(stack from 'function console\.(.*?)\(');
@@ -30,7 +31,7 @@ begin
 	GET DIAGNOSTICS updated_rows = ROW_COUNT;
 
 	select cycle_id from route_cycles
-	    where b_date <= _reqdt::date_t and _reqdt::date_t <= e_date and hidden = 0
+	    where b_date <= _reqdt::date_t and _reqdt::date_t <= e_date and hidden = 0 and (status is null or status = 'inprogress')
 	into cid;
 	if( cid is not null ) then
 	    select hidden from routes 
@@ -48,9 +49,18 @@ begin
 	    end if;
 	end if;
     elsif( _cmd = 'reject' ) then
+	select cycle_id from routes
+	    where account_id = _aid and user_id = _uid and hidden = 0 and updated_ts = (select updated_ts from j_wishes where account_id = _aid and user_id = _uid)
+	into cid;
+
 	update j_wishes set hidden = 1
 	    where account_id = _aid and user_id = _uid and hidden = 0;
 	GET DIAGNOSTICS updated_rows = ROW_COUNT;
+
+	if( cid is not null and (select count(*) from route_cycles where cycle_id = cid and (status is null or status = 'inprogress')) > 0 ) then
+	    update routes set hidden = 1
+		where cycle_id = cid and account_id = _aid and user_id = _uid and hidden = 0;
+	end if;
     end if;
 
     if updated_rows > 0 then
