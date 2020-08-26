@@ -217,20 +217,20 @@ objectClass: top
 ou: merch
 description: Merchandisers
 
-dn: ou=admins,ou=users,dc=omobus,dc=local
+dn: ou=_admins,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
-ou: admins
+ou: _admins
 
-dn: ou=guests,ou=users,dc=omobus,dc=local
+dn: ou=_guests,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
-ou: guests
+ou: _guests
 
-dn: ou=analitics,ou=users,dc=omobus,dc=local
+dn: ou=_analitics,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
-ou: analitics
+ou: _analitics
 
 dn: uid=xz_mr_1,ou=mr,ou=users,dc=omobus,dc=local
 objectClass: posixAccount
@@ -308,7 +308,7 @@ uidNumber: 902
 consoleStatus: enabled
 dumpsStatus: enabled
 ErpId: asm01
-exchangeStatus: enabled
+exchangeStatus: disabled
 FTPStatus: enabled
 groupName: asm
 mailStatus: enabled
@@ -326,12 +326,12 @@ gidNumber: 905
 homeDirectory: /var/ftp/users/ksr/xz_cdm_1
 uid: xz_cdm_1
 uidNumber: 902
-consoleStatus: disabled
+consoleStatus: enabled
 ErpId: cdm01
 exchangeStatus: disabled
-FTPStatus: disabled
+FTPStatus: enabled
 groupName: cdm
-mailStatus: disabled
+mailStatus: enabled
 userPassword: 1
 
 dn: uid=xz_ise_1,ou=ise,ou=users,dc=omobus,dc=local
@@ -395,6 +395,7 @@ mailStatus: disabled
 userPassword: 1
 
 dn: uid=xz_tme_1,ou=tme,ou=users,dc=omobus,dc=local
+objectClass: omobusMail
 objectClass: omobusUser
 objectClass: PureFTPdUser
 objectClass: account
@@ -407,7 +408,10 @@ uid: xz_tme_1
 uidNumber: 902
 consoleStatus: enabled
 ErpId: tme01
+exchangeStatus: disabled
+FTPStatus: enabled
 groupName: tme
+mailStatus: enabled
 userPassword: 1
 
 dn: uid=dev9,ou=_dev,ou=users,dc=omobus,dc=local
@@ -451,7 +455,7 @@ groupName: merch
 mailStatus: enabled
 userPassword: 1
 
-dn: uid=john_doe,ou=admins,ou=users,dc=omobus,dc=local
+dn: uid=john_doe,ou=_admins,ou=users,dc=omobus,dc=local
 objectClass: posixAccount
 objectClass: top
 objectClass: omobusUser
