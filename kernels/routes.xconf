@@ -208,7 +208,7 @@ begin
 	return;
     end if;
 
-    no := case when extract(year from b::date) = extract(year from (e::date + 1)) then (n + 1) else 1 end; 
+    no := case when extract(year from b::date) = extract(year from (e::date + 1)) then (no + 1) else 1 end; 
     b := e::date + 1;
     e := b::date + weeks*7 - 1;
 
@@ -222,7 +222,7 @@ begin
 	    where r.cycle_id = c_id and r.hidden = 0 and r.account_id = a.account_id and a.hidden = 0;
 
     raise notice 'cycles: cycle_id=[%] has been opened (b_date =[%], e_date=[%], cycle_no=[%/%]).', 
-	n_id, b, e, n, extract(year from b::date);
+	n_id, b, e, no, extract(year from b::date);
 end;
 $$
   ]]>
