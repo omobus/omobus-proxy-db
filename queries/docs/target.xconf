@@ -79,10 +79,12 @@ begin
 		end if;
 
 		perform evmail_add(x_evaddrs, x_lang, 'target/caption', 'target/body:new', 2::smallint /*high*/, array[
-		    'subject',trim('%subject%'),'body',trim('%doc_note%'),
+		    'subject',trim('%subject%'),
+		    'body',trim('%doc_note%'),
 		    'activity_type',t_name,
 		    'u_name',u_name,
-		    'a_name',a_name,'address',a_address,
+		    'a_name',a_name,
+		    'address',a_address,
 		    'fix_dt',"L"('%fix_dt%'::datetime_t),
 		    'b_date',"L"('%b_date%'::date_t),'e_date',"L"('%e_date%'::date_t)]);
 	    end loop;
@@ -96,13 +98,26 @@ begin
 	    select distinct user_id from my_routes where account_id='%account_id%' and p_date>=(current_date-1)::date_t
 		union
 	    select distinct user_id from my_accounts where account_id='%account_id%'
+		union
+	    select pids[1] from users where user_id in (
+		select distinct user_id from my_routes where account_id='%account_id%' and p_date>=(current_date-1)::date_t
+		    union
+		select distinct user_id from my_accounts where account_id='%account_id%'
+	    ) and pids[1] is not null
+		union
+	    select executivehead_id from users where user_id in (
+		select distinct user_id from my_routes where account_id='%account_id%' and p_date>=(current_date-1)::date_t
+		    union
+		select distinct user_id from my_accounts where account_id='%account_id%'
+	    ) and executivehead_id is not null
 	) and hidden=0
 	loop
 	    perform evmail_add(x_evaddrs, x_lang, 'target/caption', 'target/body:new', 3::smallint /*normal*/, array[
 		'subject',trim('%subject%'),'body',trim('%doc_note%'),
 		'activity_type',t_name,
 		'u_name',u_name,
-		'a_name',a_name,'address',a_address,
+		'a_name',a_name,
+		'address',a_address,
 		'fix_dt',"L"('%fix_dt%'::datetime_t),
 		'b_date',"L"('%b_date%'::date_t),'e_date',"L"('%e_date%'::date_t)]);
 	end loop;
