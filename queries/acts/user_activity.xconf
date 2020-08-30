@@ -145,8 +145,30 @@ begin
 	if( violations is not null ) then
 	    select descr, address from accounts where account_id='%account_id%'
 		into a_name, a_address;
-	    perform evmail_add(rcpt_to,u_lang,'user_activity/caption','user_activity/body',2::smallint /*high*/,array['a_type',a_type,'a_name',a_name,'address',a_address,
-		'b_dt',"L"(x_dt),'violations',array_to_string(violations,';<br/>')]);
+	    perform evmail_add(rcpt_to,u_lang,'user_activity/caption','user_activity/body',2::smallint /*high*/,array[
+		'a_type', a_type,
+		'a_name', a_name,
+		'address', a_address,
+		'b_dt',"L"(x_dt),
+		'violations', array_to_string(violations,';<br/>')
+	    ]);
+
+	    for rcpt_to, u_lang in select evaddrs, lang_id from users where user_id<>'%user_id_sys%' and user_id in (
+		    select pids[1] from users where user_id='%user_id_sys%' and pids[1] is not null
+			union
+		    select executivehead_id from users where user_id='%user_id_sys%' and executivehead_id is not null
+		) and hidden=0 and evaddrs is not null and array_length(evaddrs, 1) > 0
+	    loop
+		perform evmail_add(rcpt_to, u_lang, 'user_activity/caption','user_activity/body2', 3::smallint /*normal*/,array[
+		    'a_type', lower(a_type),
+		    'a_name', a_name,
+		    'address', a_address,
+		    'b_dt',"L"(x_dt),
+		    'violations', array_to_string(violations,';<br/>'),
+		    'u_name',(select descr from users where user_id='%user_id_sys%')
+		]);
+	    end loop;
+
 	    raise notice '[user_activity] % violation(-s) detected (user_id=%user_id_sys%, account_id=%account_id%, fix_date=%)', cardinality(violations), x_dt::date_t;
 	end if;
     end if;

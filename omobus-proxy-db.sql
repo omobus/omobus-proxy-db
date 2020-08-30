@@ -6110,6 +6110,14 @@ end;
 $body$ language plpgsql STABLE;
 
 
+create or replace function my_head(my_id uid_t) returns uid_t
+as $body$
+begin
+    return my_head(my_id, null::code_t);
+end;
+$body$ language plpgsql STABLE;
+
+
 create or replace function my_executivehead(my_id uid_t) returns uid_t
 as $body$
 begin

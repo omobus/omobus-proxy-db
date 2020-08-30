@@ -31,6 +31,8 @@ declare
     f_time time_t default substring('%fix_dt%', 12, 5);
     r bool_t default 0;
     xz bool_t default 0;
+    rcpt_to emails_t;
+    u_lang lang_t;
 begin
     select "rules:gps_off" from users where user_id='%user_id_sys%'
 	into r;
@@ -59,11 +61,20 @@ begin
 
 -- **** gps_state --> mail_stream
     if( xz = 1 and abs(current_date - f_date::date) <= 1 and (select gps_violations from sysstats where user_id='%user_id_sys%' and fix_date=f_date) = 1 ) then
-	perform evmail_add('%user_id_sys%','gps_off/caption','gps_off/body',2::smallint /*high*/,array['fix_dt',"L"('%fix_dt%'::datetime_t)]);
+	perform evmail_add('%user_id_sys%','gps_off/caption','gps_off/body',1::smallint /*highest*/,array['fix_dt',"L"('%fix_dt%'::datetime_t)]);
 
-	/*** send GPS violation alart to the executive head email ***/
-	perform evmail_add(my_executivehead('%user_id_sys%'),'gps_violation/caption','gps_violation/body',1::smallint /*highest*/,array[
-	    'fix_dt',"L"('%fix_dt%'::datetime_t),'dev_login','%user_id%','u_name',(select descr from users where user_id='%user_id_sys%')]);
+	for rcpt_to, u_lang in select evaddrs, lang_id from users where user_id<>'%user_id_sys%' and user_id in (
+		select pids[1] from users where user_id='%user_id_sys%' and pids[1] is not null
+		    union
+		select executivehead_id from users where user_id='%user_id_sys%' and executivehead_id is not null
+	    ) and hidden=0 and evaddrs is not null and array_length(evaddrs, 1) > 0
+	loop
+	    perform evmail_add(rcpt_to, u_lang, 'gps_violation/caption','gps_violation/body',2::smallint /*high*/,array[
+		'fix_dt',"L"('%fix_dt%'::datetime_t),
+		'dev_login','%user_id%',
+		'u_name',(select descr from users where user_id='%user_id_sys%')
+	    ]);
+	end loop;
     end if;
 end;
 $$;

@@ -32,6 +32,8 @@ declare
     r bool_t default 0;
     violation int default case when NIL(%diff%) is null or abs(NIL(%diff%)) > 15 then 1 else 0 end;
     xz bool_t default 0;
+    rcpt_to emails_t;
+    u_lang lang_t;
 begin
     select "rules:tm_change" from users where user_id='%user_id_sys%'
 	into r;
@@ -60,11 +62,20 @@ begin
 
 -- **** time --> mail_stream
     if( xz = 1 and abs(current_date - f_date::date) <= 1 and (select tm_violations from sysstats where user_id='%user_id_sys%' and fix_date=f_date) = 1 ) then
-	perform evmail_add('%user_id_sys%','tm_change/caption','tm_change/body',2::smallint /*high*/,array['fix_dt',"L"('%fix_dt%'::datetime_t)]);
+	perform evmail_add('%user_id_sys%','tm_change/caption','tm_change/body',1::smallint /*highest*/,array['fix_dt',"L"('%fix_dt%'::datetime_t)]);
 
-	/*** send time violation alarm to the executive head email ***/
-	perform evmail_add(my_executivehead('%user_id_sys%'),'tm_violation/caption','tm_violation/body',1::smallint /*highest*/,array[
-	    'fix_dt',"L"('%fix_dt%'::datetime_t),'dev_login','%user_id%','u_name',(select descr from users where user_id='%user_id_sys%')]);
+	for rcpt_to, u_lang in select evaddrs, lang_id from users where user_id<>'%user_id_sys%' and user_id in (
+		select pids[1] from users where user_id='%user_id_sys%' and pids[1] is not null
+		    union
+		select executivehead_id from users where user_id='%user_id_sys%' and executivehead_id is not null
+	    ) and hidden=0 and evaddrs is not null and array_length(evaddrs, 1) > 0
+	loop
+	    perform evmail_add(rcpt_to, u_lang,'tm_violation/caption','tm_violation/body',2::smallint /*hight*/,array[
+		'fix_dt',"L"('%fix_dt%'::datetime_t),
+		'dev_login','%user_id%',
+		'u_name',(select descr from users where user_id='%user_id_sys%')
+	    ]);
+	end loop;
     end if;
 end;
 $$;
