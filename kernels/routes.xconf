@@ -212,17 +212,19 @@ begin
     b := e::date + 1;
     e := b::date + weeks*7 - 1;
 
-    insert into route_cycles(b_date, e_date, cycle_no) 
-	values(b, e, no) 
-    returning cycle_id 
-    into n_id;
+    if( (select count(*) from route_cycles where b_date = b::date_t and e_date = e::date_t and cycle_no = no) = 0 ) then
+	insert into route_cycles(b_date, e_date, cycle_no) 
+	    values(b, e, no) 
+	returning cycle_id 
+	into n_id;
 
-    insert into routes(user_id, cycle_id, account_id, days, weeks, author_id)
-	select r.user_id, n_id, r.account_id, r.days, r.weeks, r.author_id from routes r, accounts a
-	    where r.cycle_id = c_id and r.hidden = 0 and r.account_id = a.account_id and a.hidden = 0;
+	insert into routes(user_id, cycle_id, account_id, days, weeks, author_id)
+	    select r.user_id, n_id, r.account_id, r.days, r.weeks, null/*r.author_id*/ from routes r, accounts a
+		where r.cycle_id = c_id and r.hidden = 0 and r.account_id = a.account_id and a.hidden = 0;
 
-    raise notice 'cycles: cycle_id=[%] has been opened (b_date =[%], e_date=[%], cycle_no=[%/%]).', 
-	n_id, b, e, no, extract(year from b::date);
+	raise notice 'cycles: cycle_id=[%] has been opened (b_date =[%], e_date=[%], cycle_no=[%/%]).', 
+	    n_id, b, e, no, extract(year from b::date);
+    end if;
 end;
 $$
   ]]>
