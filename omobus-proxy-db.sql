@@ -1648,10 +1648,11 @@ create trigger trig_updated_ts before update on my_accounts for each row execute
 create table my_cities (
     user_id 		uid_t 		not null,
     city_id 		uid_t 		not null,
+    chan_id 		uid_t 		not null default '',
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    primary key (user_id, city_id)
+    primary key (user_id, city_id, chan_id)
 );
 
 create index i_db_ids_my_cities on my_cities using GIN (db_ids);
@@ -1675,10 +1676,11 @@ create trigger trig_updated_ts before update on my_kpi for each row execute proc
 create table my_regions (
     user_id 		uid_t 		not null,
     region_id 		uid_t 		not null,
+    chan_id 		uid_t 		not null default '',
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    primary key (user_id, region_id)
+    primary key (user_id, region_id, chan_id)
 );
 
 create index i_db_ids_my_regions on my_regions using GIN (db_ids);
@@ -1687,7 +1689,7 @@ create trigger trig_updated_ts before update on my_regions for each row execute 
 create table my_retail_chains (
     user_id 		uid_t 		not null,
     rc_id 		uid_t 		not null,
-    region_id 		uid_t 		not null,
+    region_id 		uid_t 		not null default '',
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
