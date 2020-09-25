@@ -23,10 +23,11 @@ select
     h.doc_note, 
     array_to_string(h.photos,',') photos,
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(h.photos)) refs,
-    u.executivehead_id head_id, ex.descr head_name
+    u.executivehead_id head_id, ex.descr head_name,
+    k.descr activity_type
 from (
-    select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, tm_id, unnest(contact_ids) contact_id, doc_note, photos from (
-	select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, unnest(tm_ids) tm_id, contact_ids, doc_note, photos from h_training
+    select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, tm_id, unnest(contact_ids) contact_id, doc_note, photos, w_cookie, a_cookie from (
+	select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, unnest(tm_ids) tm_id, contact_ids, doc_note, photos, w_cookie, a_cookie from h_training
 	    where '%b_date%'<=left(fix_dt, 10) and left(fix_dt, 10)<='%e_date%'
     ) xz
 ) h
@@ -43,6 +44,8 @@ from (
     left join job_titles j on j.job_title_id = z.job_title_id
     left join users u on u.user_id = h.user_id
     left join users ex on ex.user_id = u.executivehead_id
+    left join j_user_activities ua on ua.user_id = h.user_id and ua.account_id = h.account_id and ua.w_cookie = h.w_cookie and ua.a_cookie = h.a_cookie
+    left join activity_types k on k.activity_type_id = ua.activity_type_id 
 order by h.inserted_ts desc, u.descr, h.doc_id, b.row_no, b.descr, m.descr
   ]]>
 	</L>
