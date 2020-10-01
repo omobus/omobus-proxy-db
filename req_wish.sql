@@ -5,6 +5,7 @@ create or replace function console.req_wish(_login uid_t, _reqdt datetime_t, _cm
 as $BODY$
 declare
     stack text; fcesig text;
+    hs hstore;
     updated_rows int = 0;
     auth descr_t;
     a_name descr_t;
@@ -31,7 +32,7 @@ begin
 	GET DIAGNOSTICS updated_rows = ROW_COUNT;
 
 	select cycle_id from route_cycles
-	    where b_date <= _reqdt::date_t and _reqdt::date_t <= e_date and hidden = 0 and (status is null or status = 'inprogress')
+	    where b_date <= _reqdt::date_t and _reqdt::date_t <= e_date and hidden = 0
 	into cid;
 	if( cid is not null ) then
 	    select hidden from routes 
@@ -43,7 +44,7 @@ begin
 	    if( tmp is null ) then
 		insert into routes(user_id, cycle_id, account_id, days, weeks, author_id)
 		    values(_uid, cid, _aid, d, w, _login);
-	    else/*elsif( tmp = 1 ) then*/
+	    else
 		update routes set days = d, weeks = w, author_id = _login, hidden = 0
 		    where cycle_id = cid and account_id = _aid and user_id = _uid;
 	    end if;
@@ -57,7 +58,7 @@ begin
 	    where account_id = _aid and user_id = _uid and hidden = 0;
 	GET DIAGNOSTICS updated_rows = ROW_COUNT;
 
-	if( cid is not null and (select count(*) from route_cycles where cycle_id = cid and (status is null or status = 'inprogress')) > 0 ) then
+	if( cid is not null ) then
 	    update routes set hidden = 1
 		where cycle_id = cid and account_id = _aid and user_id = _uid and hidden = 0;
 	end if;
@@ -82,8 +83,14 @@ begin
 	);
     end if;
 
+    hs := hstore(array['user_id',_uid]);
+    hs := hs || hstore(array['account_id',_aid]);
+    if( cid is not null ) then
+	hs := hs || hstore(array['cycle_id',cid]);
+    end if;
+
     insert into console.requests(req_login, req_type, req_dt, status, attrs)
-	values(_login, fcesig, _reqdt, _cmd, hstore(array['account_id',_aid,'user_id',_uid]));
+	values(_login, fcesig, _reqdt, _cmd, hs);
 
     return updated_rows;
 end;
