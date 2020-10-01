@@ -6,22 +6,25 @@ do $$
 declare
     a int = 0;
     x int;
-    t1 int;
-    t2 int;
+    t1 int = 0;
+    t2 int = 0;
 begin
     if( (select count(*) from ".sesparams" where f='%uid%#ownerless') > 0 ) then
 	create temp table ".coverage" as
 	    select distinct account_id from my_accounts where '%ErpCode%' = any(db_ids)
 		union
-	    select distinct account_id from my_routes where '%ErpCode%' = any(db_ids) and p_date >= "monthDate_First"(current_date)::date_t
+	    select distinct account_id from my_routes where '%ErpCode%' = any(db_ids) and p_date >= coalesce((select b_date from route_cycles where b_date <= current_date::date_t and current_date::date_t <= e_date),"monthDate_First"(current_date)::date_t);
 	;
 
 	update accounts set ownerless = 1 where '%ErpCode%' = any(db_ids) and hidden = 0 and approved = 1 and ownerless = 0 and account_id not in (
 	    select account_id from ".coverage"
 	);
+	GET DIAGNOSTICS t1 = ROW_COUNT;
+
 	update accounts set ownerless = 0 where '%ErpCode%' = any(db_ids) and hidden = 0 and approved = 1 and ownerless = 1 and account_id in (
 	    select account_id from ".coverage"
 	);
+	GET DIAGNOSTICS t2 = ROW_COUNT;
 
 	if t1 > 0 or t2 > 0 then
 	    raise notice 'updated [accounts.ownerless] attribute at % rows (point: %uid%, erp: %ErpCode%).', t1 + t2;
