@@ -22,7 +22,6 @@
     cache="docs/"
     >
 <xi:include href="../queries/docs/addition.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/docs/adjustment.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/advt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/audit.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/canceling.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

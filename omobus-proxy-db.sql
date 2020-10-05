@@ -1108,24 +1108,6 @@ create table audit_scores (
 create index i_db_ids_audit_scores on audit_scores using GIN (db_ids);
 create trigger trig_updated_ts before update on audit_scores for each row execute procedure tf_updated_ts();
 
-/*[deprecated]*/ create table auto_orders /* => permitted_adjustments */ (
-    distr_id 		uid_t 		not null,
-    erp_id 		uid_t 		not null,
-    account_id 		uid_t 		not null,
-    delivery_date 	date_t 		not null,
-    prod_id 		uid_t 		not null,
-    pack_id 		uid_t 		not null,
-    qty 		numeric_t 	not null check(qty >= 0),
-    min_qty 		numeric_t 	not null check(min_qty >= 0),
-    max_qty 		numeric_t 	not null check(max_qty >= 0),
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null,
-    primary key (distr_id, erp_id, prod_id)
-);
-
-create trigger trig_updated_ts before update on auto_orders for each row execute procedure tf_updated_ts();
-
 create table blacklist (
     distr_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
@@ -3519,50 +3501,6 @@ create index i_exist_h_advt on h_advt (user_id, dev_pack, dev_id, fix_dt);
 
 create trigger trig_lock_update before update on h_advt for each row execute procedure tf_lock_update();
 create trigger trig_lock_update before update on t_advt for each row execute procedure tf_lock_update();
-
-/*[deprecated]*/ create table h_adjustment (
-    doc_id 		uid_t 		not null primary key default doc_id(),
-    inserted_ts 	ts_auto_t 	not null,
-    inserted_node 	hostname_t 	not null,
-    dev_pack 		int32_t 	not null,
-    doc_no 		uid_t 		not null,
-    dev_id 		devid_t 	not null,
-    dev_login 		uid_t 		not null,
-    user_id 		uid_t 		not null,
-    fix_dt 		datetime_t 	not null,
-    created_dt 		datetime_t 	not null,
-    created_gps_dt 	datetime_t 	null,
-    created_gps_la 	gps_t 		null,
-    created_gps_lo 	gps_t 		null,
-    closed_dt 		datetime_t 	not null,
-    closed_gps_dt 	datetime_t 	null,
-    closed_gps_la 	gps_t 		null,
-    closed_gps_lo 	gps_t 		null,
-    w_cookie 		uid_t 		not null,
-    rows 		int32_t 	not null
-);
-
-/*[deprecated]*/ create table t_adjustment (
-    doc_id 		uid_t 		not null,
-    distr_id 		uid_t 		not null,
-    erp_id 		uid_t 		not null,
-    account_id 		uid_t 		not null,
-    delivery_date 	date_t 		not null,
-    prod_id 		uid_t 		not null,
-    row_no 		int32_t 	not null check (row_no >= 0),
-    pack_id 		uid_t 		not null,
-    pack 		numeric_t 	not null,
-    qty 		numeric_t 	not null,
-    primary key (doc_id, distr_id, erp_id, prod_id)
-);
-
-create index i_fix_date_h_adjustment on h_adjustment (left(fix_dt,10));
-create index i_doc_no_h_adjustment on h_adjustment (doc_no);
-create index i_user_id_h_adjustment on h_adjustment (user_id);
-create index i_exist_h_adjustment on h_adjustment (user_id, dev_pack, dev_id, fix_dt);
-
-create trigger trig_lock_update before update on h_adjustment for each row execute procedure tf_lock_update();
-create trigger trig_lock_update before update on t_adjustment for each row execute procedure tf_lock_update();
 
 create table h_audit (
     doc_id 		uid_t 		not null primary key default doc_id(),
