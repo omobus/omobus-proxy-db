@@ -41,16 +41,16 @@ begin
 
 -- **** wish --> j_wishes
     if( (select count(*) from j_wishes where account_id='%account_id%' and user_id='%user_id_sys%') = 0 ) then
-	insert into j_wishes (account_id, user_id, fix_dt, note, wish_day_id, wish_week_id)
-	    select account_id, user_id, fix_dt, doc_note, wish_day_id, wish_week_id from h_wish where doc_id = '%doc_id_sys%';
 	x := 1;
-    elsif( (select count(*) from j_wishes where account_id='%account_id%' and user_id='%user_id_sys%' and hidden=0 and validated=1) > 0 ) then
-	raise notice 'attaching account to the route already validated: user_id=%user_id_sys%, account_id=%account_id%.';
+    elsif( (select count(*) from j_wishes j where account_id='%account_id%' and user_id='%user_id_sys%' and hidden=0 and validated=1 and left(j.fix_dt,10)>=coalesce((select b_date from route_cycles where b_date<=f_date and f_date<=e_date),"monthDate_First"(f_date)::date_t)) > 0 ) then
+	raise notice '(wish) request for [user_id=%user_id_sys%, account_id=%account_id%, date=%] already exist at the validated state.', f_date;
     else
 	delete from j_wishes where account_id='%account_id%' and user_id='%user_id_sys%';
+	x := 1;
+    end if;
+    if( x = 1 ) then
 	insert into j_wishes (account_id, user_id, fix_dt, note, wish_day_id, wish_week_id)
 	    select account_id, user_id, fix_dt, doc_note, wish_day_id, wish_week_id from h_wish where doc_id = '%doc_id_sys%';
-	x := 1;
     end if;
 
 -- **** wish --> mail_stream
