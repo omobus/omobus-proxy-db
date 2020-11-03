@@ -13,7 +13,7 @@ begin
 	create temp table ".coverage" as
 	    select distinct account_id from my_accounts where '%ErpCode%' = any(db_ids)
 		union
-	    select distinct account_id from my_routes where '%ErpCode%' = any(db_ids) and p_date >= coalesce((select b_date from route_cycles where b_date <= current_date::date_t and current_date::date_t <= e_date),"monthDate_First"(current_date)::date_t);
+	    select distinct account_id from my_routes where '%ErpCode%' = any(db_ids) and p_date >= coalesce((select b_date from route_cycles where b_date <= current_date::date_t and current_date::date_t <= e_date),"monthDate_First"(current_date)::date_t)
 	;
 
 	update accounts set ownerless = 1 where '%ErpCode%' = any(db_ids) and hidden = 0 and approved = 1 and ownerless = 0 and account_id not in (
