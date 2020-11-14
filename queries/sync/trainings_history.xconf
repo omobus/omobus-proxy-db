@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<trainings_history templ="%account_id%;%fix_date%;%training_type%;%contact_ids%;%tms%;" empty="no">
+<trainings_history templ="%account_id%;%fix_date%;%training_type%;%contact_ids%;%tms%;%note%;" empty="no">
   <![CDATA[
 select 
     h.account_id,
     left(h.fix_dt, 10) fix_date, 
     t.descr training_type, 
     array_to_string(h.contact_ids,',') contact_ids, 
-    array_to_string((select array_agg(descr::text) from training_materials where tm_id = any(h.tm_ids)), '!') tms
+    array_to_string((select array_agg(descr::text) from training_materials where tm_id = any(h.tm_ids)), '!') tms,
+    doc_note note
 from h_training h
     left join training_types t on t.training_type_id = h.training_type_id
 where left(h.fix_dt, 10) >= (current_date+"paramInteger"('trainings_history:offset'))::date_t
