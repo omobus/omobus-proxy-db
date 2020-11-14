@@ -1235,6 +1235,7 @@ create table contacts (
     loyalty_level_id 	uid_t 		null,
     locked 		bool_t 		not null default 0,
     extra_info 		note_t 		null,
+    consent 		blob_t 		null, /* consent to the processing of personal data */
     author_id 		uid_t 		null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
@@ -3736,6 +3737,7 @@ create table h_contact (
     mobile 		phone_t 	null,
     email 		email_t 	null,
     loyalty_level_id 	uid_t 		null,
+    consent 		blob_t 		null, /* consent to the processing of personal data */
     locked 		bool_t 		not null default 0,
     deleted 		bool_t 		not null default 0,
     exist 		bool_t 		not null default 1
