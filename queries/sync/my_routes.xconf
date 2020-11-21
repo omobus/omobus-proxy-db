@@ -4,6 +4,6 @@
 select user_id||account_id||p_date g_id, user_id person_id, 
     p_date, account_id, activity_type_id, allow_pending, pending_date, color, bgcolor, duration, allow_discard, extra_info
 from my_routes()
-order by user_id, p_date, allow_pending nulls first, "z-index", row_no
+order by user_id, p_date, allow_pending nulls first, "z-index", row_no, account_id
   ]]>
 </my_routes>

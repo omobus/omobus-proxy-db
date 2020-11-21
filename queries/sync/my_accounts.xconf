@@ -3,6 +3,6 @@
   <![CDATA[
 select m.user_id person_id, m.account_id from my_accounts m, accounts a
     where a.account_id = m.account_id
-order by m.user_id, a.descr
+order by m.user_id, a.descr, a.address, m.account_id
   ]]> 
 </my_accounts>
