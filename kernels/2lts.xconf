@@ -71,6 +71,7 @@
 <xi:include href="../queries/2lts/holidays.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/job_titles.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/kinds.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/loyalty_levels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/manufacturers.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/matrices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/my_accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -178,6 +179,7 @@
     <holidays />
     <job_titles />
     <kinds />
+    <loyalty_levels />
     <manufacturers />
     <matrices />
     <my_accounts />

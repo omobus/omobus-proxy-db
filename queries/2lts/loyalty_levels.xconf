@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<loyalty_levels templ="%loyalty_level_id%;%descr%;%row_no%;">
+  <![CDATA[
+select loyalty_level_id, descr, row_no from loyalty_levels
+    where hidden = 0
+order by 1
+  ]]>
+</loyalty_levels>
