@@ -54,8 +54,10 @@ begin
     end if;
 
 -- **** contact --> thumbnail_stream
-    insert into thumbnail_stream(photo)
-	values(lo_data);
+    if( lo_data is not null ) then
+	insert into thumbnail_stream(photo)
+	    values(lo_data);
+    end if;
 
 -- **** contact --> content_stream
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
