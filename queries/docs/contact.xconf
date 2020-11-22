@@ -47,7 +47,7 @@ begin
 		where contact_id='%contact_id%';
 	end if;
     elsif( (select count(*) from contacts where contact_id='%contact_id%' and ("_dataTimestamp" is null or "_dataTimestamp" < '%fix_dt%')) > 0 ) then
-	update contacts set surname=NIL(trim('%surname%')), job_title_id='%job_title_id%', phone=NIL('%phone%'), mobile=NIL('%mobile%'), email=NIL(trim('%email%')), loyalty_level_id=NIL('%loyalty_level_id%'), extra_info=NIL('%doc_note%'), locked=case when '%locked%'='yes' then 1 else 0 end, hidden=case when '%deleted%'='yes' then 1 else 0 end, author_id='%user_id_sys%', "_dataTimestamp"='%fix_dt%'
+	update contacts set surname=NIL(trim('%surname%')), job_title_id='%job_title_id%', phone=NIL('%phone%'), mobile=NIL('%mobile%'), email=NIL(trim('%email%')), loyalty_level_id=NIL('%loyalty_level_id%'), extra_info=NIL('%doc_note%'), consent=case when consent is not null then consent else lo_data end, locked="toBoolean"('%locked%'), hidden="toBoolean"('%deleted%'), author_id='%user_id_sys%', "_dataTimestamp"='%fix_dt%'
 	    where contact_id='%contact_id%';
     else
 	raise notice '(contact) updating contact parameters [contact_id=%contact_id%, doc_id=%doc_id_sys%] was ignored.';
