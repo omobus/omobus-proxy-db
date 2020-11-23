@@ -39,7 +39,7 @@ select count(*) from health_stream
   <![CDATA[
 do $$
 declare
-    d interval = '08:00:00'::interval;
+    d interval = '02:00:00'::interval;
 begin
     if (current_timestamp - '%timestamp%'::timestamp) < d and (select count(*) from health_stream where db_id = '%ErpCode%' and alarm = 1) > 0 then
 	update health_stream set health = '%timestamp%', alarm = null
