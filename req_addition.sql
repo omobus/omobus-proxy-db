@@ -5,6 +5,7 @@ create or replace function console.req_addition(_login uid_t, _reqdt datetime_t,
 as $BODY$
 declare
     stack text; fcesig text;
+    hs hstore;
     msg_body varchar(4096);
     msg_cap varchar(512);
     rcpt_to emails_t;
@@ -23,11 +24,14 @@ begin
     end if;
 
     if( _cmd = 'validate' ) then
-	update j_additions set validator_id = _login, validated = 1, updated_ts = current_timestamp
-	    where doc_id = _docid and hidden = 0 and validated = 0
+	update j_additions set validator_id = _login, validated = 1, hidden = 0, updated_ts = current_timestamp
+	    where doc_id = _docid and validated = 0
 	returning guid
 	into g;
 	GET DIAGNOSTICS updated_rows = ROW_COUNT;
+
+	update accounts set hidden = 0
+	    where account_id = g and approved = 0 and hidden = 1;
     elsif( _cmd = 'reject' ) then
 	update j_additions set hidden = 1, updated_ts = current_timestamp
 	    where doc_id = _docid and hidden = 0
@@ -35,7 +39,7 @@ begin
 	into g;
 	GET DIAGNOSTICS updated_rows = ROW_COUNT;
 
-	update accounts set hidden = 1, locked = 0
+	update accounts set hidden = 1
 	    where account_id = g and approved = 0 and hidden = 0;
     else
 	raise exception '% doesn''t support [%] command! Accepted commands are [validate|reject].', fcesig, _cmd;
@@ -62,8 +66,12 @@ begin
 	end loop;
     end if;
 
+    hs := hstore(array['doc_id',_docid]);
+    hs := hs || hstore(array['_updated_rows',updated_rows::varchar]);
+
     insert into console.requests(req_login, req_type, req_dt, status, attrs)
-	values(_login, fcesig, _reqdt, _cmd, hstore(array['doc_id',_docid]));
+	values(_login, fcesig, _reqdt, _cmd, hs);
+
     return 0;
 end;
 $BODY$ language plpgsql;

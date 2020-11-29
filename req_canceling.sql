@@ -1,6 +1,7 @@
 /* Copyright (c) 2006 - 2020 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
-create or replace function console.req_canceling(rlogin uid_t, _reqdt datetime_t, /*attrs:*/ u_id uid_t, t_id uid_t, b date_t, e date_t, n note_t) returns int
+create or replace function console.req_canceling(_login uid_t, _reqdt datetime_t, /*attrs:*/ u_id uid_t, t_id uid_t, b date_t, e date_t, n note_t) 
+    returns int
 as $BODY$
 declare
     stack text; fcesig text;
@@ -42,7 +43,7 @@ begin
 	    'b_date', "L"(b),
 	    'e_date', "L"(e),
 	    'canceling_type', (select lower(descr) from canceling_types where canceling_type_id = t_id),
-	    'u_name', coalesce((select descr from users where user_id = rlogin),lower(rlogin))
+	    'u_name', coalesce((select descr from users where user_id = _login),lower(_login))
 	]
     );
 
@@ -55,13 +56,13 @@ begin
     end if;
 
     insert into console.requests(req_login, req_type, req_dt, status, attrs)
-	values(rlogin, fcesig, _reqdt, 'set', hs);
+	values(_login, fcesig, _reqdt, 'set', hs);
 
     return 0;
 end;
 $BODY$ language plpgsql;
 
-create or replace function console.req_canceling(rlogin uid_t, _reqdt datetime_t, cmd code_t, /*attrs:*/ u_id uid_t, p_date date_t) returns int
+create or replace function console.req_canceling(_login uid_t, _reqdt datetime_t, _cmd code_t, /*attrs:*/ u_id uid_t, p_date date_t) returns int
 as $BODY$
 declare
     stack text; fcesig text;
@@ -74,14 +75,14 @@ begin
 	raise exception '% invalid input attribute!', fcesig;
     end if;
 
-    if( cmd = 'revoke' ) then
-	update j_cancellations set hidden=1, updated_ts=current_timestamp
-	    where user_id=u_id and route_date=p_date;
-    elsif( cmd = 'restore' ) then
-	update j_cancellations set hidden=0, updated_ts=current_timestamp
-	    where user_id=u_id and route_date=p_date;
+    if( _cmd = 'revoke' ) then
+	update j_cancellations set hidden = 1, updated_ts = current_timestamp
+	    where user_id = u_id and route_date = p_date and hidden = 0;
+    elsif( _cmd = 'restore' ) then
+	update j_cancellations set hidden = 0, updated_ts = current_timestamp
+	    where user_id = u_id and route_date = p_date and hidden = 1;
     else
-	raise exception '% doesn''t support [%] command! Accepted commands are [revoke|restore].', fcesig, cmd;
+	raise exception '% doesn''t support [%] command! Accepted commands are [revoke|restore].', fcesig, _cmd;
     end if;
 
     perform content_add('tech_route', u_id, p_date, p_date);
@@ -90,12 +91,12 @@ begin
 
     perform evmail_add(
 	u_id, 
-	'canceling/caption:'||cmd, 
-	'canceling/body:'||cmd, 
-	case when cmd = 'revoke' then 2::smallint /*high*/ else 3::smallint /*normal*/ end, 
+	'canceling/caption:'||_cmd, 
+	'canceling/body:'||_cmd, 
+	case when _cmd = 'revoke' then 2::smallint /*high*/ else 3::smallint /*normal*/ end, 
 	array[
 	    'route_date', "L"(p_date), 
-	    'u_name', coalesce((select descr from users where user_id = rlogin),lower(rlogin))
+	    'u_name', coalesce((select descr from users where user_id = _login),lower(_login))
 	]
     );
 
@@ -103,7 +104,7 @@ begin
     hs := hs || hstore(array['route_date',p_date]);
 
     insert into console.requests(req_login, req_type, req_dt, status, attrs)
-	values(rlogin, fcesig, _reqdt, cmd, hs);
+	values(_login, fcesig, _reqdt, _cmd, hs);
 
     return 0;
 end;
