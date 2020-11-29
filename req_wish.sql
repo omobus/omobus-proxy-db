@@ -14,7 +14,6 @@ declare
     tmp bool_t;
     d int2[];
     w int2[];
-    ts ts_t;
 begin
     GET DIAGNOSTICS stack = PG_CONTEXT;
     fcesig := substring(stack from 'function console\.(.*?)\(');
@@ -27,19 +26,20 @@ begin
     end if;
 
     if( _cmd = 'validate' ) then
-	update j_wishes set validator_id = _login, validated = 1
-	    where account_id = _aid and user_id = _uid and hidden = 0 and validated = 0;
+	update j_wishes set validator_id = _login, validated = 1, hidden = 0
+	    where account_id = _aid and user_id = _uid and validated = 0;
 	GET DIAGNOSTICS updated_rows = ROW_COUNT;
 
 	select cycle_id from route_cycles
-	    where b_date <= _reqdt::date_t and _reqdt::date_t <= e_date and hidden = 0
+	    where (status is null or status = 'inprogress') and hidden = 0
+	order by b_date
 	into cid;
 	if( cid is not null ) then
 	    select hidden from routes 
 		where cycle_id = cid and account_id = _aid and user_id = _uid
 	    into tmp;
-	    select d.days, w.weeks from j_wishes j, wish_weeks w, wish_days d
-		where j.account_id = _aid and j.user_id = _uid and j.wish_week_id = w.wish_week_id and j.wish_day_id = d.wish_day_id
+	    select days, weeks from j_wishes
+		where account_id = _aid and user_id = _uid
 	    into d, w;
 	    if( tmp is null ) then
 		insert into routes(user_id, cycle_id, account_id, days, weeks, author_id)
@@ -50,8 +50,9 @@ begin
 	    end if;
 	end if;
     elsif( _cmd = 'reject' ) then
-	select cycle_id from routes
-	    where account_id = _aid and user_id = _uid and hidden = 0 and updated_ts = (select updated_ts from j_wishes where account_id = _aid and user_id = _uid)
+	select cycle_id from route_cycles
+	    where (status is null or status = 'inprogress') and hidden = 0
+	order by b_date
 	into cid;
 
 	update j_wishes set hidden = 1
@@ -60,7 +61,11 @@ begin
 
 	if( cid is not null ) then
 	    update routes set hidden = 1
-		where cycle_id = cid and account_id = _aid and user_id = _uid and hidden = 0;
+		where cycle_id = cid and account_id = _aid and user_id = _uid and hidden = 0 and
+		    format('%s:%s',array_to_string(weeks,''),array_to_string(days,'')) = (
+			select format('%s:%s',array_to_string(weeks,''),array_to_string(days,'')) from j_wishes 
+			    where account_id = _aid and user_id = _uid
+		    );
 	end if;
     end if;
 
@@ -85,9 +90,10 @@ begin
 
     hs := hstore(array['user_id',_uid]);
     hs := hs || hstore(array['account_id',_aid]);
-    if( cid is not null ) then
+    if cid is not null  then
 	hs := hs || hstore(array['cycle_id',cid]);
     end if;
+    hs := hs || hstore(array['_updated_rows',updated_rows::varchar]);
 
     insert into console.requests(req_login, req_type, req_dt, status, attrs)
 	values(_login, fcesig, _reqdt, _cmd, hs);

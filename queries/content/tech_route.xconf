@@ -523,12 +523,10 @@ order by h.doc_id, c.surname, c.name, c.patronymic
 	<wishes>
   <![CDATA[
 select 
-    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, w.descr weeks, d.descr days, h.doc_note
-from h_wish h
-    left join wish_weeks w on w.wish_week_id = h.wish_week_id
-    left join wish_days d on d.wish_day_id = h.wish_day_id
-where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
-order by h.fix_dt, h.doc_id
+    doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration, array_to_string(weeks,',') weeks, array_to_string(days,',') days, doc_note
+from h_wish
+where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+order by fix_dt, doc_id
   ]]>
 	</wishes>
 
@@ -1155,7 +1153,15 @@ rt.foreach(_trainings_L1, function(q, i, cols)
 	table.insert(r, x)
     end
 end)
-tb.wishes = rt.groups(_wishes, "account_id", function(r, n, a) r[n] = n == "duration" and tonumber(a) or a; end)
+tb.wishes = rt.groups(_wishes, "account_id", function(r, n, a) 
+    if n == "duration" then
+	r[n] = tonumber(a)
+    elseif n == "weeks" or n == "days" then
+	r[n] = std.split(a, ',', tonumber)
+    else
+	r[n] = a
+    end
+end)
 
 if rowset_rows(_stats) > 0 then
     tb.dev_login = rowset_value(_stats, 0, rowset_colid(_stats, "dev_login"))

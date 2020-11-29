@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wishes templ="%account_id%;%user_id%;%fix_dt%;%wish_week_id%;%wish_day_id%;%note%;%validator_id%;%validated%;%hidden%;">
+<wishes templ="%account_id%;%user_id%;%fix_dt%;%weeks%;%days%;%note%;%validator_id%;%validated%;%hidden%;">
   <![CDATA[
-select account_id, user_id, fix_dt, wish_week_id, wish_day_id, note, validator_id, validated, hidden from j_wishes
+select account_id, user_id, fix_dt, array_to_string(weeks,',') weeks, array_to_string(days,',') days, note, validator_id, validated, hidden from j_wishes
     where updated_ts >= current_timestamp - '5 days 00:00:00'::interval
 order by 1, 2, 3
   ]]>

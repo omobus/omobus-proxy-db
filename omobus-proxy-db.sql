@@ -2655,35 +2655,6 @@ create table wareh_stocks (
 create index i_db_ids_wareh_stocks on wareh_stocks using GIN (db_ids);
 create trigger trig_updated_ts before update on wareh_stocks for each row execute procedure tf_updated_ts();
 
-create table wish_days (
-    wish_day_id 	uid_t 		not null primary key default man_id(),
-    descr 		descr_t 	not null,
-    days 		smallint[] 	not null default array[0,0,0,0,0,0,0] check (array_length(days,1)=7),
-    row_no 		int32_t 	null, -- ordering
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
-);
-
-create index i_db_ids_wish_days on wish_days using GIN (db_ids);
-create trigger trig_updated_ts before update on wish_days for each row execute procedure tf_updated_ts();
-
-create table wish_weeks (
-    wish_week_id 	uid_t 		not null primary key default man_id(),
-    descr 		descr_t 	not null,
-    weeks 		smallint[] 	not null default array[0,0,0,0] check (array_length(weeks,1)=4),
-    dep_id		uid_t		null,
-    row_no 		int32_t 	null, -- ordering
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
-);
-
-create index i_db_ids_wish_weeks on wish_weeks using GIN (db_ids);
-create trigger trig_updated_ts before update on wish_weeks for each row execute procedure tf_updated_ts();
-
 
 -- **** Activities ****
 
@@ -4916,8 +4887,8 @@ create table h_wish (
     a_cookie 		uid_t 		not null,
     doc_note 		note_t 		null,
     activity_type_id 	uid_t 		not null,
-    wish_week_id 	uid_t 		not null,
-    wish_day_id 	uid_t 		not null
+    weeks 		smallint[] 	not null default array[0,0,0,0] check (array_length(weeks,1)=4),
+    days 		smallint[] 	not null default array[0,0,0,0,0,0,0] check (array_length(days,1)=7)
 );
 
 create index i_user_id_h_wish on h_wish (user_id);
@@ -5466,8 +5437,8 @@ create table j_wishes (
     account_id  	uid_t 		not null,
     user_id		uid_t 		not null,
     fix_dt		datetime_t 	not null,
-    wish_week_id 	uid_t 		not null,
-    wish_day_id 	uid_t 		not null,
+    weeks 		smallint[] 	not null default array[0,0,0,0] check (array_length(weeks,1)=4),
+    days 		smallint[] 	not null default array[0,0,0,0,0,0,0] check (array_length(days,1)=7),
     note		note_t		null,
     validator_id 	uid_t		null,
     validated 		bool_t 		not null default 0,

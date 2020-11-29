@@ -12,6 +12,18 @@
 	</xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="days_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="[0-1]{1},[0-1]{1},[0-1]{1},[0-1]{1},[0-1]{1},[0-1]{1},[0-1]{1}" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="weeks_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="[0-1]{1},[0-1]{1},[0-1]{1},[0-1]{1}" />
+	</xs:restriction>
+    </xs:simpleType>
+
     <xs:element name="wish">
 	<xs:complexType>
 	    <xs:attribute name="vstamp" use="required" type="xs:string" />
@@ -34,8 +46,8 @@
 	    <xs:attribute name="closed_gps_la" use="optional" type="xs:decimal" default="0.0" />
 	    <xs:attribute name="closed_gps_lo" use="optional" type="xs:decimal" default="0.0" />
 	    <xs:attribute name="closed_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
-	    <xs:attribute name="wish_day_id" use="required" type="uid_t" />
-	    <xs:attribute name="wish_week_id" use="required" type="uid_t" />
+	    <xs:attribute name="days" use="required" type="days_t" />
+	    <xs:attribute name="weeks" use="required" type="weeks_t" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>

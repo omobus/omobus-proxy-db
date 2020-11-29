@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<wish_days templ="%wish_day_id%;%descr%;" empty="no">
-  <![CDATA[ 
-select wish_day_id, descr from wish_days
-    where hidden = 0
-order by row_no, descr
-  ]]>
-</wish_days>

@@ -22,7 +22,7 @@
     pack.encoding="utf-8"
     cache="sync/"
     diff="yes"
-    threads="2"
+    threads="4"
     >
 <queries>
 <xi:include href="../queries/sync/account_kpi.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -139,8 +139,6 @@
 <xi:include href="../queries/sync/vf_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/warehouses.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/wareh_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/wish_days.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/wish_weeks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 
 <!-- **** SYSSTEM: BEGIN **** -->
 <zztop templ="%timestamp%;%timestamp:utc%;">
@@ -337,7 +335,6 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <target_types />
     <training_types />
     <unsched_types />
-    <wish_days />
     <L10n personalize="ErpId">
 	<orders_history key="lang_id" />
 	<route_history_extra key="lang_id" />
@@ -368,7 +365,6 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<rating_criterias key="dep_id" />
 	<targets key="dep_id" />
 	<training_types key="dep_id" />
-	<wish_weeks key="dep_id" />
     </my_departments>
 <!--
     <my_dbs personalize="ErpId">
@@ -414,7 +410,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     </distributors>
     <users hierarchy="user_id" root="ErpId" group="user_id" bruteforce="yes" index="user_id">
 	<my_habitat key="user_id">
-	    <accounts key="fid" />
+	    <!--<accounts key="fid" />-->
 	</my_habitat>
 	<orders_history key="user_id" strict="yes" />
 	<ratings_history key="user_id" strict="yes" />
