@@ -76,6 +76,7 @@ order->delivery_note = yes
 delivery_calendar->left = 1
 delivery_calendar->right = 10
 #delivery_calendar->default = 1
+#wish->weeks = 4
 
 # The end of the %%filename%%.
   ]]>

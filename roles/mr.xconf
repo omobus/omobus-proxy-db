@@ -69,6 +69,7 @@ profile->contact = yes
 profile->equipment = yes
 #presence->stock = no
 stock->parts = yes
+#wish->weeks = 4
 
 # The end of the %%filename%%.
   ]]>
