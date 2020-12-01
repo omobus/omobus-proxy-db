@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dyn_reviews templ="%fix_date%;%employee_id%;%sla%;%assessment%;%note0%;%note1%;%note2%;%fix_dt%;%user_id%;">
+<dyn_reviews templ="%fix_date%;%employee_id%;%sla%;%assessment%;%note0%;%note1%;%note2%;%fix_dt%;%user_id%;%_isrecentdata%;">
   <![CDATA[
-select fix_date, employee_id, sla, assessment, note0, note1, note2, fix_dt, user_id from dyn_reviews
+select fix_date, employee_id, sla, assessment, note0, note1, note2, fix_dt, user_id, "_isRecentData" from dyn_reviews
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2
   ]]>
