@@ -11,8 +11,8 @@ declare
 begin
     if( (select count(*) from ".sesparams" where f='%uid%#ownerless') > 0 ) then
 	create temp table ".coverage" as
-	    select distinct account_id from my_accounts where '%ErpCode%' = any(db_ids)
-		union
+	    /*select distinct account_id from my_accounts where '%ErpCode%' = any(db_ids)
+		union*/
 	    select distinct account_id from my_routes where '%ErpCode%' = any(db_ids) and p_date >= coalesce((select b_date from route_cycles where b_date <= current_date::date_t and current_date::date_t <= e_date),"monthDate_First"(current_date)::date_t)
 	;
 
@@ -27,7 +27,7 @@ begin
 	GET DIAGNOSTICS t2 = ROW_COUNT;
 
 	if t1 > 0 or t2 > 0 then
-	    raise notice 'updated [accounts.ownerless] attribute at % rows (point: %uid%, erp: %ErpCode%).', t1 + t2;
+	    raise notice 'updated [accounts.ownerless] attribute at % row(-s) (point: %uid%, erp: %ErpCode%).', t1 + t2;
 	end if;
     end if;
 
@@ -36,7 +36,7 @@ begin
 	a := a + 1;
     end loop;
     if( a > 0 ) then
-	raise notice '[content_stream] % row(s) require updating (point: %uid%, erp: %ErpCode%).', a;
+	raise notice '[content_stream] % row(-s) require updating (point: %uid%, erp: %ErpCode%).', a;
     end if;
 end;
 $$;
