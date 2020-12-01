@@ -26,14 +26,11 @@ begin
     end if;
 
     if( _cmd = 'validate' ) then
-	update j_wishes set validator_id = _login, validated = 1, hidden = 0
-	    where account_id = _aid and user_id = _uid and validated = 0;
-	GET DIAGNOSTICS updated_rows = ROW_COUNT;
-
 	select cycle_id from route_cycles
 	    where (status is null or status = 'inprogress') and hidden = 0
 	order by b_date
 	into cid;
+
 	if( cid is not null ) then
 	    select hidden from routes 
 		where cycle_id = cid and account_id = _aid and user_id = _uid
@@ -49,15 +46,17 @@ begin
 		    where cycle_id = cid and account_id = _aid and user_id = _uid;
 	    end if;
 	end if;
+
+	update j_wishes set validator_id = _login, validated = 1, hidden = 0, attrs = case when cid is null then null else hstore(array['cycle_id',cid]) end
+	    where account_id = _aid and user_id = _uid and validated = 0;
+	GET DIAGNOSTICS updated_rows = ROW_COUNT;
     elsif( _cmd = 'reject' ) then
 	select cycle_id from route_cycles
-	    where (status is null or status = 'inprogress') and hidden = 0
+	    where (status is null or status = 'inprogress') and hidden = 0 and cycle_id = (
+		select attrs->'cycle_id' from j_wishes where account_id = _aid and user_id = _uid and hidden = 0 and attrs is not null
+	    )
 	order by b_date
 	into cid;
-
-	update j_wishes set hidden = 1
-	    where account_id = _aid and user_id = _uid and hidden = 0;
-	GET DIAGNOSTICS updated_rows = ROW_COUNT;
 
 	if( cid is not null ) then
 	    update routes set hidden = 1
@@ -67,6 +66,10 @@ begin
 			    where account_id = _aid and user_id = _uid
 		    );
 	end if;
+
+	update j_wishes set hidden = 1
+	    where account_id = _aid and user_id = _uid and hidden = 0;
+	GET DIAGNOSTICS updated_rows = ROW_COUNT;
     end if;
 
     if updated_rows > 0 then
