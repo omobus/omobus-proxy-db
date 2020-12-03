@@ -24,7 +24,7 @@ select
     array_to_string(h.photos,',') photos,
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(h.photos)) refs,
     u.executivehead_id head_id, ex.descr head_name,
-    k.descr activity_type
+    k.activity_type_id, k.descr activity_type
 from (
     select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, tm_id, unnest(contact_ids) contact_id, doc_note, photos, w_cookie, a_cookie from (
 	select doc_id, fix_dt, inserted_ts, user_id, account_id, training_type_id, unnest(tm_ids) tm_id, contact_ids, doc_note, photos, w_cookie, a_cookie from h_training
