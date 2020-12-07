@@ -243,7 +243,8 @@ begin
     lo0 := lo0*PI()/180;
     lo1 := lo1*PI()/180;
     return case when la0 = 0 or lo0 = 0 or la1 = 0 or lo1 = 0 then null else cast(
-	    6372795.0 * atan(sqrt(power(cos(la1)*sin(lo0-lo1),2)+power(cos(la0)*sin(la1)-sin(la0)*cos(la1)*cos(lo0-lo1),2))/(sin(la0)*sin(la1)+cos(la0)*cos(la1)*cos(lo0-lo1)))
+	    --6372795.0 * atan(sqrt(power(cos(la1)*sin(lo0-lo1),2)+power(cos(la0)*sin(la1)-sin(la0)*cos(la1)*cos(lo0-lo1),2))/(sin(la0)*sin(la1)+cos(la0)*cos(la1)*cos(lo0-lo1)))
+	    6372795.0 * atan2(sqrt(power(cos(la1) * sin(lo1 - lo0), 2) + pow(cos(la0) * sin(la1) - sin(la0) * cos(la1) * cos(lo1 - lo0), 2)), sin(la0) * sin(la1) + cos(la0) * cos(la1) * cos(lo1 - lo0))
 	 as int)
     end;
 end;
@@ -5830,6 +5831,7 @@ declare
     la0 gps_t default 0;
     lo0 gps_t default 0;
     dist int32_t default 0;
+    tmp int32_t;
 begin
     for la, lo in 
 	select latitude, longitude from (
@@ -5843,15 +5845,18 @@ begin
 	) x order by fix_dt
     loop
 	if( la0 <> 0 or lo0 <> 0 ) then
-	    dist := dist + distance(la0, lo0, la, lo);
+	    tmp := distance(la0, lo0, la, lo);
+	    if( tmp < 1000000 ) then
+		dist := dist + tmp;
+	    end if;
 	end if;
 	la0 := la;
 	lo0 := lo;
     end loop;
     return dist;
-exception 
-    when numeric_value_out_of_range then 
-	return -1;
+--exception 
+--    when numeric_value_out_of_range then 
+--	return -1;
 end;
 $BODY$ language plpgsql STABLE;
 
