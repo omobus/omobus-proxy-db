@@ -243,7 +243,6 @@ begin
     lo0 := lo0*PI()/180;
     lo1 := lo1*PI()/180;
     return case when la0 = 0 or lo0 = 0 or la1 = 0 or lo1 = 0 then null else cast(
-	    --6372795.0 * atan(sqrt(power(cos(la1)*sin(lo0-lo1),2)+power(cos(la0)*sin(la1)-sin(la0)*cos(la1)*cos(lo0-lo1),2))/(sin(la0)*sin(la1)+cos(la0)*cos(la1)*cos(lo0-lo1)))
 	    6372795.0 * atan2(sqrt(power(cos(la1) * sin(lo1 - lo0), 2) + pow(cos(la0) * sin(la1) - sin(la0) * cos(la1) * cos(lo1 - lo0), 2)), sin(la0) * sin(la1) + cos(la0) * cos(la1) * cos(lo1 - lo0))
 	 as int)
     end;
@@ -4689,12 +4688,11 @@ create table h_stock (
 create table t_stock (
     doc_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
-    manuf_date 		date_t 		not null,
     row_no 		int32_t 	not null check (row_no >= 0),
     qty 		int32_t 	not null,
     expired 		bool_t  	not null default 0,
     scratch 		date_t 		null,
-    primary key (doc_id, prod_id, manuf_date)
+    primary key (doc_id, prod_id)
 );
 
 create index i_fix_date_h_stock on h_stock (left(fix_dt,10));
@@ -5120,7 +5118,6 @@ create table dyn_stocks (
     fix_date		date_t 		not null,
     account_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
-    manuf_date 		date_t 		not null,
     stock 		int32_t 	not null,
     expired 		bool_t  	not null default 0,
     fix_dt 		datetime_t 	not null,
@@ -5130,7 +5127,7 @@ create table dyn_stocks (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     "_isRecentData"	bool_t 		null,
-    primary key(fix_date, account_id, prod_id, manuf_date)
+    primary key(fix_date, account_id, prod_id)
 );
 
 create index i_2lts_dyn_stocks on dyn_stocks (updated_ts);

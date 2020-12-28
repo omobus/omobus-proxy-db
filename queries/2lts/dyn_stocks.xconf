@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dyn_stocks templ="%fix_date%;%account_id%;%prod_id%;%manuf_date%;%stock%;%fix_dt%;%user_id%;%_isrecentdata%;">
+<dyn_stocks templ="%fix_date%;%account_id%;%prod_id%;%stock%;%fix_dt%;%user_id%;%_isrecentdata%;">
   <![CDATA[
-select fix_date, account_id, prod_id, manuf_date, stock, fix_dt, user_id, "_isRecentData" from dyn_stocks
+select fix_date, account_id, prod_id, stock, fix_dt, user_id, "_isRecentData" from dyn_stocks
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2, 3, 4
   ]]>

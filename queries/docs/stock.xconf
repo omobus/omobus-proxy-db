@@ -25,8 +25,8 @@ insert into h_stock(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, 
 </write_body>
 <write_row>
   <![CDATA[ 
-insert into t_stock(doc_id, row_no, prod_id, manuf_date, qty, scratch)
-    values('%doc_id_sys%', %row_no%, '%prod_id%', '%manuf_date%', %qty%, NIL('%scratch%'))
+insert into t_stock(doc_id, row_no, prod_id, qty, scratch)
+    values('%doc_id_sys%', %row_no%, '%prod_id%', %qty%, NIL('%scratch%'))
   ]]>
 </write_row>
 <close>
@@ -38,7 +38,6 @@ declare
     u_id uid_t;
     d_id uid_t;
     n datetime_t;
-    md date_t;
     s int32_t;
     x date_t;
 begin
@@ -56,21 +55,17 @@ begin
     /* removes obsolete entires */
     delete from dyn_stocks where account_id = '%account_id%' and fix_date = f_date;
     /* recompiles data */
-    for p_id, n, u_id, d_id, md, s, x in
-	select t.prod_id, h.fix_dt, h.user_id, h.doc_id, t.manuf_date, t.qty, t.scratch from t_stock t left join h_stock h on t.doc_id = h.doc_id
+    for p_id, n, u_id, d_id, s, x in
+	select t.prod_id, h.fix_dt, h.user_id, h.doc_id, t.qty, t.scratch from t_stock t left join h_stock h on t.doc_id = h.doc_id
 	    where h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
 	order by h.fix_dt, t.row_no
     loop
-	if( (select count(*) from dyn_stocks where account_id='%account_id%' and prod_id=p_id and fix_date=f_date and manuf_date = md) = 0 ) then
-	    /* { removed rows with different [manuf_date] attributes: */
-	    delete from dyn_stocks where account_id = '%account_id%' and prod_id = p_id and fix_date = f_date 
-		and ((md = '' and manuf_date <> '') or (md <> '' and manuf_date = ''));
-	    /* } */
-	    insert into dyn_stocks(fix_date, account_id, prod_id, manuf_date, stock, fix_dt, user_id, doc_id, scratch)
-		values(f_date, '%account_id%', p_id, md, s, n, u_id, d_id, x);
+	if( (select count(*) from dyn_stocks where account_id='%account_id%' and prod_id=p_id and fix_date=f_date) = 0 ) then
+	    insert into dyn_stocks(fix_date, account_id, prod_id, stock, fix_dt, user_id, doc_id, scratch)
+		values(f_date, '%account_id%', p_id, s, n, u_id, d_id, x);
 	else
 	    update dyn_stocks set stock = s, fix_dt = n, user_id = u_id, doc_id = d_id, scratch = x, updated_ts = current_timestamp
-		where account_id = '%account_id%' and prod_id = p_id and fix_date = f_date and manuf_date = md;
+		where account_id = '%account_id%' and prod_id = p_id and fix_date = f_date;
 	end if;
     end loop;
 

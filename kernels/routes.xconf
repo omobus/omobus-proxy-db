@@ -4,7 +4,7 @@
   <![CDATA[
 do $$
 declare
-    depth int default 5; /* close depth in days */
+    depth int default 4; /* close depth in days */
     c_id uid_t;
     b date_t;
     e date_t;
