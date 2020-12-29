@@ -19,8 +19,8 @@ select * from act_id()
 </create>
 <write_body>
   <![CDATA[
-insert into a_network (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, state, msg, background)
-    values ('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%state%', '%msg%', "toBoolean"('%background%'))
+insert into a_network (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, state, msg)
+    values ('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%state%', '%msg%')
   ]]>
 </write_body>
 <close>
