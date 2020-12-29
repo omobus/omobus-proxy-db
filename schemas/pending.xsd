@@ -23,7 +23,6 @@
 	    <xs:attribute name="vstamp" use="required" type="xs:string" />
 	    <xs:attribute name="dev_pack" use="required" type="xs:integer" />
 	    <xs:attribute name="dev_id" use="required" type="xs:string" />
-	    <!-- obsolete: --><xs:attribute name="imei" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="fix_dt" use="required" type="datetime_t" />
 	    <xs:attribute name="doc_id" use="required" type="xs:string" />
 	    <xs:attribute name="doc_note" use="optional" type="xs:string" default="" />

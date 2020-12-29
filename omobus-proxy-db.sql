@@ -3053,10 +3053,8 @@ create table a_network (
     satellite_dt 	datetime_t 	null,
     latitude 		gps_t 		null,
     longitude 		gps_t 		null,
-    /*obsolete states: 'suspended','connecting','disconnecting','unknown'*/
-    state 		varchar(13) 	not null check (state in ('suspended','connected','connecting','disconnected','disconnecting','unknown') and state = lower(state)),
-    msg 		varchar(512)	null,
-    /*obsolete:*/ background 		bool_t 		null
+    state 		varchar(13) 	not null check (state in ('connected','disconnected') and state = lower(state)),
+    msg 		varchar(512)	null
 );
 
 create index i_user_id_a_network on a_network (user_id);

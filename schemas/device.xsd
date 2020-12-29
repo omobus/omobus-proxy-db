@@ -5,19 +5,6 @@
 	    <xs:pattern value="android" />
 	</xs:restriction>
     </xs:simpleType>
-
-<!-- OBSOLETE: -->    <xs:simpleType name="sim_state_t">
-<!-- OBSOLETE: -->	<xs:restriction base="xs:string">
-<!-- OBSOLETE: -->	    <xs:pattern value="absent|locked|pin_required|puk_required|ready|unknown" />
-<!-- OBSOLETE: -->	</xs:restriction>
-<!-- OBSOLETE: -->    </xs:simpleType>
-
-<!-- OBSOLETE: -->    <xs:simpleType name="radio_type_t">
-<!-- OBSOLETE: -->	<xs:restriction base="xs:string">
-<!-- OBSOLETE: -->	    <xs:pattern value="cdma|gsm|sip|none" />
-<!-- OBSOLETE: -->	</xs:restriction>
-<!-- OBSOLETE: -->    </xs:simpleType>
-
     <xs:simpleType name="datetime_t">
 	<xs:restriction base="xs:string">
 	    <xs:pattern value="[0-9]{4}\-[0-9]{2}\-[0-9]{2}( |T){1}[0-9]{2}:[0-9]{2}:[0-9]{2}" />
@@ -47,22 +34,11 @@
 	    <xs:attribute name="model" use="required" type="xs:string" />
 	    <xs:attribute name="manufacturer" use="required" type="xs:string" />
 	    <xs:attribute name="fingerprint" use="required" type="xs:string" />
-<!-- OBSOLETE: --><xs:attribute name="imei" use="optional" type="xs:string" default="" />
-<!-- OBSOLETE: --><xs:attribute name="imeisv" use="optional" type="xs:string" default="" />
-<!-- OBSOLETE: --><xs:attribute name="spn" use="optional" type="xs:string" default="" />
-<!-- OBSOLETE: --><xs:attribute name="sim_serial" use="optional" type="xs:string" default="" />
-<!-- OBSOLETE: <xs:attribute name="sim_state" use="required" type="sim_state_t" />-->
-<!-- OBSOLETE: --><xs:attribute name="sim_state"  use="optional" type="xs:string" default="" />
-<!-- OBSOLETE: <xs:attribute name="phone_type" use="required" type="radio_type_t" />-->
-<!-- OBSOLETE: --><xs:attribute name="phone_type" use="optional" type="xs:string" default="" />
-<!-- OBSOLETE: --><xs:attribute name="phone_number" use="optional" type="xs:string" default="" />
-<!-- OBSOLETE: --><xs:attribute name="network_operator" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="uptime" use="required" type="xs:integer" />
 	    <xs:attribute name="myuid" use="required" type="xs:integer" />
 	    <xs:attribute name="cpu_abis" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="cpu_cores" use="required" type="xs:integer" />
 	    <xs:attribute name="heap_size" use="required" type="xs:integer" />
-<!-- OBSOLETE: --><xs:attribute name="gps" use="optional" type="bool_t" default="" />
 	    <xs:attribute name="screen_inches" use="required" type="xs:decimal" />
 	    <xs:attribute name="screen_density" use="required" type="xs:integer" />
 	    <xs:attribute name="screen_height" use="required" type="xs:integer" />
