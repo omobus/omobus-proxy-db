@@ -57,7 +57,7 @@ select
 		else format('%s %s %s at %s (pid: %s)', state, facility, name, coalesce(extra,'-'), pid)
 	     end from a_lifecycle where j.act_id=act_id)
 	when 'a_network' then
-	    (select state || case when msg is null or msg = '' then '' else ' [' || msg || ']' end || case when background = 1 then ' //background' else '' end
+	    (select state || case when msg is null or msg = '' then '' else ' [' || msg || ']' end 
 		from a_network where j.act_id=act_id)
 	when 'a_package' then
 	    (select format('%s %s (enabled: %s, name: [%s], system: %s, debuggable: %s)', 
