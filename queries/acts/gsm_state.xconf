@@ -32,7 +32,7 @@ declare
 begin
 -- **** gsm_state --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
-	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
 
 -- **** gsm_state --> sysstats
     perform sysstat_add('%user_id_sys%', f_date, f_time);

@@ -20,7 +20,7 @@ select * from doc_id()
 <write_body>
   <![CDATA[
 insert into h_receipt(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, distr_id, receipt_type_id, amount)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', %created_gps_la%, %created_gps_lo%, '%created_gps_dt%', '%closed_dt%', %closed_gps_la%, %closed_gps_lo%, '%closed_gps_dt%', '%distr_id%', NIL('%receipt_type_id%'), %amount%)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), '%distr_id%', NIL('%receipt_type_id%'), %amount%)
   ]]>
 </write_body>
 <close>
@@ -31,7 +31,7 @@ declare
 begin
 -- **** receipt --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
-	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', '%created_gps_dt%', %created_gps_la%, %created_gps_lo%, '%closed_dt%', '%closed_gps_dt%', %closed_gps_la%, %closed_gps_lo%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', '%doc_code_sys%');
+	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', NIL('%created_gps_dt%'), NIL(%created_gps_la%), NIL(%created_gps_lo%), '%closed_dt%', NIL('%closed_gps_dt%'), NIL(%closed_gps_la%), NIL(%closed_gps_lo%), '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', '%doc_code_sys%');
 
 -- **** receipt --> content_stream
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);

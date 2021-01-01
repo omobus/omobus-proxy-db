@@ -20,7 +20,7 @@ select * from act_id()
 <write_body>
   <![CDATA[
 insert into a_user_document (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, w_cookie, c_cookie, a_cookie, satellite_dt, latitude, longitude, doc_type, doc_no, activity_type_id, account_id, employee_id, duration, rows)
-    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', '%satellite_dt%', %latitude%, %longitude%, '%doc_type%', '%doc_id%', '%activity_type_id%', '%account_id%', '%employee_id%', %duration%, %rows%)
+    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%doc_type%', '%doc_id%', '%activity_type_id%', '%account_id%', '%employee_id%', %duration%, %rows%)
   ]]>
 </write_body>
 <close>
@@ -32,7 +32,7 @@ declare
 begin
 -- **** user_document --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
-	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
 
 -- **** user_document --> sysstats
     perform sysstat_add('%user_id_sys%', f_date, f_time);

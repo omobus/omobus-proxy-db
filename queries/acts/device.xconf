@@ -20,7 +20,7 @@ select * from act_id()
 <write_body>
   <![CDATA[
 insert into a_device (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, os_name, os_version, model, manufacturer, fingerprint, uptime, myuid, cpu_abis, cpu_cores, heap_size, screen_inches, screen_density, screen_height, screen_width, su, kernel, vstamp)
-    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%os_name%', '%os_version%', '%model%', '%manufacturer%', '%fingerprint%', %uptime%, %myuid%, '%cpu_abis%', %cpu_cores%, %heap_size%, %screen_inches%, %screen_density%, %screen_height%, %screen_width%, NIL('%su%'), NIL('%kernel%'), '%vstamp%')
+    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%os_name%', '%os_version%', '%model%', '%manufacturer%', '%fingerprint%', %uptime%, %myuid%, '%cpu_abis%', %cpu_cores%, %heap_size%, %screen_inches%, %screen_density%, %screen_height%, %screen_width%, NIL('%su%'), NIL('%kernel%'), '%vstamp%')
   ]]>
 </write_body>
 <close>
@@ -32,7 +32,7 @@ declare
 begin
 -- **** device --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
-	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
 
 -- **** device --> sysstats
     perform sysstat_add('%user_id_sys%', f_date, f_time);

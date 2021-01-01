@@ -20,7 +20,7 @@ select * from act_id()
 <write_body>
   <![CDATA[
 insert into a_user_work (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, state, w_cookie, satellite_dt, latitude, longitude)
-    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%state%', '%w_cookie%', '%satellite_dt%', %latitude%, %longitude%)
+    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%state%', '%w_cookie%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%))
   ]]>
 </write_body>
 <close>
@@ -32,24 +32,24 @@ declare
 begin
 -- **** user_work --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
-	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
 
 -- **** user_work --> j_user_works
     if( (select count(*) from j_user_works where user_id='%user_id_sys%' and w_cookie='%w_cookie%') > 0 ) then
 	if( '%state%' = 'begin' ) then
-	    update j_user_works set fix_date = f_date, b_dt='%fix_dt%', b_la=%latitude%, b_lo=%longitude%, b_sat_dt='%satellite_dt%'
+	    update j_user_works set fix_date = f_date, b_dt='%fix_dt%', b_la=NIL(%latitude%), b_lo=NIL(%longitude%), b_sat_dt=NIL('%satellite_dt%')
 		where user_id='%user_id_sys%' and w_cookie='%w_cookie%';
 	else
-	    update j_user_works set e_dt='%fix_dt%', e_la=%latitude%, e_lo=%longitude%, e_sat_dt='%satellite_dt%'
+	    update j_user_works set e_dt='%fix_dt%', e_la=NIL(%latitude%), e_lo=NIL(%longitude%), e_sat_dt=NIL('%satellite_dt%')
 		where user_id='%user_id_sys%' and w_cookie='%w_cookie%';
 	end if;
     else
 	if( '%state%' = 'begin' ) then
 	    insert into j_user_works (user_id, w_cookie, fix_date, b_dt, b_la, b_lo, b_sat_dt, inserted_ts)
-		values('%user_id_sys%', '%w_cookie%', f_date, '%fix_dt%', %latitude%, %longitude%, '%satellite_dt%', current_timestamp);
+		values('%user_id_sys%', '%w_cookie%', f_date, '%fix_dt%', NIL(%latitude%), NIL(%longitude%), NIL('%satellite_dt%'), current_timestamp);
 	else
 	    insert into j_user_works (user_id, w_cookie, e_dt, e_la, e_lo, e_sat_dt, inserted_ts)
-		values('%user_id_sys%', '%w_cookie%', '%fix_dt%', %latitude%, %longitude%, '%satellite_dt%', current_timestamp);
+		values('%user_id_sys%', '%w_cookie%', '%fix_dt%', NIL(%latitude%), NIL(%longitude%), NIL('%satellite_dt%'), current_timestamp);
 	end if;
     end if;
 

@@ -2,7 +2,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:simpleType name="provider_t">
 	<xs:restriction base="xs:string">
-	    <xs:enumeration value="" />
 	    <xs:enumeration value="gps" />
 	    <xs:enumeration value="network" />
 	</xs:restriction>
@@ -38,15 +37,15 @@
 	    <xs:attribute name="dev_id" use="required" type="xs:string" />
 	    <xs:attribute name="user_id" use="required" type="xs:string" />
 	    <xs:attribute name="fix_dt" use="required" type="datetime_t" />
-	    <xs:attribute name="satellite_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
-	    <xs:attribute name="latitude" use="optional" type="xs:decimal" default="0" />
-	    <xs:attribute name="longitude" use="optional" type="xs:decimal" default="0" />
+	    <xs:attribute name="satellite_dt" use="required" type="datetime_t" />
+	    <xs:attribute name="latitude" use="required" type="xs:decimal" />
+	    <xs:attribute name="longitude" use="required" type="xs:decimal" />
 	    <xs:attribute name="seconds" use="optional" type="xs:integer" default="0" />
-	    <xs:attribute name="accuracy" use="optional" type="xs:decimal" default="0" />
+	    <xs:attribute name="accuracy" use="required" type="xs:decimal" />
 	    <xs:attribute name="speed" use="optional" type="xs:decimal" default="0" />
 	    <xs:attribute name="altitude" use="optional" type="xs:decimal" default="0" />
 	    <xs:attribute name="bearing" use="optional" type="xs:decimal" default="0" />
-	    <xs:attribute name="provider" use="optional" type="provider_t" default="" />
+	    <xs:attribute name="provider" use="required" type="provider_t" />
 	    <xs:attribute name="satellites" use="optional" type="xs:integer" default="-1" />
 	</xs:complexType>
     </xs:element>

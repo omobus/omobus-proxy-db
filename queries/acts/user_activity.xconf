@@ -20,7 +20,7 @@ select * from act_id()
 <write_body>
   <![CDATA[
 insert into a_user_activity(act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, state, w_cookie, c_cookie, a_cookie, satellite_dt, latitude, longitude, activity_type_id, account_id, route_date, employee_id, extra_info, docs)
-    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%state%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', '%satellite_dt%', %latitude%, %longitude%, '%activity_type_id%', '%account_id%', NIL('%route_date%'), NIL('%employee_id%'), NIL('%extra_info%'), NIL(%docs%))
+    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%state%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%activity_type_id%', '%account_id%', NIL('%route_date%'), NIL('%employee_id%'), NIL('%extra_info%'), NIL(%docs%))
   ]]>
 </write_body>
 <close>
@@ -45,24 +45,24 @@ declare
 begin
 -- **** user_activity --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
-	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
 
 -- **** user_activity --> j_user_activities
     if( (select count(*) from j_user_activities where user_id='%user_id_sys%' and account_id='%account_id%' and activity_type_id='%activity_type_id%' and w_cookie='%w_cookie%' and a_cookie='%a_cookie%') > 0 ) then
 	if( '%state%' = 'begin' ) then
-	    update j_user_activities set fix_date=f_date, dev_login='%user_id%', b_dt='%fix_dt%', b_la=%latitude%, b_lo=%longitude%, b_sat_dt='%satellite_dt%'
+	    update j_user_activities set fix_date=f_date, dev_login='%user_id%', b_dt='%fix_dt%', b_la=NIL(%latitude%), b_lo=NIL(%longitude%), b_sat_dt=NIL('%satellite_dt%')
 		where user_id='%user_id_sys%' and account_id='%account_id%' and activity_type_id='%activity_type_id%' and w_cookie='%w_cookie%' and a_cookie='%a_cookie%';
 	else
-	    update j_user_activities set e_dt='%fix_dt%', e_la=%latitude%, e_lo=%longitude%, e_sat_dt='%satellite_dt%', extra_info=NIL('%extra_info%'), docs=NIL(%docs%)
+	    update j_user_activities set e_dt='%fix_dt%', e_la=NIL(%latitude%), e_lo=NIL(%longitude%), e_sat_dt=NIL('%satellite_dt%'), extra_info=NIL('%extra_info%'), docs=NIL(%docs%)
 		where user_id='%user_id_sys%' and account_id='%account_id%' and activity_type_id='%activity_type_id%' and w_cookie='%w_cookie%' and a_cookie='%a_cookie%';
 	end if;
     else
 	if( '%state%' = 'begin' ) then
 	    insert into j_user_activities (user_id, account_id, w_cookie, c_cookie, a_cookie, activity_type_id, fix_date, dev_login, route_date, employee_id, b_dt, b_la, b_lo, b_sat_dt, inserted_ts)
-		values('%user_id_sys%', '%account_id%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', '%activity_type_id%', f_date, '%user_id%', NIL('%route_date%'), NIL('%employee_id%'), '%fix_dt%', %latitude%, %longitude%, '%satellite_dt%', current_timestamp);
+		values('%user_id_sys%', '%account_id%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', '%activity_type_id%', f_date, '%user_id%', NIL('%route_date%'), NIL('%employee_id%'), '%fix_dt%', NIL(%latitude%), NIL(%longitude%), NIL('%satellite_dt%'), current_timestamp);
 	else
 	    insert into j_user_activities (user_id, account_id, w_cookie, c_cookie, a_cookie, activity_type_id, route_date, employee_id, e_dt, e_la, e_lo, e_sat_dt, extra_info, docs, inserted_ts)
-		values('%user_id_sys%', '%account_id%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', '%activity_type_id%', NIL('%route_date%'), NIL('%employee_id%'), '%fix_dt%', %latitude%, %longitude%, '%satellite_dt%', NIL('%extra_info%'), NIL(%docs%), current_timestamp);
+		values('%user_id_sys%', '%account_id%', '%w_cookie%', NIL('%c_cookie%'), '%a_cookie%', '%activity_type_id%', NIL('%route_date%'), NIL('%employee_id%'), '%fix_dt%', NIL(%latitude%), NIL(%longitude%), NIL('%satellite_dt%'), NIL('%extra_info%'), NIL(%docs%), current_timestamp);
 	end if;
     end if;
 

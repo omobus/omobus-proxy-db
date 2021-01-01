@@ -20,13 +20,13 @@ select * from act_id()
 <write_body>
   <![CDATA[ 
 insert into a_gsm_pos(act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, mcc, mnc, cid, lac, tA, asu, rxlev, radio, accuracy, speed, altitude, bearing)
-    values ('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', '%latitude%', '%longitude%', %mcc%, %mnc%, %cid%, %lac%, %tA%, %asu%, %rxlev%, '%radio%', %accuracy%, %speed%, %altitude%, %bearing%)
+    values ('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), '%latitude%', '%longitude%', %mcc%, %mnc%, %cid%, %lac%, %tA%, %asu%, %rxlev%, '%radio%', %accuracy%, %speed%, %altitude%, %bearing%)
   ]]>
 </write_body>
 <write_row>
   <![CDATA[
 insert into a_gsm_trace(act_id, row_no, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, mcc, mnc, cid, lac, tA, asu, rxlev, radio, accuracy, speed, altitude, bearing)
-    values ('%doc_id_sys%', %trace_no%, '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', '%latitude%', '%longitude%', %mcc%, %mnc%, %cid%, %lac%, %tA%, %asu%, %rxlev%, '%radio%', %accuracy%, %speed%, %altitude%, %bearing%)
+    values ('%doc_id_sys%', %trace_no%, '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), '%latitude%', '%longitude%', %mcc%, %mnc%, %cid%, %lac%, %tA%, %asu%, %rxlev%, '%radio%', %accuracy%, %speed%, %altitude%, %bearing%)
   ]]>
 </write_row>
 <close>
@@ -43,7 +43,7 @@ declare
 begin
 -- **** gsm_pos --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
-	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
 
 -- **** gsm_pos --> sysstats
     perform sysstat_add('%user_id_sys%', f_date, f_time);

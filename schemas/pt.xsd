@@ -6,6 +6,18 @@
 	</xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="datetime2_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="(|[0-9]{4}\-[0-9]{2}\-[0-9]{2}( |T){1}[0-9]{2}:[0-9]{2}:[0-9]{2})" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="decimal_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="(|[\-+]?[0-9]*[.][0-9]*)" />
+	</xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="uid_t">
 	<xs:restriction base="xs:string">
 	    <xs:pattern value="[^%]*" />
@@ -28,13 +40,13 @@
 		    <xs:attribute name="activity_type_id" use="required" type="uid_t" />
 		    <xs:attribute name="account_id" use="required" type="uid_t" />
 		    <xs:attribute name="created_dt" use="required" type="datetime_t" />
-		    <xs:attribute name="created_gps_la" use="optional" type="xs:decimal" default="0.0" />
-		    <xs:attribute name="created_gps_lo" use="optional" type="xs:decimal" default="0.0" />
-		    <xs:attribute name="created_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
+		    <xs:attribute name="created_gps_la" use="optional" type="decimal_t" default="" />
+		    <xs:attribute name="created_gps_lo" use="optional" type="decimal_t" default="" />
+		    <xs:attribute name="created_gps_dt" use="optional" type="datetime2_t" default="" />
 		    <xs:attribute name="closed_dt" use="required" type="datetime_t" />
-		    <xs:attribute name="closed_gps_la" use="optional" type="xs:decimal" default="0.0" />
-		    <xs:attribute name="closed_gps_lo" use="optional" type="xs:decimal" default="0.0" />
-		    <xs:attribute name="closed_gps_dt" use="optional" type="datetime_t" default="0000-00-00 00:00:00" />
+		    <xs:attribute name="closed_gps_la" use="optional" type="decimal_t" default="" />
+		    <xs:attribute name="closed_gps_lo" use="optional" type="decimal_t" default="" />
+		    <xs:attribute name="closed_gps_dt" use="optional" type="datetime2_t" default="" />
 		    <xs:attribute name="prod_id" use="required" type="uid_t" />
 		</xs:extension>
 	    </xs:simpleContent>
