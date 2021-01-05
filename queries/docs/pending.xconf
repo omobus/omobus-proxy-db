@@ -12,6 +12,11 @@ select count(*) from h_pending
     where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
   ]]>
 </check_exist>
+<check_date>
+  <![CDATA[
+select (current_date - '%fix_dt%'::date) not between -1 and "paramInteger"('gc:keep_alive'::uid_t) banned
+  ]]>
+</check_date>
 <create>
   <![CDATA[
 select * from doc_id()
