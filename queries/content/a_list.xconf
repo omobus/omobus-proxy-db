@@ -8,12 +8,12 @@ select
     case when j.satellite_dt = '0000-00-00 00:00:00' then null else j.satellite_dt end satellite_dt,
     case when j.latitude = 0 then null else j.latitude end latitude,
     case when j.longitude = 0 then null else j.longitude end longitude,
-    case act_code 
-	when 'a_airplane' then
+    case /*act_code*/ replace(act_code,'a_','')
+	when 'airplane' then
 	    (select state from a_airplane where j.act_id=act_id)
-	when 'a_bluetooth' then
+	when 'bluetooth' then
 	    (select state from a_bluetooth where j.act_id=act_id)
-	when 'a_device' then
+	when 'device' then
 	    (select 
 		os_name || ' ' || os_version || case when su is null then '' else ' *** ROOTED ***' end || ', ' || manufacturer || ' ' || model || 
 		format(', uptime: %s min.', round(uptime/60000, 0)) ||
@@ -25,47 +25,47 @@ select
 		case when kernel is null then '' else format(', Kernel: %s', kernel) end ||
 		format(', vstamp: %s', coalesce(vstamp,'-'))
 	    from a_device where j.act_id=act_id)
-	when 'a_exchange' then
+	when 'exchange' then
 	    (select status || ' (' || mode || ':' || packets || (case when corrupted is null or corrupted=0 then '' else ('; corrupted: ' || corrupted) end) || ')' || 
 		    case when msg is null or msg = '' then '' else ' [' || msg || ']' end
 		from a_exchange where j.act_id=act_id)
-	when 'a_heap' then
+	when 'heap' then
 	    (select 'Heap: ' || pid || ' (' || image_name || ') [VM max=' || round(vm_max/1048576.0, 2) || ' MiB, allocated=' || 
 		round(vm_allocated/1048576.0, 2) || ' MiB, free=' || round(vm_free/1048576.0, 2)|| ' MiB], [native heapsize=' || 
 		round(native_heapsize/1048576.0, 2) || ' MiB, allocated=' || round(native_allocated/1048576.0, 2) || ' MiB, free=' || 
 		round(native_free/1048576.0, 2) || ' MiB] ' || case when msg is null then '' else msg end 
 	    from a_heap where j.act_id=act_id)
-	when 'a_gps_pos' then
+	when 'gps_pos' then
 	    (select 'GPS control point' || case when latitude = 0 and longitude = 0 then ' is empty' else (': provider=' || 
 		case when provider is null then '-' else provider end || ', accuracy=' || accuracy || ', outdate (sec.)=' || 
 		seconds || ', satellites=' || case when satellites is null then '-' else satellites::varchar end) end 
 	    from a_gps_pos where j.act_id=act_id)
-	when 'a_gps_state' then
+	when 'gps_state' then
 	    (select 'state: ' || state || ', provider: ' || provider || case when msg is null or msg = '' then '' else ' [' || msg || ']' end
 		from a_gps_state where j.act_id=act_id)
-	when 'a_gsm_pos' then
+	when 'gsm_pos' then
 	    (select 'gsm control point: ' || upper(radio) || ' mcc=' || mcc || ' mnc=' ||mnc || ' cid=' || cid || ' lac=' || lac || ' asu=' || asu ||
 		' (ta=' || ta || ' rxlev=' || rxlev || ')'
 	    from a_gsm_pos where j.act_id=act_id)
-	when 'a_gsm_state' then
+	when 'gsm_state' then
 	    (select format('SIM#0: %s SIM#1: %s', sim0_state, sim1_state)
 		from a_gsm_state where j.act_id=act_id)
-	when 'a_lifecycle' then
+	when 'lifecycle' then
 	    (select case when facility='os' then format('%s system (reason: %s)', state, coalesce(extra,'-'))
 		when facility='process' and extra is not null then format('%s process %s (pid: %s): %s', state, name, pid, replace(extra,' at ', '<br/>at '))
 		when facility='process' then format('%s process %s (pid: %s)', state, name, pid)
 		else format('%s %s %s at %s (pid: %s)', state, facility, name, coalesce(extra,'-'), pid)
 	     end from a_lifecycle where j.act_id=act_id)
-	when 'a_network' then
+	when 'network' then
 	    (select state || case when msg is null or msg = '' then '' else ' [' || msg || ']' end 
 		from a_network where j.act_id=act_id)
-	when 'a_package' then
+	when 'package' then
 	    (select format('%s %s (enabled: %s, name: [%s], system: %s, debuggable: %s)', 
 			status, package, case when enabled=1 then 'yes' else 'no' end, coalesce("name",'-'), 
 			case when system=1 then 'yes' when system=0 then 'no' else '-' end,
 			case when debuggable=1 then 'yes' when debuggable=0 then 'no' else '-' end)
 		from a_package where j.act_id=act_id)
-	when 'a_power' then
+	when 'power' then
 	    (select state || ' (' || case when battery_life=255 then '-' else (battery_life||'%') end || case when voltage>0 then (', '||voltage||' V') else '' end || 
 		    case when temperature>0 then (', '||temperature||' °C') else '' end || case when tech is not null and tech<>'' then (', '||tech) else '' end || ')' || 
 		    case when usb=1 then ', *** USB ***' else '' end ||
@@ -73,45 +73,45 @@ select
 		    case when idle=1 and ibo=1 then ', IDLE, IgnoringBatteryOptimizations' else '' end ||
 		    case when idle=1 and ibo=0 then ', *** IDLE ***' else '' end
 		from a_power where j.act_id=act_id)
-	when 'a_sms' then
+	when 'sms' then
 	    (select 'SMS ' || case when sender is null then '[*]' else sender end || ' -> ' || case when receiver is null then '[*]' else receiver end || 
 		    ': ' || case when msg is null then '(empty message)' else msg end
 		from a_sms where j.act_id=act_id)
-	when 'a_statfs' then
+	when 'statfs' then
 	    (select path || ' available: ' || round(available_bytes/1048576.0, 2) || ' MiB, total: ' || round(total_bytes/1048576.0, 2) || ' MiB'
 		from a_statfs where j.act_id=act_id)
-	when 'a_time' then
+	when 'time' then
 	    (select format('%s: %s, diff: %s, interactive: %s', status, msg, coalesce(diff::varchar||' min.','-'), case interactive when 1 then 'yes' when 0 then 'no' else 'N/A' end) 
 		from a_time where j.act_id=act_id)
-	when 'a_traffic' then
+	when 'traffic' then
 	    (select '(' || duration || ' sec.) Total: RX:' || round(total_rx_bytes/1048576.0, 2) || ' MiB TX:' || round(total_tx_bytes/1048576.0, 2) || 
 		' MiB, [Mobile: RX:' || round(mobile_rx_bytes/1048576.0, 2) || ' MiB TX:' || round(mobile_tx_bytes/1048576.0, 2) || 
 		' MiB], [OMOBUS: RX:' || round(omobus_rx_bytes/1048576.0, 2) || ' MiB TX:' || round(omobus_tx_bytes/1048576.0, 2) || ' MiB]' 
 	    from a_traffic where j.act_id=act_id)
-	when 'a_wifi' then
+	when 'wifi' then
 	    (select state from a_wifi where j.act_id=act_id)
 
-	when 'a_user_work' then
+	when 'user_work' then
 	    (select 'work: ' || state || ' [' || w_cookie || ']' from a_user_work where j.act_id=act_id)
-	when 'a_user_joint' then
+	when 'user_joint' then
 	    (select 'joint route: ' || state || ' [' || w_cookie || ':' || c_cookie || '], employee_id:' || employee_id
 		from a_user_joint where j.act_id=act_id)
-	when 'a_user_activity' then
+	when 'user_activity' then
 	    (select 'activity_type_id: ' || activity_type_id || ', state: ' || state || ' [' || w_cookie || ':' || a_cookie || ']' || 
 		case when route_date is null or route_date = '' then '' else ' route date: ' || route_date end ||
 		case when employee_id is null or employee_id = '' then '' else ' employee_id: ' || employee_id end
 	    from a_user_activity where j.act_id=act_id)
-	when 'a_user_document' then
+	when 'user_document' then
 	    (select doc_type || '; doc_no: ' || d.doc_no || ', duration: ' || d.duration || ' sec.' || 
 		case when employee_id is null or employee_id = '' then '' else ', employee_id: ' || employee_id end ||
 		coalesce((select format(', doc_id: %s (%s)', doc_id, inserted_ts) from j_docs where user_id=d.user_id and doc_no=d.doc_no and dev_id=d.dev_id and fix_dt=d.fix_dt limit 1),
 		    ' *** N/T ***')
 		from a_user_document d where j.act_id=act_id)
-	when 'a_user_report' then
+	when 'user_report' then
 	    (select doc_type || '; duration: ' || duration || ' sec.' || case when employee_id is null or employee_id = '' then '' else ', employee_id: ' || employee_id end 
 		from a_user_report where j.act_id=act_id)
 
-	when 'a_applog' then
+	when 'applog' then
 	    (select 
 		case when status in ('bind','unbind') then 
 		    format('%s %s (name: %s)', status, package, coalesce(name,'-'))

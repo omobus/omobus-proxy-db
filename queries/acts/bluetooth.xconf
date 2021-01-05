@@ -37,7 +37,7 @@ declare
 begin
 -- **** bluetooth --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
-	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%server_hostname%', '%dev_pack%', 'a_%doc_code_sys%');
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%server_hostname%', '%dev_pack%', '%doc_code_sys%');
 
 -- **** bluetooth --> sysstats
     perform sysstat_add('%user_id_sys%', f_date, f_time);
@@ -50,4 +50,10 @@ end;
 $$;
   ]]>
 </close>
+<log>
+  <![CDATA[
+insert into pack_stream (pack_code, pack_name, pack_size, inserted_node, inserted_svc, vstamp, dev_pack, dev_id, dev_login, user_id, fix_dt, status, obj_id)
+    values('%doc_code_sys%', '%doc_name_sys%', %doc_size_sys%, '%server_hostname%', 'acts', '%vstamp%', %dev_pack%, '%dev_id%', '%user_id%', NIL('%user_id_sys%'), '%fix_dt%', '%doc_status_sys%', NIL('%doc_id_sys%'))
+  ]]>
+</log>
 </bluetooth>

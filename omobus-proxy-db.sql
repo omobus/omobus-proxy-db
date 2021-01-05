@@ -13,6 +13,7 @@ create sequence seq_activities;
 create sequence seq_documents;
 create sequence seq_mail_stream;
 create sequence seq_manuals;
+create sequence seq_pack_stream;
 create sequence seq_tickets;
 
 
@@ -5922,6 +5923,26 @@ create table pt_stream (
     barcode 		ean13 		null,
     processing_ts 	ts_t 		null
 );
+
+create table pack_stream (
+    pack_id		int64_t		not null primary key default nextval('seq_pack_stream'),
+    pack_code 		uid_t 		not null,
+    pack_name 		varchar(255) 	not null,
+    pack_size 		int64_t 	not null,
+    inserted_ts 	ts_auto_t 	not null,
+    inserted_node 	hostname_t 	not null,
+    inserted_svc 	code_t 		not null,
+    vstamp 		code_t 		not null,
+    dev_pack 		int32_t 	not null,
+    dev_id 		devid_t 	not null,
+    dev_login 		uid_t 		not null,
+    fix_dt 		datetime_t 	not null,
+    status 		code_t 		not null,
+    user_id 		uid_t 		null,
+    obj_id 		uid_t 		null
+);
+
+create trigger trig_lock_update before update on pack_stream for each row execute procedure tf_lock_update();
 
 create table thumbnail_stream (
     photo 		blob_t 		not null primary key,
