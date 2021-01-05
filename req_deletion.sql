@@ -1,4 +1,4 @@
-/* Copyright (c) 2006 - 2020 omobus-proxy-db authors, see the included COPYRIGHT file. */
+/* Copyright (c) 2006 - 2021 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
 create or replace function console.req_deletion(_login uid_t, _reqdt datetime_t, _cmd code_t, /*attrs:*/ a_id uid_t) 
     returns int

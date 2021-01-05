@@ -1,4 +1,4 @@
-/* Copyright (c) 2006 - 2020 omobus-proxy-db authors, see the included COPYRIGHT file. */
+/* Copyright (c) 2006 - 2021 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
 create type console.training_material_t as (
     descr descr_t,
