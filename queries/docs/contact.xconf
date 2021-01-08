@@ -32,7 +32,8 @@ insert into h_contact(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login
   <![CDATA[
 do $$
 declare
-    f_date date_t default left('%fix_dt%',10);
+    f_date date_t default left('%fix_dt%', 10);
+    f_time time_t default substring('%fix_dt%', 12, 5);
     lo_data blob_t;
 begin
     select consent from h_contact where doc_id='%doc_id_sys%' and consent is not null
@@ -57,6 +58,13 @@ begin
     else
 	raise notice '(contact) updating contact parameters [contact_id=%contact_id%, doc_id=%doc_id_sys%] was ignored.';
     end if;
+
+-- **** contact --> sysstats
+    perform sysstat_add('%user_id_sys%', f_date, f_time);
+
+-- **** contact --> sysdevices
+    update sysdevices set outdated_ts = current_timestamp
+	where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
 
 -- **** contact --> thumbnail_stream
     if( lo_data is not null ) then

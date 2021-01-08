@@ -32,7 +32,8 @@ insert into h_review(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login,
   <![CDATA[
 do $$
 declare
-    f_date date_t default left('%fix_dt%',10);
+    f_date date_t default left('%fix_dt%', 10);
+    f_time time_t default substring('%fix_dt%', 12, 5);
     x datetime_t;
     u_lang lang_t;
     cap descr_t;
@@ -42,7 +43,14 @@ begin
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, c_cookie, employee_id, inserted_node, dev_pack, doc_code)
 	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%created_dt%', NIL('%created_gps_dt%'), NIL(%created_gps_la%), NIL(%created_gps_lo%), '%closed_dt%', NIL('%closed_gps_dt%'), NIL(%closed_gps_la%), NIL(%closed_gps_lo%), '%w_cookie%', '%c_cookie%', '%employee_id%', '%server_hostname%', '%dev_pack%', '%doc_code_sys%');
 
--- **** testing --> content_stream
+-- **** review --> sysstats
+    perform sysstat_add('%user_id_sys%', f_date, f_time);
+
+-- **** review --> sysdevices
+    update sysdevices set outdated_ts = current_timestamp
+	where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
+
+-- **** review --> content_stream
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
     perform content_add('a_list', '%user_id_sys%', f_date, f_date);
     perform content_add('joint_routes', '', "monthDate_First"(f_date)::date_t, "monthDate_Last"(f_date)::date_t);

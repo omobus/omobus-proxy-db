@@ -32,7 +32,8 @@ insert into h_discard(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login
   <![CDATA[
 do $$
 declare
-    f_date date_t default left('%fix_dt%',10);
+    f_date date_t default left('%fix_dt%', 10);
+    f_time time_t default substring('%fix_dt%', 12, 5);
     x bool_t default 0;
     a_name descr_t;
     a_address address_t;
@@ -52,6 +53,13 @@ begin
     else
 	raise notice 'discard already exist: user_id=%user_id_sys%, account_id=%account_id%, activity_type_id=%activity_type_id%, route_date=%route_date%.';
     end if;
+
+-- **** discard --> sysstats
+    perform sysstat_add('%user_id_sys%', f_date, f_time);
+
+-- **** discard --> sysdevices
+    update sysdevices set outdated_ts = current_timestamp
+	where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
 
 -- **** discard --> content_stream
     perform content_add('tech_route', '%user_id_sys%', '%route_date%', '%route_date%');

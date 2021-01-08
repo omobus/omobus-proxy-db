@@ -32,11 +32,19 @@ insert into h_location(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_logi
   <![CDATA[
 do $$
 declare
-    f_date date_t default left('%fix_dt%',10);
+    f_date date_t default left('%fix_dt%', 10);
+    f_time time_t default substring('%fix_dt%', 12, 5);
 begin
 -- **** location --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
 	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%fix_dt%', '%satellite_dt%', %latitude%, %longitude%, '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', '%doc_code_sys%');
+
+-- **** location --> sysstats
+    perform sysstat_add('%user_id_sys%', f_date, f_time);
+
+-- **** location --> sysdevices
+    update sysdevices set outdated_ts = current_timestamp
+	where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
 
 -- *** location --> geocode_stream
     if( (select count(*) from geocode_stream where account_id='%account_id%' and reverse = 1) = 0 ) then
