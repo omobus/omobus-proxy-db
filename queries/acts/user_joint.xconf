@@ -61,6 +61,10 @@ begin
 -- **** user_joint --> sysstats
     perform sysstat_add('%user_id_sys%', f_date, f_time);
 
+-- **** user_joint --> sysdevices
+    update sysdevices set outdated_ts = current_timestamp
+	where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
+
 -- **** user_joint --> content_stream
     perform content_add('tech', '', f_date, f_date);
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);

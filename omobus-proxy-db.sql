@@ -862,6 +862,34 @@ create trigger trig_update_content after insert or update on syswdmv for each ro
 
 -- **** System statistics ****
 
+create table sysdevices(
+    dev_id 		devid_t 	not null,
+    user_id 		uid_t 		not null,
+    dev_login 		uid_t 		not null,
+    os_name		varchar(7) 	not null check (os_name in ('android') and os_name = lower(os_name)),
+    os_version		code_t 		not null,
+    model		descr_t		not null,
+    manufacturer	descr_t		not null,
+    fingerprint		descr_t		not null,
+    myuid		int32_t		not null,
+    cpu_abis 		descr_t 	null,
+    cpu_cores		int32_t		not null,
+    heap_size		int64_t		not null,
+    screen_inches 	numeric(3,1)  	not null,
+    screen_density 	int32_t 	not null,
+    screen_height 	int32_t 	not null,
+    screen_width 	int32_t 	not null,
+    su 			varchar(2048) 	null,
+    kernel 		varchar(512) 	null,
+    vstamp 		code_t 		not null,
+    fix_dt 		datetime_t	not null,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    outdated_ts 	ts_auto_t 	not null,
+    primary key(dev_id, user_id, dev_login)
+);
+
+
 create type counter_t as (fix_time time_t, count int32_t);
 
 create table sysstats (

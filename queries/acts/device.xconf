@@ -34,6 +34,7 @@ do $$
 declare
     f_date date_t default left('%fix_dt%',10);
     f_time time_t default substring('%fix_dt%', 12, 5);
+    t datetime_t;
 begin
 -- **** device --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
@@ -41,6 +42,20 @@ begin
 
 -- **** device --> sysstats
     perform sysstat_add('%user_id_sys%', f_date, f_time);
+
+-- **** device --> sysdevices
+    select fix_dt from sysdevices where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%'
+	into t;
+    if t is null then
+	insert into sysdevices (dev_id, dev_login, user_id, fix_dt, os_name, os_version, model, manufacturer, fingerprint, myuid, cpu_abis, cpu_cores, heap_size, screen_inches, screen_density, screen_height, screen_width, su, kernel, vstamp)
+	    values('%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%os_name%', '%os_version%', '%model%', '%manufacturer%', '%fingerprint%', %myuid%, '%cpu_abis%', %cpu_cores%, %heap_size%, %screen_inches%, %screen_density%, %screen_height%, %screen_width%, NIL('%su%'), NIL('%kernel%'), '%vstamp%');
+    elseif t < '%fix_dt%' then
+	update sysdevices set os_name = '%os_name%', os_version = '%os_version%', model = '%model%', manufacturer = '%manufacturer%', fingerprint = '%fingerprint%', myuid = %myuid%, cpu_abis = '%cpu_abis%', cpu_cores = %cpu_cores%, heap_size = %heap_size%, screen_inches = %screen_inches%, screen_density = %screen_density%, screen_height = %screen_height%, screen_width = %screen_width%, su = NIL('%su%'), kernel = NIL('%kernel%'), vstamp = '%vstamp%', updated_ts = current_timestamp, outdated_ts = current_timestamp
+	    where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
+    else
+	update sysdevices set outdated_ts = current_timestamp
+	    where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
+    end if;
 
 -- **** device --> content_stream
     perform content_add('tech', '', f_date, f_date);
