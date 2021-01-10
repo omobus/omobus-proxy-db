@@ -34,6 +34,12 @@ do $$
 declare
     f_date date_t default left('%fix_dt%',10);
     f_time time_t default substring('%fix_dt%', 12, 5);
+    limits int default 100;
+    violation int default case when round(%available_bytes%/1048576.0, 2) > limits then 0 else 1 end;
+    xz bool_t default 0;
+    d int default 0;
+    rcpt_to emails_t;
+    u_lang lang_t;
 begin
 -- **** statfs --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
@@ -41,6 +47,14 @@ begin
 
 -- **** statfs --> sysstats
     perform sysstat_add('%user_id_sys%', f_date, f_time);
+
+    if( violation > 0 ) then
+	update sysstats set oom_violations = coalesce(oom_violations,0) + 1
+	    where user_id = '%user_id_sys%' and fix_date = f_date
+	returning oom_violations
+	into d;
+	xz := 1;
+    end if;
 
 -- **** statfs --> sysdevices
     update sysdevices set outdated_ts = current_timestamp
@@ -50,6 +64,31 @@ begin
     perform content_add('tech', '', f_date, f_date);
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
     perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+    if( xz = 1 ) then
+	perform content_add('route_compliance', '', f_date, f_date);
+	perform content_add('time', '', "monthDate_First"(f_date), "monthDate_Last"(f_date));
+    end if;
+
+-- **** statfs --> mail_stream
+    if( xz = 1 and abs(current_date - f_date::date) <= 1 and d = 1 ) then
+	perform evmail_add('%user_id_sys%','oom/caption','oom/body',1::smallint /*highest*/,array[
+	    'fix_dt',"L"('%fix_dt%'::datetime_t),
+	    'size',((2*limits)-(%available_bytes%/1048576.0)::int)::text
+	]);
+
+	for rcpt_to, u_lang in select evaddrs, lang_id from users where user_id<>'%user_id_sys%' and user_id in (
+		select pids[1] from users where user_id='%user_id_sys%' and pids[1] is not null
+		    union
+		select executivehead_id from users where user_id='%user_id_sys%' and executivehead_id is not null
+	    ) and hidden=0 and evaddrs is not null and array_length(evaddrs, 1) > 0
+	loop
+	    perform evmail_add(rcpt_to, u_lang,'oom_violation/caption','oom_violation/body',2::smallint /*hight*/,array[
+		'fix_dt',"L"('%fix_dt%'::datetime_t),
+		'dev_login','%user_id%',
+		'u_name',(select descr from users where user_id='%user_id_sys%')
+	    ]);
+	end loop;
+    end if;
 end;
 $$;
   ]]>

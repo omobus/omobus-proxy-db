@@ -395,9 +395,8 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','gps_off/caption','НЕ ОТКЛЮЧАЙТЕ ДАТЧИК ОПРЕДЕЛЕНИЯ МЕСТОПОЛОЖЕНИЯ');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','gps_off/body', 
     '<html><body>$(fix_dt) зафиксировано <b>отключение</b> датчика определения местоположения или датчик был выключен в момент запуска процедуры контроля перемещений. ' ||
-    'Для того, что-бы избежать спорных ситуаций, рекомендуется <i>незамедлительно включить</i> датчик определения местоположения. ' || 
-    'Для этого:<br />' ||
-    '&nbsp;&nbsp;&nbsp;1. зайдите в настройки планшета;<br />' ||
+    'Для того, что-бы избежать спорных ситуаций, рекомендуется <i>незамедлительно включить</i> датчик определения местоположения. Для этого:<br />' ||
+    '&nbsp;&nbsp;&nbsp;1. откройте настройки мобильного устройства;<br />' ||
     '&nbsp;&nbsp;&nbsp;2. выберите пункт «Местоположение»;<br />' ||
     '&nbsp;&nbsp;&nbsp;3. включите датчик определения местоположения.<br />' ||
     '<br />'||
@@ -405,6 +404,18 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
     '</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','gps_violation/caption','Отключение датчика местоположения ($(dev_login))');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','gps_violation/body','$(fix_dt) на устройстве $(dev_login) (сотрудник: $(u_name)) зафиксировано отключение датчика местоположения. Контроль перемещений сотрудника заблокирована.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','oom/caption','НЕДОСТАТОЧНО СВОБОДНОГО МЕСТА');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','oom/body', 
+    '<html><body>$(fix_dt) зафиксировано <b>отсутствие свободного места</b> на внутреннем накопителе мобильного устройства. ' ||
+    'Рекомендуется <i>незамедлительно освободить</i> не менее $(size)МБ на внутреннем накопителе, для этого:<br />' ||
+    '&nbsp;&nbsp;&nbsp;1. откройте настройки мобильного устройства;<br />' ||
+    '&nbsp;&nbsp;&nbsp;2. выберите пункт «Хранилище»;<br />' ||
+    '&nbsp;&nbsp;&nbsp;3. очистите данные редко используемых приложений.<br />' ||
+    '<br />'||
+    'ВНИМАНИЕ. Отутствие свободного места на внутреннем накопителе может привести к потере собираемых данных.' ||
+    '</body></html>');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','oom_violation/caption','Недостаточно свободного места ($(dev_login))');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','oom_violation/body','$(fix_dt) на устройстве $(dev_login) (сотрудник: $(u_name)) выявлено отсутствие свободного места на внутреннем накопителе.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','order/caption','Заказ продукции $(doc_no) (принят)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','order/body','<html><body>В обработку принят заказ продукции $(doc_no) на сумму <b>$(amount)</b> (доставка: <b>$(delivery_date)</b>, тип: $(order_type)) от <i>$(a_name) $(address)</i>. Отгрузка будет осуществляться со склада <i>$(d_name) [$(w_name)]</i>.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','reclamation/caption','Возврат продукции $(doc_no) (принят)');
@@ -435,7 +446,7 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
     '<br />'||
     'ВНИМАНИЕ. В том случае, если Вы не меняли время, необходимо в настройках устройства отключить режим энергосбережения и автоматическую синхронизацию времени и ' ||
     'часового пояса по данным сети. Отключить автоматическую синхронизацию времени можно следующим образом:<br/>' ||
-    '&nbsp;&nbsp;&nbsp;1. зайдите в настройки планшета;<br />' ||
+    '&nbsp;&nbsp;&nbsp;1. откройте настройки мобильного устройства;<br />' ||
     '&nbsp;&nbsp;&nbsp;2. выберите пункт «Дата и время»;<br />' ||
     '&nbsp;&nbsp;&nbsp;3. отключите «Дата и время сети»;<br />' ||
     '&nbsp;&nbsp;&nbsp;4. отключите «Часовой пояс сети»;<br />' ||

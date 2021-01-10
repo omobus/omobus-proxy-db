@@ -898,6 +898,7 @@ create table sysstats (
     packets 		counter_t 	not null default(row(null,0)),
     gps_violations 	int32_t 	not null default 0,
     tm_violations 	int32_t 	not null default 0,
+    oom_violations 	int32_t 	not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     primary key(fix_date, user_id)
