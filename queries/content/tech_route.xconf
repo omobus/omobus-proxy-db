@@ -549,6 +549,7 @@ select
     (s.packets).fix_time packets_time,
     s.gps_violations,
     s.tm_violations,
+    s.oom_violations,
     case when (s.packets).count > 0 then (select battery_life from a_power
 	where user_id=u.user_id and left(fix_dt, 10)='%b_date%' and substring(fix_dt, 12, 5) < coalesce(u."rules:wd_begin", "paramUID"('rules:wd_begin')::time_t)
 	order by fix_dt desc limit 1) else null end power_begin,
@@ -1195,6 +1196,7 @@ if rowset_rows(_stats) > 0 then
     tb.violations = {}
     tb.violations.gps_off = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "gps_violations")))
     tb.violations.tm_changed = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "tm_violations")))
+    tb.violations.oom = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "oom_violations")))
     tb.power = {}
     tb.power.b = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "power_begin")))
     tb.power.e = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "power_end")))

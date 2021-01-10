@@ -20,6 +20,7 @@ select
     case when s.packets is not null and (s.packets).count > 0 then 1 else 0 end alive,
     s.gps_violations,
     s.tm_violations,
+    s.oom_violations,
     case 
 	when z.scheduled > 0 then 1
 	when mvt.t_date is not null and (
@@ -225,6 +226,11 @@ local days = rt.groups(_days, "user_id", function(r, n, a)
 	    r.violations = {}
 	end
 	r.violations["tm"] = tonumber(a)
+    elseif n == "oom_violations" then
+	if r.violations == nil then
+	    r.violations = {}
+	end
+	r.violations["oom"] = tonumber(a)
     elseif std.contains({'alive','route_duration','instore_duration','scheduled','closed','canceled','other','pending','discarded',
 	    'accepted','rejected','warn_min_duration','warn_max_duration','warn_max_distance','mileage','total_mileage','wday'}, n) then
 	r[n] = tonumber(a)

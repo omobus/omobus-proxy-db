@@ -47,6 +47,7 @@ select
     case when s.packets is not null and (s.packets).count > 0 then 1 else 0 end alive,
     s.gps_violations, 
     s.tm_violations, 
+    s.oom_violations, 
     e.user_id head_id, e.descr head_name,
     /* power: */
     case when (s.packets).count>0 then
@@ -172,6 +173,8 @@ tb.rows = rt.rows(_L, false, function(r, n, a)
 	    r.violations["gps"] = tonumber(a)
 	elseif n == "tm_violations" then
 	    r.violations["tm"] = tonumber(a)
+	elseif n == "oom_violations" then
+	    r.violations["oom"] = tonumber(a)
 	elseif n == "power_begin" then
 	    r.power["begin"] = tonumber(a)
 	elseif n == "power_end" then
