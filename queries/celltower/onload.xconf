@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<onload>
-  <![CDATA[
-select 'resolver' content_code, mcc, mnc, cid, lac from celltower_stream 
-    where content_ts is null or data_ts > content_ts
-limit 10
-  ]]>
-</onload>

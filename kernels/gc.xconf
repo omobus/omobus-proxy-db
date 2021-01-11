@@ -6,7 +6,6 @@ do $$
 declare
     alive int = "paramInteger"('gc:keep_alive'::uid_t);
     gc_date date_t = ("monthDate_First"(current_date - greatest(alive,60)))::date_t;
-    ct_date date_t = current_date - greatest(alive+180,360);
     i uid_t;
     f int;
     c int;
@@ -178,13 +177,6 @@ begin
     delete from thumbnail_stream where inserted_ts::date_t < gc_date and photo in (select orphanTHUMB());
 
     raise notice 'deleted rows before %.', gc_date;
-
-    delete from celltower_stream
-	where data_ts::date_t < ct_date;
-    GET DIAGNOSTICS c = ROW_COUNT;
-    if( c > 0 ) then
-	raise notice 'deleted % obsolete celltower measures that created before %.', c, ct_date;
-    end if;
 end;
 $$;
   ]]>

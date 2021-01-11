@@ -5492,21 +5492,6 @@ create table blob_stream ( /* blob packages, that imported to the storage */
 
 create trigger trig_updated_ts before update on blob_stream for each row execute procedure tf_updated_ts();
 
-create table celltower_stream (
-    mcc 		int32_t 	not null, /* mobile country code */
-    mnc 		int32_t 	not null, /* mobile network code */
-    cid 		int32_t 	not null, /* cell tower ID */
-    lac 		int32_t 	not null, /* local area code */
-    inserted_ts 	ts_auto_t 	not null,
-    data_ts 		ts_auto_t 	not null,
-    content_ts 		ts_t 		null,
-    latitude 		gps_t 		null,
-    longitude 		gps_t 		null,
-    changeable 		bool_t 		null, /* defines if coordinates of the cell tower are exact (0) or approximate (1). */
-    source 		code_t 		null, /* defines source of the cell tower coordinates */
-    primary key(mcc, mnc, cid, lac)
-);
-
 create table content_stream (
     user_id 		uid_t 		not null,
     b_date 		date_t 		not null,
