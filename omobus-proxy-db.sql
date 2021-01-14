@@ -5858,7 +5858,7 @@ begin
     loop
 	if( la0 <> 0 or lo0 <> 0 ) then
 	    tmp := distance(la0, lo0, la, lo);
-	    if( tmp < 1000000 ) then
+	    if( tmp < 300000 ) then
 		dist := dist + tmp;
 	    end if;
 	end if;
@@ -5866,9 +5866,11 @@ begin
 	lo0 := lo;
     end loop;
     return dist;
---exception 
---    when numeric_value_out_of_range then 
---	return -1;
+exception 
+    when numeric_value_out_of_range then 
+	raise notice 'catched numeric_value_out_of_range exception at the mileage_calc(%,%,%,%).',
+	    uid, d, coalesce(b_time,'null'), coalesce(e_time,'null');
+	return 0;
 end;
 $BODY$ language plpgsql STABLE;
 
