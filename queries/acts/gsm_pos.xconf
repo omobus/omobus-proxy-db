@@ -61,6 +61,7 @@ begin
     perform content_add('tech', '', f_date, f_date);
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
     perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+end;
 $$;
   ]]>
 </close>
