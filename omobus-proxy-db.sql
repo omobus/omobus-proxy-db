@@ -2810,6 +2810,8 @@ create table a_exchange (
     status 		varchar(8) 	not null check (status in ('success','failed') and status = lower(status)),
     packets 		int32_t 	null,
     corrupted 		int32_t 	null,
+    bytes 		int32_t 	null,
+    duration 		int32_t 	null, /* msecs. */
     msg 		varchar(512) 	null
 );
 

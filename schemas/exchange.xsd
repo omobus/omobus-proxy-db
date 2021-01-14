@@ -50,6 +50,8 @@
 	    <xs:attribute name="status" use="required" type="status_t" />
 	    <xs:attribute name="packets" use="required" type="xs:integer" />
 	    <xs:attribute name="corrupted" use="optional" type="int_t" default="" />
+	    <xs:attribute name="bytes" use="optional" type="int_t" default="" />
+	    <xs:attribute name="duration" use="optional" type="int_t" default="" />
 	    <xs:attribute name="msg" use="optional" type="xs:string" default="" />
 	</xs:complexType>
     </xs:element>
