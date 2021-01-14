@@ -26,8 +26,9 @@ select
 		format(', vstamp: %s', coalesce(vstamp,'-'))
 	    from a_device where j.act_id=act_id)
 	when 'exchange' then
-	    (select status || ' (' || mode || ':' || packets || (case when corrupted is null or corrupted=0 then '' else ('; corrupted: ' || corrupted) end) || ')' || 
-		    case when msg is null or msg = '' then '' else ' [' || msg || ']' end
+	    (select status || ' (' || mode || ':' || packets || (case when corrupted is null or corrupted=0 then '' else ('; corrupted: ' || corrupted) end) || 
+		    (case when bytes is null or bytes=0 or duration is null or duration=0 then '' else ('; rate: ' || round((bytes/1048576.0)/(duration/1000.0),2) || 'MiB/sec.') end) ||
+		    ')' || case when msg is null or msg = '' then '' else ' [' || msg || ']' end
 		from a_exchange where j.act_id=act_id)
 	when 'heap' then
 	    (select 'Heap: ' || pid || ' (' || image_name || ') [VM max=' || round(vm_max/1048576.0, 2) || ' MiB, allocated=' || 
