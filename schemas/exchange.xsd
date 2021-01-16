@@ -26,7 +26,7 @@
 
     <xs:simpleType name="mode_t">
 	<xs:restriction base="xs:string">
-	    <xs:pattern value="docs|sync|upd" />
+	    <xs:pattern value="acts|docs|sync|upd|logs|push" />
 	</xs:restriction>
     </xs:simpleType>
 

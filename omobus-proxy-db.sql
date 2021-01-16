@@ -2806,7 +2806,7 @@ create table a_exchange (
     satellite_dt 	datetime_t 	null,
     latitude 		gps_t 		null,
     longitude 		gps_t 		null,
-    mode 		varchar(8) 	not null check (mode in ('docs','sync','upd') and mode = lower(mode)),
+    mode 		varchar(8) 	not null check (mode in ('acts','docs','sync','upd','logs','push') and mode = lower(mode)),
     status 		varchar(8) 	not null check (status in ('success','failed') and status = lower(status)),
     packets 		int32_t 	null,
     corrupted 		int32_t 	null,
