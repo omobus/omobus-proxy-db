@@ -615,7 +615,7 @@ order by fix_dt
 	<exchanges>
   <![CDATA[
 select act_id, mode, fix_dt, status, packets, corrupted from a_exchange
-    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/ and mode in ('docs','sync')
   ]]>
 	</exchanges>
 	<user_documents>
