@@ -4,7 +4,7 @@ delete from activity_types;
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable)
     values('0', 'Посещение', 'Плановый визит к клиенту.', 1, 1, 1, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, row_no, roles)
-    values('1', 'Внеплановое посещение', 'Внеплановый визит к клиенту. Не влияет на выполнение планов по посещениям.', 0, 4, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t);
+    values('1', 'Внеплановое посещение', 'Внеплановый визит к клиенту. Не влияет на выполнение планов по посещениям.', 0, 4, 1, 1, 1, array['merch','mr','ksr','sr','cdm']::uids_t);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, selectable, roles)
     values('2', 'Звонок клиента(-у)', 'Прием документов по телефону. Не влияет на выполнение планов по посещениям.', 0, 255, 1, array['sr','sv']::uids_t);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, selectable)
@@ -14,7 +14,7 @@ insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limi
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, joint, row_no)
     values('5', 'Совместное посещение', 'Посещение клиента совместно с подчиненным.', 0, 2, 1, 1, array['sv','ise','asm']::uids_t, 1, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, hidden, row_no)
-    values('6', 'Повторное посещение', 'Выполнение повторного визита к клиенту из планового маршрута. Не влияет на выполнение планов по посещениям.', 1, 1, 1, 1, array['merch','mr','ksr','sr']::uids_t, 1, 0);
+    values('6', 'Повторное посещение', 'Выполнение повторного визита к клиенту из планового маршрута. Не влияет на выполнение планов по посещениям.', 1, 1, 1, 1, array['merch','mr','ksr','sr','cdm']::uids_t, 1, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, important)
     values('7', 'Срочное посещение', 'Срочный визит в торговую точку для устранения выявленных нарушений. Не влияет на выполнение планов по посещениям.', 1, 1, 1, 0, 1);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, row_no, roles, hidden)
