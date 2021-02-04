@@ -36,7 +36,7 @@ begin
     delete from j_acts where left(fix_dt,10) < gc_date;
     delete from j_additions where left(fix_dt,10) < gc_date;
     delete from j_cancellations where route_date < gc_date;
-    delete from j_deletions where left(fix_dt,10) < gc_date and hidden = 1;
+    delete from j_deletions where left(fix_dt,10) < gc_date;
     delete from j_discards where left(fix_dt,10) < gc_date;
     delete from j_docs where left(fix_dt,10) < gc_date;
     delete from j_remarks where doc_id not in (select doc_id from h_confirmation);
