@@ -36,9 +36,8 @@ insert into accounts(pid, account_id, code, ftype, descr, address, rc_id, chan_i
   <![CDATA[
 /* recalculates targets.rows via internal trigger */
 update targets set rows=null where (region_ids is not null or city_ids is not null or rc_ids is not null or chan_ids is not null or poten_ids is not null) and e_date >= current_date::date_t and hidden=0;
-/* unlocks deleted accounts: */
-update j_deletions set hidden = 1 where account_id in (select account_id from accounts where hidden = 1 and locked = 1) and hidden = 0;
-update accounts set locked = 0 where hidden = 1 and locked = 1;
+/* unlocks accounts if deletion request doesn't exist */
+update accounts set locked = 0 where hidden = 0 and locked = 1 and account_id not in (select account_id from j_deletions where hidden = 0 and validated = 1);
 /* set flag for refreshing [ownerless] attribute: */
 insert into ".sesparams" values('%uid%#ownerless') on conflict do nothing;
 
