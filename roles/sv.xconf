@@ -4,7 +4,7 @@
 
     <template_source name="omobus-droid.conf" enc="utf-8">
 	<defs>
-	    <beginWorkingTime value="08:00" />
+	    <beginWorkingTime value="07:00" />
 	    <endWorkingTime value="19:00" />
 	    <terminalList value="" />
 	    <orderUnavailableProducts value="yes" />
