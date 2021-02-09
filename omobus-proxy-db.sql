@@ -2099,18 +2099,6 @@ create table rdd (
 create index i_db_ids_rdd on rdd using GIN (db_ids);
 create trigger trig_updated_ts before update on rdd for each row execute procedure tf_updated_ts();
 
-create table receipt_types (
-    receipt_type_id 	uid_t 		not null primary key default man_id(),
-    descr 		descr_t 	not null,
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
-);
-
-create index i_db_ids_receipt_types on receipt_types using GIN (db_ids);
-create trigger trig_updated_ts before update on receipt_types for each row execute procedure tf_updated_ts();
-
 create table reclamation_types (
     reclamation_type_id uid_t 		not null primary key default man_id(),
     descr 		descr_t 	null,
@@ -4435,43 +4423,6 @@ create index i_exist_h_rating on h_rating (user_id, dev_pack, dev_id, fix_dt);
 
 create trigger trig_lock_update before update on h_rating for each row execute procedure tf_lock_update();
 create trigger trig_lock_update before update on t_rating for each row execute procedure tf_lock_update();
-
-create table h_receipt (
-    doc_id 		uid_t 		not null primary key default doc_id(),
-    inserted_ts 	ts_auto_t 	not null,
-    inserted_node 	hostname_t 	not null,
-    dev_pack 		int32_t 	not null,
-    doc_no 		uid_t 		not null,
-    dev_id 		devid_t 	not null,
-    dev_login 		uid_t 		not null,
-    distr_id 		uid_t 		not null,
-    user_id 		uid_t 		not null,
-    account_id 		uid_t 		not null,
-    fix_dt 		datetime_t 	not null,
-    created_dt 		datetime_t 	not null,
-    created_gps_dt 	datetime_t 	null,
-    created_gps_la 	gps_t 		null,
-    created_gps_lo 	gps_t 		null,
-    closed_dt 		datetime_t 	not null,
-    closed_gps_dt 	datetime_t 	null,
-    closed_gps_la 	gps_t 		null,
-    closed_gps_lo 	gps_t 		null,
-    w_cookie 		uid_t 		not null,
-    a_cookie 		uid_t 		not null,
-    activity_type_id 	uid_t 		not null,
-    doc_note 		note_t 		null,
-    receipt_type_id 	uid_t 		null,
-    amount 		currency_t 	not null
-);
-
-create index i_fix_date_h_receipt on h_receipt (left(fix_dt,10));
-create index i_doc_no_h_receipt on h_receipt (doc_no);
-create index i_account_id_h_receipt on h_receipt (account_id);
-create index i_user_id_h_receipt on h_receipt (user_id);
-create index i_exist_h_receipt on h_receipt (user_id, dev_pack, dev_id, fix_dt);
-create index i_2lts_h_receipt on h_receipt (inserted_ts);
-
-create trigger trig_lock_update before update on h_receipt for each row execute procedure tf_lock_update();
 
 create table h_reclamation (
     doc_id 		uid_t 		not null primary key default doc_id(),

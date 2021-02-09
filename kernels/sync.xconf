@@ -103,7 +103,6 @@
 <xi:include href="../queries/sync/rating_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/ratings_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/rdd.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/receipt_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/reclamation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/reclamations_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/reclamations_history_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -318,7 +317,6 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <oos_types />
     <order_types />
     <ownership_types />
-    <receipt_types />
     <payment_methods />
     <pending_types />
     <photo_params />

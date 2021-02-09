@@ -29,8 +29,6 @@
 <xi:include href="../queries/2agent/orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/order_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/payment_methods.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/2agent/receipt_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/2agent/receipts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/reclamation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/symlinks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -40,8 +38,6 @@
     <order_types />
     <orders personalize="ErpCode" />
     <payment_methods />
-    <receipt_types />
-    <receipts personalize="ErpCode" />
     <reclamation_types />
     <reclamations personalize="ErpCode" />
     <symlinks personalize="ErpCode" />

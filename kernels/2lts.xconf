@@ -100,8 +100,6 @@
 <xi:include href="../queries/2lts/quest_rows.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/rating_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/rating_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/2lts/receipts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/2lts/receipt_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/reclamation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/regions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -206,8 +204,6 @@
     <quest_rows />
     <rating_criterias />
     <rating_scores />
-    <receipts />
-    <receipt_types />
     <reclamations />
     <reclamation_types />
     <regions />

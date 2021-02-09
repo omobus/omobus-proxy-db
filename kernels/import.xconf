@@ -93,7 +93,6 @@
 <xi:include href="../queries/import/rating_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/rating_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/rdd.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/import/receipt_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/reclamation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/recom_orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/recom_retail_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

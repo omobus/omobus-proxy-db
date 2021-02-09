@@ -29,7 +29,6 @@
 <xi:include href="../queries/export/discards.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/locations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/export/receipts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/target_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/wishes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -53,7 +52,6 @@ select user_id, unnest(db_ids) person_id from users
     <target_types />
     <distributors personalize='ErpCode'>
 	<orders key="distr_id" />
-	<receipts key="distr_id" />
 	<reclamations key="distr_id" />
     </distributors>
     <users personalize='ErpCode'>

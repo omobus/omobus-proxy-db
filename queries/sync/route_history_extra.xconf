@@ -140,14 +140,6 @@ from h_rating h
     left join users u on u.user_id=h.user_id
 where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
 
-/* receipts */ union 
-select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['amount',round(h.amount,2)::varchar,'receipt_type',lower(t.descr)]) extra_info
-from h_receipt h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='receipt'
-    left join receipt_types t on t.receipt_type_id=h.receipt_type_id
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
-
 /* reclamations */ union
 select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, format_a(z.str,array['amount',round(h.amount,2)::varchar,'rows',h.rows::varchar]) extra_info

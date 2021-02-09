@@ -139,7 +139,6 @@ begin
 	delete from t_rating where doc_id = i;
 	delete from h_rating where doc_id = i;
     end loop;
-    delete from h_receipt where left(fix_dt,10) < gc_date;
     for i in select doc_id from h_reclamation where left(fix_dt,10) < gc_date loop
 	delete from t_reclamation where doc_id = i;
 	delete from h_reclamation where doc_id = i;

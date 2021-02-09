@@ -192,10 +192,6 @@ insert into rating_scores(rating_score_id, descr, score, wf) values('0', '<b>О�
 insert into rating_scores(rating_score_id, descr, score, wf) values('1', '<b>Оценка: 1 балл</b> (имеются незначительные недостатки)', 1, 0.5);
 insert into rating_scores(rating_score_id, descr, score, wf) values('2', '<b>Оценка: 2 балла</b> (недостатки не обнаружены)', 2, 1);
 
-delete from receipt_types;
-insert into receipt_types(receipt_type_id, descr) values('0', 'Основной платеж');
-insert into receipt_types(receipt_type_id, descr) values('1', 'Платеж по второй схеме');
-
 delete from reclamation_types;
 insert into reclamation_types(reclamation_type_id, descr) values('0', 'Повреждение упаковки');
 insert into reclamation_types(reclamation_type_id, descr) values('1', 'Нарушение комплектации');
@@ -504,7 +500,6 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_hist
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','presentation', 'Презентация кон/потребителям: $(participants) чел.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','prices', 'Мониторинг цен.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','rating', 'Оценка работы [$(u_name)]: $(assessment) / $(sla)%.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','receipt', 'ПКО: $(amount).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','reclamations', 'Возвращено продуктов: $(rows) на сумму <b>$(amount)</b>.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','shelf', 'Доля полки / доля в ассортименте в категории $(categ): $(sos)% / $(soa)%.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','stocks', 'Ревизия складских остатков.');
