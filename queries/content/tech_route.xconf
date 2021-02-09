@@ -151,7 +151,7 @@ order by fix_dt
 	</advt_L0>
 	<advt_L1>
   <![CDATA[
-select t.doc_id, t.row_no, p.descr posm, g.descr placement, t.qty, t.scratch from (
+select t.doc_id, t.row_no, p.descr posm, g.descr placement, t.qty, t.scratch, format('%s!%s',t.placement_id,t.posm_id) _pkey from (
 	select doc_id, row_no, placement_id, posm_id, qty, scratch from t_advt where doc_id in (
 	    select doc_id from h_advt where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
@@ -165,7 +165,7 @@ order by t.doc_id, t.row_no
   <![CDATA[
 select 
     h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, x.descr categ, 
-    round(100*h.sla,1) sla, array_to_string(h.photos,',') photos 
+    round(100*h.sla,1) sla, array_to_string(h.photos,',') photos, x.categ_id _pkey
 from h_audit h
     left join categories x on x.categ_id = h.categ_id
 where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
@@ -192,7 +192,7 @@ order by fix_dt
 	</checkups_L0>
 	<checkups_L1>
   <![CDATA[
-select t.doc_id, t.row_no, p.code p_code, p.descr prod, g.descr placement, t.exist from (
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, g.descr placement, t.exist, format('%s!%s',t.placement_id,t.prod_id) _pkey from (
 	select doc_id, row_no, placement_id, prod_id, exist from t_checkup where doc_id in (
 	    select doc_id from h_checkup where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
@@ -235,7 +235,7 @@ order by fix_dt
 	</oos_L0>
 	<oos_L1>
   <![CDATA[
-select t.doc_id, t.row_no, p.code p_code, p.descr prod, x.descr oos_type, t.note from (
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, x.descr oos_type, t.note, t.prod_id _pkey from (
 	select doc_id, row_no, prod_id, oos_type_id, note from t_oos where doc_id in (
 	    select doc_id from h_oos where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
@@ -314,7 +314,7 @@ order by fix_dt
 	</presences_L0>
 	<presences_L1>
   <![CDATA[
-select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.facing, t.stock, t.scratch from (
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.facing, t.stock, t.scratch, t.prod_id _pkey from (
 	select doc_id, row_no, prod_id, facing, stock, scratch from t_presence where doc_id in (
 	    select doc_id from h_presence where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
@@ -342,7 +342,7 @@ order by fix_dt
 	</prices_L0>
 	<prices_L1>
   <![CDATA[
-select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.price, t.promo, t.rrp, t.scratch from (
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.price, t.promo, t.rrp, t.scratch, t.prod_id _pkey from (
 	select doc_id, row_no, prod_id, price, promo, rrp, scratch from t_price where doc_id in (
 	    select doc_id from h_price where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
@@ -372,7 +372,7 @@ order by fix_dt
 	</quests_L0>
 	<quests_L1>
   <![CDATA[
-select t.doc_id, t.row_no, n.descr qname, quest_path(null, r.qname_id, r.pid) qpath, r.descr qrow, t.value from (
+select t.doc_id, t.row_no, n.descr qname, quest_path(null, r.qname_id, r.pid) qpath, r.descr qrow, t.value, format('%s!%s',t.qname_id,t.qrow_id) _pkey from (
 	select doc_id, row_no, qname_id, qrow_id, "value" from t_quest where doc_id in (
 	    select doc_id from h_quest where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
@@ -395,7 +395,7 @@ order by h.fix_dt, h.doc_id
 	</ratings_L0>
 	<ratings_L1>
   <![CDATA[
-select t.doc_id, t.row_no, x.descr, t.score, t.note from (
+select t.doc_id, t.row_no, x.descr, t.score, t.note, t.rating_criteria_id _pkey from (
 	select doc_id, row_no, rating_criteria_id, score, note from t_rating where doc_id in (
 	    select doc_id from h_rating where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
@@ -429,7 +429,7 @@ order by t.doc_id, t.row_no
 select
     h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, x.descr categ, 
     round(100*h.sos_target,0) sos_target, round(100*h.soa_target,0) soa_target, round(100*h.sos,1) sos, round(100*h.soa,1) soa, 
-    array_to_string(h.photos,',') photos
+    array_to_string(h.photos,',') photos, x.categ_id _pkey
 from h_shelf h
     left join categories x on x.categ_id = h.categ_id
 where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
@@ -456,7 +456,7 @@ order by fix_dt
 	</stocks_L0>
 	<stocks_L1>
   <![CDATA[
-select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.stock, t.scratch from (
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.stock, t.scratch, t.prod_id _pkey from (
 	select doc_id, row_no, prod_id, qty stock, scratch from t_stock where doc_id in (
 	    select doc_id from h_stock where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
@@ -490,7 +490,7 @@ order by h.fix_dt, h.doc_id
 	</testings_L0>
 	<testings_L1>
   <![CDATA[
-select t.doc_id, t.row_no, x.descr, t.score, t.note from (
+select t.doc_id, t.row_no, x.descr, t.score, t.note, t.testing_criteria_id _pkey from (
 	select doc_id, row_no, testing_criteria_id, score, note from t_testing where doc_id in (
 	    select doc_id from h_testing where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
@@ -752,7 +752,7 @@ rt.foreach(_advt_L1, function(q, i, cols)
 end)
 idx = {}; tb.audits = rt.groups(_audits_L0, "account_id", function(r, n, a)
     if n == "doc_id" then
-	r.criterias = {}; idx[a] = r.criterias; r[n] = a
+	r.rows = {}; idx[a] = r.rows; r[n] = a
     elseif std.contains({'duration','sla'}, n) then
 	r[n] = tonumber(a)
     elseif n == "photos" then
@@ -991,7 +991,7 @@ rt.foreach(_quests_L1, function(q, i, cols)
 end)
 idx = {}; tb.ratings = rt.groups(_ratings_L0, "account_id", function(r, n, a)
     if n == "doc_id" then
-	r.criterias = {}; idx[a] = r.criterias; r[n] = a
+	r.rows = {}; idx[a] = r.rows; r[n] = a
     elseif std.contains({'duration','sla','assessment'}, n) then
 	r[n] = tonumber(a)
     else
@@ -1045,7 +1045,7 @@ rt.foreach(_reclamations_L1, function(q, i, cols)
 end)
 idx = {}; tb.shelfs = rt.groups(_shelfs_L0, "account_id", function(r, n, a)
     if n == "doc_id" then
-	r.brands = {}; idx[a] = r.brands; r[n] = a
+	r.rows = {}; idx[a] = r.rows; r[n] = a
     elseif n == "photos" then
 	r[n] = std.split(a, ',')
     elseif std.contains({'duration','sos_target','soa_target','sos','soa'}, n) then
@@ -1102,7 +1102,7 @@ end)
 tb.targets = rt.groups(_targets, "account_id", function(r, n, a) r[n] = n == "duration" and tonumber(a) or a; end)
 idx = {}; tb.testings = rt.groups(_testings_L0, "account_id", function(r, n, a)
     if n == "doc_id" then
-	r.criterias = {}; idx[a] = r.criterias; r[n] = a
+	r.rows = {}; idx[a] = r.rows; r[n] = a
     elseif std.contains({'duration','sla'}, n) then
 	r[n] = tonumber(a)
     else
