@@ -44,7 +44,6 @@
 <xi:include href="../queries/docs/price.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/profile.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/promo.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/docs/pt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/quest.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/rating.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/receipt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

@@ -1,12 +1,8 @@
 /* Copyright (c) 2006 - 2021 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
 create extension hstore;
-/*create extension file_fdw;*/
 create extension isn;
 create extension "uuid-ossp";
-
-/*create server fs foreign data wrapper file_fdw;*/
-
 
 create sequence seq_accounts;
 create sequence seq_activities;
@@ -15,7 +11,6 @@ create sequence seq_mail_stream;
 create sequence seq_manuals;
 create sequence seq_pack_stream;
 create sequence seq_tickets;
-
 
 create domain address_t as varchar(256);
 create domain blob_t as OID;
@@ -4347,41 +4342,6 @@ create index i_2lts_h_promo on h_promo (inserted_ts);
 create trigger trig_lock_update before update on h_promo for each row 
     when (not (old.blobs > 0 and (old.photos is null or old.blobs <> array_length(old.photos, 1)))) execute procedure tf_lock_update();
 
-/*[deprecated]*/ create table h_pt ( /* price-tags */
-    doc_id 		uid_t 		not null primary key default doc_id(),
-    inserted_ts 	ts_auto_t 	not null,
-    inserted_node 	hostname_t 	not null,
-    dev_pack 		int32_t 	not null,
-    doc_no 		uid_t 		not null,
-    dev_id 		devid_t 	not null,
-    dev_login 		uid_t 		not null,
-    user_id 		uid_t 		not null,
-    account_id 		uid_t 		not null,
-    fix_dt 		datetime_t 	not null,
-    created_dt 		datetime_t 	not null,
-    created_gps_dt 	datetime_t 	null,
-    created_gps_la 	gps_t 		null,
-    created_gps_lo 	gps_t 		null,
-    closed_dt 		datetime_t 	not null,
-    closed_gps_dt 	datetime_t 	null,
-    closed_gps_la 	gps_t 		null,
-    closed_gps_lo 	gps_t 		null,
-    w_cookie 		uid_t 		not null,
-    a_cookie 		uid_t 		not null,
-    doc_note 		note_t 		null,
-    activity_type_id 	uid_t 		not null,
-    prod_id 		uid_t 		not null,
-    photo 		blob_t 		not null
-);
-
-create index i_user_id_h_pt on h_pt (user_id);
-create index i_fix_date_h_pt on h_pt (left(fix_dt,10));
-create index i_doc_no_h_pt on h_pt (doc_no);
-create index i_account_id_h_pt on h_pt (account_id);
-create index i_exist_h_pt on h_pt (user_id, dev_pack, dev_id, fix_dt);
-
-create trigger trig_lock_update before update on h_pt for each row execute procedure tf_lock_update();
-
 create table h_quest (
     doc_id 		uid_t 		not null primary key default doc_id(),
     inserted_ts 	ts_auto_t 	not null,
@@ -5927,20 +5887,6 @@ begin
 end;
 $BODY$ language plpgsql STABLE;
 
-
-create table pt_stream (
-    doc_id 		uid_t		not null primary key,
-    photo 		blob_t 		not null,
-    inserted_ts		ts_auto_t 	not null,
-    prod_id 		uid_t 		null,
-    price 		currency_t 	null,
-    promo 		bool_t 		null,
-    plu_code 		code_t 		null,
-    name 		descr_t 	null,
-    art 		code_t 		null,
-    barcode 		ean13 		null,
-    processing_ts 	ts_t 		null
-);
 
 create table pack_stream (
     pack_id		int64_t		not null primary key default nextval('seq_pack_stream'),
