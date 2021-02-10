@@ -4,7 +4,7 @@
     ldap.uri="ldap://127.0.0.1:389" 
     ldap.bind_dn="uid=omobusd,ou=services,dc=omobus,dc=local"
     ldap.bind_pw="0"
-    ldap.base="ou=distributors,dc=omobus,dc=local"
+    ldap.base="ou=distributors,ou=data,dc=omobus,dc=local"
     ldap.filter="(&amp;(objectClass=PureFTPdUser)(objectClass=omobusMaintainPoint)(FTPStatus=enabled)(exchangeStatus=enabled)(!(groupName=agent))(!(groupName=zero)))"
     Xldap.tls="yes"
     ftp.host="127.0.0.1"
