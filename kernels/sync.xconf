@@ -125,9 +125,6 @@
 <xi:include href="../queries/sync/support.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/target_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/testing_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/testing_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/testings_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/training_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/training_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/trainings_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -328,8 +325,6 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <rating_scores />
     <reclamation_types />
     <shelf_lifes />
-    <testing_criterias hierarchy="testing_criteria_id" />
-    <testing_scores />
     <target_types />
     <training_types />
     <unsched_types />
@@ -428,9 +423,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<agreements2 key="account_id" strict="yes" />
 	<blacklist key="account_id" />
 	<checkup_defaults key="account_id" strict="yes" />
-	<contacts key="account_id">
-	    <testings_history key="contact_id" strict="yes" />
-	</contacts>
+	<contacts key="account_id" />
 	<debts key="account_id" strict="yes" />
 	<discounts key="account_id" />
 	<equipments key="account_id" strict="yes" />

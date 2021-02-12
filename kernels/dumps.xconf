@@ -45,7 +45,6 @@
 <xi:include href="../queries/dumps/routes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/Share-of-Shelf.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/testings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/trainings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 
 <!-- **** FILTERS: BEGIN **** -->
@@ -100,7 +99,6 @@ order by user_id
 	    <reclamations key="account_id" strict="yes" />
 	    <Share-of-Shelf key="account_id" strict="yes" />
 	    <stocks key="account_id" strict="yes" />
-	    <testings key="account_id" strict="yes" />
 	    <trainings key="account_id" strict="yes" />
 	</my_habitat>
 	<routes key="user_id" strict="yes" />

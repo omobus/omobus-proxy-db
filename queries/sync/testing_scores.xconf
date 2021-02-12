@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<testing_scores templ="%testing_score_id%;%descr%;%wf%;%score%;" empty="no">
-  <![CDATA[ 
-select testing_score_id, descr, wf, score from testing_scores
-    where hidden = 0
-order by row_no, descr
-  ]]>
-</testing_scores>

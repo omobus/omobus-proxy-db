@@ -52,7 +52,6 @@
 <xi:include href="../queries/docs/shelf.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/stock.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/target.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/docs/testing.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/training.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/unsched.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/docs/wish.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

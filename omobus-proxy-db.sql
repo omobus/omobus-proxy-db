@@ -2463,39 +2463,6 @@ create table target_types (
 
 create trigger trig_updated_ts before update on target_types for each row execute procedure tf_updated_ts();
 
-create table testing_criterias (
-    testing_criteria_id uid_t 		not null primary key default man_id(),
-    pid 		uid_t 		null,
-    ftype 		ftype_t 	not null,
-    descr 		descr_t 	not null,
-    wf 			wf_t 		null check((ftype=0 and wf is not null and wf between 0.01 and 1.00) or (ftype<>0 and wf is null)),
-    mandatory 		bool_t 		null check((ftype=0 and mandatory is not null) or (ftype<>0 and mandatory is null)),
-    extra_info 		note_t 		null,
-    row_no 		int32_t 	null, -- ordering
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
-);
-
-create index i_db_ids_testing_criterias on testing_criterias using GIN (db_ids);
-create trigger trig_updated_ts before update on testing_criterias for each row execute procedure tf_updated_ts();
-
-create table testing_scores (
-    testing_score_id 	uid_t 		not null primary key default man_id(),
-    descr 		descr_t 	not null,
-    score 		int32_t 	not null check(score >= 0),
-    wf 			wf_t 		not null check(wf between 0.00 and 1.00),
-    row_no 		int32_t 	null, -- ordering
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
-);
-
-create index i_db_ids_testing_scores on testing_scores using GIN (db_ids);
-create trigger trig_updated_ts before update on testing_scores for each row execute procedure tf_updated_ts();
-
 create table tickets (
     ticket_id 		uid_t 		not null primary key default nextval('seq_tickets'),
     user_id 		uid_t 		not null,
@@ -4685,54 +4652,6 @@ create index i_exist_h_target on h_target (user_id, dev_pack, dev_id, fix_dt);
 
 create trigger trig_lock_update before update on h_target for each row execute procedure tf_lock_update();
 
-create table h_testing (
-    doc_id 		uid_t 		not null primary key default doc_id(),
-    inserted_ts 	ts_auto_t 	not null,
-    inserted_node 	hostname_t 	not null,
-    dev_pack 		int32_t 	not null,
-    doc_no 		uid_t 		not null,
-    dev_id 		devid_t 	not null,
-    dev_login 		uid_t 		not null,
-    user_id 		uid_t 		not null,
-    account_id 		uid_t 		not null,
-    fix_dt 		datetime_t 	not null,
-    created_dt 		datetime_t 	not null,
-    created_gps_dt 	datetime_t 	null,
-    created_gps_la 	gps_t 		null,
-    created_gps_lo 	gps_t 		null,
-    closed_dt 		datetime_t 	not null,
-    closed_gps_dt 	datetime_t 	null,
-    closed_gps_la 	gps_t 		null,
-    closed_gps_lo 	gps_t 		null,
-    w_cookie 		uid_t 		not null,
-    a_cookie 		uid_t 		not null,
-    activity_type_id 	uid_t 		not null,
-    rows 		int32_t 	not null,
-    contact_id 		uid_t 		not null,
-    sla 		numeric(6,5)	not null check(sla between 0.0 and 1.0)
-);
-
-create table t_testing (
-    doc_id 		uid_t 		not null,
-    row_no 		int32_t 	not null check (row_no >= 0),
-    testing_criteria_id uid_t 		not null,
-    testing_score_id 	uid_t 		null,
-    criteria_wf 	wf_t 		not null check(criteria_wf between 0.01 and 1.00),
-    score_wf 		wf_t 		null check(score_wf between 0.00 and 1.00),
-    score 		int32_t 	null check (score >= 0),
-    note 		note_t 		null,
-    primary key (doc_id, testing_criteria_id)
-);
-
-create index i_fix_date_h_testing on h_testing (left(fix_dt,10));
-create index i_doc_no_h_testing on h_testing (doc_no);
-create index i_account_id_h_testing on h_testing (account_id);
-create index i_user_id_h_testing on h_testing (user_id);
-create index i_exist_h_testing on h_testing (user_id, dev_pack, dev_id, fix_dt);
-
-create trigger trig_lock_update before update on h_testing for each row execute procedure tf_lock_update();
-create trigger trig_lock_update before update on t_testing for each row execute procedure tf_lock_update();
-
 create table h_training (
     doc_id 		uid_t 		not null primary key default doc_id(),
     inserted_ts 	ts_auto_t 	not null,
@@ -5074,30 +4993,6 @@ create table dyn_stocks (
 create index i_2lts_dyn_stocks on dyn_stocks (updated_ts);
 
 create trigger trig_updated_ts before update on dyn_stocks for each row execute procedure tf_updated_ts();
-
-create table dyn_testings (
-    fix_date		date_t 		not null,
-    contact_id 		uid_t 		not null,
-    testing_criteria_id uid_t 		not null,
-    testing_score_id 	uid_t 		null,
-    criteria_wf 	wf_t 		not null check(criteria_wf between 0.01 and 1.00),
-    score_wf 		wf_t 		null check(score_wf between 0.00 and 1.00),
-    score 		int32_t 	null check (score >= 0),
-    note 		note_t 		null,
-    sla 		numeric(6,5)	not null check(sla between 0.0 and 1.0),
-    fix_dt		datetime_t 	not null,
-    account_id 		uid_t 		not null,
-    user_id 		uid_t 		not null,
-    doc_id 		uid_t 		not null,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts		ts_auto_t 	not null,
-    "_isRecentData"	bool_t 		null,
-    primary key(fix_date, contact_id, testing_criteria_id)
-);
-
-create index i_2lts_dyn_testings on dyn_testings (updated_ts);
-
-create trigger trig_updated_ts before update on dyn_testings for each row execute procedure tf_updated_ts();
 
 create table j_acts (
     act_id 		uid_t 		not null primary key,

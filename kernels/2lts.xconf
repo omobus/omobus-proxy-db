@@ -65,7 +65,6 @@
 <xi:include href="../queries/2lts/dyn_reviews.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/dyn_shelfs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/dyn_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/2lts/dyn_testings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/equipment_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/equipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/holidays.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -110,8 +109,6 @@
 <xi:include href="../queries/2lts/shelf_lifes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/target_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/2lts/testing_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/2lts/testing_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/thumbnails.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/training_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/training_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -169,7 +166,6 @@
     <dyn_reviews />
     <dyn_shelfs />
     <dyn_stocks />
-    <dyn_testings />
     <equipment_types />
     <equipments />
     <holidays />
@@ -214,8 +210,6 @@
     <shelf_lifes />
     <targets />
     <target_types />
-    <testing_criterias />
-    <testing_scores />
     <thumbnails />
     <training_materials />
     <training_types />

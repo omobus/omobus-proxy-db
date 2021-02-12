@@ -58,7 +58,6 @@ begin
     delete from dyn_reviews where fix_date < gc_date;
     delete from dyn_shelfs where fix_date < gc_date;
     delete from dyn_stocks where fix_date < gc_date;
-    delete from dyn_testings where fix_date < gc_date;
 
     delete from a_airplane where left(fix_dt,10) < gc_date;
     delete from a_applog where left(fix_dt,10) < gc_date;
@@ -155,10 +154,6 @@ begin
 	delete from h_stock where doc_id = i;
     end loop;
     delete from h_target where left(fix_dt,10) < gc_date;
-    for i in select doc_id from h_testing where left(fix_dt,10) < gc_date loop
-	delete from t_testing where doc_id = i;
-	delete from h_testing where doc_id = i;
-    end loop;
     delete from h_training where left(fix_dt,10) < gc_date;
     delete from h_unsched where left(fix_dt,10) < gc_date;
     delete from h_wish where left(fix_dt,10) < gc_date;

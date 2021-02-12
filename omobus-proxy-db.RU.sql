@@ -318,11 +318,6 @@ insert into target_types(target_type_id, descr, row_no) values('target:normal', 
 insert into target_types(target_type_id, descr, row_no) values('target:permanent', 'ЗАДАЧА на каждом посещении с ОБЯЗАТЕЛЬНОЙ фотографией', 2);
 insert into target_types(target_type_id, descr, row_no, selectable) values('yes:no', 'Анкетирование (ответ Да или Нет)', 90, 0);
 
-delete from testing_scores;
-insert into testing_scores(testing_score_id, descr, score, wf) values('0', '<b>Оценка: 0 баллов</b> (имеются серьезные недостатки)', 0, 0);
-insert into testing_scores(testing_score_id, descr, score, wf) values('1', '<b>Оценка: 1 балл</b> (имеются незначительные недостатки)', 1, 0.5);
-insert into testing_scores(testing_score_id, descr, score, wf) values('2', '<b>Оценка: 2 балла</b> (недостатки не обнаружены)', 2, 1);
-
 delete from training_types;
 insert into training_types(training_type_id, descr) values('0', 'Индивидуальное');
 insert into training_types(training_type_id, descr) values('1', 'Фармкружок');
@@ -504,7 +499,6 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_hist
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','shelf', 'Доля полки / доля в ассортименте в категории $(categ): $(sos)% / $(soa)%.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','stocks', 'Ревизия складских остатков.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','target', 'Задача: $(subject).');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','testing', 'Тестирование $(surname) $(name): $(sla)%.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','training', 'Обучение персонала: $(training_type).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','audit','В ходе выполнения аудита размещения продукции от <i>$(fix_date)</i> обнаружены следующие <b><i>нарушения</i></b>:<br/><br/>$(violations)<br/><br/>Итоговый SLA: <b>$(sla)%</b>.<br/>Автор: <b>$(u_name)</b>.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','audit/positive','В ходе выполнения аудита размещения продукции от <i>$(fix_date)</i> нарушений <b><i>НЕ выявлено</i></b>:<br/><br/>$(violations)<br/><br/>Автор: <b>$(u_name)</b>.');

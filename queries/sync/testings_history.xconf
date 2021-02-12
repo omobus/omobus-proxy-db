@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<testings_history templ="%fix_date%;%contact_id%;%testing_criteria_id%;%score%;%note%;%latest%;" empty="no">
-  <![CDATA[ 
-select fix_date, contact_id, testing_criteria_id, score, note, "_isRecentData" latest from dyn_testings
-    where score is not null and fix_date < current_date::date_t
-order by contact_id, testing_criteria_id, fix_date desc
-  ]]>
-</testings_history>

@@ -23,7 +23,6 @@
 <xi:include href="../queries/content/stat_reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/stat_shelfs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/stat_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/content/stat_testings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/stat_trainings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/targets_compliance.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/tech.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -47,7 +46,6 @@
 <xi:include href="../queries/content/tech_shelfs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/tech_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/tech_targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/content/tech_testings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/tech_trainings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/content/time.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 </content>

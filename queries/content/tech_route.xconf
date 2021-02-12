@@ -476,29 +476,6 @@ where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
 order by h.fix_dt
   ]]>
 	</targets>
-	<testings_L0>
-  <![CDATA[
-select
-    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, 
-    c.name, c.surname, c.patronymic, round(100*h.sla,1) sla, j.descr job_title
-from h_testing h
-    left join contacts c on c.contact_id = h.contact_id
-    left join job_titles j on j.job_title_id = c.job_title_id
-where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*%e_date%*/
-order by h.fix_dt, h.doc_id
-  ]]>
-	</testings_L0>
-	<testings_L1>
-  <![CDATA[
-select t.doc_id, t.row_no, x.descr, t.score, t.note, t.testing_criteria_id _pkey from (
-	select doc_id, row_no, testing_criteria_id, score, note from t_testing where doc_id in (
-	    select doc_id from h_testing where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
-	)
-    ) t
-    left join testing_criterias x on x.testing_criteria_id = t.testing_criteria_id
-order by t.doc_id, t.row_no, x.descr
-  ]]>
-	</testings_L1>
 	<trainings_L0>
   <![CDATA[
 select 
@@ -1100,33 +1077,6 @@ rt.foreach(_stocks_L1, function(q, i, cols)
     end
 end)
 tb.targets = rt.groups(_targets, "account_id", function(r, n, a) r[n] = n == "duration" and tonumber(a) or a; end)
-idx = {}; tb.testings = rt.groups(_testings_L0, "account_id", function(r, n, a)
-    if n == "doc_id" then
-	r.rows = {}; idx[a] = r.rows; r[n] = a
-    elseif std.contains({'duration','sla'}, n) then
-	r[n] = tonumber(a)
-    else
-	r[n] = a
-    end
-end)
-rt.foreach(_testings_L1, function(q, i, cols)
-    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
-    if r ~= nil then
-	local x = {}
-	for j = 0, cols-1 do
-	    local n = rowset_colname(q, j)
-	    local a = rowset_value(q, i, j)
-	    if a ~= nil and n ~= "doc_id" then
-		if std.contains({'row_no','score'}, n) then
-		    x[n] = tonumber(a)
-		else
-		    x[n] = a
-		end
-	    end
-	end
-	table.insert(r, x)
-    end
-end)
 idx = {}; tb.trainings = rt.groups(_trainings_L0, "account_id", function(r, n, a) 
     if n == "doc_id" then
 	r.contacts = {}; idx[a] = r.contacts; r[n] = a

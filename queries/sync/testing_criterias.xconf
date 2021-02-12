@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<testing_criterias templ="%testing_criteria_id%;%descr%;%wf%;%mandatory%;%extra_info%;%delim%;" empty="no">
-  <![CDATA[ 
-select testing_criteria_id, pid, ftype, descr, wf, mandatory, extra_info, case when ftype=0 then null else 1 end delim from testing_criterias
-    where hidden = 0
-order by row_no, descr
-  ]]>
-</testing_criterias>
