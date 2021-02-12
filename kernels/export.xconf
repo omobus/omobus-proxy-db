@@ -26,7 +26,6 @@
 <xi:include href="../queries/export/activity_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/additions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/deletions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/export/discards.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/locations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/export/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -57,7 +56,6 @@ select user_id, unnest(db_ids) person_id from users
     <users personalize='ErpCode'>
 	<additions key="user_id" />
 	<deletions key="user_id" />
-	<discards key="user_id" />
 	<locations key="user_id" />
 	<wishes key="user_id" />
     </users>
