@@ -28,24 +28,24 @@
 <xi:include href="../queries/dumps/access-log.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/action-log.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/advt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/audits.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/checkups.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/confirmations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/contacts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<!-- temporarily locked: <xi:include href="../queries/dumps/advt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
+<!-- temporarily locked: <xi:include href="../queries/dumps/audits.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
+<!-- temporarily locked: <xi:include href="../queries/dumps/checkups.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
+<!-- temporarily locked: <xi:include href="../queries/dumps/confirmations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
+<!-- temporarily locked: <xi:include href="../queries/dumps/contacts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
 <xi:include href="../queries/dumps/equipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/dumps/locstate-log.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/Out-of-Stock.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<!-- temporarily locked: <xi:include href="../queries/dumps/Out-of-Stock.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
+<!-- temporarily locked: <xi:include href="../queries/dumps/orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
 <xi:include href="../queries/dumps/presences.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/presentations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/quests.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<!-- temporarily locked: <xi:include href="../queries/dumps/presentations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
+<!-- temporarily locked: <xi:include href="../queries/dumps/prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
+<!-- temporarily locked: <xi:include href="../queries/dumps/quests.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
+<!-- temporarily locked: <xi:include href="../queries/dumps/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
 <xi:include href="../queries/dumps/routes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/Share-of-Shelf.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<!-- temporarily locked: <xi:include href="../queries/dumps/Share-of-Shelf.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
 <xi:include href="../queries/dumps/stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/dumps/trainings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<!-- temporarily locked: <xi:include href="../queries/dumps/trainings.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> -->
 
 <!-- **** FILTERS: BEGIN **** -->
 <my_habitat>
@@ -84,22 +84,22 @@ order by user_id
 	<locstate-log key="user_id" strict="yes" />
 	<my_habitat key="user_id" strict="yes">
 	    <accounts key="account_id" strict="yes" />
-	    <advt key="account_id" strict="yes" />
-	    <audits key="account_id" strict="yes" />
-	    <checkups key="account_id" strict="yes" />
-	    <confirmations key="account_id" strict="yes" />
-	    <contacts key="account_id" strict="yes" />
+	    <!-- temporarily locked: <advt key="account_id" strict="yes" />-->
+	    <!-- temporarily locked: <audits key="account_id" strict="yes" />-->
+	    <!-- temporarily locked: <checkups key="account_id" strict="yes" />-->
+	    <!-- temporarily locked: <confirmations key="account_id" strict="yes" />-->
+	    <!-- temporarily locked: <contacts key="account_id" strict="yes" />-->
 	    <equipments key="account_id" strict="yes" />
-	    <Out-of-Stock key="account_id" strict="yes" />
-	    <orders key="account_id" strict="yes" />
+	    <!-- temporarily locked: <Out-of-Stock key="account_id" strict="yes" /> -->
+	    <!-- temporarily locked: <orders key="account_id" strict="yes" /> -->
 	    <presences key="account_id" strict="yes" />
-	    <presentations key="account_id" strict="yes" />
-	    <prices key="account_id" strict="yes" />
-	    <quests key="account_id" strict="yes" />
-	    <reclamations key="account_id" strict="yes" />
-	    <Share-of-Shelf key="account_id" strict="yes" />
+	    <!-- temporarily locked: <presentations key="account_id" strict="yes" />-->
+	    <!-- temporarily locked: <prices key="account_id" strict="yes" /> -->
+	    <!-- temporarily locked: <quests key="account_id" strict="yes" /> -->
+	    <!-- temporarily locked: <reclamations key="account_id" strict="yes" /> -->
+	    <!-- temporarily locked: <Share-of-Shelf key="account_id" strict="yes" /> -->
 	    <stocks key="account_id" strict="yes" />
-	    <trainings key="account_id" strict="yes" />
+	    <!-- temporarily locked: <trainings key="account_id" strict="yes" /> -->
 	</my_habitat>
 	<routes key="user_id" strict="yes" />
     </users>
