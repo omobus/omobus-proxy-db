@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <retail_chains templ="%rc_id%;%descr%;" empty="no">
   <![CDATA[ 
-select rc_id, descr, ka_code from retail_chains
+select rc_id, descr, ka_type from retail_chains
     where hidden = 0
 order by descr
   ]]>

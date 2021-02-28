@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<advt templ="%user_id%,%u_name%,%department%,%year%,%month%,%fix_date%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%placement%,%posm_id%,%posm_name%,%brand%,%qty%,%head_name%,%fix_dt%" empty="no">
+<advt templ="%user_id%,%u_name%,%department%,%year%,%month%,%fix_date%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_type%,%a_category%,%channel%,%region%,%city%,%placement%,%posm_id%,%posm_name%,%brand%,%qty%,%head_name%,%fix_dt%" empty="no">
   <![CDATA[
 select
     d.user_id,
@@ -13,7 +13,7 @@ select
     quote_csv_string(a.descr) a_name,
     quote_csv_string(a.address) address,
     quote_csv_string(rc.descr) retail_chain,
-    quote_csv_string(rc.ka_code) ka_code,
+    quote_csv_string(rc.ka_type) ka_type,
     quote_csv_string(o.descr) a_category,
     quote_csv_string(n.descr) channel,
     quote_csv_string(r.descr) region,

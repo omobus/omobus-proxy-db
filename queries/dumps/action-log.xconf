@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<action-log templ="%user_id%,%u_name%,%fix_dt%,%obj_code%,%obj_type%,%duration%,%rows%,%doc_no%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%" empty="no">
+<action-log templ="%user_id%,%u_name%,%fix_dt%,%obj_code%,%obj_type%,%duration%,%rows%,%doc_no%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_type%,%a_category%,%channel%,%region%,%city%" empty="no">
   <![CDATA[
 select
     quote_csv_string(x.user_id) user_id,
@@ -15,7 +15,7 @@ select
     quote_csv_string(a.descr) a_name,
     quote_csv_string(a.address) address,
     quote_csv_string(rc.descr) retail_chain,
-    quote_csv_string(rc.ka_code) ka_code,
+    quote_csv_string(rc.ka_type) ka_type,
     quote_csv_string(o.descr) a_category,
     quote_csv_string(n.descr) channel,
     quote_csv_string(r.descr) region,

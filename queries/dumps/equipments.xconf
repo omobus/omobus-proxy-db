@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<equipments templ="%equipment_id%,%serial_number%,%equipment_type%,%ownership_type%,%extra_info%,%photoref%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_code%,%a_category%,%channel%,%region%,%city%,%author_name%,%inserted_ts%,%updated_ts%" empty="no">
+<equipments templ="%equipment_id%,%serial_number%,%equipment_type%,%ownership_type%,%extra_info%,%photoref%,%account_id%,%a_code%,%a_name%,%address%,%retail_chain%,%ka_type%,%a_category%,%channel%,%region%,%city%,%author_name%,%inserted_ts%,%updated_ts%" empty="no">
   <![CDATA[
 select
     quote_csv_string(d.equipment_id) equipment_id,
@@ -13,7 +13,7 @@ select
     quote_csv_string(a.descr) a_name,
     quote_csv_string(a.address) address,
     quote_csv_string(rc.descr) retail_chain,
-    quote_csv_string(rc.ka_code) ka_code,
+    quote_csv_string(rc.ka_type) ka_type,
     quote_csv_string(o.descr) a_category,
     quote_csv_string(n.descr) channel,
     quote_csv_string(r.descr) region,

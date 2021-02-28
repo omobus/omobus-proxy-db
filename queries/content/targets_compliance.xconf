@@ -10,7 +10,7 @@ select
     x.account_id, a.code a_code, a.descr a_name, a.address,
     reg.descr region,
     c.descr city,
-    a.rc_id, r.descr rc, r.ka_code,
+    a.rc_id, r.descr rc, r.ka_type,
     p.descr poten,
     a.chan_id, ch.descr chan,
     t.image::varchar blob_id, ts.guid::varchar "ref",

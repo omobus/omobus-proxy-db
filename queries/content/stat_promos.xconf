@@ -11,7 +11,7 @@ select
     h.account_id, a.code a_code, a.descr a_name, a.address, 
     reg.descr region, 
     c.descr city, 
-    a.rc_id, r.descr rc, r.ka_code,
+    a.rc_id, r.descr rc, r.ka_type,
     p.descr poten,
     a.chan_id, ch.descr chan,
     h.categ_id, k.descr categ,
