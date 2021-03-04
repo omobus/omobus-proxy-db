@@ -88,6 +88,8 @@ begin
 		'u_name',(select descr from users where user_id='%user_id_sys%')
 	    ]);
 	end loop;
+
+	raise notice '[statfs] OOM violation detected (user_id=%user_id_sys%, fix_date=%)', f_date;
     end if;
 end;
 $$;
