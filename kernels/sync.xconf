@@ -333,7 +333,7 @@ select unnest(brand_ids) brand_id, tm_id from training_materials where brand_ids
 select null brand_id, tm_id from training_materials where brand_ids is null and hidden=0
     order by 1, 2
     ]]>
-</my_training_materialsL2>
+</my_training_materialsL3>
 <my_training_typesL2>
     <![CDATA[
 select unnest(dep_ids) dep_id, training_type_id from training_types where dep_ids is not null and hidden=0
@@ -437,7 +437,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<targets key="dep_id" />
 	<my_training_materialsL2 key="dep_id">
 	    <training_materials key="tm_id" />
-	</my_trainint_materialsL2>
+	</my_training_materialsL2>
 	<my_training_typesL2 key="dep_id">
 	    <training_types key="training_type_id" />
 	</my_training_typesL2>
@@ -571,6 +571,7 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<account_prices key="prod_id" strict="yes" />
 	<agreements2 key="prod_id" strict="yes" />
 	<brands key="brand_id">
+	    <manufacturers key="manuf_id" strict="yes" />
 	    <my_planogramsL3 key="brand_id">
 		<planograms key="pl_id" />
 	    </my_planogramsL3>
