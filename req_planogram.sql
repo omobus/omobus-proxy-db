@@ -2,8 +2,9 @@
 
 create type console.planogram_t as (
     descr descr_t,
-    country_id uid_t,
     brand_ids uids_t,
+    country_id uid_t,
+    dep_ids uids_t,
     rc_id uid_t,
     chan_ids uids_t,
     b_date date_t,
@@ -35,8 +36,9 @@ begin
 
 	update planograms set 
 	    descr = (_opt).descr, 
-	    country_id = (_opt).country_id, 
 	    brand_ids = (_opt).brand_ids, 
+	    country_id = (_opt).country_id, 
+	    dep_ids = (_opt).dep_ids,
 	    rc_id = (_opt).rc_id,
 	    chan_ids = (_opt).chan_ids, 
 	    b_date = (_opt).b_date, 
@@ -51,8 +53,11 @@ begin
     hs := hstore(array['pl_id',_pl_id]);
     if( _opt is not null ) then
 	hs := hs || hstore(array['descr',(_opt).descr]);
-	hs := hs || hstore(array['country_id',(_opt).country_id]);
 	hs := hs || hstore(array['brand_ids',array_to_string((_opt).brand_ids,',')]);
+	hs := hs || hstore(array['country_id',(_opt).country_id]);
+	if( (_opt).dep_ids is not null ) then
+	    hs := hs || hstore(array['dep_ids',(_opt).dep_ids]);
+	end if;
 	if( (_opt).rc_id is not null ) then
 	    hs := hs || hstore(array['rc_id',(_opt).rc_id]);
 	end if;

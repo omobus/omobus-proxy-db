@@ -1151,7 +1151,6 @@ create table brands (
     brand_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
     manuf_id 		uid_t 		not null,
-    dep_id		uid_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
@@ -1489,8 +1488,8 @@ create table info_materials (
     content_type 	varchar(32) 	not null default 'application/pdf',
     rc_id 		uid_t 		null,
     chan_ids 		uids_t 		null,
-    dep_id 		uid_t		null,
     country_id 		country_t 	not null,
+    dep_ids 		uids_t		null,
     b_date 		date_t 		null,
     e_date 		date_t 		null,
     author_id 		uid_t 		not null,
@@ -1727,7 +1726,7 @@ create trigger trig_updated_ts before update on my_routes for each row execute p
 create table oos_types (
     oos_type_id		uid_t		not null primary key default man_id(),
     descr		descr_t		not null,
-    dep_id		uid_t		null,
+    dep_ids 		uids_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden		bool_t		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
@@ -1890,6 +1889,7 @@ create table planograms (
     rc_id 		uid_t 		null,
     chan_ids 		uids_t 		null,
     country_id		country_t 	not null,
+    dep_ids 		uids_t		null,
     b_date 		date_t 		null,
     e_date 		date_t 		null,
     author_id 		uid_t 		not null,
@@ -1936,6 +1936,7 @@ create table pos_materials ( /* Point-of-Sale and Point-of-Purchase materials */
     placement_ids 	uids_t 		null,
     chan_ids 		uids_t 		null,
     country_id		country_t 	not null,
+    dep_ids 		uids_t		null,
     b_date 		date_t 		null,
     e_date 		date_t 		null,
     author_id 		uid_t 		not null,
@@ -1992,6 +1993,7 @@ create table products (
     barcodes 		ean13 array 	null,
     image 		blob_t 		null,
     country_ids 	countries_t 	null,
+    dep_ids		uids_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
@@ -2056,7 +2058,7 @@ create table rating_criterias (
     pid 		uid_t 		null,
     ftype 		ftype_t 	not null,
     descr 		descr_t 	not null,
-    dep_id 		uid_t 		null,
+    dep_ids 		uids_t		null,
     wf 			wf_t 		null check((ftype=0 and wf is not null and wf between 0.01 and 1.00) or (ftype<>0 and wf is null)),
     mandatory 		bool_t 		null check((ftype=0 and mandatory is not null) or (ftype<>0 and mandatory is null)),
     extra_info 		note_t 		null,
@@ -2484,6 +2486,7 @@ create table training_materials (
     content_type 	varchar(32) 	not null default 'application/pdf',
     brand_ids 		uids_t 		null,
     country_id		country_t 	not null,
+    dep_ids 		uids_t		null,
     b_date 		date_t 		null,
     e_date 		date_t 		null,
     author_id 		uid_t 		not null,
@@ -2497,7 +2500,7 @@ create trigger trig_updated_ts before update on training_materials for each row 
 create table training_types (
     training_type_id	uid_t		not null primary key default man_id(),
     descr		descr_t		not null,
-    dep_id		uid_t		null,
+    dep_ids 		uids_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden		bool_t		not null default 0,
     inserted_ts 	ts_auto_t 	not null,

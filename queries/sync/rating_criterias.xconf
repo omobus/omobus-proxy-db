@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rating_criterias templ="%rating_criteria_id%;%descr%;%dep_id%;%wf%;%mandatory%;%extra_info%;%delim%;" empty="no">
+<rating_criterias templ="%rating_criteria_id%;%descr%;%dep_ids%;%wf%;%mandatory%;%extra_info%;%delim%;" empty="no">
   <![CDATA[ 
-select rating_criteria_id, pid, ftype, descr, dep_id, wf, mandatory, extra_info, case when ftype=0 then null else 1 end delim from rating_criterias
+select 
+    case when ftype=0 then rating_criteria_id else null end fid,
+    rating_criteria_id, 
+    pid, 
+    ftype, 
+    descr, 
+    array_to_string(dep_ids,',') dep_ids, 
+    wf, 
+    mandatory, 
+    extra_info, 
+    case when ftype=0 then null else 1 end delim 
+from rating_criterias
     where hidden = 0
 order by row_no, descr
   ]]>

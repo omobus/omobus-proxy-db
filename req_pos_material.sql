@@ -2,9 +2,10 @@
 
 create type console.pos_material_t as (
     descr descr_t,
-    country_id uid_t,
     brand_ids uids_t,
     placement_ids uids_t,
+    country_id uid_t,
+    dep_ids uids_t,
     chan_ids uids_t,
     b_date date_t,
     e_date date_t
@@ -35,8 +36,9 @@ begin
 
 	update pos_materials set 
 	    descr = (_opt).descr, 
-	    country_id = (_opt).country_id, 
 	    brand_ids = (_opt).brand_ids, 
+	    country_id = (_opt).country_id, 
+	    dep_ids = (_opt).dep_ids,
 	    placement_ids = (_opt).placement_ids,
 	    chan_ids = (_opt).chan_ids, 
 	    b_date = (_opt).b_date, 
@@ -51,8 +53,11 @@ begin
     hs := hstore(array['posm_id',_posm_id]);
     if( _opt is not null ) then
 	hs := hs || hstore(array['descr',(_opt).descr]);
-	hs := hs || hstore(array['country_id',(_opt).country_id]);
 	hs := hs || hstore(array['brand_ids',array_to_string((_opt).brand_ids,',')]);
+	hs := hs || hstore(array['country_id',(_opt).country_id]);
+	if( (_opt).dep_ids is not null ) then
+	    hs := hs || hstore(array['dep_ids',(_opt).dep_ids]);
+	end if;
 	if( (_opt).placement_ids is not null ) then
 	    hs := hs || hstore(array['placement_ids',array_to_string((_opt).placement_ids,',')]);
 	end if;

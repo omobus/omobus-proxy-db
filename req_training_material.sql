@@ -2,8 +2,9 @@
 
 create type console.training_material_t as (
     descr descr_t,
-    country_id uid_t,
     brand_ids uids_t,
+    country_id uid_t,
+    dep_ids uids_t,
     b_date date_t,
     e_date date_t
 );
@@ -33,8 +34,9 @@ begin
 
 	update training_materials set 
 	    descr = (_opt).descr, 
-	    country_id = (_opt).country_id, 
 	    brand_ids = (_opt).brand_ids, 
+	    country_id = (_opt).country_id, 
+	    dep_ids = (_opt).dep_ids,
 	    b_date = (_opt).b_date, 
 	    e_date = (_opt).e_date, 
 	    author_id = _login
@@ -47,9 +49,12 @@ begin
     hs := hstore(array['tm_id',_tm_id]);
     if( _opt is not null ) then
 	hs := hs || hstore(array['descr',(_opt).descr]);
-	hs := hs || hstore(array['country_id',(_opt).country_id]);
 	if( (_opt).brand_ids is not null ) then
 	    hs := hs || hstore(array['brand_ids',array_to_string((_opt).brand_ids,',')]);
+	end if;
+	hs := hs || hstore(array['country_id',(_opt).country_id]);
+	if( (_opt).dep_ids is not null ) then
+	    hs := hs || hstore(array['dep_ids',(_opt).dep_ids]);
 	end if;
 	if( (_opt).b_date is not null ) then
 	    hs := hs || hstore(array['b_date',(_opt).b_date]);

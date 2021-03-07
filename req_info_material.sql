@@ -3,7 +3,7 @@
 create type console.info_material_t as (
     descr descr_t,
     country_id uid_t,
-    dep_id uid_t,
+    dep_ids uids_t,
     rc_id uid_t,
     chan_ids uids_t,
     b_date date_t,
@@ -36,7 +36,7 @@ begin
 	update info_materials set 
 	    descr = (_opt).descr, 
 	    country_id = (_opt).country_id, 
-	    dep_id = (_opt).dep_id, 
+	    dep_ids = (_opt).dep_ids, 
 	    rc_id = (_opt).rc_id, 
 	    chan_ids = (_opt).chan_ids, 
 	    b_date = (_opt).b_date, 
@@ -52,8 +52,8 @@ begin
     if( _opt is not null ) then
 	hs := hs || hstore(array['descr',(_opt).descr]);
 	hs := hs || hstore(array['country_id',(_opt).country_id]);
-	if( (_opt).dep_id is not null ) then
-	    hs := hs || hstore(array['dep_id',(_opt).dep_id]);
+	if( (_opt).dep_ids is not null ) then
+	    hs := hs || hstore(array['dep_ids',(_opt).dep_ids]);
 	end if;
 	if( (_opt).rc_id is not null ) then
 	    hs := hs || hstore(array['rc_id',(_opt).rc_id]);

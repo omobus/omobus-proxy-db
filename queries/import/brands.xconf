@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<brands templ="%brand_id%;%descr%;%manuf_id%;%dep_id%;%row_no%;">
+<brands templ="%brand_id%;%descr%;%manuf_id%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from brands
 </check_exist>
 <update>
   <![CDATA[
-update brands set descr=trim(both from '%descr%'), manuf_id='%manuf_id%', dep_id=NIL('%dep_id%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update brands set descr=trim(both from '%descr%'), manuf_id='%manuf_id%', row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where brand_id = '%brand_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into brands (brand_id, descr, manuf_id, dep_id, row_no, hidden, db_ids) 
-    values ('%brand_id%', trim(both from '%descr%'), '%manuf_id%', NIL('%dep_id%'), NIL(%row_no%), 0, array['%ErpCode%'])
+insert into brands (brand_id, descr, manuf_id, row_no, hidden, db_ids) 
+    values ('%brand_id%', trim(both from '%descr%'), '%manuf_id%', NIL(%row_no%), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>

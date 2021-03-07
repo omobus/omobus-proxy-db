@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rating_criterias templ="%rating_criteria_id%;%pid%;%ftype%;%descr%;%dep_id%;%wf%;%mandatory%;%extra_info%;%row_no%;">
+<rating_criterias templ="%rating_criteria_id%;%pid%;%ftype%;%descr%;%dep_ids%;%wf%;%mandatory%;%extra_info%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from rating_criterias
 </check_exist>
 <update>
   <![CDATA[
-update rating_criterias set pid=NIL('%pid%'), ftype=0%ftype%, descr=trim(both from '%descr%'), dep_id=NIL('%dep_id%'), wf=NIL(%wf%), mandatory=NIL(%mandatory%), extra_info=NIL(trim(both from '%extra_info%')), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update rating_criterias set pid=NIL('%pid%'), ftype=0%ftype%, descr=trim(both from '%descr%'), dep_ids=string_to_array(NIL('%dep_ids%'),','), wf=NIL(%wf%), mandatory=NIL(%mandatory%), extra_info=NIL(trim(both from '%extra_info%')), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where rating_criteria_id = '%rating_criteria_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into rating_criterias(rating_criteria_id, pid, ftype, descr, dep_id, wf, mandatory, extra_info, row_no, hidden, db_ids)
-    values('%rating_criteria_id%', NIL('%pid%'), 0%ftype%, trim(both from '%descr%'), NIL('%dep_id%'), NIL(%wf%), NIL(%mandatory%), NIL(trim(both from '%extra_info%')), NIL(%row_no%), 0, array['%ErpCode%'])
+insert into rating_criterias(rating_criteria_id, pid, ftype, descr, dep_ids, wf, mandatory, extra_info, row_no, hidden, db_ids)
+    values('%rating_criteria_id%', NIL('%pid%'), 0%ftype%, trim(both from '%descr%'), string_to_array(NIL('%dep_ids%'),','), NIL(%wf%), NIL(%mandatory%), NIL(trim(both from '%extra_info%')), NIL(%row_no%), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>

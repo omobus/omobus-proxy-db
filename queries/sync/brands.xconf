@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <brands templ="%brand_id%;%descr%;%manuf_id%;" empty="no">
   <![CDATA[ 
-select b.brand_id, b.descr, b.manuf_id, b.dep_id from brands b, manufacturers m
+select b.brand_id, b.descr, b.manuf_id from brands b, manufacturers m
     where b.hidden = 0 and b.manuf_id = m.manuf_id
 order by m.competitor nulls first, b.row_no, b.descr
   ]]>
