@@ -158,7 +158,7 @@ begin
     delete from h_unsched where left(fix_dt,10) < gc_date;
     delete from h_wish where left(fix_dt,10) < gc_date;
 
-    delete from blob_stream where inserted_ts::date_t < gc_date;
+    /* temporarily locked: delete from blob_stream where inserted_ts::date_t < gc_date; */
     delete from content_stream where e_date < gc_date and e_date != '';
     delete from "content_stream.ghost" where e_date < gc_date and e_date != '';
     if( f > 0 ) then
