@@ -5390,8 +5390,15 @@ create or replace function content_get(_content_code code_t, _user_id uid_t, _b_
 	where content_ts is not null and content_blob is not null and user_id=_user_id and b_date=_b_date::date_t and e_date=_e_date::date_t and content_code=_content_code;
 $BODY$ language sql STABLE;
 
+create table data_sources (
+    db_id 		uid_t 		not null primary key,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null
+);
 
-create table data_stream ( /* data streams, that imported to the stogage */
+create trigger trig_updated_ts before update on data_sources for each row execute procedure tf_updated_ts();
+
+create table data_stream ( /* data streams, that imported to the storage */
     s_id 		varchar(256) 	not null primary key,
     digest 		varchar(32) 	not null,
     inserted_ts 	ts_auto_t 	not null,

@@ -38,6 +38,9 @@ begin
     if( a > 0 ) then
 	raise notice '[content_stream] % row(-s) require updating (point: %uid%, erp: %ErpCode%).', a;
     end if;
+
+    insert into data_sources(db_id) values('%ErpCode%')
+	on conflict (db_id) do update set updated_ts = current_timestamp;
 end;
 $$;
   ]]>
