@@ -111,6 +111,14 @@ end;
 $body$
 language plpgsql IMMUTABLE;
 
+create or replace function NIL(arg bigint) returns bigint as
+$body$
+begin
+    return arg;
+end;
+$body$
+language plpgsql IMMUTABLE;
+
 create or replace function NIL() returns integer as
 $body$
 begin
@@ -2763,7 +2771,7 @@ create table a_exchange (
     status 		varchar(8) 	not null check (status in ('success','failed') and status = lower(status)),
     packets 		int32_t 	null,
     corrupted 		int32_t 	null,
-    bytes 		int32_t 	null,
+    bytes 		int64_t 	null,
     duration 		int32_t 	null, /* msecs. */
     msg 		varchar(512) 	null
 );
