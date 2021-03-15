@@ -87,11 +87,8 @@ begin
     if( f_date >= (select max(fix_dt::date_t) from h_advt where account_id='%account_id%' group by account_id) ) then
 	update dyn_advt set "_isRecentData" = null where account_id='%account_id%' and posm_id in (
 	    select distinct posm_id from dyn_advt where account_id='%account_id%' and fix_date=f_date
-		union /* removes user department POS materials: */
-	    select p.posm_id from users u, brands b, pos_materials p
-		where u.user_id='%user_id_sys%' and 
-		    (u.dep_ids is null or array_length(u.dep_ids,1) is null or b.dep_id is null or b.dep_id='' or b.dep_id=any(u.dep_ids)) and
-		    b.brand_id=any(p.brand_ids)
+		union /* suppress any PoS-materials allowed to the user: */
+	    select posm_id from pos_materials where dep_ids is null or dep_ids && coalesce((select dep_ids from users where user_id='%user_id_sys%'),dep_ids)
 	) and "_isRecentData" = 1;
 	update dyn_advt set "_isRecentData" = 1 where account_id='%account_id%' and fix_date=f_date;
     end if;

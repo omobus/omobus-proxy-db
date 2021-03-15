@@ -85,11 +85,8 @@ begin
     if( f_date >= (select max(fix_dt::date_t) from h_oos where account_id='%account_id%' group by account_id) ) then
 	update dyn_oos set "_isRecentData" = null where account_id='%account_id%' and prod_id in (
 	    select distinct prod_id from dyn_oos where account_id='%account_id%' and fix_date=f_date
-		union /* removes user department products: */
-	    select prod_id from products where brand_id in (
-		select brand_id from (select dep_ids from users where user_id='%user_id_sys%') u
-		    left join brands b on u.dep_ids is null or array_length(u.dep_ids,1) is null or b.dep_id is null or b.dep_id='' or b.dep_id=any(u.dep_ids)
-	    )
+		union /* suppress any products allowed to the user: */
+	    select prod_id from products where dep_ids is null or dep_ids && coalesce((select dep_ids from users where user_id='%user_id_sys%'),dep_ids)
 	) and "_isRecentData" = 1;
 	update dyn_oos set "_isRecentData" = 1 where account_id='%account_id%' and fix_date=f_date;
     end if;
