@@ -3,6 +3,6 @@
   <![CDATA[ 
 select oos_type_id, descr from oos_types
     where hidden = 0
-order by row_no
+order by row_no, descr
   ]]>
 </oos_types>
