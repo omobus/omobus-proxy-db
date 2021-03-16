@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<planogramsL3>
+    <![CDATA[
+select unnest(chan_ids) chan_id, pl_id from planograms where chan_ids is not null and hidden = 0
+    union
+select null chan_id, pl_id from planograms where chan_ids is null and hidden = 0
+order by 1, 2
+    ]]>
+</planogramsL3>

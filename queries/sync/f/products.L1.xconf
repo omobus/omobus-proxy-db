@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<productsL1>
+    <![CDATA[
+select unnest(country_ids) country_id, prod_id fid from products where country_ids is not null and hidden = 0
+    union
+select null country_id, prod_id fid from products where country_ids is null and hidden = 0
+order by 1, 2
+    ]]>
+</productsL1>

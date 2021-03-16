@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<my_departments>
+    <![CDATA[
+select user_id person_id, unnest(dep_ids) dep_id from users
+    where hidden = 0 and dep_ids is not null and cardinality(dep_ids) > 0
+union
+select u.user_id person_id, d.dep_id from users u, departments d
+    where u.hidden = 0 and d.hidden = 0 and u.dep_ids is null
+order by 1, 2
+    ]]>
+</my_departments>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<my_reminders>
+  <![CDATA[
+select r.user_id person_id, r.reminder_id from (select unnest(user_ids) user_id, reminder_id, permanent from reminders) r
+    where r.permanent = 1  or (r.permanent = 0 and (select count(*) from h_dismiss h where h.user_id=r.user_id and h.reminder_id=r.reminder_id) = 0)
+order by r.user_id, r.reminder_id
+  ]]>
+</my_reminders>

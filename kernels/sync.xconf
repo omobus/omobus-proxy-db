@@ -34,6 +34,7 @@
 <xi:include href="../queries/sync/advt_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/agreements1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/agreements2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/asp_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/attributes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> 
 <xi:include href="../queries/sync/audit_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/audit_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -145,211 +146,37 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 <!-- **** SYSTEM: END **** -->
 
 <!-- **** FILTERS: BEGIN **** -->
-<L10n>
-    <![CDATA[
-select user_id person_id, lang_id from users
-    where hidden = 0
-order by 1, 2
-    ]]>
-</L10n>
-<my_countries>
-    <![CDATA[
-select user_id person_id, country_id from users 
-    where hidden = 0 and country_id is not null and country_id <> ''
-order by 1, 2
-    ]]>
-</my_countries>
-<my_departments>
-    <![CDATA[
-select user_id person_id, unnest(dep_ids) dep_id from users
-    where hidden = 0 and dep_ids is not null and cardinality(dep_ids) > 0
-union
-select u.user_id person_id, d.dep_id from users u, departments d
-    where u.hidden = 0 and d.hidden = 0 and u.dep_ids is null
-order by 1, 2
-    ]]>
-</my_departments>
-<my_distributors>
-    <![CDATA[
-select user_id person_id, unnest(distr_ids) distr_id from users
-    where hidden = 0
-order by 1, 2
-    ]]>
-</my_distributors>
-<!--
-<my_dbs>
-    <![CDATA[
-select user_id person_id, unnest(db_ids) db_id from users
-    where hidden = 0
-order by 1, 2
-    ]]>
-</my_dbs>
--->
-<my_habitat>
-    <![CDATA[
-select user_id, account_id fid from j_user_activities where fix_date >= (current_date + "paramInteger"('route_history:offset:left'))::date_t
-    union
-select user_id, account_id fid from my_accounts
-    union
-select distinct user_id, account_id fid from my_routes where p_date >= (current_date + "paramInteger"('route_history:offset:left'))::date_t
-    union
-select r.user_id, a.account_id fid from my_regions r, accounts a where r.region_id=a.region_id and (r.chan_id='' or r.chan_id=a.chan_id) and a.hidden=0
-    union
-select c.user_id, a.account_id fid from (select user_id, expand_cities(city_id) city_id, chan_id from my_cities) c, accounts a where c.city_id=a.city_id and (c.chan_id='' or c.chan_id=a.chan_id) and a.hidden=0
-    union
-select r.user_id, a.account_id fid from my_retail_chains r, accounts a where r.rc_id=a.rc_id and (r.region_id='' or r.region_id=a.region_id) and a.hidden=0
-    union
-select user_id, guid fid from j_additions where hidden = 0
-order by 1, 2
-    ]]>
-</my_habitat>
-<my_info_materialsL1>
-    <![CDATA[
-select unnest(chan_ids) chan_id, infom_id from info_materials where chan_ids is not null and hidden=0
-    union
-select null chan_id, infom_id from info_materials where chan_ids is null and hidden=0
-order by 1, 2
-    ]]>
-</my_info_materialsL1>
-<my_info_materialsL2>
-    <![CDATA[
-select unnest(dep_ids) dep_id, infom_id from info_materials where dep_ids is not null and hidden=0
-    union
-select null dep_id, infom_id from info_materials where dep_ids is null and hidden=0
-order by 1, 2
-    ]]>
-</my_info_materialsL2>
-<my_oos_typesL2>
-    <![CDATA[
-select unnest(dep_ids) dep_id, oos_type_id from oos_types where dep_ids is not null and hidden=0
-    union
-select null dep_id, oos_type_id from oos_types where dep_ids is null and hidden=0
-order by 1, 2
-    ]]>
-</my_oos_typesL2>
-<my_planogramsL1>
-    <![CDATA[
-select unnest(chan_ids) chan_id, pl_id from planograms where chan_ids is not null and hidden=0
-    union
-select null chan_id, pl_id from planograms where chan_ids is null and hidden=0
-order by 1, 2
-    ]]>
-</my_planogramsL1>
-<my_planogramsL2>
-    <![CDATA[
-select unnest(dep_ids) dep_id, pl_id from planograms where dep_ids is not null and hidden=0
-    union
-select null dep_id, pl_id from planograms where dep_ids is null and hidden=0
-order by 1, 2
-    ]]>
-</my_planogramsL2>
-<my_planogramsL3>
-    <![CDATA[
-select unnest(brand_ids) brand_id, pl_id from planograms where hidden=0
-    order by 1, 2
-    ]]>
-</my_planogramsL3>
-<my_pos_materialsL1>
-    <![CDATA[
-select unnest(chan_ids) chan_id, posm_id from pos_materials where chan_ids is not null and hidden=0
-    union
-select null chan_id, posm_id from pos_materials where chan_ids is null and hidden=0
-order by 1, 2
-    ]]>
-</my_pos_materialsL1>
-<my_pos_materialsL2>
-    <![CDATA[
-select unnest(dep_ids) dep_id, posm_id from pos_materials where dep_ids is not null and hidden=0
-    union
-select null dep_id, posm_id from pos_materials where dep_ids is null and hidden=0
-order by 1, 2
-    ]]>
-</my_pos_materialsL2>
-<my_pos_materialsL3>
-    <![CDATA[
-select unnest(brand_ids) brand_id, posm_id from pos_materials where hidden=0
-    order by 1, 2
-    ]]>
-</my_pos_materialsL3>
-<!--
-<my_productsL0>
-     <![CDATA[
-select unnest(db_ids) db_id, prod_id fid from products where db_ids is not null and hidden=0
-    order by 1, 2
-    ]]>
-</my_productsL0>
--->
-<my_productsL1>
-    <![CDATA[
-select unnest(country_ids) country_id, prod_id fid from products where country_ids is not null and hidden=0
-    union
-select null country_id, prod_id fid from products where country_ids is null and hidden=0
-order by 1, 2
-    ]]>
-</my_productsL1>
-<my_productsL2>
-    <![CDATA[
-select unnest(dep_ids) dep_id, prod_id fid from products where dep_ids is not null and hidden=0
-    union
-select null dep_id, prod_id fid from products where dep_ids is null and hidden=0
-order by 1, 2
-    ]]>
-</my_productsL2>
-<my_quests>
-  <![CDATA[
-select unnest(country_ids) country_id, format('%s+%s',qname_id,qrow_id) fid from quest_rows where country_ids is not null and hidden=0
-    union
-select null country_id, format('%s+%s',qname_id,qrow_id) fid from quest_rows where country_ids is null and hidden=0
-order by 1, 2
-  ]]>
-</my_quests>
-<my_rating_criteriasL2>
-    <![CDATA[
-select unnest(dep_ids) dep_id, rating_criteria_id fid from rating_criterias where dep_ids is not null and hidden=0
-    union
-select null dep_id, rating_criteria_id fid from rating_criterias where dep_ids is null and hidden=0
-order by 1, 2
-    ]]>
-</my_rating_criteriasL2>
-<my_reminders>
-  <![CDATA[
-select r.user_id person_id, r.reminder_id from (select unnest(user_ids) user_id, reminder_id, permanent from reminders) r
-    where r.permanent = 1  or (r.permanent = 0 and (select count(*) from h_dismiss h where h.user_id=r.user_id and h.reminder_id=r.reminder_id) = 0)
-order by r.user_id, r.reminder_id
-  ]]>
-</my_reminders>
-<my_training_materialsL2>
-    <![CDATA[
-select unnest(dep_ids) dep_id, tm_id from training_materials where dep_ids is not null and hidden=0
-    union
-select null dep_id, tm_id from training_materials where dep_ids is null and hidden=0
-    order by 1, 2
-    ]]>
-</my_training_materialsL2>
-<my_training_materialsL3>
-    <![CDATA[
-select unnest(brand_ids) brand_id, tm_id from training_materials where brand_ids is not null and hidden=0
-    union
-select null brand_id, tm_id from training_materials where brand_ids is null and hidden=0
-    order by 1, 2
-    ]]>
-</my_training_materialsL3>
-<my_training_typesL2>
-    <![CDATA[
-select unnest(dep_ids) dep_id, training_type_id from training_types where dep_ids is not null and hidden=0
-    union
-select null dep_id, training_type_id from training_types where dep_ids is null and hidden=0
-order by 1, 2
-    ]]>
-</my_training_typesL2>
-<!--
-<my_vfs>
-    <![CDATA[
-select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hidden=0
-    order by 1, 2
-    ]]>
-</my_vfs>
--->
+<xi:include href="../queries/sync/f/L10n.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/asp_types.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/asp_types.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/info_materials.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/info_materials.L3.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/my_countries.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/my_dbs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/my_departments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/my_distributors.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/my_habitat.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/my_reminders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/oos_types.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/photo_params.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/photo_params.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/photo_types.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/photo_types.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/planograms.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/planograms.L3.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/planograms.L5.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/pos_materials.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/pos_materials.L3.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/pos_materials.L5.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/products.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/products.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/products.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/quests.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/rating_criterias.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/training_materials.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/training_materials.L5.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/training_types.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/vfs.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <!-- **** FILTERS: END **** -->
 </queries>
 <pack strict="yes" Xtrace="yes">
@@ -380,8 +207,6 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <ownership_types />
     <payment_methods />
     <pending_types />
-    <photo_params />
-    <photo_types />
     <placements />
     <potentials />
     <promo_types />
@@ -399,57 +224,75 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
     <my_accounts personalize="ErpId" />
     <my_jobs personalize="ErpId" />
     <my_countries personalize="ErpId">
+	<asp_typesL1 key="country_id">
+	    <asp_types key="asp_type_id" />
+	</asp_typesL1>
 	<distributors key="country_id" strict="yes" />
 	<info_materials key="country_id" strict="yes" />
-	<my_productsL1 key="country_id">
-	    <products key="fid" />
-	</my_productsL1>
-	<my_quests key="country_id">
-	    <quest_rows key="fid" />
-	</my_quests>
+	<photo_paramsL1 key="country_id">
+	    <photo_params key="photo_param_id" />
+	</photo_paramsL1>
+	<photo_typesL1 key="country_id">
+	    <photo_types key="photo_type_id" />
+	</photo_typesL1>
 	<planograms key="country_id" strict="yes" />
 	<pos_materials key="country_id" strict="yes" />
 	<priorities key="country_id" />
+	<productsL1 key="country_id">
+	    <products key="fid" />
+	</productsL1>
+	<questsL1 key="country_id">
+	    <quest_rows key="fid" />
+	</questsL1>
 	<retail_chains key="country_id" strict="yes" />
 	<support key="country_id" />
 	<training_materials key="country_id" strict="yes" />
     </my_countries>
     <my_departments personalize="ErpId">
+	<asp_typesL2 key="dep_id">
+	    <asp_types key="asp_type_id" />
+	</asp_typesL2>
 	<departments key="dep_id" />
-	<my_info_materialsL2 key="dep_id">
+	<info_materialsL2 key="dep_id">
 	    <info_materials key="infom_id" />
-	</my_info_materialsL2>
-	<my_oos_typesL2 key="dep_id">
+	</info_materialsL2>
+	<oos_typesL2 key="dep_id">
 	    <oos_types key="oos_type_id" />
-	</my_oos_typesL2>
-	<my_planogramsL2 key="dep_id">
+	</oos_typesL2>
+	<photo_paramsL1 key="dep_id">
+	    <photo_params key="photo_param_id" />
+	</photo_paramsL1>
+	<photo_typesL1 key="dep_id">
+	    <photo_types key="photo_type_id" />
+	</photo_typesL1>
+	<planogramsL2 key="dep_id">
 	    <planograms key="pl_id" />
-	</my_planogramsL2>
-	<my_pos_materialsL2 key="dep_id">
+	</planogramsL2>
+	<pos_materialsL2 key="dep_id">
 	    <pos_materials key="posm_id" />
-	</my_pos_materialsL2>
-	<my_productsL2 key="dep_id">
+	</pos_materialsL2>
+	<productsL2 key="dep_id">
 	    <products key="fid" />
-	</my_productsL2>
-	<my_rating_criteriasL2 key="dep_id">
+	</productsL2>
+	<rating_criteriasL2 key="dep_id">
 	    <rating_criterias key="fid" />
-	</my_rating_criteriasL2>
+	</rating_criteriasL2>
 	<targets key="dep_id" />
-	<my_training_materialsL2 key="dep_id">
+	<training_materialsL2 key="dep_id">
 	    <training_materials key="tm_id" />
-	</my_training_materialsL2>
-	<my_training_typesL2 key="dep_id">
+	</training_materialsL2>
+	<training_typesL2 key="dep_id">
 	    <training_types key="training_type_id" />
-	</my_training_typesL2>
+	</training_typesL2>
     </my_departments>
 <!--
     <my_dbs personalize="ErpId">
-	<my_productsL0 key="db_id">
+	<productsL0 key="db_id">
 	    <products key="fid" />
-	</my_productsL0>
-	<my_vfs key="db_id">
+	</productsL0>
+	<vfs key="db_id">
 	    <vf_names key="vf_id" strict="yes" />
-	</my_vfs>
+	</vfs>
     </my_dbs>
 -->
     <my_distributors personalize="ErpId">
@@ -512,19 +355,13 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<equipments key="account_id" strict="yes" />
 	<floating_prices key="account_id" strict="yes" />
 	<highlights key="account_id" />
+	<info_materialsL3 key="chan_id">
+	    <info_materials key="infom_id" />
+	</info_materialsL3>
 	<matrices key="account_id" />
 	<my_accounts key="account_id" strict="yes">
 	    <my_jobs key="account_id" strict="yes" />
 	</my_accounts>
-	<my_info_materialsL1 key="chan_id">
-	    <info_materials key="infom_id" />
-	</my_info_materialsL1>
-	<my_planogramsL1 key="chan_id">
-	    <planograms key="pl_id" />
-	</my_planogramsL1>
-	<my_pos_materialsL1 key="chan_id">
-	    <pos_materials key="posm_id" />
-	</my_pos_materialsL1>
 	<my_routes key="account_id" strict="yes" />
 	<my_targets key="account_id" strict="yes">
 	    <targets key="target_id" strict="yes" />
@@ -537,8 +374,14 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<oos_history key="account_id" strict="yes" />
 	<permitted_returns key="account_id" strict="yes" />
 	<photos_history key="account_id" strict="yes" />
+	<planogramsL3 key="chan_id">
+	    <planograms key="pl_id" />
+	</planogramsL3>
 	<plu_codes key="account_id" strict="yes" />
 	<!--<pmlist key="account_id" />-->
+	<pos_materialsL3 key="chan_id">
+	    <pos_materials key="posm_id" />
+	</pos_materialsL3>
 	<posms_history key="account_id" strict="yes" />
 	<presences_history key="account_id" strict="yes" />
 	<prices_history key="account_id" strict="yes" />
@@ -572,17 +415,17 @@ select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hi
 	<agreements2 key="prod_id" strict="yes" />
 	<brands key="brand_id">
 	    <manufacturers key="manuf_id" strict="yes" />
-	    <my_planogramsL3 key="brand_id">
-		<planograms key="pl_id" />
-	    </my_planogramsL3>
-	    <my_pos_materialsL3  key="brand_id">
-		<pos_materials key="posm_id" />
-	    </my_pos_materialsL3>
-	    <my_training_materialsL3 key="brand_id">
-		<training_materials key="tm_id" />
-	    </my_training_materialsL3>
 	    <photos_history key="brand_id" />
+	    <planogramsL5 key="brand_id">
+		<planograms key="pl_id" />
+	    </planogramsL5>
+	    <pos_materialsL5 key="brand_id">
+		<pos_materials key="posm_id" />
+	    </pos_materialsL5>
 	    <priorities key="brand_id" strict="yes" />
+	    <training_materialsL5 key="brand_id">
+		<training_materials key="tm_id" />
+	    </training_materialsL5>
 	</brands>
 	<checkup_defaults key="prod_id" strict="yes" />
 	<blacklist key="prod_id" />

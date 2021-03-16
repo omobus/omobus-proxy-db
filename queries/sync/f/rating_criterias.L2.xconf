@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rating_criteriasL2>
+    <![CDATA[
+select unnest(dep_ids) dep_id, rating_criteria_id fid from rating_criterias where dep_ids is not null and hidden = 0
+    union
+select null dep_id, rating_criteria_id fid from rating_criterias where dep_ids is null and hidden = 0
+order by 1, 2
+    ]]>
+</rating_criteriasL2>

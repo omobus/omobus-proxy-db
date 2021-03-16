@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<my_dbs>
+    <![CDATA[
+select user_id person_id, unnest(db_ids) db_id from users
+    where hidden = 0
+order by 1, 2
+    ]]>
+</my_dbs>

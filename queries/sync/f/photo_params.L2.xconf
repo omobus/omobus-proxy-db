@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<photo_paramsL2>
+    <![CDATA[
+select unnest(dep_ids) dep_id, photo_param_id from photo_params where dep_ids is not null and hidden = 0
+    union
+select null dep_id, photo_param_id from photo_params where dep_ids is null and hidden = 0
+order by 1, 2
+    ]]>
+</photo_paramsL2>

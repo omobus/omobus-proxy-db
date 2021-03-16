@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<planogramsL5>
+    <![CDATA[
+select unnest(brand_ids) brand_id, pl_id from planograms where hidden = 0
+    order by 1, 2
+    ]]>
+</planogramsL5>

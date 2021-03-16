@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<asp_typesL1>
+    <![CDATA[
+select unnest(country_ids) country_id, asp_type_id from asp_types where country_ids is not null and hidden = 0
+    union
+select null country_id, asp_type_id from asp_types where country_ids is null and hidden = 0
+order by 1, 2
+    ]]>
+</asp_typesL1>

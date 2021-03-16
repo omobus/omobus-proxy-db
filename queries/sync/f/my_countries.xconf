@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<my_countries>
+    <![CDATA[
+select user_id person_id, country_id from users
+    where hidden = 0 and country_id is not null and country_id <> ''
+order by 1, 2
+    ]]>
+</my_countries>

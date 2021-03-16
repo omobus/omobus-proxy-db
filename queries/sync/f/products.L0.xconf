@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<productsL0>
+     <![CDATA[
+select unnest(db_ids) db_id, prod_id fid from products where db_ids is not null and hidden = 0
+    order by 1, 2
+    ]]>
+</productsL0>

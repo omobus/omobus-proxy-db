@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pos_materialsL5>
+    <![CDATA[
+select unnest(brand_ids) brand_id, posm_id from pos_materials where hidden = 0
+    order by 1, 2
+    ]]>
+</pos_materialsL5>

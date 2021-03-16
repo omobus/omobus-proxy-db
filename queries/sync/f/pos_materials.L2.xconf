@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pos_materialsL2>
+    <![CDATA[
+select unnest(dep_ids) dep_id, posm_id from pos_materials where dep_ids is not null and hidden = 0
+    union
+select null dep_id, posm_id from pos_materials where dep_ids is null and hidden = 0
+order by 1, 2
+    ]]>
+</pos_materialsL2>
