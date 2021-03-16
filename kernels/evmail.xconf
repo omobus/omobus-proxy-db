@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <kernel 
-    module="kern_evmail" 
+    module="kern_mail" 
     smtp.host="127.0.0.1"
     smtp.port="25"
     smtp.tls="yes"
