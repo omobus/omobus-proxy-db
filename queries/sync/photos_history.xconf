@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<photos_history templ="%account_id%;%fix_dt%;%placement_id%;%brand_id%;%photo_type%;%photo_params%;%note%;%photo%;" empty="no">
+<photos_history templ="%account_id%;%fix_dt%;%placement_id%;%brand_id%;%asp_type%;%photo_type%;%photo_params%;%note%;%photo%;" empty="no">
   <![CDATA[
 select
     h.account_id, 
     h.fix_dt,
     h.placement_id, 
     h.brand_id, 
+    a.descr asp_type,
     z.descr photo_type,
     array_to_string((select array_agg(descr::text) from photo_params where photo_param_id = any(photo_param_ids)), '!') photo_params,
     h.doc_note note, 
@@ -16,6 +17,7 @@ from (
     group by account_id
 ) x
     left join h_photo h on x.account_id = h.account_id and x.fix_date = left(h.fix_dt,10)
+    left join asp_types a on a.asp_type_id = h.asp_type_id
     left join photo_types z on z.photo_type_id = h.photo_type_id
     left join j_revocations r on r.doc_id = h.doc_id
     left join thumbnail_stream t on t.photo = h.photo
