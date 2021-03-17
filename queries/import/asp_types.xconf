@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<asp_types templ="%asp_type_id%;%descr%;%placement_ids%;%country_ids%;%dep_ids%;%row_no%;">
+<asp_types templ="%asp_type_id%;%descr%;%extra_info%;%placement_ids%;%country_ids%;%dep_ids%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from asp_types
 </check_exist>
 <update>
   <![CDATA[
-update asp_types set descr=trim(both from '%descr%'), placement_ids=string_to_array(NIL('%placement_ids%'),','), country_ids=string_to_array(NIL('%country_ids%'),','), dep_ids=string_to_array(NIL('%dep_ids%'),','), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update asp_types set descr=trim(both from '%descr%'), extra_info=NIL('%extra_info%'), placement_ids=string_to_array(NIL('%placement_ids%'),','), country_ids=string_to_array(NIL('%country_ids%'),','), dep_ids=string_to_array(NIL('%dep_ids%'),','), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where asp_type_id = '%asp_type_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into asp_types (asp_type_id, descr, placement_ids, country_ids, dep_ids, row_no, hidden, db_ids)
-    values ('%asp_type_id%', trim(both from '%descr%'), string_to_array(NIL('%placement_ids%'),','), string_to_array(NIL('%country_ids%'),','), string_to_array(NIL('%dep_ids%'),','), NIL(%row_no%), 0, array['%ErpCode%'])
+insert into asp_types (asp_type_id, descr, extra_info, placement_ids, country_ids, dep_ids, row_no, hidden, db_ids)
+    values ('%asp_type_id%', trim(both from '%descr%'), NIL('%extra_info%'), string_to_array(NIL('%placement_ids%'),','), string_to_array(NIL('%country_ids%'),','), string_to_array(NIL('%dep_ids%'),','), NIL(%row_no%), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>
