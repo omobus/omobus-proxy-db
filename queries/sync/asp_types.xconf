@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<asp_types templ="%asp_type_id%;%descr%;%placement_ids%;" empty="no">
+<asp_types templ="%asp_type_id%;%descr%;%extra_info%;%placement_ids%;" empty="no">
   <![CDATA[ 
-select asp_type_id, descr, array_to_string(placement_ids,',') placement_ids from asp_types
+select asp_type_id, descr, extra_info, array_to_string(placement_ids,',') placement_ids from asp_types
     where hidden = 0
 order by row_no, descr
   ]]>

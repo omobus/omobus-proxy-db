@@ -1085,9 +1085,13 @@ create table agreements2 (
 create index i_db_ids_agreements2 on agreements2 using GIN (db_ids);
 create trigger trig_updated_ts before update on agreements2 for each row execute procedure tf_updated_ts();
 
-create table asp_types ( /* Addition-Sales-Places */
+create table asp_types ( /* Additional-Sales-Places */
     asp_type_id 	uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
+    extra_info 		note_t 		null,
+    placement_ids 	uids_t 		null,
+    country_ids 	countries_t 	null,
+    dep_ids		uids_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
@@ -1851,6 +1855,8 @@ create table photo_params (
     photo_param_id	uid_t		not null primary key default man_id(),
     descr		descr_t		not null,
     placement_ids 	uids_t 		null,
+    country_ids 	countries_t 	null,
+    dep_ids		uids_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden		bool_t		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
@@ -1864,7 +1870,10 @@ create trigger trig_updated_ts before update on photo_params for each row execut
 create table photo_types (
     photo_type_id	uid_t		not null primary key default man_id(),
     descr		descr_t		not null,
+    extra_info 		note_t 		null,
     placement_ids 	uids_t 		null,
+    country_ids 	countries_t 	null,
+    dep_ids		uids_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden		bool_t		not null default 0,
     inserted_ts 	ts_auto_t 	not null,

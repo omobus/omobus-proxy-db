@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<photo_types templ="%photo_type_id%;%descr%;%placement_ids%;" empty="no">
+<photo_types templ="%photo_type_id%;%descr%;%extra_info%;%placement_ids%;" empty="no">
   <![CDATA[ 
-select photo_type_id, descr, array_to_string(placement_ids,',') placement_ids from photo_types
+select photo_type_id, descr, extra_info, array_to_string(placement_ids,',') placement_ids from photo_types
     where hidden = 0
 order by row_no, descr
   ]]>
