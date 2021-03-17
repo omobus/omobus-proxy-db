@@ -49,6 +49,7 @@
 		    <xs:attribute name="closed_gps_dt" use="optional" type="datetime2_t" default="" />
 		    <xs:attribute name="placement_id" use="required" type="uid_t" />
 		    <xs:attribute name="brand_id" use="optional" type="uid_t" default="" />
+		    <xs:attribute name="asp_type_id" use="optional" type="uid_t" default="" />
 		    <xs:attribute name="photo_type_id" use="optional" type="uid_t" default="" />
 		    <xs:attribute name="photo_param_ids" use="optional" type="xs:string" default="" />
 		    <xs:attribute name="rev_cookie" use="optional" type="uid_t" default="" />

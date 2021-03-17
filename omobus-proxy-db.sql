@@ -4057,6 +4057,7 @@ create table h_photo (
     activity_type_id	uid_t		not null,
     placement_id 	uid_t		not null,
     brand_id		uid_t		null,
+    asp_type_id 	uid_t		null,
     photo_type_id	uid_t		null,
     photo_param_ids 	uids_t		null,
     photo		blob_t		not null,
