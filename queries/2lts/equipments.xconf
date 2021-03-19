@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<equipments templ="%equipment_id%;%account_id%;%serial_number%;%equipment_type_id%;%ownership_type_id%;%extra_info%;">
+<equipments templ="%equipment_id%;%account_id%;%serial_number%;%equipment_type_id%;%ownership_type_id%;%extra_info%;%author_id%;">
   <![CDATA[
-select equipment_id, account_id, serial_number, equipment_type_id, ownership_type_id, extra_info from equipments
+select equipment_id, account_id, serial_number, equipment_type_id, ownership_type_id, extra_info, author_id from equipments
     where hidden = 0
 order by 1, 2
   ]]>
