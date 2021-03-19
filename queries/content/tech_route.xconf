@@ -274,6 +274,7 @@ select
     h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, 
     g.descr placement, 
     b.descr brand, 
+    k.descr asp_type, 
     t.descr photo_type, 
     h.doc_note, 
     h.photo::varchar blob_id,
@@ -282,6 +283,7 @@ select
 from h_photo h
     left join placements g on g.placement_id = h.placement_id
     left join brands b on b.brand_id = h.brand_id
+    left join asp_types k on k.asp_type_id = h.asp_type_id
     left join photo_types t on t.photo_type_id = h.photo_type_id
     left join j_revocations rev on rev.doc_id = h.doc_id
 where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
