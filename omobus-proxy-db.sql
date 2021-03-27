@@ -5300,7 +5300,7 @@ create table j_wishes (
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts		ts_auto_t 	not null,
-    attrs 		hstore 		null
+    attrs 		hstore 		null,
     primary key(user_id, account_id)
 );
 
