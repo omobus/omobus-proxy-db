@@ -25,7 +25,7 @@ select * from act_id()
 <write_body>
   <![CDATA[
 insert into a_exchange (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, latitude, longitude, satellite_dt, mode, status, packets, corrupted, bytes, duration, msg)
-    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL(%latitude%), NIL(%longitude%), NIL('%satellite_dt%'), '%mode%', '%status%', NIL(%packets%), NIL(%corrupted%), NIL(%bytes%), NIL(%duration%), '%msg%')
+    values('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL(%latitude%), NIL(%longitude%), NIL('%satellite_dt%'), '%mode%', '%status%', NIL(%packets%), NIL(%corrupted%), NIL(%bytes%), NIL(%duration%), NIL('%msg%'))
   ]]>
 </write_body>
 <close>
