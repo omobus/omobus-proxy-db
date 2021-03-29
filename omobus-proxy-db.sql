@@ -2781,7 +2781,7 @@ create table a_exchange (
     packets 		int32_t 	null,
     corrupted 		int32_t 	null,
     bytes 		int64_t 	null,
-    duration 		int32_t 	null, /* msecs. */
+    duration 		int64_t 	null, /* msecs. */
     msg 		varchar(512) 	null
 );
 
