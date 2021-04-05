@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<confirmation_types templ="%confirmation_type_id%;%descr%;%target_type_ids%;">
-  <![CDATA[
-select confirmation_type_id, descr, array_to_string(target_type_ids,',') target_type_ids from confirmation_types
+<confirmation_types templ="%confirmation_type_id%;%descr%;%succeeded%;%row_no%;%props%;">
+  <![CDATA[ 
+select confirmation_type_id, descr, succeeded, row_no, props from confirmation_types
     where hidden = 0
-order by 1
+order by descr
   ]]>
 </confirmation_types>
