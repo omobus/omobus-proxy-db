@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<confirmation_types templ="%confirmation_type_id%;%descr%;%min_note_length%;%photo_needed%;%accomplished%;%succeeded%;%extra_info%;%target_type_ids%;%row_no%;%props%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update confirmation_types set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update confirmation_types set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from confirmation_types 
+    where confirmation_type_id = '%confirmation_type_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update confirmation_types set descr=trim(both from '%descr%'), min_note_length=NIL(%min_note_length%), photo_needed=NIL(%photo_needed%), accomplished=NIL(%accomplished%), succeeded=NIL(%succeeded%), extra_info=NIL('%extra_info%'), target_type_ids=string_to_array(NIL('%target_type_ids%'),','), row_no=NIL(%row_no%), props=NIL('%props%')::hstore, hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where confirmation_type_id = '%confirmation_type_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into confirmation_types (confirmation_type_id, descr, min_note_length, photo_needed, accomplished, succeeded, extra_info, target_type_ids, row_no, props, hidden, db_ids)
+    values ('%confirmation_type_id%', trim(both from '%descr%'), NIL(%min_note_length%), NIL(%photo_needed%), NIL(%accomplished%), NIL(%succeeded%), NIL('%extra_info%'), string_to_array(NIL('%target_type_ids%'),','),  NIL(%row_no%), NIL('%props%')::hstore, 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</confirmation_types>
