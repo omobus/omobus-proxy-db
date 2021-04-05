@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<target_types templ="%target_type_id%;%descr%;">
-  <![CDATA[
-select target_type_id, descr from target_types
-    where hidden = 0
-order by 1
-  ]]>
-</target_types>
