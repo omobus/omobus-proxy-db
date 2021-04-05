@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<confirmation_types templ="%confirmation_type_id%;%target_type_ids%;%descr%;%min_note_length%;%photo_needed%;" empty="no">
+<confirmation_types templ="%confirmation_type_id%;%target_type_ids%;%descr%;%min_note_length%;%photo_needed%;%extra_info%;" empty="no">
   <![CDATA[ 
-select confirmation_type_id, array_to_string(target_type_ids,',') target_type_ids, descr, min_note_length, photo_needed from confirmation_types
+select confirmation_type_id, array_to_string(target_type_ids,',') target_type_ids, descr, min_note_length, photo_needed, extra_info from confirmation_types
     where hidden = 0
 order by row_no, descr, confirmation_type_id
   ]]>
