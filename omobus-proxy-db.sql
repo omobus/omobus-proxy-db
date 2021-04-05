@@ -1250,13 +1250,16 @@ create table confirmation_types (
     min_note_length 	int32_t 	null,
     photo_needed 	bool_t 		null,
     accomplished 	bool_t 		null,
+    succeeded 		bool_t 		null,
     target_type_ids 	uids_t 		not null,
     extra_info 		note_t 		null,
     row_no 		int32_t 	null, -- ordering
     props 		hstore 		null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null /* data from the external sources */
 );
 
 create trigger trig_updated_ts before update on confirmation_types for each row execute procedure tf_updated_ts();
@@ -2480,7 +2483,9 @@ create table target_types (
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null /* data from the external sources */
 );
 
 create trigger trig_updated_ts before update on target_types for each row execute procedure tf_updated_ts();
