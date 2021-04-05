@@ -1093,6 +1093,7 @@ create table asp_types ( /* Additional-Sales-Places */
     country_ids 	countries_t 	null,
     dep_ids		uids_t		null,
     row_no 		int32_t 	null, -- ordering
+    props 		hstore 		null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -1250,7 +1251,9 @@ create table confirmation_types (
     photo_needed 	bool_t 		null,
     accomplished 	bool_t 		null,
     target_type_ids 	uids_t 		not null,
+    extra_info 		note_t 		null,
     row_no 		int32_t 	null, -- ordering
+    props 		hstore 		null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null

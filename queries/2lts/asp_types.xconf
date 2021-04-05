@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<asp_types templ="%asp_type_id%;%descr%;%row_no%;">
+<asp_types templ="%asp_type_id%;%descr%;%row_no%;%props%;">
   <![CDATA[ 
-select asp_type_id, descr, row_no from asp_types
+select asp_type_id, descr, row_no, props from asp_types
     where hidden = 0
 order by descr
   ]]>
