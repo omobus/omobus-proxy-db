@@ -1106,6 +1106,7 @@ create trigger trig_updated_ts before update on asp_types for each row execute p
 create table attributes (
     attr_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
+    row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,

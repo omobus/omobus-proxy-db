@@ -3,6 +3,6 @@
   <![CDATA[
 select attr_id, descr from attributes
     where hidden = 0
-order by descr
+order by row_no, descr
   ]]>
 </attributes>
