@@ -5,6 +5,8 @@ select user_id, account_id fid from j_user_activities where fix_date >= (current
     union
 select user_id, account_id fid from my_accounts
     union
+select user_id, account_id fid from my_habitats
+    union
 select distinct user_id, account_id fid from my_routes where p_date >= (current_date + "paramInteger"('route_history:offset:left'))::date_t
     union
 select r.user_id, a.account_id fid from my_regions r, accounts a where r.region_id=a.region_id and (r.chan_id='' or r.chan_id=a.chan_id) and a.hidden = 0
