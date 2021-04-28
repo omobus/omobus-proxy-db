@@ -1684,6 +1684,18 @@ create table my_cities (
 create index i_db_ids_my_cities on my_cities using GIN (db_ids);
 create trigger trig_updated_ts before update on my_cities for each row execute procedure tf_updated_ts();
 
+create table my_habitats (
+    user_id 		uid_t 		not null,
+    account_id 		uid_t 		not null,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    primary key (user_id, account_id)
+);
+
+create index i_db_ids_my_habitats on my_habitats using GIN (db_ids);
+create trigger trig_updated_ts before update on my_habitats for each row execute procedure tf_updated_ts();
+
 create table my_kpi (
     user_id 		uid_t 		not null,
     kpi_id 		uid_t 		not null,

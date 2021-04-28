@@ -75,6 +75,7 @@
 <xi:include href="../queries/2lts/matrices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/my_accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/my_cities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/my_habitats.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/my_regions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/my_retail_chains.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/my_routes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -176,6 +177,7 @@
     <matrices />
     <my_accounts />
     <my_cities />
+    <my_habitats />
     <my_regions />
     <my_retail_chains />
     <my_routes />

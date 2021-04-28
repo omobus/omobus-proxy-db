@@ -68,6 +68,7 @@
 <xi:include href="../queries/import/mutuals.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/my_accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/my_cities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/my_habitats.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/my_kpi.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/my_regions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/my_retail_chains.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
