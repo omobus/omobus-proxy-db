@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<attributes templ="%attr_id%;%descr%;">
+<attributes templ="%attr_id%;%descr%;%row_no%;">
   <![CDATA[
-select attr_id, descr from attributes
+select attr_id, descr, row_no from attributes
     order by 1
   ]]>
 </attributes>
