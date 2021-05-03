@@ -9,7 +9,7 @@
     Xldap.tls="yes"
     ftp.host="127.0.0.1"
     ftp.port="21021"
-    ftp.path="o2d/"
+    ftp.path="docs/"
     ftp.connect_timeout="10"
     ftp.recv_timeout="5"
     ftp.send_timeout="5"
