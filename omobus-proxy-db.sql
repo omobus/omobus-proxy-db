@@ -4082,7 +4082,11 @@ create table h_photo (
     photo_type_id	uid_t		null,
     photo_param_ids 	uids_t		null,
     photo		blob_t		not null,
-    rev_cookie 		uid_t 		null
+    rev_cookie 		uid_t 		null,
+    orientation 	int32_t 	null check(orientation >= 0 and orientation <= 360),
+    azimuth 		numeric(4,1) 	null check(azimuth >= 0 and azimuth <= 360),
+    pitch 		numeric(4,1) 	null check(pitch >= -180 and pitch <= 180),
+    roll 		numeric(4,1) 	null check(roll >= -180 and roll <= 180)
 );
 
 create index i_fix_date_h_photo on h_photo (left(fix_dt,10));

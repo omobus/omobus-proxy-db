@@ -24,8 +24,8 @@ select * from doc_id()
 </create>
 <write_body>
   <![CDATA[
-insert into h_photo(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id,  account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, placement_id, brand_id, asp_type_id, photo_type_id, photo_param_ids, photo, rev_cookie)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), '%placement_id%', NIL('%brand_id%'), NIL('%asp_type_id%'), NIL('%photo_type_id%'), string_to_array(NIL('%photo_param_ids%'),','), $1:blob, NIL('%rev_cookie%'))
+insert into h_photo(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id,  account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, placement_id, brand_id, asp_type_id, photo_type_id, photo_param_ids, photo, rev_cookie, orientation, azimuth, pitch, roll)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), '%placement_id%', NIL('%brand_id%'), NIL('%asp_type_id%'), NIL('%photo_type_id%'), string_to_array(NIL('%photo_param_ids%'),','), $1:blob, NIL('%rev_cookie%'), NIL(%orientation%), NIL(%azimuth%), NIL(%pitch%), NIL(%roll%))
   ]]>
 </write_body>
 <close>
