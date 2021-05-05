@@ -200,7 +200,7 @@ begin
     select 
 	cycle_id, b_date, e_date, cycle_no, ceil((e_date::date - b_date::date)::float/7) 
     from route_cycles 
-    where hidden = 0 and status = 'inprogress' and (e_date::date - current_date) <= depth
+    where hidden = 0 and status in ('inprogress','closed') and (e_date::date - current_date) <= depth
     order by b_date desc limit 1
     into c_id, b, e, no, weeks;
 
