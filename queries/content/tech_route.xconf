@@ -1230,7 +1230,9 @@ if tb.route ~= nil and #tb.route > 0 then
 	    tb.rd.indoor = tb.rd.indoor + v.duration
 	end
     end
-    tb.rd.mileage = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "rd_mileage")))
+    if rowset_rows(_stats) > 0 then
+	tb.rd.mileage = tonumber(rowset_value(_stats, 0, rowset_colid(_stats, "rd_mileage")))
+    end
 end
 
 
