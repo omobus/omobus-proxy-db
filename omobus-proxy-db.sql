@@ -963,7 +963,7 @@ create index i_db_ids_accounts on accounts using GIN (db_ids);
 create trigger trig_code before insert or update on accounts for each row when (new.code is null or new.code = '') execute procedure tf_code();
 create trigger trig_updated_ts before update on accounts for each row execute procedure tf_updated_ts();
 
-create table account_info (
+create table account_hints (
     account_id 		uid_t 		not null,
     join_code 		code_t 		not null,
     descr0 		descr_t 	not null,
@@ -978,8 +978,8 @@ create table account_info (
     primary key (account_id, join_code, row_no)
 );
 
-create index i_db_ids_account_info on account_info using GIN (db_ids);
-create trigger trig_updated_ts before update on account_info for each row execute procedure tf_updated_ts();
+create index i_db_ids_account_hints on account_hints using GIN (db_ids);
+create trigger trig_updated_ts before update on account_hints for each row execute procedure tf_updated_ts();
 
 create table account_params (
     distr_id 		uid_t 		not null,
@@ -1699,7 +1699,7 @@ create table my_habitats (
 create index i_db_ids_my_habitats on my_habitats using GIN (db_ids);
 create trigger trig_updated_ts before update on my_habitats for each row execute procedure tf_updated_ts();
 
-create table my_info (
+create table my_hints (
     user_id 		uid_t 		not null,
     join_code 		code_t 		not null,
     descr0 		descr_t 	not null,
@@ -1714,8 +1714,8 @@ create table my_info (
     primary key (user_id, join_code, row_no)
 );
 
-create index i_db_ids_my_info on my_info using GIN (db_ids);
-create trigger trig_updated_ts before update on my_info for each row execute procedure tf_updated_ts();
+create index i_db_ids_my_hints on my_hints using GIN (db_ids);
+create trigger trig_updated_ts before update on my_hints for each row execute procedure tf_updated_ts();
 
 create table my_regions (
     user_id 		uid_t 		not null,

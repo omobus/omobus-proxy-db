@@ -25,7 +25,7 @@
     threads="4"
     >
 <queries>
-<xi:include href="../queries/sync/account_info.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/account_hints.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/account_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/account_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -67,7 +67,7 @@
 <xi:include href="../queries/sync/mutuals_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/mutuals_history_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/my_accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/my_info.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/my_hints.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/my_jobs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/my_routes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/my_targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -302,7 +302,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<reminders key="reminder_id" strict="yes" />
     </my_reminders>
     <my_routes personalize="ErpId" group="g_id" collapse="yes" />
-    <my_info personalize="ErpId" />
+    <my_hints personalize="ErpId" />
     <my_targets personalize="ErpId" />
     <distributors index="distr_id">
 	<account_params key="distr_id" strict="yes" />
@@ -339,7 +339,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	</route_history>
     </users>
     <accounts hierarchy="account_id" index="account_id">
-	<account_info key="account_id" />
+	<account_hints key="account_id" />
 	<account_params key="account_id" strict="yes">
 	    <group_prices key="group_price_id" strict="yes" />
 	</account_params>

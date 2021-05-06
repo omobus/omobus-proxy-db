@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<my_info templ="%join_code%;%descr0%;%descr1%;%extra_info%;%attention%;" empty="no">
+<my_hints templ="%join_code%;%descr0%;%descr1%;%extra_info%;%attention%;" empty="no">
   <![CDATA[ 
-select user_id person_id, join_code, descr0, descr1, extra_info, attention, row_no from my_info
+select user_id person_id, join_code, descr0, descr1, extra_info, attention, row_no from my_hints
 
 /* visit compliance (totals) */ union /* previous month */
 
@@ -64,4 +64,4 @@ where r.total > 0
 
 order by 1, 2, 7
   ]]>
-</my_info>
+</my_hints>

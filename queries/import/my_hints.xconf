@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<my_info templ="%user_id%;%join_code%;%descr0%;%descr1%;%extra_info%;%attention%;%row_no%;">
+<my_hints templ="%user_id%;%join_code%;%descr0%;%descr1%;%extra_info%;%attention%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -8,17 +8,17 @@ select count(*) from data_stream
 </verification>
 <begin>
   <![CDATA[
-delete from my_info
+delete from my_hints
     where "_isAlienData" = 1 and db_ids = (array['%ErpCode%'])::uids_t;
-update my_info set db_ids=array_remove(db_ids,'%ErpCode%')
+update my_hints set db_ids=array_remove(db_ids,'%ErpCode%')
     where "_isAlienData" = 1 and db_ids @> (array['%ErpCode%'])::uids_t;
-delete from my_info
+delete from my_hints
     where "_isAlienData" = 1 and (db_ids is null or cardinality(db_ids)=0);
   ]]>
 </begin>
 <insert>
   <![CDATA[
-insert into my_info (user_id, join_code, descr0, descr1, extra_info, attention, row_no, db_ids, "_isAlienData") 
+insert into my_hints (user_id, join_code, descr0, descr1, extra_info, attention, row_no, db_ids, "_isAlienData") 
     values ('%user_id%', '%join_code%', '%descr0%', '%descr1%', NIL('%extra_info%'), NIL(%attention%), 0%row_no%, array['%ErpCode%'], 1)
 on conflict do nothing
   ]]>
@@ -28,4 +28,4 @@ on conflict do nothing
 select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
   ]]>
 </end>
-</my_info>
+</my_hints>
