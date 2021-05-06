@@ -963,20 +963,23 @@ create index i_db_ids_accounts on accounts using GIN (db_ids);
 create trigger trig_code before insert or update on accounts for each row when (new.code is null or new.code = '') execute procedure tf_code();
 create trigger trig_updated_ts before update on accounts for each row execute procedure tf_updated_ts();
 
-create table account_kpi (
+create table account_info (
     account_id 		uid_t 		not null,
-    kpi_id 		uid_t 		not null,
+    join_code 		code_t 		not null,
     descr0 		descr_t 	not null,
     descr1 		descr_t 	not null,
+    extra_info 		note_t 		null,
+    attention 		bool_t 		null,
+    row_no 		int32_t 	not null, -- ordering
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null, /* KPI from the external sources */
-    primary key (account_id, kpi_id)
+    "_isAlienData" 	bool_t 		null, /* row from the external sources */
+    primary key (account_id, join_code, row_no)
 );
 
-create index i_db_ids_account_kpi on account_kpi using GIN (db_ids);
-create trigger trig_updated_ts before update on account_kpi for each row execute procedure tf_updated_ts();
+create index i_db_ids_account_info on account_info using GIN (db_ids);
+create trigger trig_updated_ts before update on account_info for each row execute procedure tf_updated_ts();
 
 create table account_params (
     distr_id 		uid_t 		not null,
@@ -1696,20 +1699,23 @@ create table my_habitats (
 create index i_db_ids_my_habitats on my_habitats using GIN (db_ids);
 create trigger trig_updated_ts before update on my_habitats for each row execute procedure tf_updated_ts();
 
-create table my_kpi (
+create table my_info (
     user_id 		uid_t 		not null,
-    kpi_id 		uid_t 		not null,
+    join_code 		code_t 		not null,
     descr0 		descr_t 	not null,
     descr1 		descr_t 	not null,
+    extra_info 		note_t 		null,
+    attention 		bool_t 		null,
+    row_no 		int32_t 	not null, -- ordering
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
     "_isAlienData" 	bool_t 		null, /* KPI from the external sources */
-    primary key (user_id, kpi_id)
+    primary key (user_id, join_code, row_no)
 );
 
-create index i_db_ids_my_kpi on my_kpi using GIN (db_ids);
-create trigger trig_updated_ts before update on my_kpi for each row execute procedure tf_updated_ts();
+create index i_db_ids_my_info on my_info using GIN (db_ids);
+create trigger trig_updated_ts before update on my_info for each row execute procedure tf_updated_ts();
 
 create table my_regions (
     user_id 		uid_t 		not null,

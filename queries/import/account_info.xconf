@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<my_kpi templ="%user_id%;%kpi_id%;%descr0%;%descr1%;">
+<account_info templ="%account_id%;%join_code%;%descr0%;%descr1%;%extra_info%;%attention%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -8,18 +8,18 @@ select count(*) from data_stream
 </verification>
 <begin>
   <![CDATA[
-delete from my_kpi
+delete from account_info
     where "_isAlienData" = 1 and db_ids = (array['%ErpCode%'])::uids_t;
-update my_kpi set db_ids=array_remove(db_ids,'%ErpCode%')
+update account_info set db_ids=array_remove(db_ids,'%ErpCode%')
     where "_isAlienData" = 1 and db_ids @> (array['%ErpCode%'])::uids_t;
-delete from my_kpi
+delete from account_info
     where "_isAlienData" = 1 and (db_ids is null or cardinality(db_ids)=0);
   ]]>
 </begin>
 <insert>
   <![CDATA[
-insert into my_kpi (kpi_id, user_id, descr0, descr1, db_ids, "_isAlienData") 
-    values ('%kpi_id%', '%user_id%', '%descr0%', '%descr1%', array['%ErpCode%'], 1)
+insert into account_info (account_id, join_code, descr0, descr1, extra_info, attention, row_no, db_ids, "_isAlienData")
+    values ('%account_id%', '%join_code%', '%descr0%', '%descr1%', NIL('%extra_info%'), NIL(%attention%), 0%row_no%, array['%ErpCode%'], 1)
 on conflict do nothing
   ]]>
 </insert>
@@ -28,4 +28,4 @@ on conflict do nothing
 select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
   ]]>
 </end>
-</my_kpi>
+</account_info>

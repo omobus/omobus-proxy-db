@@ -13,7 +13,7 @@ begin
     delete from console.sessions where inserted_ts::date_t < gc_date;
     delete from console.requests where inserted_ts::date_t < gc_date;
 
-    delete from account_kpi where updated_ts::date_t < gc_date;
+    delete from account_info where updated_ts::date_t < gc_date;
     for i in select cycle_id from route_cycles where e_date < gc_date loop
 	delete from routes where cycle_id = i;
 	delete from route_cycles where cycle_id = i;

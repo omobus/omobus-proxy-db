@@ -100,7 +100,7 @@ begin
 	end if;
     end if;
 
--- **** audit --> dyn_audits, account_kpi, targets
+-- **** audit --> dyn_audits, account_info, targets
     select fix_dt from dyn_audits where account_id = '%account_id%' and fix_date = f_date and categ_id = '%categ_id%' order by fix_dt desc limit 1
 	into x;
     if( x is null or '%fix_dt%' > x) then
@@ -117,13 +117,13 @@ begin
 	    update dyn_audits set "_isRecentData" = 1 where account_id='%account_id%' and fix_date=f_date /*and categ_id = '%categ_id%'*/;
 
 	    /* recompiles KPI: */
-	    delete from account_kpi where account_id='%account_id%' and kpi_id='%doc_code_sys%';
-	    insert into account_kpi(account_id, kpi_id, descr0, descr1)
+	    delete from account_info where account_id='%account_id%' and join_code='%doc_code_sys%';
+	    insert into account_info(account_id, join_code, descr0, descr1, row_no)
 		values('%account_id%', '%doc_code_sys%', 
 		    "L10n_format_a"(u_lang,'aKPI','','audit',array['fix_date',"L"(f_date)]),
 		    '<b>'||(
 			select round(sum(sla*wf)*100/sum(wf), 1) from dyn_audits where account_id='%account_id%' and "_isRecentData"=1 group by account_id
-		    )||'%</b>');
+		    )||'%</b>', 0);
 
 	    /* recompiles target */
 	    update targets set hidden=1 where target_id in (
