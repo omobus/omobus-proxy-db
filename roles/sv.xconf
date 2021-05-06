@@ -49,7 +49,7 @@ traffic->wakeup = 60
 traffic->read_timeout = 15
 upd->wakeup = 40
 
-terminals = logo support watermark obsolete oom update_required title user gps work route reminders account location kpi targets route_history orders_history reclamations_history sales_history mutuals debts refunds stats rating delim checkup presence price photo stock oos delim shipments ordered_products returned_products order reclamation delim quest comment target contact equipment deletion addition unsched %%terminalList%% delim products planograms pos_materials info_materials notice docs sync version
+terminals = logo support watermark obsolete oom update_required title user gps work route reminders account location info targets route_history orders_history reclamations_history sales_history mutuals debts refunds stats rating delim checkup presence price photo stock oos delim shipments ordered_products returned_products order reclamation delim quest comment target contact equipment deletion addition unsched %%terminalList%% delim products planograms pos_materials info_materials notice docs sync version
 sync->outdated = 6
 oom->panic = 200
 work->begin = gpsmon sync upd
