@@ -44,10 +44,6 @@ select
 	when 'gps_state' then
 	    (select 'state: ' || state || ', provider: ' || provider || case when msg is null or msg = '' then '' else ' [' || msg || ']' end
 		from a_gps_state where j.act_id=act_id)
-	when 'gsm_pos' then
-	    (select 'gsm control point: ' || upper(radio) || ' mcc=' || mcc || ' mnc=' ||mnc || ' cid=' || cid || ' lac=' || lac || ' asu=' || asu ||
-		' (ta=' || ta || ' rxlev=' || rxlev || ')'
-	    from a_gsm_pos where j.act_id=act_id)
 	when 'gsm_state' then
 	    (select format('SIM#0: %s SIM#1: %s', sim0_state, sim1_state)
 		from a_gsm_state where j.act_id=act_id)

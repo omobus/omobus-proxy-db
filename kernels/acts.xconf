@@ -28,7 +28,6 @@
 <xi:include href="../queries/acts/exchange.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/gps_pos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/gps_state.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/acts/gsm_pos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/gsm_state.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/heap.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/lifecycle.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

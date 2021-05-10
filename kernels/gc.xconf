@@ -66,9 +66,8 @@ begin
     delete from a_exchange where left(fix_dt,10) < gc_date;
     delete from a_gps_pos where left(fix_dt,10) < gc_date;
     delete from a_gps_trace where left(fix_dt,10) < gc_date;
-    delete from a_gps_state where left(fix_dt,10) < gc_date;
-    delete from a_gsm_pos where left(fix_dt,10) < gc_date;
-    delete from a_gsm_trace where left(fix_dt,10) < gc_date;
+    delete from a_gps_pos where left(fix_dt,10) < gc_date;
+    delete from a_gsm_state where left(fix_dt,10) < gc_date;
     delete from a_heap where left(fix_dt,10) < gc_date;
     delete from a_heap_trace where left(fix_dt,10) < gc_date;
     delete from a_lifecycle where left(fix_dt,10) < gc_date;
