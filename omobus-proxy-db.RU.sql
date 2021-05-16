@@ -221,7 +221,6 @@ insert into sysholidays(h_date, country_id, descr) values('2021-01-08', 'RU', '�
 insert into sysholidays(h_date, country_id, descr) values('2021-02-23', 'RU', 'День защитника Отечества');
 insert into sysholidays(h_date, country_id, descr) values('2021-03-08', 'RU', 'Международный женский день');
 insert into sysholidays(h_date, country_id, descr) values('2021-05-03', 'RU', 'Праздник Весны и Труда (перенос с 1 мая на 3 мая)');
-insert into sysholidays(h_date, country_id, descr) values('2021-05-04', 'RU', 'Новогодние каникулы (перенос с 4 января на 4 мая)');
 insert into sysholidays(h_date, country_id, descr) values('2021-05-10', 'RU', 'День Победы (перенос с 9 мая на 10 мая)');
 insert into sysholidays(h_date, country_id, descr) values('2021-06-14', 'RU', 'День России (перенос с 12 июня на 14 июня)');
 insert into sysholidays(h_date, country_id, descr) values('2021-11-04', 'RU', 'День народного единства');
