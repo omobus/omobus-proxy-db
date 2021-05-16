@@ -38,8 +38,8 @@ select
 	    from a_heap where j.act_id=act_id)
 	when 'gps_pos' then
 	    (select 'GPS control point' || case when latitude = 0 and longitude = 0 then ' is empty' else (': provider=' || 
-		case when provider is null then '-' else provider end || ', accuracy=' || accuracy || ', outdate (sec.)=' || 
-		seconds || ', satellites=' || case when satellites is null then '-' else satellites::varchar end) end 
+		case when provider is null then '-' else provider end || ', accuracy=' || accuracy || ', outdate=' || 
+		seconds || ' sec., satellites=' || case when satellites is null then '-' else satellites::varchar end) end 
 	    from a_gps_pos where j.act_id=act_id)
 	when 'gps_state' then
 	    (select 'state: ' || state || ', provider: ' || provider || case when msg is null or msg = '' then '' else ' [' || msg || ']' end
