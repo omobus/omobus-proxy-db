@@ -158,8 +158,8 @@ begin
 		perform content_update('tech_route', u_id, p, p);
 	    end if;
 	    insert into ".dates"(d) values(p) on conflict do nothing;
+	    raise notice 'cycles: [user_id=%] refreshed content_stream tech_route reports at %.', u_id, p;
 	end loop;
-	raise notice 'cycles: [user_id=%] refreshed content_stream tech_route reports at %.', u_id, p;
     end loop;
 
     for p in
@@ -172,7 +172,7 @@ begin
     if( (select count(*) from ".dates") != 0 ) then
 	update route_cycles set compiled_ts = current_timestamp
 	    where cycle_id = c_id;
-	raise notice 'cycles: **** route compiled_ts updated to [%] ****', current_timestamp;
+	raise notice 'cycles: compiled_ts updated to [%]', current_timestamp;
     end if;
 end;
 $$
