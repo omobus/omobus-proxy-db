@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<order_summary type="text/html">
+    <queries>
+	<D>
+  <![CDATA[
+select 
+    h.doc_id,
+    a.descr a_name, 
+    a.address, 
+    h.doc_no,
+    left(h.fix_dt,10) fix_date,
+    h.amount, 
+    h.rows, 
+    h.delivery_date, 
+    h.delivery_note, 
+    h.doc_note, 
+    u.descr u_name,
+    array_to_string(h.mailboxes,',') mailboxes
+from spam_stream j
+    left join h_order h on h.doc_id = j.attrs->'doc_id'
+    left join users u on u.user_id = h.user_id
+    left join accounts a on a.account_id = h.account_id
+where j.spam_id = '%spam_id%'
+  ]]>
+	</D>
+	<R>
+  <![CDATA[
+select 
+    t.row_no + 1 row_no, 
+    p.code p_code,
+    p.descr prod, 
+    p.art art,
+    array_to_string(p.barcodes,',') barcodes,
+    t.qty, 
+    x.descr pack, 
+    t.unit_price, 
+    t.amount
+from spam_stream j
+    left join t_order t on t.doc_id = j.attrs->'doc_id'
+    left join products p on p.prod_id = t.prod_id
+    left join packs x on x.prod_id = t.prod_id and x.pack_id = t.pack_id
+where j.spam_id = '%spam_id%'
+order by row_no
+  ]]>
+	</R>
+    </queries>
+    <templates> <!-- Localized resources (L7d) -->
+	<caption>OMOBUS. ЗАКАЗ ПРОДУКЦИИ №$(doc_no)</caption>
+	<body>
+    <![CDATA[<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="omobusd">
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <title>OMOBUS. ЗАКАЗ ПРОДУКЦИИ №$(doc_no)</title>
+    <style>
+body{margin: 4px 20px 4px 20px; background-color: #f6f6f6; font-family: verdana, arial, sans-serif; font-weight: normal; font-size: 9pt;}
+h1{font-size: 11pt;font-weight: bold;}
+table{border-collapse: collapse;}
+table,td,th{border: 1px solid #adadad; padding-left: 5px; padding-right: 5px;}
+th{font-family: verdana, arial, sans-serif; font-weight: normal; font-size: 9pt; text-align: center; font-weight: lighter; border: 1.4pt solid #adadad;}
+td{font-family: verdana, arial, sans-serif; font-weight: normal; font-size: 9pt;}
+td.autoincrement,td.int{text-align: center;}
+td.int,td.numeric{white-space: nowrap;}
+td.numeric{text-align: right;}
+.watermark{color: #a3a3a3; font-size: 8pt; font-style: normal;}
+    </style>
+</head>
+<body>
+    <h1>ЗАКАЗ ПРОДУКЦИИ №$(doc_no) (позиций: <b>$(rows)</b>, на сумму: $(amount))</h1>
+    <div>$(a_name) <b>$(address)</b>.</div>
+    <div>Сотрудник: <i>$(u_name)</i>.</div>
+    $(delivery_date)
+    $(delivery_note)
+    $(doc_note)
+    <br/>
+    <br/>
+    <table>
+	<thead><tr><th>#</th><th>Название</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr></thead
+	<tbody>$(tbody)</tbody>
+    </table>
+    <br/>
+    <div class="watermark">Данные от $(inserted_ts). Создано автоматически сервисом <a href="http://omobus.ru">OMOBUS</a>.</div>
+</body>
+</html>
+    ]]>
+	</body>
+	<tbody>
+    <![CDATA[<tr><td class="autoincrement">$(row_no)</td><td>$(prod)</td><td class="int">$(qty) $(pack)</td><td class="numeric">$(unit_price)</td><td class="numeric">$(amount)</td></tr>]]>
+	</tbody>
+	<delivery_date>
+    <div>Планируемая дата поставки: <i>$(delivery_date)</i>.</div>
+	</delivery_date>
+	<delivery_note>
+    <div>Примечание доставки: <i>$(delivery_note)</i>.</div>
+	</delivery_note>
+	<note>
+    <div>Примечание: <i>$(doc_note)</i>.</div>
+	</note>
+	<attachment>
+    <![CDATA[<?xml version="1.0"?>
+<order num="$(doc_no)" date="$(fix_date)" amount="$(amount)">
+    <account_name>$(a_name)</account_name>
+    <address type="shipping">$(address)</address>
+    <delivery_date>$(delivery_date)</delivery_date>
+    <delivery_notes>$(delivery_note)</delivery_notes>
+    <notes>$(doc_note)</notes>
+    <author_name>$(u_name)</author_name>
+    <items>
+$(items)
+    </items>
+</order>
+    ]]>
+	</attachment>
+	<attachment_item>
+    <![CDATA[
+    <item num="$(row_no)">
+        <product_code>$(p_code)</product_code>
+        <product_name>$(prod)</product_name>
+        <quantity>$(qty)</quantity>
+	<pack_name>$(pack)</pack_name>
+        <unit_price>$(unit_price)</unit_price>
+        <amount>$(amount)</amount>
+        <art>$(p_code)</art>
+        <barcodes>$(p_code)</barcodes>
+    </item>
+    ]]>
+	</attachment_item>
+    </templates>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+
+local function set(s, f, t) return s == nil and '' or s:replace(string.format("$(%s)", f), t ~= nil and t or ''); end
+local function D(n) return rowset_value(_D, 0, rowset_colid(_D, n)); end
+local function R(i, n) return rowset_value(_R, i, rowset_colid(_R, n)); end
+
+local function D2(templ, n)
+    local x = D(n)
+    return (x ~= nil and not (#x == 0)) and set(templ, n, x) or ""
+end
+
+local function caption()
+    local a = _caption
+    a = set(a, "doc_no", D("doc_no"))
+    return a
+end
+
+local function rows()
+    local a, x, i, rows
+    a = ""
+    rows = rowset_rows(_R)
+
+    if rows > 0 then -- <
+        for i = 0, rows-1 do
+	    x = _tbody
+	    x = set(x, "row_no", R(i, "row_no"))
+	    x = set(x, "prod", R(i, "prod"))
+	    x = set(x, "qty", R(i, "qty"))
+	    x = set(x, "pack", R(i, "pack"))
+	    x = set(x, "unit_price", R(i, "unit_price"))
+	    x = set(x, "amount", R(i, "amount"))
+	    a = a .. x
+	end
+    end
+    return a
+end
+
+local function body()
+    local a = _body
+    a = set(a, "doc_no", D("doc_no"))
+    a = set(a, "inserted_ts", _inserted_ts)
+    a = set(a, "amount", D("amount"))
+    a = set(a, "rows", D("rows"))
+    a = set(a, "a_name", D("a_name"))
+    a = set(a, "address", D("address"))
+    a = set(a, "u_name", D("u_name"))
+    a = set(a, "delivery_date", D2(_delivery_date, "delivery_date"))
+    a = set(a, "delivery_note", D2(_delivery_note, "delivery_note"))
+    a = set(a, "doc_note", D2(_doc_note, "doc_note"))
+    a = set(a, "tbody", rows())
+    return a
+end
+
+local function items()
+    local a, x, i, rows
+    a = ""
+    rows = rowset_rows(_R)
+
+    if rows > 0 then -- <
+        for i = 0, rows-1 do
+	    x = _attachment_item
+	    x = set(x, "row_no", R(i, "row_no"))
+	    x = set(x, "p_code", R(i, "p_code"))
+	    x = set(x, "prod", R(i, "prod"))
+	    x = set(x, "art", R(i, "art"))
+	    x = set(x, "barcodes", R(i, "barcodes"))
+	    x = set(x, "qty", R(i, "qty"))
+	    x = set(x, "pack", R(i, "pack"))
+	    x = set(x, "unit_price", R(i, "unit_price"))
+	    x = set(x, "amount", R(i, "amount"))
+	    a = a .. x
+	end
+    end
+    return a
+end
+
+local function attachment()
+    local a = _attachment
+    a = set(a, "doc_no", D("doc_no"))
+    a = set(a, "amount", D("amount"))
+    a = set(a, "fix_date", D("fix_date"))
+    a = set(a, "a_name", D("a_name"))
+    a = set(a, "address", D("address"))
+    a = set(a, "u_name", D("u_name"))
+    a = set(a, "delivery_date", D("delivery_date"))
+    a = set(a, "delivery_note", D("delivery_note"))
+    a = set(a, "doc_note", D("doc_note"))
+    a = set(a, "items", items())
+    return a
+end
+
+local function filename()
+    local a = "order-$(doc_id).xml"
+    a = set(a, "doc_id", D("doc_id"))
+    return a
+end
+
+local function normalizeMailboxes(ar)
+    local a = ""
+    for index, value in ipairs(ar) do
+	if #a > 0 then -- <
+	    a = a .. ","
+	end
+	a = a .. string.format("<%s>", value)
+    end
+    return a
+end
+
+set_param(_content, "rcpt_to", normalizeMailboxes(std.split(D("mailboxes"),',')))
+set_param(_content, "msg_cap", caption())
+set_param(_content, "msg_body", body(), false)
+set_param(_content, "msg_content", "text/html")
+set_param(_content, "priority", "3" --[[ normal ]])
+set_param(_content, "filename", filename())
+write_stream(_content, attachment())
+  ]]>
+    </generator>
+</order_summary>
