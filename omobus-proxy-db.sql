@@ -10,6 +10,7 @@ create sequence seq_documents;
 create sequence seq_mail_stream;
 create sequence seq_manuals;
 create sequence seq_pack_stream;
+create sequence seq_spam_stream;
 create sequence seq_tickets;
 
 create domain address_t as varchar(256);
@@ -1585,6 +1586,19 @@ create table loyalty_levels (
 
 create index i_db_ids_loyalty_levels on loyalty_levels using GIN (db_ids);
 create trigger trig_updated_ts before update on loyalty_levels for each row execute procedure tf_updated_ts();
+
+create table mailboxes (
+    email 		email_t 	not null primary key,
+    descr 		descr_t 	null,
+    distr_id 		uid_t 		null,
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null
+);
+
+create index i_db_ids_mailboxes on mailboxes using GIN (db_ids);
+create trigger trig_updated_ts before update on mailboxes for each row execute procedure tf_updated_ts();
 
 create table manufacturers (
     manuf_id 		uid_t 		not null primary key default man_id(),
@@ -3930,7 +3944,8 @@ create table h_order (
     payment_delay 	int32_t 	null check (payment_delay is null or (payment_delay >= 0)),
     bonus 		currency_t 	null check (bonus is null or (bonus >= 0)),
     encashment 		currency_t 	null check (encashment is null or (encashment >= 0)),
-    order_param_ids 	uids_t		null
+    order_param_ids 	uids_t		null,
+    mailboxes 		emails_t 	null
 );
 
 create table t_order (
@@ -5745,6 +5760,27 @@ create table pack_stream (
 );
 
 create trigger trig_lock_update before update on pack_stream for each row execute procedure tf_lock_update();
+
+
+create table spam_stream (
+    spam_id		int64_t 	not null primary key default nextval('seq_spam_stream'),
+    user_id 		uid_t 		not null,
+    spam_code 		code_t 		not null,
+    attrs 		hstore 		null,
+    inserted_ts 	ts_auto_t 	not null,
+    spam_ts 		ts_t 		null
+);
+
+create or replace function spam_add(_code code_t, _user_id uid_t, _attrs hstore) 
+    returns int
+as $BODY$
+begin
+    insert into spam_stream(user_id, spam_code, attrs)
+	values(_user_id, _code, _attrs);
+    return 1;
+end;
+$BODY$ language plpgsql;
+
 
 create table thumbnail_stream (
     photo 		blob_t 		not null primary key,

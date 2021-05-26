@@ -61,6 +61,7 @@
 <xi:include href="../queries/sync/info_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/job_titles.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/loyalty_levels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/mailboxes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/manufacturers.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/matrices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/mutuals.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -313,6 +314,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<floating_prices key="distr_id" strict="yes" />
 	<group_prices key="distr_id" strict="yes" />
 	<my_distributors key="distr_id" strict="yes" />
+	<mailboxes key="distr_id" />
 	<mutuals key="distr_id" strict="yes" />
 	<mutuals_history key="distr_id" strict="yes" />
 	<mutuals_history_products key="distr_id" strict="yes" />

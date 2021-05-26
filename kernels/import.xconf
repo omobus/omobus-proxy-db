@@ -61,6 +61,7 @@
 <xi:include href="../queries/import/highlights.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/job_titles.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/kinds.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/mailboxes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/manufacturers.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/matrices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/mutuals_history_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

@@ -99,6 +99,7 @@
 	    <xs:attribute name="weight" use="optional" type="xs:decimal" default="0.0" />
 	    <xs:attribute name="volume" use="optional" type="xs:decimal" default="0.0" />
 	    <xs:attribute name="order_param_ids" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="mailboxes" use="optional" type="xs:string" default="" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>

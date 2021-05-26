@@ -21,6 +21,7 @@ select
     h.wareh_id, w.descr warehouse,
     h.distr_id, d.descr distributor,
     array_to_string((select array_agg(replace(descr,'|',' ')) from order_params where distr_id=h.distr_id and order_param_id=any(h.order_param_ids)),'|') order_params,
+    array_to_string(h.mailboxes,'|') mailboxes,
     u.executivehead_id head_id, ex.descr head_name,
     j.status ttd,
     h.inserted_ts
@@ -83,6 +84,8 @@ tb.rows = rt.rows(_L0, false, function(r, n, a)
     elseif std.contains({'amount','weight','volume','payment_delay','bonus','encashment','dist'}, n) then
 	r[n] = tonumber(a)
     elseif n == 'order_params' then
+	r[n] = std.split(a, '|')
+    elseif n == 'mailboxes' then
 	r[n] = std.split(a, '|')
     else
 	r[n] = a
