@@ -59,6 +59,7 @@ declare
     b date_t;
     e date_t;
     no int32_t;
+    weeks int;
     today date_t default current_date + "offset";
     x date_t;
     a_id uid_t;
@@ -71,12 +72,14 @@ declare
     u1 timestamp;
     u2 timestamp;
 begin
-    select cycle_id, b_date, e_date, cycle_no from route_cycles 
+    select 
+	cycle_id, b_date, e_date, cycle_no, ceil((e_date::date - b_date::date)/7.0)
+    from route_cycles 
 	where hidden = 0 and today between b_date and e_date and status = 'inprogress'
     order by b_date desc limit 1
-    into c_id, b, e, no;
+    into c_id, b, e, no, weeks;
 
-    if( c_id is null ) then
+    if( c_id is null or weeks <= 0 ) then
 	return;
     end if;
 
@@ -198,13 +201,13 @@ declare
     p date_t;
 begin
     select 
-	cycle_id, b_date, e_date, cycle_no, ceil((e_date::date - b_date::date)::float/7) 
+	cycle_id, b_date, e_date, cycle_no, ceil((e_date::date - b_date::date)/7.0) 
     from route_cycles 
-    where hidden = 0 and status in ('inprogress','closed') and (e_date::date - current_date) <= depth
+	where hidden = 0 and status in ('inprogress','closed') and (e_date::date - current_date) <= depth
     order by b_date desc limit 1
     into c_id, b, e, no, weeks;
 
-    if( c_id is null ) then
+    if( c_id is null or weeks <= 0 ) then
 	return;
     end if;
 
