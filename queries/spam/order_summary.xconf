@@ -53,7 +53,7 @@ order by row_no
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="omobusd">
     <meta http-equiv="Pragma" content="no-cache"/>
-    <title>OMOBUS. ЗАКАЗ ПРОДУКЦИИ №$(doc_no)</title>
+    <title>OMOBUS. Заказ продукции №$(doc_no)</title>
     <style>
 body{margin: 4px 20px 4px 20px; background-color: #f6f6f6; font-family: verdana, arial, sans-serif; font-weight: normal; font-size: 9pt;}
 h1{font-size: 11pt;font-weight: bold;}
@@ -69,15 +69,14 @@ td.numeric{text-align: right;}
 </head>
 <body>
     <h1>ЗАКАЗ ПРОДУКЦИИ №$(doc_no) (позиций: <b>$(rows)</b>, на сумму: $(amount))</h1>
-    <div>$(a_name) <b>$(address)</b>.</div>
-    <div>Сотрудник: <i>$(u_name)</i>.</div>
-    $(delivery_date)
-    $(delivery_note)
-    $(doc_note)
+    <div>$(a_name)</div>
+    <div>$(address)</div>
     <br/>
+    <div>Дата создания: <i>$(fix_date)</i>.</div>
+    <div>Автор: <i>$(u_name)</i>.</div>$(delivery_date)$(delivery_note)$(doc_note)
     <br/>
     <table>
-	<thead><tr><th>#</th><th>Название</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr></thead
+	<thead><tr><th>#</th><th>Код</th><th>Название</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr></thead
 	<tbody>$(tbody)</tbody>
     </table>
     <br/>
@@ -87,16 +86,16 @@ td.numeric{text-align: right;}
     ]]>
 	</body>
 	<tbody>
-    <![CDATA[<tr><td class="autoincrement">$(row_no)</td><td>$(prod)</td><td class="int">$(qty) $(pack)</td><td class="numeric">$(unit_price)</td><td class="numeric">$(amount)</td></tr>]]>
+    <![CDATA[<tr><td class="autoincrement">$(row_no)</td><td>$(p_code)</td><td>$(prod)</td><td class="int">$(qty) $(pack)</td><td class="numeric">$(unit_price)</td><td class="numeric">$(amount)</td></tr>]]>
 	</tbody>
 	<delivery_date>
-    <div>Планируемая дата поставки: <i>$(delivery_date)</i>.</div>
+    <![CDATA[<div>Планируемая дата поставки: <i>$(delivery_date)</i>.</div>]]>
 	</delivery_date>
 	<delivery_note>
-    <div>Примечание доставки: <i>$(delivery_note)</i>.</div>
+    <![CDATA[<div>Примечание доставки: <i>$(delivery_note)</i>.</div>]]>
 	</delivery_note>
 	<note>
-    <div>Примечание: <i>$(doc_note)</i>.</div>
+    <![CDATA[<div>Примечание: <i>$(doc_note)</i>.</div>]]>
 	</note>
 	<attachment>
     <![CDATA[<?xml version="1.0"?>
@@ -122,7 +121,7 @@ $(items)
 	<pack_name>$(pack)</pack_name>
         <unit_price>$(unit_price)</unit_price>
         <amount>$(amount)</amount>
-        <art>$(p_code)</art>
+        <art>$(art)</art>
         <barcodes>$(p_code)</barcodes>
     </item>
     ]]>
@@ -156,6 +155,7 @@ local function rows()
         for i = 0, rows-1 do
 	    x = _tbody
 	    x = set(x, "row_no", R(i, "row_no"))
+	    x = set(x, "p_code", R(i, "p_code"))
 	    x = set(x, "prod", R(i, "prod"))
 	    x = set(x, "qty", R(i, "qty"))
 	    x = set(x, "pack", R(i, "pack"))
@@ -176,6 +176,7 @@ local function body()
     a = set(a, "a_name", D("a_name"))
     a = set(a, "address", D("address"))
     a = set(a, "u_name", D("u_name"))
+    a = set(a, "fix_date", D("fix_date"))
     a = set(a, "delivery_date", D2(_delivery_date, "delivery_date"))
     a = set(a, "delivery_note", D2(_delivery_note, "delivery_note"))
     a = set(a, "doc_note", D2(_doc_note, "doc_note"))
