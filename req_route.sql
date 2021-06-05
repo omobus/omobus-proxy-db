@@ -24,13 +24,13 @@ begin
 	raise exception '% invalid input attribute!', fcesig;
     end if;
 
-    select ceil((e_date::date - b_date::date)::float/7), status from route_cycles where cycle_id = (_attrs).cycle_id
+    select ceil((e_date::date - b_date::date)/7.0), status from route_cycles where cycle_id = (_attrs).cycle_id
 	into weeks, x;
 
     if( weeks is null or x = 'closed' ) then
 	raise exception '% unable to edit unknown or closed cycle!', fcesig;
     end if;
-    if( weeks <= 0 or weeks > 6  ) then
+    if( weeks <= 0 or weeks > 4  ) then
 	raise exception '% cycle [%] dates are invalid!', fcesig, (_attrs).cycle_id;
     end if;
     if( _cmd in ('set/week', 'set/day') and (select count(*) from accounts where account_id = (_attrs).account_id and (hidden=1 or locked=1)) > 0 ) then
@@ -59,8 +59,13 @@ begin
 	    select coalesce("rules:wdays","paramIntegerArray"('rules:wdays')) from users where user_id = (_attrs).user_id
 		into u_wdays;
 	    if( u_wdays is null or u_wdays[_arg] = 1 ) then
-		update routes set author_id=_login, days[_arg] = 1
-		    where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
+		if( weeks = 1 ) then
+		    update routes set author_id=_login, days[_arg] = 1, weeks[1] = 1
+			where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
+		else
+		    update routes set author_id=_login, days[_arg] = 1
+			where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
+		end if;
 		rc := 1;
 	    else
 		raise notice '% unables to set days[%]=1 to the route (user_id=%, account_idm%, cycle_id=%), please, check users.rules:wdays rules.', 
@@ -71,8 +76,13 @@ begin
 	if( _arg is null or _arg < 1 or _arg > 7 ) then
 	    raise exception '% invalid day number!', fcesig;
 	else
-	    update routes set author_id=_login, days[_arg] = 0
-		where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
+	    if( weeks = 1 ) then
+		update routes set author_id=_login, days[_arg] = 0, weeks[1] = 0
+		    where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
+	    else
+		update routes set author_id=_login, days[_arg] = 0
+		    where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
+	    end if;
 	    rc := 1;
 	end if;
     elsif( _cmd = 'remove' ) then
