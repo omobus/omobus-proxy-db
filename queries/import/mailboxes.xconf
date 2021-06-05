@@ -22,14 +22,14 @@ select count(*) from mailboxes
 </check_exist>
 <update>
   <![CDATA[
-update mailboxes set descr=trim(both from '%descr%'), competitor=NIL('%distr_id%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update mailboxes set descr=trim(both from '%descr%'), distr_id=NIL('%distr_id%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where email = '%email%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into mailboxes (email, descr, hidden, db_ids)
-    values ('%email%', trim(both from '%descr%'), NIL(%competitor%), 0, array['%ErpCode%'])
+insert into mailboxes (email, descr, distr_id, hidden, db_ids)
+    values ('%email%', trim(both from '%descr%'), NIL('%distr_id%'), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>
