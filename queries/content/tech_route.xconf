@@ -68,7 +68,7 @@ from user_routes('%user_id%', '%b_date%', '%e_date%', 1::bool_t) r
     left join activity_types t on r.activity_type_id = t.activity_type_id
     left join canceling_types x on x.canceling_type_id = r.canceling_type_id
 where a.account_id is not null
-order by r.b_dt, r.row_no
+order by r.b_dt, r.row_no, a.descr, a.address, a.code
   ]]>
 	</route>
 	<additions>
