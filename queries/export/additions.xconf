@@ -14,7 +14,11 @@ select
     a.chan_id, 
     a.attr_ids,
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(a.photos)) photos, 
-    a.guid account_id, a.validator_id, a.validated, a.hidden, coalesce(g1."x-address",g0."x-address") geo_address,
+    a.guid account_id, 
+    a.validator_id, 
+    a.validated, 
+    a.hidden, 
+    coalesce(g1."x-address",g0."x-address") geo_address,
     g0.latitude,
     g0.longitude
 from j_additions a
