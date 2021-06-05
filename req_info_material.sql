@@ -53,7 +53,7 @@ begin
 	hs := hs || hstore(array['descr',(_opt).descr]);
 	hs := hs || hstore(array['country_id',(_opt).country_id]);
 	if( (_opt).dep_ids is not null ) then
-	    hs := hs || hstore(array['dep_ids',(_opt).dep_ids]);
+	    hs := hs || hstore(array['dep_ids',array_to_string((_opt).dep_ids,',')]);
 	end if;
 	if( (_opt).rc_id is not null ) then
 	    hs := hs || hstore(array['rc_id',(_opt).rc_id]);

@@ -54,7 +54,7 @@ begin
 	end if;
 	hs := hs || hstore(array['country_id',(_opt).country_id]);
 	if( (_opt).dep_ids is not null ) then
-	    hs := hs || hstore(array['dep_ids',(_opt).dep_ids]);
+	    hs := hs || hstore(array['dep_ids',array_to_string((_opt).dep_ids,',')]);
 	end if;
 	if( (_opt).b_date is not null ) then
 	    hs := hs || hstore(array['b_date',(_opt).b_date]);

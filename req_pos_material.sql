@@ -56,7 +56,7 @@ begin
 	hs := hs || hstore(array['brand_ids',array_to_string((_opt).brand_ids,',')]);
 	hs := hs || hstore(array['country_id',(_opt).country_id]);
 	if( (_opt).dep_ids is not null ) then
-	    hs := hs || hstore(array['dep_ids',(_opt).dep_ids]);
+	    hs := hs || hstore(array['dep_ids',array_to_string((_opt).dep_ids,',')]);
 	end if;
 	if( (_opt).placement_ids is not null ) then
 	    hs := hs || hstore(array['placement_ids',array_to_string((_opt).placement_ids,',')]);
