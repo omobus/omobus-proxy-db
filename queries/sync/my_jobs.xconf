@@ -11,7 +11,7 @@ union
     select 
 	u.user_id, a.account_id, r.doc_type, r.frequency 
     from rules r, users u, accounts a
-    where r.hidden = 0 and u.hidden = 0 and a.hidden = 0 and a.approved = 1 and a.ownerless = 0 and u.dev_login is not null and u.dev_login <> '' and r.role = u.role  
+    where r.hidden = 0 and u.hidden = 0 and a.hidden = 0 and /*a.approved = 1 and*/ a.ownerless = 0 and u.dev_login is not null and u.dev_login <> '' and r.role = u.role  
 	and r.account_ids is null and r.region_ids is null and r.city_ids is null and r.rc_ids is null and r.chan_ids is null and r.poten_ids is null
 ) x
 left join (
