@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<activity_types templ="%activity_type_id%;%descr%;%strict%;">
+<activity_types templ="%activity_type_id%;%descr%;%strict%;%joint%;">
   <![CDATA[
-select activity_type_id, descr, strict from activity_types
+select activity_type_id, descr, strict, joint from activity_types
     where hidden = 0
 order by 1
   ]]>
