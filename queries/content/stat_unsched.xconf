@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<stat_unsched type="application/json" compress="gz" compress_level="9">
+    <queries>
+	<L>
+  <![CDATA[
+select
+    h.doc_id, 
+    h.user_id, u.descr u_name, u.dev_login, 
+    h.fix_dt, 
+    h.inserted_ts, 
+    h.unsched_type_id, t.descr unsched_type, 
+    h.doc_note, 
+    datediff(h.created_dt, h.closed_dt) duration,
+    u.executivehead_id head_id, ex.descr head_name
+from h_unsched h
+    left join unsched_types t on t.unsched_type_id = h.unsched_type_id
+    left join users u on u.user_id = h.user_id
+    left join users ex on ex.user_id = u.executivehead_id
+where '%b_date%'<=left(h.fix_dt, 10) and left(h.fix_dt, 10)<='%e_date%'
+order by h.inserted_ts desc, u.descr
+  ]]>
+	</L>
+    </queries>
+    <generator>
+  <![CDATA[
+require('rtlib').main("unsched", false, function(r, n, a) r[n] = n == 'duration' and tonumber(a) or a; end)
+  ]]>
+    </generator>
+</stat_unsched>
