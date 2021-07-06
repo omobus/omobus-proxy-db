@@ -1626,6 +1626,7 @@ create table matrices (
 );
 
 create index i_db_ids_matrices on matrices using GIN (db_ids);
+create index i_account_id_matrices on matrices(account_id);
 create trigger trig_updated_ts before update on matrices for each row execute procedure tf_updated_ts();
 
 create table mutuals (
