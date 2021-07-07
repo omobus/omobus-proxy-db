@@ -2,29 +2,30 @@
 <additions templ="%doc_id%;%fix_dt%;%user_id%;%account%;%address%;%legal_address%;%number%;%addition_type_id%;%note%;%chan_id%;%attr_ids%;%photos%;%account_id%;%validator_id%;%validated%;%hidden%;%geo_address%;%latitude%;%longitude%;">
   <![CDATA[
 select
-    a.doc_id, 
-    a.user_id, 
-    a.fix_dt, 
-    a.account, 
-    a.address, 
-    a.legal_address, 
-    a.number, 
-    a.addition_type_id, 
-    a.note, 
-    a.chan_id, 
-    a.attr_ids,
-    (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(a.photos)) photos, 
-    a.guid account_id, 
-    a.validator_id, 
-    a.validated, 
-    a.hidden, 
+    j.doc_id, 
+    j.user_id, 
+    j.fix_dt, 
+    j.account, 
+    j.address, 
+    j.legal_address, 
+    j.number, 
+    j.addition_type_id, 
+    j.note, 
+    j.chan_id, 
+    j.attr_ids,
+    (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(j.photos)) photos, 
+    j.guid account_id, 
+    j.validator_id, 
+    j.validated, 
+    j.hidden, 
     coalesce(g1."x-address",g0."x-address") geo_address,
-    g0.latitude,
-    g0.longitude
-from j_additions a
-    left join geocode_stream g0 on g0.account_id=a.guid and g0.reverse=0
-    left join geocode_stream g1 on g1.account_id=a.guid and g1.reverse=1
-where a.updated_ts >= current_timestamp - '5 days 00:00:00'::interval
+    j.latitude,
+    j.longitude
+from j_additions j
+    left join accounts a on a.account_id = j.guid
+    left join geocode_stream g0 on g0.account_id = j.guid and g0.reverse = 0
+    left join geocode_stream g1 on g1.account_id = j.guid and g1.reverse = 1
+where j.updated_ts >= current_timestamp - '5 days 00:00:00'::interval and a.approved = 0
 order by 1
   ]]>
 </additions>

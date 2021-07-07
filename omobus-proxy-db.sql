@@ -5030,6 +5030,8 @@ create table j_additions (
     chan_id 		uid_t 		null,
     photos 		blobs_t 	null,
     attr_ids 		uids_t 		null,
+    latitude 		gps_t 		null,
+    longitude 		gps_t 		null,
     guid 		uid_t 		not null,
     validator_id 	uid_t		null,
     validated 		bool_t 		not null default 0,

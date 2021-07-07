@@ -50,8 +50,8 @@ begin
 	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%created_dt%', NIL('%created_gps_dt%'), NIL(%created_gps_la%), NIL(%created_gps_lo%), '%closed_dt%', NIL('%closed_gps_dt%'), NIL(%closed_gps_la%), NIL(%closed_gps_lo%), '%w_cookie%', '%server_hostname%', '%dev_pack%', '%doc_code_sys%');
 
 -- *** addition -> j_additions
-    insert into j_additions (doc_id, user_id, fix_dt, account, address, legal_address, number, addition_type_id, note, chan_id, photos, attr_ids, guid)
-	select doc_id, user_id, fix_dt, account, address, legal_address, number, addition_type_id, doc_note, chan_id, photos, attr_ids, guid from h_addition where doc_id='%doc_id_sys%';
+    insert into j_additions (doc_id, user_id, fix_dt, account, address, legal_address, number, addition_type_id, note, chan_id, photos, attr_ids, latitude, longitude, guid)
+	select doc_id, user_id, fix_dt, account, address, legal_address, number, addition_type_id, doc_note, chan_id, photos, attr_ids, created_gps_la, created_gps_lo, guid from h_addition where doc_id='%doc_id_sys%';
 
 -- *** addition -> accounts
     if( (select count(*) from accounts where account_id='%guid%') > 0 ) then
