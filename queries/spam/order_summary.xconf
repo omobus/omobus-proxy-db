@@ -30,7 +30,7 @@ select
     p.code p_code,
     p.descr prod, 
     p.art art,
-    array_to_string(p.barcodes,',') barcodes,
+    array_to_string(ean13_out(p.barcodes),' ') barcodes,
     t.qty, 
     x.descr pack, 
     t.unit_price, 
@@ -76,7 +76,7 @@ td.numeric{text-align: right;}
     <div>Автор: <i>$(u_name)</i>.</div>$(delivery_date)$(delivery_note)$(doc_note)
     <br/>
     <table>
-	<thead><tr><th>#</th><th>Код</th><th>Название</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr></thead
+	<thead><tr><th>#</th><th>Штрихкод</th><th>Код</th><th>Название</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr></thead
 	<tbody>$(tbody)</tbody>
     </table>
     <br/>
@@ -86,7 +86,7 @@ td.numeric{text-align: right;}
     ]]>
 	</body>
 	<tbody>
-    <![CDATA[<tr><td class="autoincrement">$(row_no)</td><td>$(p_code)</td><td>$(prod)</td><td class="int">$(qty) $(pack)</td><td class="numeric">$(unit_price)</td><td class="numeric">$(amount)</td></tr>]]>
+    <![CDATA[<tr><td class="autoincrement">$(row_no)</td><td>$(barcodes)</td><td>$(p_code)</td><td>$(prod)</td><td class="int">$(qty) $(pack)</td><td class="numeric">$(unit_price)</td><td class="numeric">$(amount)</td></tr>]]>
 	</tbody>
 	<delivery_date>
     <![CDATA[<div>Планируемая дата поставки: <i>$(delivery_date)</i>.</div>]]>
@@ -115,14 +115,14 @@ $(items)
 	<attachment_item>
     <![CDATA[
     <item num="$(row_no)">
-        <product_code>$(p_code)</product_code>
-        <product_name>$(prod)</product_name>
-        <quantity>$(qty)</quantity>
+	<product_code>$(p_code)</product_code>
+	<product_name>$(prod)</product_name>
+	<quantity>$(qty)</quantity>
 	<pack_name>$(pack)</pack_name>
-        <unit_price>$(unit_price)</unit_price>
-        <amount>$(amount)</amount>
-        <art>$(art)</art>
-        <barcodes>$(p_code)</barcodes>
+	<unit_price>$(unit_price)</unit_price>
+	<amount>$(amount)</amount>
+	<art>$(art)</art>
+	<barcodes>$(barcodes)</barcodes>
     </item>
     ]]>
 	</attachment_item>
@@ -161,6 +161,7 @@ local function rows()
 	    x = set(x, "pack", R(i, "pack"))
 	    x = set(x, "unit_price", R(i, "unit_price"))
 	    x = set(x, "amount", R(i, "amount"))
+	    x = set(x, "barcodes", R(i, "barcodes"))
 	    a = a .. x
 	end
     end
