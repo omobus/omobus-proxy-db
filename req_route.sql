@@ -33,14 +33,14 @@ begin
     if( weeks <= 0 or weeks > 4  ) then
 	raise exception '% cycle [%] dates are invalid!', fcesig, (_attrs).cycle_id;
     end if;
-    if( _cmd in ('set/week', 'set/day') and (select count(*) from accounts where account_id = (_attrs).account_id and (hidden=1 or locked=1)) > 0 ) then
+    if( _cmd in ('set/week', 'set/day') and (select count(*) from accounts where account_id = (_attrs).account_id and (hidden = 1 or locked = 1)) > 0 ) then
 	raise exception '% account [%] is locked or deleted!', fcesig, (_attrs).account_id;
     end if;
     if( _cmd = 'set/week' ) then
 	if( _arg is null or _arg < 1 or _arg > weeks ) then
 	    raise exception '% invalid week number!', fcesig;
 	else
-	    update routes set author_id=_login, weeks[_arg] = 1
+	    update routes set author_id = _login, weeks[_arg] = 1
 		where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
 	    rc := 1;
 	end if;
@@ -60,10 +60,10 @@ begin
 		into u_wdays;
 	    if( u_wdays is null or u_wdays[_arg] = 1 ) then
 		if( weeks = 1 ) then
-		    update routes set author_id=_login, days[_arg] = 1, weeks[1] = 1
+		    update routes set author_id = _login, days[_arg] = 1, weeks = array[1,0,0,0]
 			where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
 		else
-		    update routes set author_id=_login, days[_arg] = 1
+		    update routes set author_id = _login, days[_arg] = 1
 			where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
 		end if;
 		rc := 1;
@@ -76,21 +76,24 @@ begin
 	if( _arg is null or _arg < 1 or _arg > 7 ) then
 	    raise exception '% invalid day number!', fcesig;
 	else
-	    if( weeks = 1 ) then
-		update routes set author_id=_login, days[_arg] = 0, weeks[1] = 0
+	    if( weeks = 1 and (
+		    select sum(q1) from routes q0, unnest(q0.days) q1
+			where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id
+		) = 1 ) then
+		update routes set author_id = _login, days[_arg] = 0, weeks = array[0,0,0,0]
 		    where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
 	    else
-		update routes set author_id=_login, days[_arg] = 0
+		update routes set author_id = _login, days[_arg] = 0
 		    where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
 	    end if;
 	    rc := 1;
 	end if;
     elsif( _cmd = 'remove' ) then
-	update routes set author_id=_login, hidden = 1
+	update routes set author_id = _login, hidden = 1
 	    where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
 	rc := 1;
     elsif( _cmd = 'restore' ) then
-	update routes set author_id=_login, hidden = 0
+	update routes set author_id = _login, hidden = 0
 	    where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
 	rc := 1;
     elsif( _cmd = 'add' ) then
@@ -101,7 +104,7 @@ begin
 		values((_attrs).user_id, (_attrs).cycle_id, (_attrs).account_id, _login);
 	    rc := 1;
 	elsif( tmp = 1 ) then
-	    update routes set author_id=_login, days=array[0,0,0,0,0,0,0], weeks=array[0,0,0,0], hidden = 0
+	    update routes set author_id = _login, days = array[0,0,0,0,0,0,0], weeks = array[0,0,0,0], hidden = 0
 		where user_id = (_attrs).user_id and account_id = (_attrs).account_id and cycle_id = (_attrs).cycle_id;
 	    rc := 1;
 	end if;
