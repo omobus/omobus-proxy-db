@@ -48,10 +48,18 @@ select
     r.account_id, 
     r.a_cookie, 
     r.row_no sched_no,
-    r.activity_type_id, t.descr activity_type, t.strict,
-    r.b_dt, r.e_dt, datediff(r.b_dt, r.e_dt) duration,
-    r.latitude, r.longitude, distance(a.latitude, a.longitude, r.latitude, r.longitude) dist,
-    r.latitude_e, r.longitude_e, distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) dist_e,
+    r.activity_type_id, 
+    t.descr activity_type, 
+    t.strict,
+    r.b_dt, 
+    r.e_dt, 
+    datediff(r.b_dt, r.e_dt) duration,
+    r.latitude, 
+    r.longitude, 
+    distance(a.latitude, a.longitude, r.latitude, r.longitude) dist,
+    r.latitude_e, 
+    r.longitude_e, 
+    distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) dist_e,
     case 
 	when r.closed = 1 and t.strict = 1 and r.b_dt is not null and r.e_dt is not null and r.b_dt < r.e_dt 
 	    and left(r.b_dt,10) = '%b_date%' and left(r.e_dt,10) = '%e_date%' 
@@ -60,8 +68,10 @@ select
     end mileage,
     r.extra_info,
     r.docs,
-    x.descr canceling_type, r.canceling_note,
-    r.zstatus, r.znote,
+    x.descr canceling_type, 
+    r.canceling_note,
+    r.zstatus, 
+    r.znote,
     r.guid
 from user_routes('%user_id%', '%b_date%', '%e_date%', 1::bool_t) r
     left join accounts a on a.account_id = r.account_id
