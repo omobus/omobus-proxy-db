@@ -24,8 +24,8 @@ select * from doc_id()
 </create>
 <write_body>
   <![CDATA[
-insert into h_contact(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, account_id, contact_id, name, surname, patronymic, job_title_id, phone, mobile, email, loyalty_level_id, locked, consent, deleted, exist)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), '%account_id%', '%contact_id%', trim('%name%'), NIL(trim('%surname%')), NIL(trim('%patronymic%')), NIL('%job_title_id%'), NIL('%phone%'), NIL('%mobile%'), NIL('%email%'), NIL('%loyalty_level_id%'), "toBoolean"('%locked%'), $1:blob, "toBoolean"('%deleted%'), "toBoolean"('%exist%'))
+insert into h_contact(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, account_id, contact_id, name, surname, patronymic, job_title_id, phone, mobile, email, loyalty_level_id, locked, deleted, exist)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), '%account_id%', '%contact_id%', trim('%name%'), NIL(trim('%surname%')), NIL(trim('%patronymic%')), NIL('%job_title_id%'), NIL('%phone%'), NIL('%mobile%'), NIL('%email%'), NIL('%loyalty_level_id%'), "toBoolean"('%locked%'), "toBoolean"('%deleted%'), "toBoolean"('%exist%'))
   ]]>
 </write_body>
 <close>
@@ -34,26 +34,22 @@ do $$
 declare
     f_date date_t default left('%fix_dt%', 10);
     f_time time_t default substring('%fix_dt%', 12, 5);
-    lo_data blob_t;
 begin
-    select consent from h_contact where doc_id='%doc_id_sys%' and consent is not null
-	into lo_data;
-
 -- **** contact --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
 	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', NIL('%created_gps_dt%'), NIL(%created_gps_la%), NIL(%created_gps_lo%), '%closed_dt%', NIL('%closed_gps_dt%'), NIL(%closed_gps_la%), NIL(%closed_gps_lo%), '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', '%doc_code_sys%');
 
 -- **** contact --> contacts
     if( (select count(*) from contacts where contact_id='%contact_id%') = 0 ) then
-	insert into contacts (contact_id, account_id, name, patronymic, surname, job_title_id, phone, mobile, email, loyalty_level_id, extra_info, consent, author_id, "_dataTimestamp")
-	    values('%contact_id%', '%account_id%', '%name%', NIL(trim('%patronymic%')), NIL(trim('%surname%')), '%job_title_id%', NIL('%phone%'), NIL('%mobile%'), NIL(trim('%email%')), NIL('%loyalty_level_id%'), NIL('%doc_note%'), lo_data, '%user_id_sys%', '%fix_dt%');
+	insert into contacts (contact_id, account_id, name, patronymic, surname, job_title_id, phone, mobile, email, loyalty_level_id, extra_info, author_id, "_dataTimestamp")
+	    values('%contact_id%', '%account_id%', '%name%', NIL(trim('%patronymic%')), NIL(trim('%surname%')), '%job_title_id%', NIL('%phone%'), NIL('%mobile%'), NIL(trim('%email%')), NIL('%loyalty_level_id%'), NIL('%doc_note%'), '%user_id_sys%', '%fix_dt%');
     elsif( '%exist%' <> 'yes' ) then
 	if( (select count(*) from contacts where contact_id='%contact_id%' and ("_dataTimestamp" is null or "_dataTimestamp" < '%fix_dt%')) > 0 ) then
-	    update contacts set account_id='%account_id%', name='%name%', patronymic=NIL(trim('%patronymic%')), surname=NIL(trim('%surname%')), job_title_id='%job_title_id%', phone=NIL('%phone%'), mobile=NIL('%mobile%'), email=NIL(trim('%email%')), loyalty_level_id=NIL('%loyalty_level_id%'), extra_info=NIL('%doc_note%'), consent=lo_data, author_id='%user_id_sys%', hidden=0, "_dataTimestamp"='%fix_dt%'
+	    update contacts set account_id='%account_id%', name='%name%', patronymic=NIL(trim('%patronymic%')), surname=NIL(trim('%surname%')), job_title_id='%job_title_id%', phone=NIL('%phone%'), mobile=NIL('%mobile%'), email=NIL(trim('%email%')), loyalty_level_id=NIL('%loyalty_level_id%'), extra_info=NIL('%doc_note%'), author_id='%user_id_sys%', hidden=0, "_dataTimestamp"='%fix_dt%'
 		where contact_id='%contact_id%';
 	end if;
     elsif( (select count(*) from contacts where contact_id='%contact_id%' and ("_dataTimestamp" is null or "_dataTimestamp" < '%fix_dt%')) > 0 ) then
-	update contacts set surname=NIL(trim('%surname%')), job_title_id='%job_title_id%', phone=NIL('%phone%'), mobile=NIL('%mobile%'), email=NIL(trim('%email%')), loyalty_level_id=NIL('%loyalty_level_id%'), extra_info=NIL('%doc_note%'), consent=case when consent is not null then consent else lo_data end, locked="toBoolean"('%locked%'), hidden="toBoolean"('%deleted%'), author_id='%user_id_sys%', "_dataTimestamp"='%fix_dt%'
+	update contacts set surname=NIL(trim('%surname%')), job_title_id='%job_title_id%', phone=NIL('%phone%'), mobile=NIL('%mobile%'), email=NIL(trim('%email%')), loyalty_level_id=NIL('%loyalty_level_id%'), extra_info=NIL('%doc_note%'), locked="toBoolean"('%locked%'), hidden="toBoolean"('%deleted%'), author_id='%user_id_sys%', "_dataTimestamp"='%fix_dt%'
 	    where contact_id='%contact_id%';
     else
 	raise notice '(contact) updating contact parameters [contact_id=%contact_id%, doc_id=%doc_id_sys%] was ignored.';
@@ -65,12 +61,6 @@ begin
 -- **** contact --> sysdevices
     update sysdevices set outdated_ts = current_timestamp
 	where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
-
--- **** contact --> thumbnail_stream
-    if( lo_data is not null ) then
-	insert into thumbnail_stream(photo)
-	    values(lo_data);
-    end if;
 
 -- **** contact --> content_stream
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
