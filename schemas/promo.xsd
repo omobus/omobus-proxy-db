@@ -32,7 +32,7 @@
 
     <xs:element name="promo">
 	<xs:complexType>
-	    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+	    <xs:choice minOccurs="0" maxOccurs="unbounded">
 		<xs:element name="blob">
 		    <xs:complexType>
 			<xs:simpleContent>
@@ -42,7 +42,13 @@
 			</xs:simpleContent>
 		    </xs:complexType>
 		</xs:element>
-	    </xs:sequence>
+		<xs:element name="row">
+		    <xs:complexType>
+			<xs:attribute name="promo_type_id" use="required" type="uid_t" />
+			<xs:attribute name="promo_value_id" use="required" type="uid_t" />
+		    </xs:complexType>
+		</xs:element>
+	    </xs:choice>
 	    <xs:attribute name="vstamp" use="required" type="xs:string" />
 	    <xs:attribute name="dev_pack" use="required" type="xs:integer" />
 	    <xs:attribute name="dev_id" use="required" type="xs:string" />
@@ -62,10 +68,10 @@
 	    <xs:attribute name="closed_gps_la" use="optional" type="decimal_t" default="" />
 	    <xs:attribute name="closed_gps_lo" use="optional" type="decimal_t" default="" />
 	    <xs:attribute name="closed_gps_dt" use="optional" type="datetime2_t" default="" />
-	    <xs:attribute name="categ_id" use="required" type="uid_t" />
-	    <xs:attribute name="brand_id" use="required" type="uid_t" />
+	    <xs:attribute name="prod_id" use="required" type="uid_t" />
 	    <xs:attribute name="promo_type_ids" use="required" type="uids_t" />
 	    <xs:attribute name="blobs" use="required" type="xs:integer" />
+	    <xs:attribute name="rows" use="required" type="xs:integer" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>

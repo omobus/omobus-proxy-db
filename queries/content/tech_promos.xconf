@@ -4,19 +4,31 @@
 	<L>
   <![CDATA[
 select
-    h.doc_id, h.fix_dt, h.inserted_ts, 
-    h.account_id, a.code a_code, a.descr a_name, a.address, 
+    h.doc_id, 
+    h.fix_dt, 
+    h.inserted_ts, 
+    h.account_id, 
+    a.code a_code, 
+    a.descr a_name, 
+    a.address, 
     c.descr categ,
     b.descr brand,
-    (select array_to_string(array_agg(descr::text),'|') from promo_types where promo_type_id=any(h.promo_type_ids)) promo_types,
+    p.descr prod,
+    t.descr promo_type,
+    v.descr "value",
     h.doc_note,
     array_to_string(h.photos,',') photos
 from h_promo h
-    left join categories c on h.categ_id = c.categ_id
-    left join brands b on h.brand_id = b.brand_id
+    left join unnest(h.promo_type_ids) d1 on 1 = 1
+    left join t_promo d2 on d2.doc_id = h.doc_id and d2.promo_type_id = d1
+    left join promo_types t on t.promo_type_id = d1
+    left join promo_values v on v.promo_value_id = d2.promo_value_id
+    left join products p on p.prod_id = h.prod_id
+    left join categories c on c.categ_id = p.categ_id
+    left join brands b on b.brand_id = p.brand_id
     left join accounts a on a.account_id = h.account_id
 where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
-order by h.fix_dt, h.doc_id, b.row_no, b.descr
+order by h.fix_dt, h.doc_id, c.descr, b.row_no, b.descr, p.row_no, p.descr, t.row_no, t.descr
   ]]>
 	</L>
     </queries>
@@ -24,9 +36,7 @@ order by h.fix_dt, h.doc_id, b.row_no, b.descr
   <![CDATA[
 local std = require('stdlib')
 require('rtlib').main("tech_promos", false, function(r, n, a)
-	if std.contains({'promo_types'}, n) then
-	    r[n] = std.split(a, '|')
-	elseif std.contains({'photos'}, n) then
+	if std.contains({'photos'}, n) then
 	    r[n] = std.split(a, ',')
 	else
 	    r[n] = a

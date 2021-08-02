@@ -2077,6 +2077,20 @@ create table promo_types (
 create index i_db_ids_promo_types on promo_types using GIN (db_ids);
 create trigger trig_updated_ts before update on promo_types for each row execute procedure tf_updated_ts();
 
+create table promo_values (
+    promo_value_id 	uid_t 		not null primary key default man_id(),
+    descr 		descr_t 	not null,
+    promo_type_ids 	uids_t 		not null,
+    row_no 		int32_t 	null, -- ordering
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null
+);
+
+create index i_db_ids_promo_values on promo_values using GIN (db_ids);
+create trigger trig_updated_ts before update on promo_values for each row execute procedure tf_updated_ts();
+
 create table quest_names (
     qname_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
@@ -4279,11 +4293,18 @@ create table h_promo (
     a_cookie 		uid_t 		not null,
     doc_note 		note_t 		null,
     activity_type_id 	uid_t 		not null,
-    categ_id 		uid_t 		not null,
-    brand_id 		uid_t 		not null,
+    prod_id 		uid_t 		not null,
     promo_type_ids 	uids_t 		not null,
     blobs 		int32_t 	not null,
-    photos 		blobs_t 	null
+    photos 		blobs_t 	null,
+    rows 		int32_t 	not null
+);
+
+create table t_promo (
+    doc_id 		uid_t 		not null,
+    promo_type_id 	uid_t 		not null,
+    promo_value_id 	uid_t 		not null,
+    primary key (doc_id, promo_type_id, promo_value_id)
 );
 
 create index i_fix_date_h_promo on h_promo (left(fix_dt,10));
@@ -4295,6 +4316,7 @@ create index i_2lts_h_promo on h_promo (inserted_ts);
 
 create trigger trig_lock_update before update on h_promo for each row 
     when (not (old.blobs > 0 and (old.photos is null or old.blobs <> array_length(old.photos, 1)))) execute procedure tf_lock_update();
+create trigger trig_lock_update before update on t_promo for each row execute procedure tf_lock_update();
 
 create table h_quest (
     doc_id 		uid_t 		not null primary key default doc_id(),

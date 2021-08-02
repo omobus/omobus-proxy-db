@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<promo_values templ="%promo_value_id%;%descr%;%promo_type_ids%;" empty="no">
+  <![CDATA[ 
+select promo_value_id, descr, array_to_string(promo_type_ids,',') promo_type_ids from promo_values
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</promo_values>

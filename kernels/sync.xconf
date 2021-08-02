@@ -98,6 +98,7 @@
 <xi:include href="../queries/sync/priorities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/promo_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/promo_values.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/quest_names.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/quest_rows.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/quests_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -211,6 +212,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
     <placements />
     <potentials />
     <promo_types />
+    <promo_values />
     <rating_criterias hierarchy="rating_criteria_id" />
     <rating_scores />
     <reclamation_types />
