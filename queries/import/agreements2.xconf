@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<agreements2 templ="%account_id%;%prod_id%;%b_date%;%e_date%;%facing%;%strict%;">
+<agreements2 templ="%account_id%;%prod_id%;%facing%;%strict%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -13,18 +13,13 @@ delete from agreements2
 update agreements2 set db_ids=array_remove(db_ids,'%ErpCode%')
     where db_ids @> (array['%ErpCode%'])::uids_t;
 delete from agreements2
-    where '%e_date%' >= current_date::date_t and (db_ids is null or cardinality(db_ids)=0);
+    where (db_ids is null or cardinality(db_ids)=0);
   ]]>
 </begin>
-<check_exist>
-  <![CDATA[
-select case when '%e_date%' >= current_date::date_t then 0 else 1 end exist
-  ]]>
-</check_exist>
 <insert>
   <![CDATA[
-insert into agreements2(account_id, prod_id, b_date, e_date, facing, "strict", db_ids)
-    values('%account_id%', '%prod_id%', '%b_date%', '%e_date%', 0%facing%, case when '%strict%'='1' then 1 else 0 end, array['%ErpCode%'])
+insert into agreements2(account_id, prod_id, facing, "strict", db_ids)
+    values('%account_id%', '%prod_id%', 0%facing%, case when '%strict%'='1' then 1 else 0 end, array['%ErpCode%'])
 on conflict do nothing
   ]]>
 </insert>

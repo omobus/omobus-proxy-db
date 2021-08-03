@@ -71,6 +71,20 @@ begin
 	end if;
     end if;
 
+-- **** user_activity --> slices.*
+    if( (select count(*) from slices.matrices where slice_date=f_date and account_id='%account_id%') = 0 ) then
+	insert into slices.matrices(slice_date, account_id, prod_id, placement_ids, row_no, inserted_ts)
+	    select f_date, account_id, prod_id, placement_ids, row_no, inserted_ts from matrices where account_id='%account_id%';
+    end if;
+    if( (select count(*) from slices.agreements1 where slice_date=f_date and account_id='%account_id%') = 0 ) then
+	insert into slices.agreements1(slice_date, account_id, placement_id, posm_id, "strict", cookie, inserted_ts)
+	    select f_date, account_id, placement_id, posm_id, "strict", cookie, inserted_ts from agreements1 where account_id='%account_id%';
+    end if;
+    if( (select count(*) from slices.agreements2 where slice_date=f_date and account_id='%account_id%') = 0 ) then
+	insert into slices.agreements2(slice_date, account_id, prod_id, facing, "strict", inserted_ts)
+	    select f_date, account_id, prod_id, facing, "strict", inserted_ts from agreements2 where account_id='%account_id%';
+    end if;
+
 -- **** user_activity --> j_cancellations
     if( '%route_date%' != '' and (select hidden from j_cancellations where user_id = '%user_id_sys%' and route_date = '%route_date%') = 0 ) then
 	update j_cancellations set hidden = 1, updated_ts = current_timestamp

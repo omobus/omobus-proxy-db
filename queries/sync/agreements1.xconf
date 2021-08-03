@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<agreements1 templ="%account_id%;%placement_id%;%posm_id%;%b_date%;%e_date%;%strict%;%cookie%;" empty="no">
+<agreements1 templ="%account_id%;%placement_id%;%posm_id%;%strict%;%cookie%;" empty="no">
   <![CDATA[ 
-select account_id, placement_id, posm_id, b_date, e_date, strict, cookie from agreements1
-    where 
-	/* current: */  (b_date <= current_date::date_t and current_date::date_t <= e_date) or
-	/* obsolete: */ (current_date::date_t > e_date and e_date >= (current_date - 1)::date_t) or
-	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t)
-order by 1, 2, 3, 5
+select account_id, placement_id, posm_id, strict, cookie from agreements1
+    order by 1, 2, 3, 5
   ]]>
 </agreements1>

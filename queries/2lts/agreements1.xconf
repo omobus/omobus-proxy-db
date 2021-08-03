@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<agreements1 templ="%account_id%;%placement_id%;%posm_id%;%b_date%;%e_date%;%strict%;%cookie%;">
+<agreements1 templ="%slice_date%;%account_id%;%placement_id%;%posm_id%;%strict%;%cookie%;">
   <![CDATA[
-select account_id, placement_id, posm_id, b_date, e_date, strict, cookie from agreements1
-    where e_date >= "LTS_aging_L"()::date_t
+select slice_date, account_id, placement_id, posm_id, strict, cookie from slices.agreements1
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2, 3, 4
   ]]>
 </agreements1>

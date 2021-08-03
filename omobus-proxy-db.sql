@@ -1060,14 +1060,12 @@ create table agreements1 (
     account_id		uid_t		not null,
     placement_id 	uid_t 		not null,
     posm_id 		uid_t 		not null,
-    b_date 		date_t 		not null,
-    e_date 		date_t 		not null,
     strict 		bool_t 		not null default 1,
     cookie 		uid_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    primary key (account_id, placement_id, posm_id, b_date)
+    primary key (account_id, placement_id, posm_id)
 );
 
 create index i_db_ids_agreements1 on agreements1 using GIN (db_ids);
@@ -1076,14 +1074,12 @@ create trigger trig_updated_ts before update on agreements1 for each row execute
 create table agreements2 (
     account_id		uid_t		not null,
     prod_id 		uid_t 		not null,
-    b_date 		date_t 		not null,
-    e_date 		date_t 		not null,
     facing 		int32_t 	not null check(facing > 0),
     strict 		bool_t 		not null default 1,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    primary key (account_id, prod_id, b_date)
+    primary key (account_id, prod_id)
 );
 
 create index i_db_ids_agreements2 on agreements2 using GIN (db_ids);
