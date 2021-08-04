@@ -84,8 +84,19 @@ order by r.b_dt, r.row_no, a.descr, a.address, a.code
 	<additions>
   <![CDATA[
 select 
-    h.fix_dt, h.created_dt, h.created_gps_la latitude, h.created_gps_lo longitude, h.doc_id, h.account, h.address, h.legal_address, h.number, h.doc_note, 
-    t.descr addition_type, c.descr chan, guid a_code, array_to_string(h.photos,'|') photos,
+    h.fix_dt, 
+    h.created_dt, 
+    h.created_gps_la latitude, 
+    h.created_gps_lo longitude, 
+    h.doc_id, 
+    h.account, 
+    h.address, 
+    h.number, 
+    h.doc_note, 
+    t.descr addition_type, 
+    c.descr chan, 
+    guid a_code, 
+    array_to_string(h.photos,'|') photos,
     (select array_to_string(array_agg(descr::varchar),'|') from attributes where attr_id = any (h.attr_ids)) attrs
 from h_addition h
     left join addition_types t on t.addition_type_id = h.addition_type_id

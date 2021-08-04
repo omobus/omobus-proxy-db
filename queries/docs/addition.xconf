@@ -24,8 +24,8 @@ select * from doc_id()
 </create>
 <write_body>
   <![CDATA[
-insert into h_addition (doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, user_id, w_cookie, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, doc_note, number, addition_type_id, account, address, legal_address, chan_id, attr_ids, guid, blobs)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), '%doc_note%', '%number%', NIL('%addition_type_id%'), '%account%', '%address%', '%legal_address%', NIL('%chan_id%'), string_to_array(NIL('%attr_ids%'),','), NIL('%guid%'), %blobs%)
+insert into h_addition (doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, user_id, w_cookie, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, doc_note, number, addition_type_id, account, address, chan_id, attr_ids, guid, blobs)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), '%doc_note%', '%number%', NIL('%addition_type_id%'), '%account%', '%address%', NIL('%chan_id%'), string_to_array(NIL('%attr_ids%'),','), NIL('%guid%'), %blobs%)
   ]]>
 </write_body>
 <write_blob>
@@ -50,8 +50,8 @@ begin
 	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', '%created_dt%', NIL('%created_gps_dt%'), NIL(%created_gps_la%), NIL(%created_gps_lo%), '%closed_dt%', NIL('%closed_gps_dt%'), NIL(%closed_gps_la%), NIL(%closed_gps_lo%), '%w_cookie%', '%server_hostname%', '%dev_pack%', '%doc_code_sys%');
 
 -- *** addition -> j_additions
-    insert into j_additions (doc_id, user_id, fix_dt, account, address, legal_address, number, addition_type_id, note, chan_id, photos, attr_ids, latitude, longitude, guid)
-	select doc_id, user_id, fix_dt, account, address, legal_address, number, addition_type_id, doc_note, chan_id, photos, attr_ids, created_gps_la, created_gps_lo, guid from h_addition where doc_id='%doc_id_sys%';
+    insert into j_additions (doc_id, user_id, fix_dt, account, address, number, addition_type_id, note, chan_id, photos, attr_ids, latitude, longitude, guid)
+	select doc_id, user_id, fix_dt, account, address, number, addition_type_id, doc_note, chan_id, photos, attr_ids, created_gps_la, created_gps_lo, guid from h_addition where doc_id='%doc_id_sys%';
 
 -- *** addition -> accounts
     if( (select count(*) from accounts where account_id='%guid%') > 0 ) then
