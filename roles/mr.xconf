@@ -24,6 +24,7 @@ working_days = Sun Mon Tue Wed Thu Fri Sat
 image->width = 2048
 image->height = 1536
 image->quality = 95
+#image->restrictions->roll = 15
 pack->compression->type = gz
 pack->compression->level = 9
 transport->pack->servers = ftp://zdev.omobus.net:21021
