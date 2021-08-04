@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<omobusd timeout="300">
+<omobusd semaphore="zombie" timeout="300">
     <xi:include href="connections/proxy-db.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
     <xi:include href="transactions/write.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
     <xi:include href="kernels/zombie.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
