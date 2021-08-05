@@ -67,6 +67,7 @@ target->everyone = yes
 target->urgent = yes
 profile->channel = yes
 profile->potential = yes
+profile->phone = yes
 profile->cash_register = yes
 profile->attrs = yes
 profile->contact = yes

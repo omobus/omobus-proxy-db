@@ -66,6 +66,7 @@ notice->lifetime = 5
 #target->calendar->right = 60
 profile->channel = yes
 profile->potential = yes
+profile->phone = yes
 profile->cash_register = yes
 profile->attrs = yes
 profile->contact = yes
