@@ -54,6 +54,7 @@
 	    <xs:attribute name="chan_id" use="optional" type="uid_t" default="" />
 	    <xs:attribute name="poten_id" use="optional" type="uid_t" default="" />
 	    <xs:attribute name="cash_register" use="optional" type="int_t" default="" />
+	    <xs:attribute name="phone" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="attr_ids" use="optional" type="xs:string" default="" />
 	</xs:complexType>
     </xs:element>

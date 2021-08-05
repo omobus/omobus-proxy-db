@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<contacts templ="%contact_id%;%account_id%;%name%;%surname%;%patronymic%;%job_title_id%;%phone%;%mobile%;%email%;%locked%;%extra_info%;">
+<contacts templ="%contact_id%;%account_id%;%name%;%surname%;%patronymic%;%job_title_id%;%mobile%;%email%;%locked%;%extra_info%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from contacts
 </check_exist>
 <update>
   <![CDATA[
-update contacts set account_id='%account_id%', name='%name%', surname='%surname%', patronymic=NIL('%patronymic%'), job_title_id=NIL('%job_title_id%'), phone=NIL('%phone%'), mobile=NIL('%mobile%'), email=NIL('%email%'), locked=0%locked%, extra_info=NIL('%extra_info%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update contacts set account_id='%account_id%', name='%name%', surname='%surname%', patronymic=NIL('%patronymic%'), job_title_id=NIL('%job_title_id%'), mobile=NIL('%mobile%'), email=NIL('%email%'), locked=0%locked%, extra_info=NIL('%extra_info%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where contact_id = '%contact_id%' and "_isAlienData" = 1
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into contacts (contact_id, account_id, name, surname, patronymic, job_title_id, phone, mobile, email, locked, extra_info, hidden, db_ids, "_isAlienData") 
-    values ('%contact_id%', '%account_id%', '%name%', '%surname%', NIL('%patronymic%'), NIL('%job_title_id%'), NIL('%phone%'), NIL('%mobile%'), NIL('%email%'), 0%locked%, NIL('%extra_info%'), 0, array['%ErpCode%'], 1)
+insert into contacts (contact_id, account_id, name, surname, patronymic, job_title_id, mobile, email, locked, extra_info, hidden, db_ids, "_isAlienData") 
+    values ('%contact_id%', '%account_id%', '%name%', '%surname%', NIL('%patronymic%'), NIL('%job_title_id%'), NIL('%mobile%'), NIL('%email%'), 0%locked%, NIL('%extra_info%'), 0, array['%ErpCode%'], 1)
   ]]>
 </insert>
 <end>

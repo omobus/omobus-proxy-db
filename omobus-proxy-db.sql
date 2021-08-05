@@ -943,6 +943,7 @@ create table accounts (
     cash_register 	int32_t 	null,
     latitude 		gps_t 		null,
     longitude 		gps_t 		null,
+    phone 		phone_t 	null,
     attr_ids 		uids_t 		null,
     extra_info 		note_t 		null,
     locked 		bool_t 		null default 0,
@@ -1272,7 +1273,6 @@ create table contacts (
     surname 		descr_t 	null,
     patronymic 		descr_t 	null,
     job_title_id 	uid_t 		not null,
-    phone 		phone_t 	null,
     mobile 		phone_t 	null,
     email 		email_t 	null,
     loyalty_level_id 	uid_t 		null,
@@ -3687,7 +3687,6 @@ create table h_contact (
     name 		descr_t 	not null,
     surname 		descr_t 	null,
     patronymic 		descr_t 	null,
-    phone 		phone_t 	null,
     mobile 		phone_t 	null,
     email 		email_t 	null,
     loyalty_level_id 	uid_t 		null,
@@ -4254,6 +4253,7 @@ create table h_profile (
     chan_id 		uid_t 		null,
     poten_id 		uid_t 		null,
     cash_register 	int32_t 	null,
+    phone 		phone_t 	null,
     attr_ids 		uids_t 		null
 );
 

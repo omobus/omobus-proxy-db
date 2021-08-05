@@ -57,7 +57,7 @@
 	    <xs:attribute name="surname" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="patronymic" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="job_title_id" use="required" type="uid_t" />
-	    <xs:attribute name="phone" use="optional" type="xs:string" default="" />
+<!-- obsolete: --> <xs:attribute name="phone" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="mobile" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="email" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="loyalty_level_id" use="optional" type="uid_t" default="" />

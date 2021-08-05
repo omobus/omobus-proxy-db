@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<contacts templ="%account_id%;%contact_id%;%name%;%surname%;%patronymic%;%job_title_id%;%phone%;%mobile%;%email%;%loyalty_level_id%;%locked%;%extra_info%;" empty="no">
+<contacts templ="%account_id%;%contact_id%;%name%;%surname%;%patronymic%;%job_title_id%;%mobile%;%email%;%loyalty_level_id%;%locked%;%extra_info%;" empty="no">
   <![CDATA[ 
-select account_id, contact_id, name, surname, patronymic, job_title_id, phone, mobile, email, loyalty_level_id, locked, extra_info from contacts
+select account_id, contact_id, name, surname, patronymic, job_title_id, mobile, email, loyalty_level_id, locked, extra_info from contacts
     where hidden = 0
 order by account_id, locked, surname, name
   ]]>

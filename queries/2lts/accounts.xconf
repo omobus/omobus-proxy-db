@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<accounts templ="%account_id%;%pid%;%code%;%ftype%;%descr%;%address%;%region_id%;%city_id%;%rc_id%;%chan_id%;%poten_id%;%cash_register%;%latitude%;%longitude%;%attr_ids%;%locked%;%approved%;%props%;">
+<accounts templ="%account_id%;%pid%;%code%;%ftype%;%descr%;%address%;%region_id%;%city_id%;%rc_id%;%chan_id%;%poten_id%;%cash_register%;%latitude%;%longitude%;%phone%;%attr_ids%;%locked%;%approved%;%props%;%hidden%;">
   <![CDATA[
-select account_id, pid, code, ftype, descr, address, region_id, city_id, rc_id, chan_id, poten_id, cash_register, latitude, longitude, attr_ids, locked, approved, props from accounts
-    where hidden = 0
+select account_id, pid, code, ftype, descr, address, region_id, city_id, rc_id, chan_id, poten_id, cash_register, latitude, longitude, phone, attr_ids, locked, approved, props, hidden from accounts
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </accounts>

@@ -24,8 +24,8 @@ select * from doc_id()
 </create>
 <write_body>
   <![CDATA[
-insert into h_profile (doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, chan_id, poten_id, cash_register, attr_ids)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), NIL('%chan_id%'), NIL('%poten_id%'), NIL(%cash_register%), string_to_array(NIL('%attr_ids%'),','))
+insert into h_profile (doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, doc_note, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, chan_id, poten_id, cash_register, phone, attr_ids)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%doc_note%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), NIL('%chan_id%'), NIL('%poten_id%'), NIL(%cash_register%), NIL('%phone%'), string_to_array(NIL('%attr_ids%'),','))
   ]]>
 </write_body>
 <close>
@@ -40,7 +40,7 @@ begin
 	values('%doc_id_sys%', '%doc_id%', '%dev_id%', '%user_id%', '%user_id_sys%', '%account_id%', '%fix_dt%', '%created_dt%', NIL('%created_gps_dt%'), NIL(%created_gps_la%), NIL(%created_gps_lo%), '%closed_dt%', NIL('%closed_gps_dt%'), NIL(%closed_gps_la%), NIL(%closed_gps_lo%), '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%server_hostname%', '%dev_pack%', '%doc_code_sys%');
 
 -- *** profile -> accounts
-    update accounts set chan_id=NIL('%chan_id%'), poten_id=NIL('%poten_id%'), cash_register=NIL(%cash_register%), attr_ids=string_to_array(NIL('%attr_ids%'),','), extra_info=NIL('%doc_note%')
+    update accounts set chan_id=NIL('%chan_id%'), poten_id=NIL('%poten_id%'), cash_register=NIL(%cash_register%), phone=NIL('%phone%'), attr_ids=string_to_array(NIL('%attr_ids%'),','), extra_info=NIL('%doc_note%')
 	where account_id='%account_id%';
 
 -- **** profile --> sysstats
