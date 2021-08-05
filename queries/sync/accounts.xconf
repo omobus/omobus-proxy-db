@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<accounts templ="%pid%;%account_id%;%ftype%;%code%;%descr%;%address%;%rc_id%;%chan_id%;%poten_id%;%cash_register%;%latitude%;%longitude%;%attr_ids%;%approved%;%locked%;%hidden%;%ownerless%;%extra_info%;">
+<accounts templ="%pid%;%account_id%;%ftype%;%code%;%descr%;%address%;%rc_id%;%chan_id%;%poten_id%;%cash_register%;%latitude%;%longitude%;%phone%;%attr_ids%;%approved%;%locked%;%hidden%;%ownerless%;%extra_info%;">
   <![CDATA[
-select case when ftype=0 then account_id else null end fid, 
-    account_id, pid, descr, ftype, code, locked, address, latitude, longitude, chan_id, poten_id, rc_id, cash_register, array_to_string(attr_ids, ',') attr_ids, extra_info, approved, hidden, ownerless
+select 
+    case when ftype=0 then account_id else null end fid, 
+    account_id, 
+    pid, 
+    descr, 
+    ftype, 
+    code, 
+    locked, 
+    address, 
+    latitude, 
+    longitude, 
+    chan_id, 
+    poten_id, 
+    rc_id, 
+    cash_register, 
+    phone, 
+    array_to_string(attr_ids, ',') attr_ids, 
+    extra_info, 
+    approved, 
+    hidden, 
+    ownerless
 from accounts
 where 
     /* allows only approved accounts: */
