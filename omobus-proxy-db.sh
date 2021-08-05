@@ -24,8 +24,9 @@ psql -d $dbname -c \
     "CREATE LANGUAGE plpgsql"
 
 psql -d $dbname -f ./omobus-proxy-db.sql
-psql -d $dbname -f ./omobus-proxy-db.shadows.sql
 psql -d $dbname -f ./omobus-proxy-db.console.sql
+psql -d $dbname -f ./omobus-proxy-db.shadows.sql
+psql -d $dbname -f ./omobus-proxy-db.slices.sql
 psql -d $dbname -f ./omobus-proxy-db.RU.sql
 psql -d $dbname -f ./version.sql
 
