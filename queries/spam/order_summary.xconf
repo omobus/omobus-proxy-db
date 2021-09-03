@@ -76,7 +76,7 @@ td.numeric{text-align: right;}
     <div>Автор: <i>$(u_name)</i>.</div>$(delivery_date)$(delivery_note)$(doc_note)
     <br/>
     <table>
-	<thead><tr><th>#</th><th>Штрихкод</th><th>Код</th><th>Название</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr></thead
+	<thead><tr><th>#</th><th>Код</th><th>Артикул</th><th>Штрихкод</th><th>Название</th><th>Цена</th><th>Кол-во</th><th>Упак.</th><th>Сумма</th></tr></thead
 	<tbody>$(tbody)</tbody>
     </table>
     <br/>
@@ -86,7 +86,7 @@ td.numeric{text-align: right;}
     ]]>
 	</body>
 	<tbody>
-    <![CDATA[<tr><td class="autoincrement">$(row_no)</td><td>$(barcodes)</td><td>$(p_code)</td><td>$(prod)</td><td class="int">$(qty) $(pack)</td><td class="numeric">$(unit_price)</td><td class="numeric">$(amount)</td></tr>]]>
+    <![CDATA[<tr><td class="autoincrement">$(row_no)</td><td>$(p_code)</td><td>$(art)</td><td>$(barcodes)</td><td>$(prod)</td><td class="numeric">$(unit_price)</td><td class="int">$(qty)</td><td class="int">$(pack)</td><td class="numeric">$(amount)</td></tr>]]>
 	</tbody>
 	<delivery_date>
     <![CDATA[<div>Планируемая дата поставки: <i>$(delivery_date)</i>.</div>]]>
@@ -99,7 +99,7 @@ td.numeric{text-align: right;}
 	</note>
 	<attachment>
     <![CDATA[<?xml version="1.0"?>
-<order num="$(doc_no)" date="$(fix_date)" amount="$(amount)">
+<order doc_id="$(doc_id)" num="$(doc_no)" date="$(fix_date)" amount="$(amount)">
     <account_name>$(a_name)</account_name>
     <address type="shipping">$(address)</address>
     <delivery_date>$(delivery_date)</delivery_date>
@@ -162,6 +162,7 @@ local function rows()
 	    x = set(x, "unit_price", R(i, "unit_price"))
 	    x = set(x, "amount", R(i, "amount"))
 	    x = set(x, "barcodes", R(i, "barcodes"))
+	    x = set(x, "art", R(i, "art"))
 	    a = a .. x
 	end
     end
@@ -210,6 +211,7 @@ end
 
 local function attachment()
     local a = _attachment
+    a = set(a, "doc_id", D("doc_id"))
     a = set(a, "doc_no", D("doc_no"))
     a = set(a, "amount", D("amount"))
     a = set(a, "fix_date", D("fix_date"))
