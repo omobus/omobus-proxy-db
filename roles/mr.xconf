@@ -7,6 +7,7 @@
 	    <beginWorkingTime value="07:00" />
 	    <endWorkingTime value="19:00" />
 	    <terminalList value="" />
+	    <presenceStock value="yes" />
 	</defs>
 	<templ>
   <![CDATA[
@@ -70,7 +71,7 @@ profile->cash_register = yes
 profile->attrs = yes
 profile->contact = yes
 profile->equipment = yes
-#presence->stock = no
+#presence->stock = %%presenceStock%%
 #wish->weeks = 4
 
 # The end of the %%filename%%.
