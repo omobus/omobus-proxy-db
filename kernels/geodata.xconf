@@ -29,6 +29,7 @@ begin
 		left join accounts a on a.account_id = j.account_id
 		left join (select account_id, max(fix_dt) fix_dt from h_location group by account_id) z on z.account_id = j.account_id
 	    where j.account_id = a_id and t.strict = 1 and j.b_dt is not null and (z.fix_dt is null or j.b_dt > z.fix_dt)
+		and j.b_la is not null and j.b_lo is not null
 	    order by j.b_dt desc
 	    limit 3
 	) x where x.dist > radius
