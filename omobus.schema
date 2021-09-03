@@ -22,6 +22,11 @@ attributetype ( 1.3.6.1.4.1.33158.11.3.203 NAME 'endWorkingTime'
 	EQUALITY caseIgnoreMatch
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
 
+attributetype ( 1.3.6.1.4.1.33158.11.3.204 NAME 'presenceStock'
+	DESC 'OMOBUS: enable inputing stock data in the presence document (format: yes|no)'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
 attributetype ( 1.3.6.1.4.1.33158.11.3.205 NAME 'orderUnavailableProducts'
 	DESC 'OMOBUS: shown unavailable products in the order document (format: yes|no)'
 	EQUALITY caseIgnoreMatch
@@ -115,18 +120,18 @@ attributetype ( 1.3.6.1.4.1.33158.11.3.401 NAME 'mailGroup'
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
 
 
-attributetype ( 1.3.6.1.4.1.33158.11.3.405 NAME 'wsStatus'
-	DESC 'OMOBUS: disable or enable access to the data via web-service (disabled|enabled)'
+attributetype ( 1.3.6.1.4.1.33158.11.3.405 NAME 'bridgeStatus'
+	DESC 'OMOBUS: disable or enable access to the data bridge web-service (disabled|enabled)'
 	EQUALITY caseIgnoreIA5Match
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE )
 
-attributetype ( 1.3.6.1.4.1.33158.11.3.406 NAME 'wsToken'
-	DESC 'OMOBUS: web service token'
+attributetype ( 1.3.6.1.4.1.33158.11.3.406 NAME 'bridgeToken'
+	DESC 'OMOBUS: data bridge web-service token'
 	EQUALITY caseIgnoreIA5Match
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
 
-attributetype ( 1.3.6.1.4.1.33158.11.3.407 NAME 'wsAcceptedHost'
-	DESC 'OMOBUS: accepted web-service client (IPv4 addresses as a dotted decimal omitting leading zeros or IPv6 addresses as defined in RFC2373)'
+attributetype ( 1.3.6.1.4.1.33158.11.3.407 NAME 'bridgeAcceptedHost'
+	DESC 'OMOBUS: accepted data bridge web-service client (IPv4 addresses as a dotted decimal omitting leading zeros or IPv6 addresses as defined in RFC2373)'
 	SUP name )
 
 
@@ -144,53 +149,75 @@ attributetype ( 1.3.6.1.4.1.33158.11.3.412 NAME 'arkAcceptedHost'
 	DESC 'OMOBUS: accepted ark web-service client (IPv4 addresses as a dotted decimal omitting leading zeros or IPv6 addresses as defined in RFC2373)'
 	SUP name )
 
+attributetype ( 1.3.6.1.4.1.33158.11.3.415 NAME 'whereisStatus'
+	DESC 'OMOBUS: disable or enable access to the whereis web-service (disabled|enabled)'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.416 NAME 'whereisToken'
+	DESC 'OMOBUS: whereis web-service token'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( 1.3.6.1.4.1.33158.11.3.417 NAME 'whereisAcceptedHost'
+	DESC 'OMOBUS: accepted whereis web-service client (IPv4 addresses as a dotted decimal omitting leading zeros or IPv6 addresses as defined in RFC2373)'
+	SUP name )
+
+
+objectclass ( 1.3.6.1.4.1.33158.11.2.0 NAME 'omobusService'
+	SUP top AUXILIARY
+	MUST ( uid $ userPassword )
+	MAY ( cn $ description ) )
 
 objectclass ( 1.3.6.1.4.1.33158.11.2.1 NAME 'omobusUser' 
 	SUP top AUXILIARY
+	MUST ( uid $ userPassword )
 	MAY ( 
-		ErpId $ 
-		syncErpId $ 
-		syncEncoding $ 
-		syncPackage $ 
-		groupName $ 
-		exchangeStatus $ 
-		consoleStatus $ 
-		dumpsStatus $
-		beginWorkingTime $ 
-		endWorkingTime $ 
-		transportServers $ 
-		terminalList $ 
-		serviceList $ 
-		orderUnavailableProducts $
-		distributor $ 
-		agency $ 
-		department $
-		country
-	    ) )
+	    cn $
+	    description $
+	    ErpId $ 
+	    syncErpId $ 
+	    syncEncoding $ 
+	    syncPackage $ 
+	    groupName $ 
+	    exchangeStatus $ 
+	    consoleStatus $ 
+	    mailStatus $ 
+	    dumpsStatus $ 
+	    beginWorkingTime $ 
+	    endWorkingTime $ 
+	    transportServers $ 
+	    terminalList $ 
+	    serviceList $ 
+	    orderUnavailableProducts $ 
+	    presenceStock $ 
+	    distributor $ 
+	    agency $ 
+	    department $ 
+	    country 
+	) )
 
 objectclass ( 1.3.6.1.4.1.33158.11.2.2 NAME 'omobusMaintainPoint' 
 	SUP top AUXILIARY
-	MAY ( 
-		ErpCode $ 
-		importEncoding $ 
-		syncEncoding $ 
-		syncPackage $ 
-		exchangeStatus $ 
-		groupName $ 
-		wsStatus $ 
-		wsToken $ 
-		wsAcceptedHost 
-	    ) )
+	MUST ( uid $ userPassword )
+	MAY ( cn $ ErpCode $ importEncoding $ syncEncoding $ syncPackage $ exchangeStatus $ groupName $ description ) )
 
 objectclass ( 1.3.6.1.4.1.33158.11.2.3 NAME 'omobusMail' 
 	SUP top AUXILIARY
-	MAY ( mailStatus $ mailGroup ) )
-
-objectclass ( 1.3.6.1.4.1.33158.11.2.4 NAME 'omobusAccount' 
-	SUP top STRUCTURAL
-	MUST ( cn $ uid $ userPassword )
-	MAY ( description ) )
+	MUST ( uid $ userPassword $ mailStatus )
+	MAY ( cn $ mailGroup $ description ) )
 
 objectclass ( 1.3.6.1.4.1.33158.11.2.5 NAME 'omobusArk'
 	SUP top AUXILIARY
-	MAY ( arkStatus $ arkToken $ arkAcceptedHost ) )
+	MUST ( ErpCode $ arkStatus $ arkToken $ arkAcceptedHost )
+	MAY ( cn $ description ) )
+
+objectclass ( 1.3.6.1.4.1.33158.11.2.6 NAME 'omobusBridge'
+	SUP top AUXILIARY
+	MUST ( ErpCode $ groupName $ bridgeStatus $ bridgeToken $ bridgeAcceptedHost )
+	MAY ( cn $ description ) )
+
+objectclass ( 1.3.6.1.4.1.33158.11.2.7 NAME 'omobusWhereIs'
+	SUP top AUXILIARY
+	MUST ( whereisStatus $ whereisToken $ whereisAcceptedHost )
+	MAY ( cn $ description ) )
