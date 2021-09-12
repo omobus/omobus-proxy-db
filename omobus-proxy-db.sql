@@ -5852,8 +5852,8 @@ $BODY$ language plpgsql STABLE;
 create or replace function expand_cities(c_id uid_t, root bool_t = 1::bool_t) returns setof uid_t
 as $body$
 declare
-   c uid_t;
-   x uid_t;
+    c uid_t;
+    x uid_t;
 begin
     if( root = 1 ) then
 	return next c_id; -- return current row of select
@@ -5868,6 +5868,31 @@ begin
 	    return next x; -- return current row of select
 	end loop;
     end loop;
+end;
+$body$ language plpgsql STABLE;
+
+
+create or replace function long_city_name(c_id uid_t, reverse bool_t = 0)
+    returns text
+as $body$
+declare
+    t text;
+    k text;
+    p uid_t;
+begin
+    select pid, trim(descr) descr from cities where city_id = c_id
+	into p, t;
+    if p is not null then
+	k := long_city_name(p);
+	if k is not null and k <> '' then
+	    if reverse = 0 then
+		t := k || ', ' || t;
+	    else
+		t := t || ', ' || k;
+	    end if;
+	end if;
+    end if;
+    return t;
 end;
 $body$ language plpgsql STABLE;
 
@@ -6319,6 +6344,7 @@ insert into sysparams values('srv:domain', 'omobus.local', 'Server domain name.'
 insert into sysparams values('srv:push', '<3874a923-189a-4b95-b65c-b55a3809e35e@push.omobus.net>', 'Server alert notification address.');
 insert into sysparams values('gc:keep_alive', '155', 'How many days the data will be hold from cleaning.');
 insert into sysparams values('dumps:depth', null, 'Dumps depth (days).');
+insert into sysparams values('whereis:depth', '150', 'Whereis depth (days).');
 insert into sysparams values('executive_head', null, 'Executive head role name or null if direct head is executive head. After change it is necessary to execute: [update users set executivehead_id=my_executivehead(user_id) where hidden=0].');
 insert into sysparams values('lang', 'ru', 'Default language.');
 
