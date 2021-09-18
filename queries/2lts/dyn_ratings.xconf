@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dyn_ratings templ="%fix_date%;%account_id%;%employee_id%;%rating_criteria_id%;%rating_score_id%;%criteria_wf%;%score_wf%;%score%;%note%;%fix_dt%;%user_id%;%_isrecentdata%;">
+<dyn_ratings templ="%fix_date%;%account_id%;%employee_id%;%rating_criteria_id%;%rating_score_id%;%criteria_wf%;%score_wf%;%score%;%note%;%fix_dt%;%user_id%;%doc_id%;%_isrecentdata%;">
   <![CDATA[
-select fix_date, account_id, employee_id, rating_criteria_id, rating_score_id, criteria_wf, score_wf, score, note, fix_dt, user_id, "_isRecentData" from dyn_ratings
+select fix_date, account_id, employee_id, rating_criteria_id, rating_score_id, criteria_wf, score_wf, score, note, fix_dt, user_id, doc_id, "_isRecentData" from dyn_ratings
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2, 3, 4
   ]]>

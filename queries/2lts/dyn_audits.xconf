@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dyn_audits templ="%fix_date%;%account_id%;%categ_id%;%audit_criteria_id%;%audit_score_id%;%criteria_wf%;%score_wf%;%score%;%note%;%wf%;%sla%;%photos%;%fix_dt%;%user_id%;%_isrecentdata%;">
+<dyn_audits templ="%fix_date%;%account_id%;%categ_id%;%audit_criteria_id%;%audit_score_id%;%criteria_wf%;%score_wf%;%score%;%note%;%wf%;%sla%;%photos%;%fix_dt%;%user_id%;%doc_id%;%_isrecentdata%;">
   <![CDATA[
 select 
-    x.fix_date, x.account_id, x.categ_id, x.audit_criteria_id, x.audit_score_id, x.criteria_wf, x.score_wf, x.score, x.note, x.wf, x.sla, x.fix_dt, x.user_id,
-    (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(x.photos)) photos, "_isRecentData"
+    x.fix_date, x.account_id, x.categ_id, x.audit_criteria_id, x.audit_score_id, x.criteria_wf, x.score_wf, x.score, x.note, x.wf, x.sla, x.fix_dt, x.user_id, x.doc_id,
+    (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(x.photos)) photos, x."_isRecentData"
 from dyn_audits x
     where "LTS_aging_L"() <= x.updated_ts and x.updated_ts <= "LTS_aging_R"()
 order by 1, 2, 3, 4
