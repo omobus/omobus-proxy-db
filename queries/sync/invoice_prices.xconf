@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<invoice_prices templ="%prod_id%;%pack_id%;%price%;" empty="no">
+  <![CDATA[
+select country_id, prod_id, pack_id, price from invoice_prices
+    order by 1, 2
+  ]]>
+</invoice_prices>

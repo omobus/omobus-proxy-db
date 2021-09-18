@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<invoice_prices templ="%country_id%;%prod_id%;%pack_id%;%price%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from invoice_prices
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update invoice_prices set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from invoice_prices
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[ 
+insert into invoice_prices (country_id, prod_id, pack_id, price, db_ids)
+    values ('%country_id%', '%prod_id%', '%pack_id%', %price%, array['%ErpCode%'])
+on conflict do nothing
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</invoice_prices>
