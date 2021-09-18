@@ -59,6 +59,7 @@
 <xi:include href="../queries/sync/group_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/highlights.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/info_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/invoice_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/job_titles.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/loyalty_levels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/mailboxes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -232,6 +233,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	</asp_typesL1>
 	<distributors key="country_id" strict="yes" />
 	<info_materials key="country_id" strict="yes" />
+	<invoice_prices key="country_id" strict="yes" />
 	<photo_paramsL1 key="country_id">
 	    <photo_params key="photo_param_id" />
 	</photo_paramsL1>
@@ -437,6 +439,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<floating_prices key="prod_id" strict="yes" />
 	<group_prices key="prod_id" strict="yes" />
 	<highlights key="prod_id" strict="yes" />
+	<invoice_prices key="prod_id" strict="yes" />
 	<matrices key="prod_id" strict="yes" />
 	<mutuals_history_products key="prod_id" strict="yes" />
 	<oos_history key="prod_id" strict="yes" />

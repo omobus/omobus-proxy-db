@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<account_params templ="%account_id%;%group_price_id%;%payment_delay%;%payment_method_id%;%wareh_ids%;">
+<account_params templ="%account_id%;%group_price_id%;%payment_delay%;%payment_method_id%;%wareh_ids%;%locked%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -14,8 +14,8 @@ delete from shadow.account_params
 </begin>
 <insert>
   <![CDATA[
-insert into shadow.account_params (distr_id, account_id, group_price_id, payment_method_id, payment_delay, wareh_ids)
-    values ('%ErpCode%', '%account_id%', NIL('%group_price_id%'), NIL('%payment_method_id%'), NIL(%payment_delay%), string_to_array(NIL('%wareh_ids%'),','))
+insert into shadow.account_params (distr_id, account_id, group_price_id, payment_method_id, payment_delay, wareh_ids, locked)
+    values ('%ErpCode%', '%account_id%', NIL('%group_price_id%'), NIL('%payment_method_id%'), NIL(%payment_delay%), string_to_array(NIL('%wareh_ids%'),','), 0%locked%)
 on conflict do nothing
   ]]>
 </insert>

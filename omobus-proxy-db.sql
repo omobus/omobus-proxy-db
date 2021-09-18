@@ -990,6 +990,7 @@ create table account_params (
     payment_delay 	int32_t 	null,
     payment_method_id 	uid_t 		null,
     wareh_ids 		uids_t 		null,
+    locked 		bool_t 		not null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
@@ -1517,6 +1518,20 @@ create table info_materials (
 );
 
 create trigger trig_updated_ts before update on info_materials for each row execute procedure tf_updated_ts();
+
+create table invoice_prices (
+    country_id 		country_t 	not null,
+    prod_id 		uid_t 		not null,
+    pack_id 		uid_t 		not null,
+    price 		currency_t 	not null check (price >= 0),
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    primary key (country_id, prod_id)
+);
+
+create index i_db_ids_invoice_prices on invoice_prices using GIN (db_ids);
+create trigger trig_updated_ts before update on invoice_prices for each row execute procedure tf_updated_ts();
 
 create table issues (
     issue_id 		uid_t 		not null primary key default man_id(),
