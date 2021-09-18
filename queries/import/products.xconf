@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<products templ="%prod_id%;%pid%;%ftype%;%code%;%descr%;%kind_id%;%brand_id%;%categ_id%;%shelf_life_id%;%art%;%obsolete%;%novelty%;%promo%;%barcodes%;%image%;%country_ids%;%dep_ids%;%row_no%;">
+<products templ="%prod_id%;%pid%;%ftype%;%code%;%descr%;%kind_id%;%brand_id%;%categ_id%;%shelf_life_id%;%art%;%obsolete%;%novelty%;%promo%;%barcodes%;%units%;%image%;%country_ids%;%dep_ids%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from products
 </check_exist>
 <update>
   <![CDATA[
-update products set pid=NIL('%pid%'), ftype=0%ftype%, code=NIL(trim(both from '%code%')), art=NIL(trim(both from '%art%')), descr=trim(both from '%descr%'), shelf_life_id=NIL('%shelf_life_id%'), kind_id=NIL('%kind_id%'), brand_id=NIL('%brand_id%'), categ_id=NIL('%categ_id%'), obsolete=0%obsolete%, novelty=0%novelty%, promo=0%promo%, barcodes=ean13_in(string_to_array(NIL('%barcodes%'),',')), country_ids=string_to_array(NIL('%country_ids%'),','), dep_ids=string_to_array(NIL('%dep_ids%'),','), image=resolve_blob_stream('//%uid%/%image%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update products set pid=NIL('%pid%'), ftype=0%ftype%, code=NIL(trim(both from '%code%')), art=NIL(trim(both from '%art%')), descr=trim(both from '%descr%'), shelf_life_id=NIL('%shelf_life_id%'), kind_id=NIL('%kind_id%'), brand_id=NIL('%brand_id%'), categ_id=NIL('%categ_id%'), obsolete=0%obsolete%, novelty=0%novelty%, promo=0%promo%, barcodes=ean13_in(string_to_array(NIL('%barcodes%'),',')), units=greatest(1,0%units%), country_ids=string_to_array(NIL('%country_ids%'),','), dep_ids=string_to_array(NIL('%dep_ids%'),','), image=resolve_blob_stream('//%uid%/%image%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where prod_id = '%prod_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[ 
-insert into products (pid, prod_id, ftype, code, art, descr, kind_id, shelf_life_id, brand_id, categ_id, obsolete, novelty, promo, barcodes, country_ids, dep_ids, image, row_no, hidden, db_ids)
-    values(NIL('%pid%'), '%prod_id%', %ftype%, NIL(trim(both from '%code%')), NIL(trim(both from '%art%')), trim(both from '%descr%'), NIL('%kind_id%'), NIL('%shelf_life_id%'), NIL('%brand_id%'), NIL('%categ_id%'), 0%obsolete%, 0%novelty%, 0%promo%, ean13_in(string_to_array(NIL('%barcodes%'),',')), string_to_array(NIL('%country_ids%'),','), string_to_array(NIL('%dep_ids%'),','), resolve_blob_stream('//%uid%/%image%'), NIL(%row_no%), 0, array['%ErpCode%'])
+insert into products (pid, prod_id, ftype, code, art, descr, kind_id, shelf_life_id, brand_id, categ_id, obsolete, novelty, promo, barcodes, units, country_ids, dep_ids, image, row_no, hidden, db_ids)
+    values(NIL('%pid%'), '%prod_id%', %ftype%, NIL(trim(both from '%code%')), NIL(trim(both from '%art%')), trim(both from '%descr%'), NIL('%kind_id%'), NIL('%shelf_life_id%'), NIL('%brand_id%'), NIL('%categ_id%'), 0%obsolete%, 0%novelty%, 0%promo%, ean13_in(string_to_array(NIL('%barcodes%'),',')), greatest(1,0%units%), string_to_array(NIL('%country_ids%'),','), string_to_array(NIL('%dep_ids%'),','), resolve_blob_stream('//%uid%/%image%'), NIL(%row_no%), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>

@@ -2058,6 +2058,7 @@ create table products (
     novelty 		bool_t 		null,
     promo 		bool_t 		null,
     barcodes 		ean13 array 	null,
+    units 		int32_t 	not null default 1 check(units > 0),
     image 		blob_t 		null,
     country_ids 	countries_t 	null,
     dep_ids		uids_t		null,
