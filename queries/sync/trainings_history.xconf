@@ -10,7 +10,7 @@ select
     doc_note note
 from h_training h
     left join training_types t on t.training_type_id = h.training_type_id
-where left(h.fix_dt, 10) >= (current_date+"paramInteger"('trainings_history:offset'))::date_t
+where left(h.fix_dt, 10) >= (current_date - "paramInteger"('trainings_history:depth'))::date_t
 order by h.account_id, h.fix_dt desc
   ]]>
 </trainings_history>

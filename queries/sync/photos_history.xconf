@@ -13,7 +13,7 @@ select
     coalesce(t."thumb800",h.photo) photo
 from (
     select account_id, max(left(fix_dt,10)) fix_date from h_photo
-	where left(fix_dt, 10)>=(current_date+"paramInteger"('photos_history:offset'))::date_t 
+	where left(fix_dt, 10) >= (current_date - "paramInteger"('photos_history:depth'))::date_t 
     group by account_id
 ) x
     left join h_photo h on x.account_id = h.account_id and x.fix_date = left(h.fix_dt,10)

@@ -102,7 +102,7 @@ begin
 		"L10n_format_a"(u_lang,'targets','','confirmation',array['fix_date',"L"(current_date),'msg',array_to_string(ar,'<br/>'),
 		    'u_name',coalesce(author_name,_login)],_note),
 		current_date, 
-		case when re = 1 then current_date + "paramInteger"('target:depth') else x end, 
+		case when re = 1 then current_date + "paramInteger"('target:offset') else x end, 
 		_login, 
 		array[a_id::varchar],
 		blob_id, 

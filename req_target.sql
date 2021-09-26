@@ -255,7 +255,7 @@ begin
 	(_opt).sub, 
 	"L10n_format_a"(u_lang,'targets','',d_code,array['fix_date',"L"(current_date),'msg',(_opt).msg,'u_name',author_name],(_opt).msg), 
 	current_date, 
-	current_date + "paramInteger"('target:depth'), 
+	current_date + "paramInteger"('target:offset'), 
 	_login, 
 	array[aid::varchar], 
 	blob_id, 
@@ -314,7 +314,7 @@ begin
 		'address',a_address,
 		'fix_dt',"L"(_reqdt),
 		'b_date',"L"(current_date),
-		'e_date',"L"(current_date + "paramInteger"('target:depth'))
+		'e_date',"L"(current_date + "paramInteger"('target:offset'))
 	    ]
 	);
     end if;

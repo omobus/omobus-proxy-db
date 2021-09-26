@@ -30,11 +30,11 @@ where
     hidden = 0 
     /* deleted accounts: */
     or (hidden = 1 and account_id in (
-	    select distinct account_id from j_user_activities where fix_date >= (current_date + "paramInteger"('route_history:offset:left'))::date_t
+	    select distinct account_id from j_user_activities where fix_date >= "route_history_L"()
 		union
-	    select distinct account_id from my_routes where p_date >= (current_date + "paramInteger"('route_history:offset:left'))::date_t
+	    select distinct account_id from my_routes where p_date >= "route_history_L"()
 		union
-	    select distinct account_id from h_pending where left(fix_dt,10) >= (current_date + "paramInteger"('my_routes:pending:depth'))::date_t
+	    select distinct account_id from h_pending where left(fix_dt,10) >= "route_history_L"()
 	    )
 	)
     )

@@ -2,7 +2,7 @@
 <stocks_history templ="%fix_date%;%account_id%;%prod_id%;%stock%;%latest%;" empty="no">
   <![CDATA[
 select fix_date, account_id, prod_id, sum(stock) stock, max("_isRecentData") latest from dyn_stocks
-    where fix_date >= (current_date+"paramInteger"('stocks_history:offset'))::date_t
+    where fix_date >= (current_date - "paramInteger"('stocks_history:depth'))::date_t
 group by fix_date, account_id, prod_id
 order by 2, 3, 1 desc
   ]]>

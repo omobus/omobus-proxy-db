@@ -5979,8 +5979,8 @@ declare
     row my_routes_t;
     index date;
     start_date date;	/* First route date */
-    offsetL int32_t = "paramInteger"('my_routes:offset:left');
-    offsetR int32_t = "paramInteger"('my_routes:offset:right');
+    offsetL int32_t = "paramInteger"('my_routes:depth');
+    offsetR int32_t = "paramInteger"('my_routes:offset');
     pen_depth int32_t = "paramInteger"('my_routes:pending:depth');
     pen_color int32_t = "paramInteger"('my_routes:pending:color');
     pen_bgcolor int32_t = "paramInteger"('my_routes:pending:bgcolor');
@@ -5989,7 +5989,7 @@ declare
     d bool_t = "paramBoolean"('my_routes:discard');
 begin
     start_date = current_date;
-    index = start_date + offsetL;
+    index = start_date - offsetL;
 
     /*** Step 1: pending activities ***/
     while  index <= start_date + offsetR loop
@@ -6043,7 +6043,7 @@ begin
     end loop;
 
     /*** Step 3: urgent activities ***/
-    index = start_date + offsetL;
+    index = start_date - offsetL;
     while index <= start_date + offsetR loop
 	for row in 
 	    select
@@ -6075,7 +6075,7 @@ begin
 	null extra_info, r.row_no, r.duration, 8 "z-index"
     from my_routes r
 	left join syswdmv mv on mv.f_date = r.p_date and (select count(*) from users u where u.user_id=r.user_id and mv.country_id = u.country_id) > 0
-    where start_date + offsetL <= mv.t_date::date and mv.t_date::date <= start_date + offsetR
+    where start_date - offsetL <= mv.t_date::date and mv.t_date::date <= start_date + offsetR
 	and (select count(*) from j_user_activities j where j.user_id=r.user_id and j.account_id=r.account_id and j.route_date=mv.f_date and j.b_dt is not null and j.e_dt is not null and j.fix_date/*left(j.b_dt, 10)*/ <> mv.t_date)=0
     loop
 	return next row; -- return current row of select
@@ -6086,7 +6086,7 @@ begin
 	user_id, account_id, activity_type_id, p_date, d allow_discard, 1 allow_pending, null pending_date, null color, null bgcolor, null extra_info, 
 	row_no, duration, 9 "z-index"
     from my_routes
-	where start_date + offsetL <= p_date::date and p_date::date <= start_date + offsetR
+	where start_date - offsetL <= p_date::date and p_date::date <= start_date + offsetR
     loop
 	return next row; -- return current row of select
     end loop;
@@ -6169,6 +6169,32 @@ begin
 end;
 $$
 language plpgsql;
+
+create or replace function "route_history_L"() returns date_t
+as $body$
+declare
+    def text = "paramText"('route_history:depth');
+begin
+    if lower(trim(def)) = 'auto' then
+	if extract(day from current_date) < 10 then
+	    return "monthDate_First"(current_date - interval '1' month)::date_t;
+	else
+	    return "monthDate_First"(current_date)::date_t;
+	end if;
+    else
+	return (current_date - def::int)::date_t;
+    end if;
+end;
+$body$ language plpgsql STABLE;
+
+create function "route_history_R"() returns date_t
+as $body$
+declare
+    def text = "paramText"('route_history:offset');
+begin
+    return (current_date + def::int)::date_t;
+end;
+$body$ language plpgsql STABLE;
 
 create or replace function thumb_get(blob_id blob_t) returns blob_t
 as $body$
@@ -6354,16 +6380,36 @@ $body$ language sql STABLE;
 
 -- default system parameters
 
+insert into sysparams values('advt_history:depth', '60', 'The maximum depth of the advt_history in days.');
+insert into sysparams values('checkups:depth', '30', 'How long (in days) empty data from the dyn_checkups is used.');
 insert into sysparams values('db:created_ts', current_timestamp, 'Database creation datetime.');
 insert into sysparams values('db:id', 'PRI', 'Database unique ID.');
-insert into sysparams values('srv:domain', 'omobus.local', 'Server domain name.');
-insert into sysparams values('srv:push', '<3874a923-189a-4b95-b65c-b55a3809e35e@push.omobus.net>', 'Server alert notification address.');
-insert into sysparams values('gc:keep_alive', '155', 'How many days the data will be hold from cleaning.');
 insert into sysparams values('dumps:depth', null, 'Dumps depth (days).');
-insert into sysparams values('whereis:depth', '150', 'Whereis depth (days).');
 insert into sysparams values('executive_head', null, 'Executive head role name or null if direct head is executive head. After change it is necessary to execute: [update users set executivehead_id=my_executivehead(user_id) where hidden=0].');
+insert into sysparams values('gc:keep_alive', '155', 'How many days the data will be hold from cleaning.');
 insert into sysparams values('lang', 'ru', 'Default language.');
-
+insert into sysparams values('my_routes:depth', '1', 'The maximum deph of the my_routes in days.');
+insert into sysparams values('my_routes:offset', '5', 'The maximum offset to the future for the my_routes in days.');
+insert into sysparams values('my_routes:pending:depth', '7', 'The maximum deph of the pending activities in days.');
+insert into sysparams values('my_routes:pending:color', '1704061', 'my_routes pending color as rgb integer value.');
+insert into sysparams values('my_routes:pending:bgcolor', '15395583', 'my_routes pending bgcolor as rgb integer value.');
+insert into sysparams values('my_routes:important:depth', '3', 'my_routes important depth in days.');
+insert into sysparams values('my_routes:important:bgcolor', '16773360', 'my_routes important bgcolor as rgb integer value.');
+insert into sysparams values('my_routes:discard', 'false', 'allows discarding of the route.');
+insert into sysparams values('oos_history:depth', '60', 'The maximum depth of the oos_history in days.');
+insert into sysparams values('orders_history:depth', '10', 'The maximum depth of the orders_history in days.');
+insert into sysparams values('orders_history:alert:color', '13107200', 'orders_history alert text color as rgb integer.');
+insert into sysparams values('orders_history:alert:bgcolor', '16116715', 'orders_history alert bgcolor as rgb integer.');
+insert into sysparams values('photos_history:depth', '2', 'The maximum depth of the photos_history in days.');
+insert into sysparams values('posms_history:depth', '2', 'The maximum depth of the posms_history in days.');
+insert into sysparams values('presences_history:depth', '60', 'The maximum depth of the presences_history in days.');
+insert into sysparams values('prices_history:depth', '60', 'The maximum depth of the prices_history in days.');
+insert into sysparams values('quests_history:depth', '60', 'The maximum depth of the quests_history in days.');
+insert into sysparams values('reclamations_history:depth', '10', 'The maximum depth of the reclamations_history in days.');
+insert into sysparams values('reclamations_history:alert:color', '13107200', 'reclamations_history alert text color as rgb integer.');
+insert into sysparams values('reclamations_history:alert:bgcolor', '16116715', 'reclamations_history alert bgcolor as rgb integer.');
+insert into sysparams values('route_history:depth', 'auto', 'The maximum depth of the route_history in days or [auto] for default period.');
+insert into sysparams values('route_history:offset', '5', 'The maximum offset to the future for the route_history in days.');
 insert into sysparams values('rules:wdays', '{1,1,1,1,1,0,0}', 'The woking day list as array of flags for each week day starting monday.');
 insert into sysparams values('rules:min_duration', '5', 'The minimum duration of the activity (in minutes).');
 insert into sysparams values('rules:max_duration', '90', 'The maximum duration of the activity (in minutes).');
@@ -6372,37 +6418,10 @@ insert into sysparams values('rules:wd_begin', '09:30', 'Show warning if the wor
 insert into sysparams values('rules:wd_end', '17:30', 'Show warning if the working day ends early than rules:wd_end.');
 insert into sysparams values('rules:timing', '06:00', 'Minimal route day duration.');
 insert into sysparams values('rules:power', '90', 'The minimum power (battery life percentage) at the working day begin.');
-
-insert into sysparams values('checkups:offset', '-30', 'How long (in days) empty data from the dyn_checkups is used.');
-
-insert into sysparams values('advt_history:offset', '-60', 'The maximum depth of the advt_history in days');
-insert into sysparams values('oos_history:offset', '-60', 'The maximum depth of the oos_history in days');
-insert into sysparams values('photos_history:offset', '-2', 'The maximum depth of the photos_history in days.');
-insert into sysparams values('posms_history:offset', '-2', 'The maximum depth of the posms_history in days.');
-insert into sysparams values('presences_history:offset', '-60', 'The maximum depth of the presences_history in days');
-insert into sysparams values('prices_history:offset', '-60', 'The maximum depth of the prices_history in days.');
-insert into sysparams values('quests_history:offset', '-60', 'The maximum depth of the quests_history in days.');
-insert into sysparams values('route_history:offset:left', '-10', 'The maximum depth of the route_history in days.');
-insert into sysparams values('route_history:offset:right', '5', 'The maximum depth of the route_history right offset in days.');
-insert into sysparams values('stocks_history:offset', '-60', 'The maximum depth of the stocks_history in days');
-insert into sysparams values('trainings_history:offset', '-60', 'The maximum depth of the trainings_history in days.');
-
-insert into sysparams values('orders_history:offset', '-10', 'The maximum depth of the orders_history in days.');
-insert into sysparams values('orders_history:alert:color', '13107200', 'orders_history alert text color as rgb integer.');
-insert into sysparams values('orders_history:alert:bgcolor', '16116715', 'orders_history alert bgcolor as rgb integer.');
-
-insert into sysparams values('reclamations_history:offset', '-10', 'The maximum depth of the reclamations_history in days.');
-insert into sysparams values('reclamations_history:alert:color', '13107200', 'reclamations_history alert text color as rgb integer.');
-insert into sysparams values('reclamations_history:alert:bgcolor', '16116715', 'reclamations_history alert bgcolor as rgb integer.');
-
-insert into sysparams values('my_routes:offset:left', '-1', 'The maximum deph of the my_routes in days.');
-insert into sysparams values('my_routes:offset:right', '5', 'my_routes right offset in days.');
-insert into sysparams values('my_routes:pending:depth', '7', 'my_routes pending depth in days.');
-insert into sysparams values('my_routes:pending:color', '1704061', 'my_routes pending color as rgb integer value.');
-insert into sysparams values('my_routes:pending:bgcolor', '15395583', 'my_routes pending bgcolor as rgb integer value.');
-insert into sysparams values('my_routes:important:depth', '3', 'my_routes important depth in days.');
-insert into sysparams values('my_routes:important:bgcolor', '16773360', 'my_routes important bgcolor as rgb integer value.');
-insert into sysparams values('my_routes:discard', 'false', 'allows discarding of the route.');
-
-insert into sysparams values('target:depth', '14', 'default target depth (days).');
+insert into sysparams values('srv:domain', 'omobus.local', 'Server domain name.');
+insert into sysparams values('srv:push', '<3874a923-189a-4b95-b65c-b55a3809e35e@push.omobus.net>', 'Server alert notification address.');
+insert into sysparams values('stocks_history:depth', '60', 'The maximum depth of the stocks_history in days.');
+insert into sysparams values('target:offset', '14', 'default target offset to the future (days).');
 insert into sysparams values('target:multi', 'no', 'set to [yes] for allowing more then one target per document.');
+insert into sysparams values('trainings_history:depth', '60', 'The maximum depth of the trainings_history in days.');
+insert into sysparams values('whereis:depth', '150', 'Whereis depth (days).');

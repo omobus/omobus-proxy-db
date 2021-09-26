@@ -9,7 +9,7 @@ select
 from h_reclamation h
     left join (select distinct on(doc_id) * from erp_docs where doc_type in ('reclamation')
         order by doc_id, erp_dt desc) e on e.doc_id = h.doc_id
-where left(fix_dt, 10) >= (current_date + "paramInteger"('reclamations_history:offset'))::date_t
+where left(fix_dt, 10) >= (current_date - "paramInteger"('reclamations_history:depth'))::date_t
 order by doc_id, erp_dt desc
   ]]>
 </reclamations_history>

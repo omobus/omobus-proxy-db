@@ -28,7 +28,7 @@ select
 	when r.pending=1   then format_a('$(2) [$(1)]',array['1',lower(p.descr),'2',NIL(r.pending_note)])
 	else null
     end extra_info
-from user_routes(null, (current_date + "paramInteger"('route_history:offset:left'))::date_t, (current_date + "paramInteger"('route_history:offset:right'))::date_t, 0::bool_t) r
+from user_routes(null, "route_history_L"(), "route_history_R"(), 0::bool_t) r
     left join canceling_types c on c.canceling_type_id = r.canceling_type_id
     left join discard_types d on d.discard_type_id = r.discard_type_id
     left join pending_types p on p.pending_type_id = r.pending_type_id 

@@ -13,7 +13,7 @@ from h_order h
     left join (select distinct on(doc_id) * from erp_docs where doc_type in ('order','contract')
         order by doc_id, erp_dt desc) e on e.doc_id = h.doc_id
     left join "L10n" z on z.obj_code='orders_history' and z.obj_attr=''
-where left(fix_dt, 10) >= (current_date + "paramInteger"('orders_history:offset'::uid_t))::date_t
+where left(fix_dt, 10) >= (current_date - "paramInteger"('orders_history:depth'))::date_t
 order by left(h.fix_dt, 10) desc, h.fix_dt, h.doc_id
   ]]>
 </orders_history>

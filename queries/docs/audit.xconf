@@ -139,14 +139,14 @@ begin
 		    values('%doc_id_sys%', 'target:strict', 
 			(select descr from categories where categ_id='%categ_id%'), 
 			"L10n_format_a"(u_lang,'targets','','audit',array['u_name',u_name,'fix_date',"L"(f_date),'sla',round(%sla%*100, 1)::varchar,'violations',tmp]),
-			current_date, current_date + "paramInteger"('target:depth'), '%user_id_sys%', string_to_array('%account_id%',','), 
+			current_date, current_date + "paramInteger"('target:offset'), '%user_id_sys%', string_to_array('%account_id%',','), 
 			case when %blobs% > 0 then (select photos[1] from h_audit where doc_id='%doc_id_sys%') else null end, 1);
 	    elsif( tmp is not null ) then
 		insert into targets(target_id, target_type_id, subject, body, b_date, e_date, author_id, account_ids, image, "immutable")
 		    values('%doc_id_sys%', 'notice', 
 			(select descr from categories where categ_id='%categ_id%'), 
 			"L10n_format_a"(u_lang,'targets','','audit/positive',array['u_name',u_name,'fix_date',"L"(f_date),'violations',tmp]),
-			current_date, current_date + "paramInteger"('target:depth'), '%user_id_sys%', string_to_array('%account_id%',','), 
+			current_date, current_date + "paramInteger"('target:offset'), '%user_id_sys%', string_to_array('%account_id%',','), 
 			case when %blobs% > 0 then (select photos[1] from h_audit where doc_id='%doc_id_sys%') else null end, 1);
 	    end if;
 	    perform content_add('targets_compliance', '', '', '');

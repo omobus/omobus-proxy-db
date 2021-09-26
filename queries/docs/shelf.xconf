@@ -99,7 +99,7 @@ begin
 			values('%doc_id_sys%', 'target:strict', 
 			    (select descr from categories where categ_id='%categ_id%'), 
 			    "L10n_format_a"(u_lang,'targets','','shelf',array['u_name',u_name,'fix_date',"L"(f_date),'sos',round(0%sos%*100, 1)::varchar]),
-			    current_date, current_date + "paramInteger"('target:depth'), '%user_id_sys%', string_to_array('%account_id%',','), 1);
+			    current_date, current_date + "paramInteger"('target:offset'), '%user_id_sys%', string_to_array('%account_id%',','), 1);
 		end if;
 		perform content_add('targets_compliance', '', '', '');
 	    end if;

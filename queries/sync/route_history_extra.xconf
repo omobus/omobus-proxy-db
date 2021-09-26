@@ -8,7 +8,7 @@ select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
 from (
     select user_id, account_id, a_cookie, min(fix_dt) sorting from h_advt
-	where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='advt'
@@ -19,14 +19,14 @@ select
 from h_audit h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='audit'
     left join categories t on t.categ_id=h.categ_id
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* checkups */ union 
 select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
 from (
     select user_id, account_id, a_cookie, min(fix_dt) sorting from h_checkup
-	where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='checkups'
@@ -37,7 +37,7 @@ select
 from h_comment h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='comment'
     left join comment_types t on t.comment_type_id=h.comment_type_id
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* confirmations */ union
 select
@@ -48,21 +48,21 @@ select
 from h_confirmation h
     left join targets t on t.target_id=h.target_id
     left join confirmation_types c on c.confirmation_type_id=h.confirmation_type_id
-where  (current_date + "paramInteger"('route_history:offset:left')) <= h.fix_dt::date and h.fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* contacts */ union
 select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['name',NIL(trim(h.name)),'surname',NIL(trim(h.surname))]) extra_info
 from h_contact h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='contact'
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right')) and h.exist=0
+where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* deletions */ union
 select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['doc_note',NIL(lower(trim(h.doc_note)))]) extra_info
 from h_deletion h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='deletion'
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* equipments */ union
 select
@@ -70,14 +70,14 @@ select
 from h_equipment h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='equipment'
     left join equipment_types t on t.equipment_type_id=h.equipment_type_id
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right')) and h.exist=0
+where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* oos */ union 
 select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
 from (
     select user_id, account_id, a_cookie, min(fix_dt) sorting from h_oos
-	where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='oos'
@@ -87,7 +87,7 @@ select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, format_a(z.str,array['amount',round(h.amount,2)::varchar,'rows',h.rows::varchar]) extra_info
 from (
     select user_id, account_id, a_cookie, min(fix_dt) sorting, sum(amount) "amount", sum(rows) "rows" from h_order
-	where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='orders'
@@ -97,7 +97,7 @@ select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, format_a(z.str,array['placement',NIL(trim(p.descr)),'brand',NIL(trim(b.descr)),'photo_type',NIL(trim(t.descr)),'rows',h.rows::varchar]) extra_info
 from (
     select user_id, account_id, a_cookie, max(fix_dt) sorting, placement_id, brand_id, photo_type_id, count(placement_id) "rows" from h_photo
-	where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie, placement_id, brand_id, photo_type_id
 ) h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='photo'
@@ -110,7 +110,7 @@ select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
 from (
     select user_id, account_id, a_cookie, min(fix_dt) sorting from h_presence
-	where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='presences'
@@ -120,14 +120,14 @@ select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['participants',h.participants::varchar]) extra_info
 from h_presentation h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='presentation'
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* prices */ union 
 select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
 from (
     select user_id, account_id, a_cookie, min(fix_dt) sorting from h_price
-	where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='prices'
@@ -138,14 +138,14 @@ select
 from h_rating h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='rating'
     left join users u on u.user_id=h.user_id
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* reclamations */ union
 select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, format_a(z.str,array['amount',round(h.amount,2)::varchar,'rows',h.rows::varchar]) extra_info
 from (
     select user_id, account_id, a_cookie, min(fix_dt) sorting, sum(amount) "amount", sum(rows) "rows" from h_reclamation
-	where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='reclamations'
@@ -156,14 +156,14 @@ select
 from h_shelf h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='shelf'
     left join categories t on t.categ_id=h.categ_id
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* stocks */ union 
 select
     z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
 from (
     select user_id, account_id, a_cookie, min(fix_dt) sorting from h_stock
-	where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='stocks'
@@ -174,7 +174,7 @@ select
 from h_target h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='target'
     left join target_types t on t.target_type_id=h.target_type_id
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* trainings */ union 
 select
@@ -182,7 +182,7 @@ select
 from h_training h
     left join "L10n" z on z.obj_code='route_history' and z.obj_attr='training'
     left join training_types t on t.training_type_id=h.training_type_id
-where (current_date + "paramInteger"('route_history:offset:left')) <= fix_dt::date and fix_dt::date <= (current_date + "paramInteger"('route_history:offset:right'))
+where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 ) q
 order by 1, 2, 3, sorting

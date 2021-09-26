@@ -2,7 +2,7 @@
 <presences_history templ="%fix_date%;%account_id%;%prod_id%;%facing%;%stock%;%latest%;" empty="no">
   <![CDATA[ 
 select fix_date, account_id, prod_id, facing, stock, "_isRecentData" latest from dyn_presences
-    where fix_date >= (current_date+"paramInteger"('presences_history:offset'))::date_t
+    where fix_date >= (current_date - "paramInteger"('presences_history:depth'))::date_t
 order by 2, 3, 1 desc
   ]]>
 </presences_history>
