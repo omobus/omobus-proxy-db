@@ -6,8 +6,6 @@ do $$
 declare
     a_id uid_t;
     a_address address_t;
-    u_id uid_t;
-    r_date date_t;
     c int32_t default 0;
     radius int32_t default "paramInteger"('rules:max_distance');
     t int32_t;
@@ -38,10 +36,6 @@ begin
 	if t = 3 then
 	    update accounts set latitude=null, longitude=null where account_id=a_id;
 	    delete from geocode_stream where account_id=a_id;
-	    for r_date, u_id in select distinct p_date, user_id from my_routes where account_id=a_id
-	    loop
-		update "content_stream.ghost" set data_ts=current_timestamp where user_id=u_id and content_code='tech_route' and b_date=r_date;
-	    end loop;
 	    c = c + 1;
 	    raise notice '[account_id=%] location has been reset.', a_id;
 	end if;
