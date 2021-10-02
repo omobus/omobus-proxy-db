@@ -6038,6 +6038,7 @@ begin
 	left join routemv mv on mv.user_id = r.user_id and mv.f_date = r.p_date
     where start_date - offsetR <= cast(mv.t_date as date) and cast(mv.t_date as date) <= start_date + offsetR and mv.user_id is not null
 	and (select count(*) from j_user_activities j where j.user_id=r.user_id and j.account_id=r.account_id and j.route_date=mv.f_date and j.b_dt is not null and j.e_dt is not null and left(j.b_dt, 10) <> mv.t_date)=0
+	and (select count(*) from j_discards j where j.user_id=r.user_id and j.account_id=r.account_id and j.route_date=mv.f_date and j.hidden=0)=0
     loop
 	return next row; -- return current row of select
     end loop;
