@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<specializations templ="%spec_id%;%descr%;">
+  <![CDATA[
+select spec_id, descr from specializations
+    where hidden = 0
+order by 1
+  ]]>
+</specializations>

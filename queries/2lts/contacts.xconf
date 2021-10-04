@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<contacts templ="%contact_id%;%account_id%;%name%;%surname%;%patronymic%;%job_title_id%;%loyalty_level_id%;%mobile%;%email%;%locked%;%extra_info%;%author_id%;%hidden%;">
+<contacts templ="%contact_id%;%account_id%;%name%;%surname%;%patronymic%;%job_title_id%;%spec_id%;%loyalty_level_id%;%mobile%;%email%;%locked%;%extra_info%;%author_id%;%hidden%;">
   <![CDATA[
-select contact_id, account_id, name, patronymic, surname, job_title_id, loyalty_level_id, mobile, email, locked, extra_info, author_id, hidden from contacts
+select contact_id, account_id, name, patronymic, surname, job_title_id, spec_id, loyalty_level_id, mobile, email, locked, extra_info, author_id, hidden from contacts
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2
   ]]>

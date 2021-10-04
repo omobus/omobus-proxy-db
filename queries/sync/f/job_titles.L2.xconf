@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job_titlesL2>
+    <![CDATA[
+select unnest(dep_ids) dep_id, job_title_id from job_titles where dep_ids is not null and hidden = 0
+    union
+select null dep_id, job_title_id from job_titles where dep_ids is null and hidden = 0
+order by 1, 2
+    ]]>
+</job_titlesL2>

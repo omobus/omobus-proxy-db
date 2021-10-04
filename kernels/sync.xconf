@@ -124,6 +124,7 @@
 <xi:include href="../queries/sync/sales_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/shelf_lifes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/shipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/specializations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/std_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/stocks_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/support.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -152,8 +153,12 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 <xi:include href="../queries/sync/f/L10n.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/asp_types.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/asp_types.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/attributes.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/channels.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/info_materials.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/info_materials.L3.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/job_titles.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/loyalty_levels.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/my_countries.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/my_dbs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/my_departments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -176,6 +181,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 <xi:include href="../queries/sync/f/products.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/quests.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/rating_criterias.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/specializations.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/training_materials.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/training_materials.L5.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/training_types.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -192,18 +198,14 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
     <!-- role: END -->
     <activity_types personalize="groupName" />
     <addition_types />
-    <attributes />
     <audit_criterias />
     <audit_scores />
     <canceling_types />
-    <channels />
     <comment_types />
     <confirmation_types />
     <delivery_types />
     <discard_types />
     <equipment_types />
-    <job_titles />
-    <loyalty_levels />
     <manufacturers />
     <oos_types />
     <order_types />
@@ -257,10 +259,22 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<asp_typesL2 key="dep_id">
 	    <asp_types key="asp_type_id" />
 	</asp_typesL2>
+	<attributesL2 key="dep_id">
+	    <attributes key="attr_id" />
+	</attributesL2>
+	<channelsL2 key="dep_id">
+	    <channels key="chan_id" />
+	</channelsL2>
 	<departments key="dep_id" />
 	<info_materialsL2 key="dep_id">
 	    <info_materials key="infom_id" />
 	</info_materialsL2>
+	<job_titlesL2 key="dep_id">
+	    <job_titles key="job_title_id" />
+	</job_titlesL2>
+	<loyalty_levelsL2 key="dep_id">
+	    <loyalty_levels key="loyalty_level_id" />
+	</loyalty_levelsL2>
 	<oos_typesL2 key="dep_id">
 	    <oos_types key="oos_type_id" />
 	</oos_typesL2>
@@ -282,6 +296,9 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<rating_criteriasL2 key="dep_id">
 	    <rating_criterias key="fid" />
 	</rating_criteriasL2>
+	<specializationsL2 key="dep_id">
+	    <specializations key="spec_id" />
+	</specializationsL2>
 	<targets key="dep_id" />
 	<training_materialsL2 key="dep_id">
 	    <training_materials key="tm_id" />

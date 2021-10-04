@@ -108,6 +108,7 @@
 <xi:include href="../queries/2lts/retail_chains.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/revocations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/shelf_lifes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/specializations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/target_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/thumbnails.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -210,6 +211,7 @@
     <retail_chains />
     <revocations />
     <shelf_lifes />
+    <specializations />
     <targets />
     <target_types />
     <thumbnails />

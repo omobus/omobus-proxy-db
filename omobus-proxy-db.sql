@@ -1108,6 +1108,7 @@ create trigger trig_updated_ts before update on asp_types for each row execute p
 create table attributes (
     attr_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
+    dep_ids		uids_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
@@ -1207,6 +1208,7 @@ create trigger trig_updated_ts before update on categories for each row execute 
 create table channels (
     chan_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
+    dep_ids		uids_t		null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -1274,6 +1276,7 @@ create table contacts (
     surname 		descr_t 	null,
     patronymic 		descr_t 	null,
     job_title_id 	uid_t 		not null,
+    spec_id 		uid_t 		null,
     mobile 		phone_t 	null,
     email 		email_t 	null,
     loyalty_level_id 	uid_t 		null,
@@ -1548,6 +1551,7 @@ create trigger trig_updated_ts before update on issues for each row execute proc
 create table job_titles (
     job_title_id 	uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
+    dep_ids		uids_t		null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -1587,6 +1591,7 @@ create table loyalty_levels (
     loyalty_level_id	uid_t		not null primary key default man_id(),
     descr		descr_t		not null,
     extra_info 		note_t 		null,
+    dep_ids		uids_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden		bool_t		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
@@ -2460,6 +2465,19 @@ create table shipments (
 
 create index i_db_ids_shipments on shipments using GIN (db_ids);
 create trigger trig_updated_ts before update on shipments for each row execute procedure tf_updated_ts();
+
+create table specializations (
+    spec_id 		uid_t 		not null primary key default man_id(),
+    descr 		descr_t 	not null,
+    dep_ids		uids_t		null,
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null
+);
+
+create index i_db_ids_specializations on specializations using GIN (db_ids);
+create trigger trig_updated_ts before update on specializations for each row execute procedure tf_updated_ts();
 
 create table std_prices (
     distr_id 		uid_t 		not null,
@@ -3700,6 +3718,7 @@ create table h_contact (
     activity_type_id 	uid_t 		not null,
     contact_id 		uid_t 		not null,
     job_title_id 	uid_t 		not null,
+    spec_id 		uid_t 		null,
     name 		descr_t 	not null,
     surname 		descr_t 	null,
     patronymic 		descr_t 	null,
