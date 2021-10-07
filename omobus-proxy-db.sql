@@ -5589,7 +5589,7 @@ create table mail_stream (
     mail_from		email_t 	null,
     rcpt_to		emails_t	not null,
     cap			varchar(512) 	not null,
-    msg			varchar(32768)	not null,
+    msg			text		not null,
     priority		INT2 		not null default 3 check (priority between 1 and 5),
     content		varchar(16)	not null default 'text/plain',
     return_receipt 	bool_t 		not null default 0,
