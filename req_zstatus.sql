@@ -30,11 +30,11 @@ begin
     end if;
 
     if( _cmd = 'accept' ) then
-	update j_user_activities set zstatus = 'accepted', znote = _note
+	update j_user_activities set zstatus = 'accepted', znote = _note, zauthor_id = _login
 	    where guid = _cookie and (zstatus is null or zstatus <> 'accepted') and b_dt is not null and e_dt is not null;
 	GET DIAGNOSTICS zrows = ROW_COUNT;
     elsif( _cmd = 'reject' ) then
-	update j_user_activities set zstatus = 'rejected', znote = _note
+	update j_user_activities set zstatus = 'rejected', znote = _note, zauthor_id = _login
 	    where guid = _cookie and (zstatus is null or zstatus <> 'rejected') and b_dt is not null and e_dt is not null;
 	GET DIAGNOSTICS zrows = ROW_COUNT;
     end if;

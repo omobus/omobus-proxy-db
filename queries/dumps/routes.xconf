@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<routes templ="%user_id%,%u_name%,%u_area%,%department%,%year%,%month%,%week%,%day_of_week%,%account_id%,%a_code%,%a_name%,%address%,%undefined_account_location%,%retail_chain%,%ka_type%,%a_category%,%channel%,%region%,%city%,%route_date%,%fix_date%,%b_time%,%e_time%,%duration%,%b_distance%,%e_distance%,%route%,%closed%,%canceled%,%canceling_type%,%canceling_note%,%discard_type%,%discard_note%,%activity_type%,%strict%,%zstatus%,%znote%,%head_name%" empty="no">
+<routes templ="%user_id%,%u_name%,%u_area%,%department%,%year%,%month%,%week%,%day_of_week%,%account_id%,%a_code%,%a_name%,%address%,%undefined_account_location%,%retail_chain%,%ka_type%,%a_category%,%channel%,%region%,%city%,%route_date%,%fix_date%,%b_time%,%e_time%,%duration%,%b_distance%,%e_distance%,%route%,%closed%,%canceled%,%canceling_type%,%canceling_note%,%discard_type%,%discard_note%,%activity_type%,%strict%,%zstatus%,%znote%,%zauthor%,%head_name%" empty="no">
   <![CDATA[
 select
     x.user_id,
@@ -41,6 +41,7 @@ select
     t.strict,
     x.zstatus,
     quote_csv_string(x.znote) znote,
+    quote_csv_string(coalesce(z.descr,x.zauthor_id)) zauthor,
     quote_csv_string(e.descr) head_name,
     case when a.latitude is null or a.longitude is null or (a.latitude=0 and a.longitude=0) then 1 else null end "undefined_account_location"
 from user_routes(
@@ -53,6 +54,7 @@ from user_routes(
     left join canceling_types f on f.canceling_type_id = x.canceling_type_id
     left join discard_types d on d.discard_type_id = x.discard_type_id
     left join users u on u.user_id = x.user_id
+    left join users z on z.user_id = x.zauthor_id
     left join departments i on u.dep_ids is not null and cardinality(u.dep_ids) = 1 and i.dep_id = u.dep_ids[1]
     left join users e on e.user_id = u.executivehead_id
     left join accounts a on a.account_id = x.account_id

@@ -5255,6 +5255,7 @@ create table j_user_activities (
     dev_login 		uid_t 		null,
     zstatus 		varchar(8) 	null check(zstatus in ('accepted','rejected') and zstatus = lower(zstatus)),
     znote 		note_t 		null,
+    zauthor_id 		uid_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts		ts_auto_t 	not null,
     guid 		uuid 		not null default uuid_generate_v4(),
@@ -6284,6 +6285,7 @@ create or replace function user_routes(f_user_id uid_t, f_b_date date_t, f_e_dat
     pending_note note_t,
     zstatus text,
     znote note_t,
+    zauthor_id uid_t,
     guid uuid
     )
 as $body$
@@ -6316,6 +6318,7 @@ as $body$
 	null::note_t pending_note, 
 	zstatus, 
 	znote, 
+	zauthor_id,
 	guid
     from j_user_activities
 	where (f_user_id is null or user_id=f_user_id) and fix_date>=f_b_date and fix_date<=f_e_date and 
@@ -6350,6 +6353,7 @@ union
 	p.note pending_note, 
 	v.zstatus, 
 	v.znote,
+	v.zauthor_id,
 	v.guid
     from my_routes r
 	left join j_user_activities v on v.user_id = r.user_id and v.account_id = r.account_id
@@ -6390,6 +6394,7 @@ union /* orphaned routes: */
 	null::note_t pending_note,
 	j.zstatus,
 	j.znote,
+	j.zauthor_id,
 	j.guid
     from j_user_activities j
 	left join my_routes m on m.user_id=j.user_id and m.account_id=j.account_id and m.p_date=j.route_date and m.activity_type_id=j.activity_type_id
