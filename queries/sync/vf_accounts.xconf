@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vf_accounts templ="%vf_id%;%account_id%;" empty="no">
   <![CDATA[
-select vf_id, account_id from vf_accounts
-    order by vf_id, row_no
+select 
+    v.db_id, 
+    v.vf_id, 
+    v.account_id 
+from vf_accounts v, accounts a
+    where v.account_id = a.account_id
+order by v.vf_id, v.row_no, a.descr, a.address, a.code
   ]]>
 </vf_accounts>

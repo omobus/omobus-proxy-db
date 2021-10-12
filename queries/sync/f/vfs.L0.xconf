@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<vfsL0>
-    <![CDATA[
-select unnest(db_ids) db_id, vf_id from vf_names where db_ids is not null and hidden = 0
-    order by 1, 2
-    ]]>
-</vfsL0>

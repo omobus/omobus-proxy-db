@@ -1489,6 +1489,7 @@ create index i_db_ids_group_prices on group_prices using GIN (db_ids);
 create trigger trig_updated_ts before update on group_prices for each row execute procedure tf_updated_ts();
 
 create table highlights (
+    db_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
     color 		color_t 	null,
@@ -1496,11 +1497,10 @@ create table highlights (
     remark 		descr_t 	null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null,
-    primary key (account_id, prod_id)
+    primary key (db_id, account_id, prod_id)
 );
 
-create index i_db_ids_highlights on highlights using GIN (db_ids);
+create index i_db_id_highlights on highlights (db_id);
 create trigger trig_updated_ts before update on highlights for each row execute procedure tf_updated_ts();
 
 create table info_materials (
@@ -1986,17 +1986,17 @@ create index i_db_ids_plu_codes on plu_codes using GIN (db_ids);
 create trigger trig_updated_ts before update on plu_codes for each row execute procedure tf_updated_ts();
 
 create table pmlist ( /* Price Monitoring List - allowed products for the [price] document */
+    db_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
     b_date 		date_t 		not null,
     e_date 		date_t 		not null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null,
-    primary key (account_id, prod_id, b_date)
+    primary key (db_id, account_id, prod_id, b_date)
 );
 
-create index i_db_ids_pmlist on pmlist using GIN (db_ids);
+create index i_db_id_pmlist on pmlist (db_id);
 create trigger trig_updated_ts before update on pmlist for each row execute procedure tf_updated_ts();
 
 create table pos_materials ( /* Point-of-Sale and Point-of-Purchase materials */
@@ -2229,17 +2229,17 @@ create index i_db_ids_recom_retail_prices on recom_retail_prices using GIN (db_i
 create trigger trig_updated_ts before update on recom_retail_prices for each row execute procedure tf_updated_ts();
 
 create table recom_shares (
+    db_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
     categ_id 		uid_t 		not null,
     sos 		wf_t 		null check(sos between 0.01 and 1.00),
     soa 		wf_t 		null check(soa between 0.01 and 1.00),
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null,
-    primary key(account_id, categ_id)
+    primary key(db_id, account_id, categ_id)
 );
 
-create index i_db_ids_recom_shares on recom_shares using GIN (db_ids);
+create index i_db_id_recom_shares on recom_shares (db_id);
 create trigger trig_updated_ts before update on recom_shares for each row execute procedure tf_updated_ts();
 
 create table refunds (
@@ -2673,43 +2673,44 @@ create index i_db_ids_users on users using GIN (db_ids);
 create trigger trig_updated_ts before update on users for each row execute procedure tf_updated_ts();
 
 create table vf_accounts (
+    db_id 		uid_t 		not null,
     vf_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
     row_no 		int32_t 	null, -- ordering
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null,
-    primary key (vf_id, account_id)
+    primary key (db_id, vf_id, account_id)
 );
 
-create index i_db_ids_vf_accounts on vf_accounts using GIN (db_ids);
+create index i_db_id_vf_accounts on vf_accounts (db_id);
 create trigger trig_updated_ts before update on vf_accounts for each row execute procedure tf_updated_ts();
 
 create table vf_names (
-    vf_id 		uid_t 		not null primary key default man_id(),
+    db_id 		uid_t 		not null,
+    vf_id 		uid_t 		not null,
     descr 		descr_t 	not null,
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
+    primary key(db_id, vf_id)
 );
 
-create index i_db_ids_vf_names on vf_names using GIN (db_ids);
+create index i_db_id_vf_names on vf_names (db_id);
 create trigger trig_updated_ts before update on vf_names for each row execute procedure tf_updated_ts();
 
 create table vf_products (
+    db_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
     vf_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
     row_no 		int32_t 	null, -- ordering
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null,
-    primary key (vf_id, account_id, prod_id)
+    primary key (db_id, vf_id, account_id, prod_id)
 );
 
-create index i_db_ids_vf_products on vf_products using GIN (db_ids);
+create index i_db_id_vf_products on vf_products (db_id);
 create trigger trig_updated_ts before update on vf_products for each row execute procedure tf_updated_ts();
 
 create table warehouses (

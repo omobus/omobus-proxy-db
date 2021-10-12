@@ -185,7 +185,6 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 <xi:include href="../queries/sync/f/training_materials.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/training_materials.L5.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/training_types.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/f/vfs.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <!-- **** FILTERS: END **** -->
 </queries>
 <pack strict="yes" Xtrace="yes">
@@ -309,12 +308,15 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
     </my_departments>
 <!--
     <my_dbs personalize="ErpId">
+	<highlights key="db_id" />
+	<pmlist key="db_id" />
 	<productsL0 key="db_id">
 	    <products key="fid" />
 	</productsL0>
-	<vfs key="db_id">
-	    <vf_names key="vf_id" strict="yes" />
-	</vfs>
+	<recom_shares key="db_id" />
+	<vf_accounts key="db_id" />
+	<vf_names key="db_id" />
+	<vf_products key="db_id" />
     </my_dbs>
 -->
     <my_distributors personalize="ErpId">

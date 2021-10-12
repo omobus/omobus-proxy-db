@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vf_names templ="%vf_id%;%descr%;" empty="no">
   <![CDATA[ 
-select vf_id, descr from vf_names
+select db_id, vf_id, descr from vf_names
     where hidden = 0
 order by row_no, descr
   ]]>

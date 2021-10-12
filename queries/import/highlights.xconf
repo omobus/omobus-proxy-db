@@ -9,17 +9,13 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 delete from highlights
-    where db_ids = (array['%ErpCode%'])::uids_t;
-update highlights set db_ids=array_remove(db_ids,'%ErpCode%')
-    where db_ids @> (array['%ErpCode%'])::uids_t;
-delete from highlights
-    where (db_ids is null or cardinality(db_ids)=0);
+    where db_id = '%ErpCode%'
   ]]>
 </begin>
 <insert>
   <![CDATA[ 
-insert into highlights (account_id, prod_id, color, bgcolor, remark, db_ids)
-    values ('%account_id%', '%prod_id%', NIL(%color%), NIL(%bgcolor%), NIL('%remark%'), array['%ErpCode%'])
+insert into highlights (db_id, account_id, prod_id, color, bgcolor, remark)
+    values ('%ErpCode%', '%account_id%', '%prod_id%', NIL(%color%), NIL(%bgcolor%), NIL('%remark%'))
 on conflict do nothing
   ]]>
 </insert>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <recom_shares templ="%account_id%;%categ_id%;%sos%;%soa%;" empty="no">
   <![CDATA[ 
-select account_id, categ_id, sos, soa from recom_shares
+select db_id, account_id, categ_id, sos, soa from recom_shares
     where sos is not null or soa is not null
 order by 1, 2
   ]]>
