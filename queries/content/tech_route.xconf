@@ -72,11 +72,13 @@ select
     r.canceling_note,
     r.zstatus, 
     r.znote,
+    coalesce(z.descr,r.zauthor_id) zauthor,
     r.guid
 from user_routes('%user_id%', '%b_date%', '%e_date%', 1::bool_t) r
     left join accounts a on a.account_id = r.account_id
     left join activity_types t on r.activity_type_id = t.activity_type_id
     left join canceling_types x on x.canceling_type_id = r.canceling_type_id
+    left join users z on z.user_id = r.zauthor_id
 where a.account_id is not null
 order by r.b_dt, r.row_no, a.descr, a.address, a.code
   ]]>
@@ -365,8 +367,8 @@ order by fix_dt
 	</prices_L0>
 	<prices_L1>
   <![CDATA[
-select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.price, t.promo, t.rrp, t.scratch, t.prod_id _pkey from (
-	select doc_id, row_no, prod_id, price, promo, rrp, scratch from t_price where doc_id in (
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.price, t.promo, t.discount, t.rrp, t.scratch, t.prod_id _pkey from (
+	select doc_id, row_no, prod_id, price, promo, discount, rrp, scratch from t_price where doc_id in (
 	    select doc_id from h_price where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
     ) t
@@ -962,7 +964,7 @@ rt.foreach(_prices_L1, function(q, i, cols)
 	    local n = rowset_colname(q, j)
 	    local a = rowset_value(q, i, j)
 	    if a ~= nil and n ~= "doc_id" then
-		if std.contains({'row_no','price','promo','rrp'}, n) then
+		if std.contains({'row_no','price','promo','discount','rrp'}, n) then
 		    x[n] = tonumber(a)
 		else
 		    x[n] = a

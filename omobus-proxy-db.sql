@@ -4247,11 +4247,13 @@ create table t_price (
     doc_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
     row_no 		int32_t 	not null check (row_no >= 0),
-    price 		currency_t 	not null,
-    promo 		bool_t 		not null default 0,
+    price 		currency_t 	null,
+    promo 		currency_t 	null,
+    discount 		bool_t 		not null default 0,
     rrp 		currency_t 	null,
     scratch 		date_t 		null,
-    primary key (doc_id, prod_id)
+    primary key (doc_id, prod_id),
+    check(price is not null or promo is not null)
 );
 
 create index i_fix_date_h_price on h_price (left(fix_dt,10));
@@ -4921,8 +4923,9 @@ create table dyn_prices (
     fix_date		date_t 		not null,
     account_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
-    price 		currency_t 	not null,
-    promo 		bool_t 		not null,
+    price 		currency_t 	null,
+    promo 		currency_t 	null,
+    discount 		bool_t 		not null,
     rrp 		currency_t 	null,
     fix_dt		datetime_t 	not null,
     user_id 		uid_t 		not null,
@@ -4931,7 +4934,8 @@ create table dyn_prices (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts		ts_auto_t 	not null,
     "_isRecentData"	bool_t 		null,
-    primary key(fix_date, account_id, prod_id)
+    primary key(fix_date, account_id, prod_id),
+    check(price is not null or promo is not null)
 );
 
 create index i_2lts_dyn_prices on dyn_prices (updated_ts);

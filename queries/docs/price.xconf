@@ -30,8 +30,8 @@ insert into h_price(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, 
 </write_body>
 <write_row>
   <![CDATA[
-insert into t_price(doc_id, row_no, prod_id, price, promo, rrp, scratch)
-    values('%doc_id_sys%', %row_no%, '%prod_id%', %price%, "toBoolean"('%promo%'), NIL(%rrp%), NIL('%scratch%'))
+insert into t_price(doc_id, row_no, prod_id, price, promo, discount, rrp, scratch)
+    values('%doc_id_sys%', %row_no%, '%prod_id%', NIL(%price%), NIL(%promo%), "toBoolean"('%discount%'), NIL(%rrp%), NIL('%scratch%'))
   ]]>
 </write_row>
 <close>
@@ -45,6 +45,7 @@ declare
     d_id uid_t;
     f_dt datetime_t;
     v currency_t;
+    k currency_t;
     p bool_t;
     r currency_t;
     s date_t;
@@ -70,16 +71,16 @@ begin
     /* removes obsolete entires */
     delete from dyn_prices where account_id = '%account_id%' and fix_date = f_date;
     /* recompiles data */
-    for p_id, f_dt, u_id, d_id, v, p, r, s in
-	select t.prod_id, h.fix_dt, h.user_id, h.doc_id, t.price, t.promo, t.rrp, t.scratch from t_price t left join h_price h on t.doc_id = h.doc_id
+    for p_id, f_dt, u_id, d_id, v, k, p, r, s in
+	select t.prod_id, h.fix_dt, h.user_id, h.doc_id, t.price, t.promo, t.discount, t.rrp, t.scratch from t_price t left join h_price h on t.doc_id = h.doc_id
 	    where h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
 	order by h.fix_dt
     loop
 	if( (select count(*) from dyn_prices where account_id='%account_id%' and prod_id=p_id and fix_date=f_date) = 0 ) then
-	    insert into dyn_prices(fix_date, account_id, prod_id, price, promo, rrp, fix_dt, user_id, doc_id, scratch)
-		values(f_date, '%account_id%', p_id, v, p, r, f_dt, u_id, d_id, s);
+	    insert into dyn_prices(fix_date, account_id, prod_id, price, promo, discount, rrp, fix_dt, user_id, doc_id, scratch)
+		values(f_date, '%account_id%', p_id, v, k, p, r, f_dt, u_id, d_id, s);
 	else
-	    update dyn_prices set price = v, promo = p, rrp = r, fix_dt = f_dt, user_id = u_id, doc_id = d_id, scratch = s, updated_ts = current_timestamp
+	    update dyn_prices set price = v, promo = k, discount = p, rrp = r, fix_dt = f_dt, user_id = u_id, doc_id = d_id, scratch = s, updated_ts = current_timestamp
 		where account_id = '%account_id%' and prod_id = p_id and fix_date = f_date;
 	end if;
     end loop;

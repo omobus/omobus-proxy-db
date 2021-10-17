@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<prices_history templ="%fix_date%;%account_id%;%prod_id%;%price%;%promo%;%latest%;" empty="no">
+<prices_history templ="%fix_date%;%account_id%;%prod_id%;%price%;%promo%;%discount%;%latest%;" empty="no">
   <![CDATA[ 
-select fix_date, account_id, prod_id, price, promo, "_isRecentData" latest from dyn_prices
+select fix_date, account_id, prod_id, price, promo, discount, "_isRecentData" latest from dyn_prices
     where fix_date >= (current_date - "paramInteger"('prices_history:depth'))::date_t
 order by 2, 3, 1 desc
   ]]>

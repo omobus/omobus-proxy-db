@@ -4,19 +4,36 @@
 	<L>
   <![CDATA[
 select
-    x.user_id, u.descr u_name, u.dev_login,
+    x.user_id, 
+    u.descr u_name, 
+    u.dev_login,
     x.fix_dt,
     x.inserted_ts,
-    x.account_id, a.code a_code, a.descr a_name, a.address,
+    x.account_id, 
+    a.code a_code, 
+    a.descr a_name, 
+    a.address,
     reg.descr region,
     c.descr city,
-    a.rc_id, r.descr rc, r.ka_type,
+    a.rc_id, 
+    r.descr rc, 
+    r.ka_type,
     p.descr poten,
-    a.chan_id, ch.descr chan,
-    z.prod_id, z.code p_code, z.descr prod, 
-    z.categ_id, f.descr categ,
-    z.brand_id, b.descr brand,
-    x.price, x.promo, x.rrp, x.scratch,
+    a.chan_id, 
+    ch.descr chan,
+    z.prod_id, 
+    z.code p_code, 
+    z.descr prod, 
+    z.categ_id, 
+    f.descr categ,
+    z.brand_id, 
+    b.descr brand,
+    z.units,
+    x.price,
+    x.promo,
+    x.discount,
+    x.rrp,
+    x.scratch,
     u.executivehead_id head_id, ex.descr head_name
 from dyn_prices x
     left join accounts a on a.account_id = x.account_id
@@ -41,7 +58,7 @@ local std = require('stdlib')
 local rt = require('rtlib')
 
 rt.main("prices", true, function(r, n, a)
-    if std.contains({'price','promo','rrp'}, n) then
+    if std.contains({'price','promo','discount','rrp'}, n) then
 	r[n] = tonumber(a)
     else
 	r[n] = a
