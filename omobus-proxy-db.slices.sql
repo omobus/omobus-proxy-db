@@ -44,3 +44,18 @@ create table slices.agreements2 (
 
 create index i_exist_agreements2 on slices.agreements2(slice_date, account_id);
 create trigger trig_updated_ts before update on slices.agreements2 for each row execute procedure tf_updated_ts();
+
+create table slices.agreements3 (
+    slice_date 		date_t 		not null,
+    account_id		uid_t		not null,
+    prod_id 		uid_t 		not null,
+    stock 		int32_t 	not null check(stock > 0),
+    strict 		bool_t 		not null default 1,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    primary key (slice_date, account_id, prod_id)
+);
+
+create index i_exist_agreements3 on slices.agreements3(slice_date, account_id);
+create trigger trig_updated_ts before update on slices.agreements3 for each row execute procedure tf_updated_ts();
+

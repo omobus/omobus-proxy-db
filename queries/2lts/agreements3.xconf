@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<agreements3 templ="%slice_date%;%account_id%;%prod_id%;%stock%;%strict%;">
+  <![CDATA[
+select slice_date, account_id, prod_id, stock, strict from slices.agreements3
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
+order by 1, 2, 3
+  ]]>
+</agreements3>
