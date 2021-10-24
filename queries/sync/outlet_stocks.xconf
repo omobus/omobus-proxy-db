@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<outlet_stocks templ="%account_id%;%prod_id%;%s_date%;%stock%;" empty="no">
+  <![CDATA[ 
+select account_id, prod_id, s_date, stock from outlet_stocks
+    order by account_id, prod_id
+  ]]>
+</outlet_stocks>

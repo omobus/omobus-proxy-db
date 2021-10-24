@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<outlet_stocks templ="%account_id%;%prod_id%;%s_date%;%stock%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+delete from outlet_stocks
+    where db_ids = (array['%ErpCode%'])::uids_t;
+update outlet_stocks set db_ids=array_remove(db_ids,'%ErpCode%')
+    where db_ids @> (array['%ErpCode%'])::uids_t;
+delete from outlet_stocks
+    where (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<insert>
+  <![CDATA[
+insert into outlet_stocks (account_id, prod_id, s_date, stock, db_ids)
+    values ('%account_id%', '%prod_id%', '%s_date%', %stock%, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</outlet_stocks>

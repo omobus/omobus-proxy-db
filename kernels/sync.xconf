@@ -75,6 +75,7 @@
 <xi:include href="../queries/sync/my_targets.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/oos_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/oos_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/outlet_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/order_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/order_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/orders_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -397,6 +398,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	</mutuals_history>
 	<orders_history key="account_id" strict="yes" />
 	<oos_history key="account_id" strict="yes" />
+	<outlet_stocks key="account_id" strict="yes" />
 	<permitted_returns key="account_id" strict="yes" />
 	<photos_history key="account_id" strict="yes" />
 	<planogramsL3 key="chan_id">
@@ -462,6 +464,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<matrices key="prod_id" strict="yes" />
 	<mutuals_history_products key="prod_id" strict="yes" />
 	<oos_history key="prod_id" strict="yes" />
+	<outlet_stocks key="prod_id" strict="yes" />
 	<permitted_returns key="prod_id" strict="yes" />
 	<packs key="prod_id" strict="yes" />
 	<plu_codes key="prod_id" strict="yes" />

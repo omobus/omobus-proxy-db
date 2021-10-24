@@ -1831,6 +1831,20 @@ create table order_types (
 create index i_db_ids_order_types on order_types using GIN (db_ids);
 create trigger trig_updated_ts before update on order_types for each row execute procedure tf_updated_ts();
 
+create table outlet_stocks (
+    account_id 		uid_t 		not null,
+    prod_id 		uid_t 		not null,
+    s_date 		date_t 		not null,
+    stock 		int32_t 	not null check(stock > 0),
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    primary key(account_id, prod_id)
+);
+
+create index i_db_ids_outlet_stocks on outlet_stocks using GIN (db_ids);
+create trigger trig_updated_ts before update on outlet_stocks for each row execute procedure tf_updated_ts();
+
 create table ownership_types (
     ownership_type_id 	uid_t		not null primary key default man_id(),
     descr 		descr_t		not null,

@@ -79,6 +79,7 @@
 <xi:include href="../queries/import/oos_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/order_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/order_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/outlet_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/ownership_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/packs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/payment_methods.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
