@@ -1087,6 +1087,20 @@ create table agreements2 (
 create index i_db_ids_agreements2 on agreements2 using GIN (db_ids);
 create trigger trig_updated_ts before update on agreements2 for each row execute procedure tf_updated_ts();
 
+create table agreements3 (
+    account_id		uid_t		not null,
+    prod_id 		uid_t 		not null,
+    stock 		int32_t 	not null check(stock > 0),
+    strict 		bool_t 		not null default 1,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    primary key (account_id, prod_id)
+);
+
+create index i_db_ids_agreements3 on agreements3 using GIN (db_ids);
+create trigger trig_updated_ts before update on agreements3 for each row execute procedure tf_updated_ts();
+
 create table asp_types ( /* Additional-Sales-Places */
     asp_type_id 	uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,

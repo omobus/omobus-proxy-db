@@ -33,6 +33,7 @@
 <xi:include href="../queries/import/agencies.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/agreements1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/agreements2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/import/agreements3.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/asp_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/attributes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/audit_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

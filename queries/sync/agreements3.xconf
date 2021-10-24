@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<agreements3 templ="%account_id%;%prod_id%;%stock%;%strict%;" empty="no">
+  <![CDATA[ 
+select account_id, prod_id, stock, strict from agreements3
+    order by 1, 2, 4
+  ]]>
+</agreements3>
