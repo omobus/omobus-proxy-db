@@ -2017,11 +2017,9 @@ create table pmlist ( /* Price Monitoring List - allowed products for the [price
     db_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
-    b_date 		date_t 		not null,
-    e_date 		date_t 		not null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    primary key (db_id, account_id, prod_id, b_date)
+    primary key (db_id, account_id, prod_id)
 );
 
 create index i_db_id_pmlist on pmlist (db_id);

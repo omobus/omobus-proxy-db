@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pmlist templ="%account_id%;%prod_id%;%b_date%;%e_date%;">
+<pmlist templ="%account_id%;%prod_id%;">
   <![CDATA[
-select db_id, account_id, prod_id, b_date, e_date from pmlist
-    where 
-	/* current: */  (b_date <= current_date::date_t and current_date::date_t <= e_date) or
-	/* obsolete: */ (current_date::date_t > e_date and e_date >= (current_date - 1)::date_t) or
-	/* future: */   (current_date::date_t < b_date and b_date <= (current_date + 5)::date_t) or
-	(b_date = '' and e_date = '')
-order by 1, 2, 3
+select db_id, account_id, prod_id from pmlist
+    order by 1, 2, 3
   ]]>
 </pmlist>
