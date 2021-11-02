@@ -9,17 +9,13 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 delete from vf_accounts
-    where db_ids = (array['%ErpCode%'])::uids_t;
-update vf_accounts set db_ids=array_remove(db_ids,'%ErpCode%')
-    where db_ids @> (array['%ErpCode%'])::uids_t;
-delete from vf_accounts
-    where (db_ids is null or cardinality(db_ids)=0);
+    where db_id = '%ErpCode%'
   ]]>
 </begin>
 <insert>
   <![CDATA[ 
-insert into vf_accounts (vf_id, account_id, row_no, db_ids)
-    values (masquerading('%vf_id%','%ErpCode%'), '%account_id%', NIL(%row_no%), array['%ErpCode%'])
+insert into vf_accounts (db_id, vf_id, account_id, row_no)
+    values ('%ErpCode%', '%vf_id%', '%account_id%', NIL(%row_no%))
 on conflict do nothing
   ]]>
 </insert>

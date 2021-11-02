@@ -9,17 +9,13 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 delete from recom_shares
-    where db_ids = (array['%ErpCode%'])::uids_t;
-update recom_shares set db_ids=array_remove(db_ids,'%ErpCode%')
-    where db_ids @> (array['%ErpCode%'])::uids_t;
-delete from recom_shares
-    where (db_ids is null or cardinality(db_ids)=0);
+    where db_id = '%ErpCode%'
   ]]>
 </begin>
 <insert>
   <![CDATA[
-insert into recom_shares (account_id, categ_id, sos, soa, db_ids)
-    values ('%account_id%', '%categ_id%', NIL(%sos%), NIL(%soa%), array['%ErpCode%'])
+insert into recom_shares (db_id, account_id, categ_id, sos, soa)
+    values ('%ErpCode%', '%account_id%', '%categ_id%', NIL(%sos%), NIL(%soa%))
 on conflict do nothing
   ]]>
 </insert>

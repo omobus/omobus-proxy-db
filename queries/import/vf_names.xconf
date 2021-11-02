@@ -8,28 +8,26 @@ select count(*) from data_stream
 </verification>
 <begin>
   <![CDATA[
-update vf_names set db_ids=array_remove(db_ids,'%ErpCode%')
-    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
-update vf_names set hidden=1, db_ids=null
-    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+update vf_names set hidden=1
+    where hidden=0 and db_id = '%ErpCode%'
   ]]>
 </begin>
 <check_exist>
   <![CDATA[
 select count(*) from vf_names 
-    where vf_id=masquerading('%vf_id%','%ErpCode%')
+    where db_id = '%ErpCode%' and vf_id = '%vf_id%'
   ]]>
 </check_exist>
 <update>
   <![CDATA[
-update vf_names set descr=trim(both from '%descr%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
-    where vf_id=masquerading('%vf_id%','%ErpCode%')
+update vf_names set descr=trim(both from '%descr%'), row_no=NIL(%row_no%), hidden=0
+    where db_id = '%ErpCode%' and vf_id = '%vf_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[ 
-insert into vf_names (vf_id, descr, row_no, hidden, db_ids)
-    values (masquerading('%vf_id%','%ErpCode%'), trim(both from '%descr%'), NIL(%row_no%), 0, array['%ErpCode%'])
+insert into vf_names (db_id, vf_id, descr, row_no, hidden)
+    values ('%ErpCode%', '%vf_id%', trim(both from '%descr%'), NIL(%row_no%), 0)
   ]]>
 </insert>
 <end>
