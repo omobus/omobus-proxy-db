@@ -25,7 +25,6 @@ begin
 
     delete from floating_prices where e_date < gc_date;
     delete from my_routes where p_date < gc_date;
-    delete from pmlist where NIL(e_date) is not null and e_date < gc_date;
     delete from priorities where NIL(e_date) is not null and e_date < gc_date;
     delete from reminders where e_date < gc_date;
     delete from routemv where greatest(f_date, t_date) < gc_date;
