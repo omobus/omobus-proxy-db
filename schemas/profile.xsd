@@ -18,15 +18,15 @@
 	</xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="uid_t">
-	<xs:restriction base="xs:string">
-	    <xs:pattern value="[^%]*" />
-	</xs:restriction>
-    </xs:simpleType>
-
     <xs:simpleType name="int_t">
 	<xs:restriction base="xs:string">
 	    <xs:pattern value="(|[0-9]*)" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="uid_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="[^%]*" />
 	</xs:restriction>
     </xs:simpleType>
 
@@ -53,8 +53,10 @@
 	    <xs:attribute name="closed_gps_dt" use="optional" type="datetime2_t" default="" />
 	    <xs:attribute name="chan_id" use="optional" type="uid_t" default="" />
 	    <xs:attribute name="poten_id" use="optional" type="uid_t" default="" />
-	    <xs:attribute name="cash_register" use="optional" type="int_t" default="" />
 	    <xs:attribute name="phone" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="workplaces" use="optional" type="int_t" default="" />
+	    <xs:attribute name="team" use="optional" type="int_t" default="" />
+	    <xs:attribute name="interaction_type_id" use="optional" type="uid_t" default="" />
 	    <xs:attribute name="attr_ids" use="optional" type="xs:string" default="" />
 	</xs:complexType>
     </xs:element>

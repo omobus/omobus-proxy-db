@@ -59,7 +59,9 @@
 <xi:include href="../queries/sync/floating_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/group_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/highlights.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/influence_levels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/info_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/interaction_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/invoice_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/job_titles.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/loyalty_levels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -157,8 +159,10 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 <xi:include href="../queries/sync/f/asp_types.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/attributes.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/channels.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/influence_levels.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/info_materials.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/info_materials.L3.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/interaction_types.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/job_titles.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/loyalty_levels.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/my_countries.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -267,9 +271,15 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	    <channels key="chan_id" />
 	</channelsL2>
 	<departments key="dep_id" />
+	<influence_levelsL2 key="dep_id">
+	    <influence_levels key="influence_level_id" />
+	</influence_levelsL2>
 	<info_materialsL2 key="dep_id">
 	    <info_materials key="infom_id" />
 	</info_materialsL2>
+	<interaction_typesL2 key="dep_id">
+	    <interaction_types key="interaction_type_id" />
+	</interaction_typesL2>
 	<job_titlesL2 key="dep_id">
 	    <job_titles key="job_title_id" />
 	</job_titlesL2>

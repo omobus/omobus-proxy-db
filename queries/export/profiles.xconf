@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<profiles templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%chan_id%;%poten_id%;%phone%;%workplaces%;%team%;%interaction_type_id%;%attr_ids%;">
+  <![CDATA[
+select 
+    doc_id,
+    fix_dt,
+    user_id,
+    account_id,
+    chan_id,
+    poten_id,
+    phone,
+    workplaces,
+    team,
+    interaction_type_id,
+    array_to_string(attr_ids,',') attr_ids
+from h_profile
+    where inserted_ts >= current_timestamp - '5 days 00:00:00'::interval
+order by 1, 2, 3
+  ]]>
+</profiles>

@@ -12,8 +12,7 @@ select
     a.latitude, 
     a.longitude, 
     c.descr chan, 
-    p.descr poten, 
-    a.cash_register 
+    p.descr poten
 from (
     select account_id, max(route) route from (
 	select account_id, null route from my_accounts where user_id='%user_id%'
@@ -726,8 +725,6 @@ tb.my_accounts = rt.idx(_my_accounts, "account_id", function(r, n, a)
     if std.contains({'latitude','longitude'}, n) then
 	local pos = tonumber(a)
 	if pos ~= 0 then r[n] = pos; end
-    elseif std.contains({'cash_register'}, n) then
-	r[n] = tonumber(a)
     else
 	r[n] = a;
     end

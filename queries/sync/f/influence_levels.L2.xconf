@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<influence_levelsL2>
+    <![CDATA[
+select unnest(dep_ids) dep_id, influence_level_id from influence_levels where dep_ids is not null and hidden = 0
+    union
+select null dep_id, influence_level_id from influence_levels where dep_ids is null and hidden = 0
+order by 1, 2
+    ]]>
+</influence_levelsL2>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interaction_types templ="%interaction_type_id%;%descr%;%row_no%;">
+  <![CDATA[
+select interaction_type_id, descr, row_no from interaction_types
+    where hidden = 0
+order by 1
+  ]]>
+</interaction_types>

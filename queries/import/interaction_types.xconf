@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interaction_types templ="%interaction_type_id%;%descr%;%dep_ids%;%row_no%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update interaction_types set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update interaction_types set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from interaction_types 
+    where interaction_type_id = '%interaction_type_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update interaction_types set descr=trim(both from '%descr%'), dep_ids=string_to_array(NIL('%dep_ids%'),','), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where interaction_type_id = '%interaction_type_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into interaction_types (interaction_type_id, descr, dep_ids, row_no, hidden, db_ids)
+    values ('%interaction_type_id%', trim(both from '%descr%'), string_to_array(NIL('%dep_ids%'),','), NIL(%row_no%), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</interaction_types>

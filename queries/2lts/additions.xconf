@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<additions templ="%doc_id%;%fix_dt%;%user_id%;%account%;%address%;%number%;%addition_type_id%;%note%;%chan_id%;%attr_ids%;%photos%;%account_id%;%validator_id%;%validated%;%hidden%;%geo_address%;">
+<additions templ="%doc_id%;%fix_dt%;%user_id%;%account%;%address%;%number%;%addition_type_id%;%note%;%chan_id%;%phone%;%workplaces%;%team%;%interaction_type_id%;%attr_ids%;%photos%;%account_id%;%validator_id%;%validated%;%hidden%;%geo_address%;">
   <![CDATA[
 select
     a.doc_id, 
@@ -11,6 +11,10 @@ select
     a.addition_type_id, 
     a.note, 
     a.chan_id, 
+    a.phone,
+    a.workplaces,
+    a.team,
+    a.interaction_type_id,
     a.attr_ids,
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(a.photos)) photos, 
     a.guid account_id, 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<accounts templ="%pid%;%account_id%;%ftype%;%code%;%descr%;%address%;%rc_id%;%chan_id%;%poten_id%;%cash_register%;%latitude%;%longitude%;%phone%;%attr_ids%;%approved%;%locked%;%hidden%;%ownerless%;%extra_info%;">
+<accounts templ="%pid%;%account_id%;%ftype%;%code%;%descr%;%address%;%rc_id%;%chan_id%;%poten_id%;%latitude%;%longitude%;%phone%;%workplaces%;%team%;%interaction_type_id%;%attr_ids%;%approved%;%locked%;%hidden%;%ownerless%;%extra_info%;">
   <![CDATA[
 select 
     case when ftype=0 then account_id else null end fid, 
@@ -15,8 +15,10 @@ select
     chan_id, 
     poten_id, 
     rc_id, 
-    cash_register, 
     phone, 
+    workplaces,
+    team,
+    interaction_type_id,
     array_to_string(attr_ids, ',') attr_ids, 
     extra_info, 
     approved, 

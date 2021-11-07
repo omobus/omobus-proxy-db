@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<interaction_typesL2>
+    <![CDATA[
+select unnest(dep_ids) dep_id, interaction_type_id from interaction_types where dep_ids is not null and hidden = 0
+    union
+select null dep_id, interaction_type_id from interaction_types where dep_ids is null and hidden = 0
+order by 1, 2
+    ]]>
+</interaction_typesL2>
