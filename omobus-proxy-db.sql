@@ -940,10 +940,12 @@ create table accounts (
     rc_id 		uid_t		null, 		/* -> retail_chains */
     chan_id 		uid_t 		null,
     poten_id 		uid_t 		null,
-    cash_register 	int32_t 	null,
     latitude 		gps_t 		null,
     longitude 		gps_t 		null,
     phone 		phone_t 	null,
+    workplaces 		int32_t 	null check(workplaces > 0),
+    team 		int32_t 	null check(team > 0),
+    interaction_type_id uid_t 		null,
     attr_ids 		uids_t 		null,
     extra_info 		note_t 		null,
     locked 		bool_t 		null default 0,
@@ -1294,6 +1296,7 @@ create table contacts (
     mobile 		phone_t 	null,
     email 		email_t 	null,
     loyalty_level_id 	uid_t 		null,
+    influence_level_id 	uid_t 		null,
     locked 		bool_t 		not null default 0,
     extra_info 		note_t 		null,
     author_id 		uid_t 		null,
@@ -1517,6 +1520,21 @@ create table highlights (
 create index i_db_id_highlights on highlights (db_id);
 create trigger trig_updated_ts before update on highlights for each row execute procedure tf_updated_ts();
 
+create table influence_levels (
+    influence_level_id 	uid_t		not null primary key default man_id(),
+    descr		descr_t		not null,
+    extra_info 		note_t 		null,
+    dep_ids		uids_t		null,
+    row_no 		int32_t 	null, -- ordering
+    hidden		bool_t		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null
+);
+
+create index i_db_ids_influence_levels on influence_levels using GIN (db_ids);
+create trigger trig_updated_ts before update on influence_levels for each row execute procedure tf_updated_ts();
+
 create table info_materials (
     infom_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
@@ -1535,6 +1553,20 @@ create table info_materials (
 );
 
 create trigger trig_updated_ts before update on info_materials for each row execute procedure tf_updated_ts();
+
+create table interaction_types (
+    interaction_type_id	uid_t		not null primary key default man_id(),
+    descr		descr_t		not null,
+    dep_ids		uids_t		null,
+    row_no 		int32_t 	null, -- ordering
+    hidden		bool_t		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null
+);
+
+create index i_db_ids_interaction_types on interaction_types using GIN (db_ids);
+create trigger trig_updated_ts before update on interaction_types for each row execute procedure tf_updated_ts();
 
 create table invoice_prices (
     country_id 		country_t 	not null,
@@ -3462,8 +3494,12 @@ create table h_addition (
     number 		code_t 		null,
     addition_type_id 	uid_t 		null,
     chan_id 		uid_t 		null,
-    photos 		blobs_t 	null,
-    attr_ids 		uids_t 		null
+    phone 		phone_t 	null,
+    workplaces 		int32_t 	null check(workplaces > 0),
+    team 		int32_t 	null check(team > 0),
+    interaction_type_id uid_t 		null,
+    attr_ids 		uids_t 		null,
+    photos 		blobs_t 	null
 );
 
 create index i_fix_date_h_addition on h_addition (left(fix_dt,10));
@@ -4316,8 +4352,10 @@ create table h_profile (
     activity_type_id 	uid_t 		not null,
     chan_id 		uid_t 		null,
     poten_id 		uid_t 		null,
-    cash_register 	int32_t 	null,
     phone 		phone_t 	null,
+    workplaces 		int32_t 	null check(workplaces > 0),
+    team 		int32_t 	null check(team > 0),
+    interaction_type_id uid_t 		null,
     attr_ids 		uids_t 		null
 );
 
@@ -5108,8 +5146,12 @@ create table j_additions (
     addition_type_id 	uid_t 		null,
     note 		note_t 		null,
     chan_id 		uid_t 		null,
-    photos 		blobs_t 	null,
+    phone 		phone_t 	null,
+    workplaces 		int32_t 	null check(workplaces > 0),
+    team 		int32_t 	null check(team > 0),
+    interaction_type_id uid_t 		null,
     attr_ids 		uids_t 		null,
+    photos 		blobs_t 	null,
     latitude 		gps_t 		null,
     longitude 		gps_t 		null,
     guid 		uid_t 		not null,
