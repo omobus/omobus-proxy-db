@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cohorts templ="%cohort_id%;%descr%;%extra_info%;%dep_ids%;%row_no%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update cohorts set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update cohorts set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from cohorts 
+    where cohort_id = '%cohort_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update cohorts set descr=trim(both from '%descr%'), extra_info=NIL('%extra_info%'), dep_ids=string_to_array(NIL('%dep_ids%'),','), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where cohort_id = '%cohort_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into cohorts (cohort_id, descr, extra_info, dep_ids, row_no, hidden, db_ids)
+    values ('%cohort_id%', trim(both from '%descr%'), NIL('%extra_info%'), string_to_array(NIL('%dep_ids%'),','), NIL(%row_no%), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</cohorts>

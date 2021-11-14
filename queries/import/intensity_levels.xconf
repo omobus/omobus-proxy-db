@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<intensity_levels templ="%intensity_level_id%;%descr%;%dep_ids%;%row_no%;">
+<verification>
+  <![CDATA[
+select count(*) from data_stream
+    where s_id = '//%uid%/%pack_code%' and digest = '%pack_digest%'
+  ]]>
+</verification>
+<begin>
+  <![CDATA[
+update intensity_levels set db_ids=array_remove(db_ids,'%ErpCode%')
+    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+update intensity_levels set hidden=1, db_ids=null
+    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+  ]]>
+</begin>
+<check_exist>
+  <![CDATA[
+select count(*) from intensity_levels 
+    where intensity_level_id = '%intensity_level_id%'
+  ]]>
+</check_exist>
+<update>
+  <![CDATA[
+update intensity_levels set descr=trim(both from '%descr%'), dep_ids=string_to_array(NIL('%dep_ids%'),','), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+    where intensity_level_id = '%intensity_level_id%'
+  ]]>
+</update>
+<insert>
+  <![CDATA[
+insert into intensity_levels (intensity_level_id, descr, dep_ids, row_no, hidden, db_ids)
+    values ('%intensity_level_id%', trim(both from '%descr%'), string_to_array(NIL('%dep_ids%'),','), NIL(%row_no%), 0, array['%ErpCode%'])
+  ]]>
+</insert>
+<end>
+  <![CDATA[
+select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
+  ]]>
+</end>
+</intensity_levels>

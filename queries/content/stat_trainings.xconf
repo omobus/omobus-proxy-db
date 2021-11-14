@@ -19,7 +19,7 @@ select
     array_to_string(m.brand_ids,',') brand_id, (select array_to_string(array_agg(descr::text),', ') from brands where brand_id=any(m.brand_ids)) brand,
     z.contact_id, z.name, z.surname, z.patronymic,
     z.job_title_id, j.descr job_title,
-    z.loyalty_level_id, l.descr loyalty_level,
+    z.cohort_id, l.descr cohort,
     h.doc_note, 
     array_to_string(h.photos,',') photos,
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(h.photos)) refs,
@@ -41,7 +41,7 @@ from (
     left join training_materials m on m.tm_id = h.tm_id
     left join contacts z on z.contact_id = h.contact_id
     left join job_titles j on j.job_title_id = z.job_title_id
-    left join loyalty_levels l on l.loyalty_level_id = z.loyalty_level_id
+    left join cohorts l on l.cohort_id = z.cohort_id
     left join users u on u.user_id = h.user_id
     left join users ex on ex.user_id = u.executivehead_id
     left join j_user_activities ua on ua.user_id = h.user_id and ua.account_id = h.account_id and ua.w_cookie = h.w_cookie and ua.a_cookie = h.a_cookie

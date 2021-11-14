@@ -43,6 +43,7 @@
 <xi:include href="../queries/2lts/categories.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/channels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/cities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/cohorts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/comments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/comment_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/confirmation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -70,6 +71,7 @@
 <xi:include href="../queries/2lts/equipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/holidays.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/influence_levels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/intensity_levels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/interaction_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/job_titles.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/kinds.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -151,6 +153,7 @@
     <categories />
     <channels />
     <cities />
+    <cohorts />
     <comments />
     <comment_types />
     <confirmation_types />
@@ -178,6 +181,7 @@
     <equipments />
     <holidays />
     <influence_levels />
+    <intensity_levels />
     <interaction_types />
     <job_titles />
     <kinds />

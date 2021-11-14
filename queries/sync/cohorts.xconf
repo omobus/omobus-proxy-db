@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cohorts templ="%cohort_id%;%descr%;%extra_info%;" empty="no">
+  <![CDATA[ 
+select cohort_id, descr, extra_info from cohorts
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</cohorts>

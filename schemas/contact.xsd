@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="bool_t">
+	<xs:restriction base="xs:string">
+	    <xs:enumeration value="yes" />
+	    <xs:enumeration value="no" />
+	</xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="datetime_t">
 	<xs:restriction base="xs:string">
 	    <xs:pattern value="[0-9]{4}\-[0-9]{2}\-[0-9]{2}( |T){1}[0-9]{2}:[0-9]{2}:[0-9]{2}" />
@@ -18,16 +25,15 @@
 	</xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="uid_t">
+    <xs:simpleType name="int_t">
 	<xs:restriction base="xs:string">
-	    <xs:pattern value="[^%]*" />
+	    <xs:pattern value="(|[0-9]*)" />
 	</xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="bool_t">
+    <xs:simpleType name="uid_t">
 	<xs:restriction base="xs:string">
-	    <xs:enumeration value="yes" />
-	    <xs:enumeration value="no" />
+	    <xs:pattern value="[^%]*" />
 	</xs:restriction>
     </xs:simpleType>
 
@@ -57,11 +63,14 @@
 	    <xs:attribute name="surname" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="patronymic" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="job_title_id" use="required" type="uid_t" />
-<!-- obsolete: --> <xs:attribute name="phone" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="mobile" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="email" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="spec_id" use="optional" type="uid_t" default="" />
+	    <xs:attribute name="cohort_id" use="optional" type="uid_t" default="" />
 	    <xs:attribute name="loyalty_level_id" use="optional" type="uid_t" default="" />
+	    <xs:attribute name="influence_level_id" use="optional" type="uid_t" default="" />
+	    <xs:attribute name="intensity_level_id" use="optional" type="uid_t" default="" />
+	    <xs:attribute name="start_year" use="optional" type="int_t" default="" />
 	    <xs:attribute name="locked" use="required" type="bool_t" />
 	    <xs:attribute name="deleted" use="required" type="bool_t" />
 	    <xs:attribute name="exist" use="required" type="bool_t" />

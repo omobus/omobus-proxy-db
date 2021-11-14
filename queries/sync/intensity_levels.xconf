@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<intensity_levels templ="%intensity_level_id%;%descr%;" empty="no">
+  <![CDATA[ 
+select intensity_level_id, descr from intensity_levels
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</intensity_levels>
