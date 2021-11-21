@@ -7,30 +7,44 @@ declare
     a_id uid_t;
     a_address address_t;
     c int32_t default 0;
-    radius int32_t default "paramInteger"('rules:max_distance');
+    radius int32_t default /*"paramInteger"('rules:max_distance')*/ 2000 /* see roles/sv.xconf location->radius - drops la/lo only if sv/ise/asm doesn't update la/lo manually < */;
     t int32_t;
 begin
     for a_id in 
-	select distinct j.account_id from j_user_activities j
+	select 
+	    distinct j.account_id 
+	from j_user_activities j
 	    left join activity_types t on t.activity_type_id = j.activity_type_id
 	    left join (select account_id, max(fix_dt) fix_dt from h_location group by account_id) z on z.account_id = j.account_id
 	    left join accounts a on a.account_id = j.account_id
-	where t.strict = 1 and j.b_dt is not null and (z.fix_dt is null or j.b_dt > z.fix_dt)
+	where t.strict = 1 
+	    and j.b_dt is not null 
+	    and j.e_dt is not null 
+	    and (z.fix_dt is null or j.b_dt > z.fix_dt)
 	    and (current_timestamp - j.updated_ts) < '00:55:00'::interval
 	    and j.b_la is not null and j.b_lo is not null and j.b_la*j.b_lo <> 0
+	    and j.e_la is not null and j.e_lo is not null and j.e_la*j.e_lo <> 0
 	    and a.latitude is not null and a.longitude is not null
 	    and distance(j.b_la, j.b_lo, a.latitude, a.longitude) > radius
+	    and distance(j.e_la, j.e_lo, a.latitude, a.longitude) > radius
     loop
 	select count(*) from (
-	    select distance(j.b_la, j.b_lo, a.latitude, a.longitude) dist from j_user_activities j
+	    select 
+		distance(j.b_la, j.b_lo, a.latitude, a.longitude) b_dist,
+		distance(j.e_la, j.e_lo, a.latitude, a.longitude) e_dist
+	    from j_user_activities j
 		left join activity_types t on t.activity_type_id = j.activity_type_id
 		left join accounts a on a.account_id = j.account_id
 		left join (select account_id, max(fix_dt) fix_dt from h_location group by account_id) z on z.account_id = j.account_id
-	    where j.account_id = a_id and t.strict = 1 and j.b_dt is not null and (z.fix_dt is null or j.b_dt > z.fix_dt)
-		and j.b_la is not null and j.b_lo is not null
+	    where j.account_id = a_id and t.strict = 1 
+		and j.b_dt is not null 
+		and j.e_dt is not null 
+		and (z.fix_dt is null or j.b_dt > z.fix_dt)
+		and j.b_la is not null and j.b_lo is not null and j.b_la*j.b_lo <> 0
+		and j.e_la is not null and j.e_lo is not null and j.e_la*j.e_lo <> 0
 	    order by j.b_dt desc
 	    limit 3
-	) x where x.dist > radius
+	) x where x.b_dist > radius and x.e_dist > radius
 	into t;
 
 	if t = 3 then
