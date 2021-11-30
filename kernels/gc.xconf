@@ -15,6 +15,7 @@ begin
 
     delete from slices.agreements1 where slice_date < gc_date;
     delete from slices.agreements2 where slice_date < gc_date;
+    delete from slices.agreements3 where slice_date < gc_date;
     delete from slices.matrices where slice_date < gc_date;
 
     delete from account_hints where updated_ts::date_t < gc_date;
@@ -33,6 +34,7 @@ begin
     delete from targets where e_date < gc_date;
     GET DIAGNOSTICS f = ROW_COUNT;
     delete from tickets where inserted_ts::date_t < gc_date;
+    delete from urgent_activities where p_date < gc_date;
 
     delete from j_acts where left(fix_dt,10) < gc_date;
     delete from j_additions where left(fix_dt,10) < gc_date;
