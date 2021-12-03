@@ -41,7 +41,7 @@ begin
 
 -- *** profile -> accounts
     if( (select max(fix_dt) from h_profile where account_id = '%account_id%') <= '%fix_dt%' ) then
-	update accounts set chan_id=NIL('%chan_id%'), poten_id=NIL('%poten_id%'), phone=NIL('%phone%'), workplaces=NIL(%workplaces%), team=NIL(%team%), interaction_type_id=NIL('%interaction_type_id%'), attr_ids=string_to_array(NIL('%attr_ids%'),','), extra_info=NIL('%doc_note%')
+	update accounts set chan_id=NIL('%chan_id%'), poten_id=NIL('%poten_id%'), phone=NIL('%phone%'), workplaces=NIL(%workplaces%), team=NIL(%team%), interaction_type_id=NIL('%interaction_type_id%'), attr_ids=string_to_array(NIL('%attr_ids%'),','), extra_info=NIL('%doc_note%'), "_isAlienData"=0
 	    where account_id='%account_id%';
     end if;
 

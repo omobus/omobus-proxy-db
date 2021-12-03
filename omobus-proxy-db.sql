@@ -955,7 +955,8 @@ create table accounts (
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null /* row from the external sources */
 );
 
 create index i_region_id_accounts on accounts(region_id);
@@ -966,6 +967,53 @@ create index i_poten_id_accounts on accounts(poten_id);
 create index i_db_ids_accounts on accounts using GIN (db_ids);
 create trigger trig_code before insert or update on accounts for each row when (new.code is null or new.code = '') execute procedure tf_code();
 create trigger trig_updated_ts before update on accounts for each row execute procedure tf_updated_ts();
+
+create or replace function tf_profile_chan_id() returns trigger as
+$body$
+declare
+    depth int = 5;
+    chanId uid_t;
+    fix datetime_t;
+begin
+    select fix_dt, chan_id from h_profile where account_id = new.account_id and left(fix_dt,10) >= (current_date - depth)::date_t
+	order by fix_dt desc limit 1
+    into fix, chanId;
+
+    if fix is not null then
+	new.chan_id = chanId;
+    end if;
+
+    return new;
+end;
+$body$
+language 'plpgsql';
+
+create or replace function tf_profile_poten_id() returns trigger as
+$body$
+declare
+    depth int = 5;
+    potenId uid_t;
+    fix datetime_t;
+begin
+    select fix_dt, poten_id from h_profile where account_id = new.account_id and left(fix_dt,10) >= (current_date - depth)::date_t
+	order by fix_dt desc limit 1
+    into fix, potenId;
+
+    if fix is not null then
+	new.poten_id = potenId;
+    end if;
+
+    return new;
+end;
+$body$
+language 'plpgsql';
+
+create trigger trig_chan_id before update of chan_id on accounts for each row when (((new.chan_id is null and old.chan_id is not null) or (new.chan_id is not null and old.chan_id is null) or (new.chan_id <> old.chan_id)) and new."_isAlienData" = 1) 
+    execute procedure tf_profile_chan_id();
+create trigger trig_poten_id before update of poten_id on accounts for each row when (((new.poten_id is null and old.poten_id is not null) or (new.poten_id is not null and old.poten_id is null) or (new.poten_id <> old.poten_id)) and new."_isAlienData" = 1) 
+    execute procedure tf_profile_poten_id();
+alter table accounts disable trigger trig_chan_id;
+alter table accounts disable trigger trig_poten_id;
 
 create table account_hints (
     account_id 		uid_t 		not null,
