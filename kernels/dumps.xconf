@@ -22,7 +22,7 @@
     pack.encoding="utf-8"
     cache="dumps/"
     diff="yes"
-    threads="2"
+    Xthreads="2"
     >
 <queries>
 <xi:include href="../queries/dumps/access-log.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
