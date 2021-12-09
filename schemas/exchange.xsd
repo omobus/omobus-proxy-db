@@ -20,7 +20,7 @@
 
     <xs:simpleType name="int_t">
 	<xs:restriction base="xs:string">
-	    <xs:pattern value="(|[0-9]*)" />
+	    <xs:pattern value="(|[\-+]?[0-9]*)" />
 	</xs:restriction>
     </xs:simpleType>
 
@@ -33,6 +33,12 @@
     <xs:simpleType name="status_t">
 	<xs:restriction base="xs:string">
 	    <xs:pattern value="success|failed" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="uint_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="(|[0-9]*)" />
 	</xs:restriction>
     </xs:simpleType>
 
@@ -49,8 +55,8 @@
 	    <xs:attribute name="mode" use="required" type="mode_t" />
 	    <xs:attribute name="status" use="required" type="status_t" />
 	    <xs:attribute name="packets" use="required" type="xs:integer" />
-	    <xs:attribute name="corrupted" use="optional" type="int_t" default="" />
-	    <xs:attribute name="bytes" use="optional" type="int_t" default="" />
+	    <xs:attribute name="corrupted" use="optional" type="uint_t" default="" />
+	    <xs:attribute name="bytes" use="optional" type="uint_t" default="" />
 	    <xs:attribute name="duration" use="optional" type="int_t" default="" />
 	    <xs:attribute name="msg" use="optional" type="xs:string" default="" />
 	</xs:complexType>
