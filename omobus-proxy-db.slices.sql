@@ -2,20 +2,6 @@
 
 create schema slices;
 
-create table slices.matrices(
-    slice_date date_t not null,
-    account_id uid_t not null,
-    prod_id uid_t not null,
-    placement_ids uids_t null,
-    row_no int32_t null,
-    inserted_ts ts_auto_t not null,
-    updated_ts ts_auto_t not null,
-    primary key (slice_date, account_id, prod_id)
-);
-
-create index i_exist_matrices on slices.matrices(slice_date, account_id);
-create trigger trig_updated_ts before update on slices.matrices for each row execute procedure tf_updated_ts();
-
 create table slices.agreements1 (
     slice_date 		date_t 		not null,
     account_id		uid_t		not null,
@@ -58,4 +44,31 @@ create table slices.agreements3 (
 
 create index i_exist_agreements3 on slices.agreements3(slice_date, account_id);
 create trigger trig_updated_ts before update on slices.agreements3 for each row execute procedure tf_updated_ts();
+
+create table slices.matrices(
+    slice_date 		date_t 		not null,
+    account_id 		uid_t 		not null,
+    prod_id 		uid_t 		not null,
+    placement_ids 	uids_t 		null,
+    row_no 		int32_t 	null,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    primary key (slice_date, account_id, prod_id)
+);
+
+create index i_exist_matrices on slices.matrices(slice_date, account_id);
+create trigger trig_updated_ts before update on slices.matrices for each row execute procedure tf_updated_ts();
+
+create table slices.my_accounts (
+    slice_date 		date_t 		not null,
+    user_id 		uid_t 		not null,
+    account_id		uid_t		not null,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    primary key (slice_date, user_id, account_id)
+);
+
+create index i_exist_my_accounts on slices.my_accounts(slice_date, user_id);
+create index i_slice_date_my_accounts on slices.my_accounts(slice_date);
+create trigger trig_updated_ts before update on slices.my_accounts for each row execute procedure tf_updated_ts();
 

@@ -125,15 +125,20 @@ order by z.user_id, z.route_date
   <![CDATA[
 select 
     x.user_id,
-    x.account_id, a.code a_code, a.descr, a.address,
+    x.account_id, 
+    a.code a_code, 
+    a.descr, 
+    a.address,
     c.descr chan_name,
     p.descr poten_name,
     k1.rows v,
     k2.rows vwv /*visited-without-violations*/
 from (
     select distinct user_id, account_id from my_routes where '%b_date%' <= p_date and p_date <= '%e_date%'
---	union
---    select user_id, account_id from my_accounts 
+	union
+    select distinct user_id, account_id from slices.my_accounts where ('%b_date%'::date + 5)::date_t <= slice_date and slice_date <= ('%e_date%'::date - 5)::date_t
+	union
+    select distinct user_id, account_id from j_user_activities where '%b_date%' <= fix_date and fix_date <= '%e_date%'
 ) x
     left join accounts a on a.account_id = x.account_id
     left join channels c on a.chan_id = c.chan_id
@@ -194,9 +199,7 @@ from users u
     left join users e on e.user_id = u.executivehead_id
 where u.user_id in (
     select distinct user_id from my_routes where '%b_date%' <= p_date and p_date <= '%e_date%'
---	union
---    select user_id from my_accounts 
-) and u.user_id in (
+	union
     select distinct user_id from sysstats where '%b_date%' <= fix_date and fix_date <= '%e_date%'
 )
 order by u.descr, u.user_id

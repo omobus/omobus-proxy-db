@@ -72,10 +72,6 @@ begin
     end if;
 
 -- **** user_activity --> slices.*
-    if( (select count(*) from slices.matrices where slice_date=f_date and account_id='%account_id%') = 0 ) then
-	insert into slices.matrices(slice_date, account_id, prod_id, placement_ids, row_no, inserted_ts)
-	    select f_date, account_id, prod_id, placement_ids, row_no, inserted_ts from matrices where account_id='%account_id%';
-    end if;
     if( (select count(*) from slices.agreements1 where slice_date=f_date and account_id='%account_id%') = 0 ) then
 	insert into slices.agreements1(slice_date, account_id, placement_id, posm_id, "strict", cookie, inserted_ts)
 	    select f_date, account_id, placement_id, posm_id, "strict", cookie, inserted_ts from agreements1 where account_id='%account_id%';
@@ -87,6 +83,14 @@ begin
     if( (select count(*) from slices.agreements3 where slice_date=f_date and account_id='%account_id%') = 0 ) then
 	insert into slices.agreements3(slice_date, account_id, prod_id, stock, "strict", inserted_ts)
 	    select f_date, account_id, prod_id, stock, "strict", inserted_ts from agreements3 where account_id='%account_id%';
+    end if;
+    if( (select count(*) from slices.matrices where slice_date=f_date and account_id='%account_id%') = 0 ) then
+	insert into slices.matrices(slice_date, account_id, prod_id, placement_ids, row_no, inserted_ts)
+	    select f_date, account_id, prod_id, placement_ids, row_no, inserted_ts from matrices where account_id='%account_id%';
+    end if;
+    if( (select count(*) from slices.my_accounts where slice_date=f_date and user_id='%user_id_sys%') = 0 ) then
+	insert into slices.my_accounts(slice_date, user_id, account_id, inserted_ts)
+	    select f_date, user_id, account_id, inserted_ts from my_accounts where user_id = '%user_id_sys%';
     end if;
 
 -- **** user_activity --> j_cancellations

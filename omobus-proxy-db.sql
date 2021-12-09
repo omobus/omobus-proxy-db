@@ -1121,6 +1121,7 @@ create table agreements1 (
 );
 
 create index i_db_ids_agreements1 on agreements1 using GIN (db_ids);
+create index i_account_id_agreements1 on agreements1(account_id);
 create trigger trig_updated_ts before update on agreements1 for each row execute procedure tf_updated_ts();
 
 create table agreements2 (
@@ -1135,6 +1136,7 @@ create table agreements2 (
 );
 
 create index i_db_ids_agreements2 on agreements2 using GIN (db_ids);
+create index i_account_id_agreements2 on agreements2(account_id);
 create trigger trig_updated_ts before update on agreements2 for each row execute procedure tf_updated_ts();
 
 create table agreements3 (
@@ -1149,6 +1151,7 @@ create table agreements3 (
 );
 
 create index i_db_ids_agreements3 on agreements3 using GIN (db_ids);
+create index i_account_id_agreements3 on agreements3(account_id);
 create trigger trig_updated_ts before update on agreements3 for each row execute procedure tf_updated_ts();
 
 create table asp_types ( /* Additional-Sales-Places */
@@ -1828,6 +1831,7 @@ create table my_accounts (
 );
 
 create index i_db_ids_my_accounts on my_accounts using GIN (db_ids);
+create index i_user_id_my_accounts on my_accounts(user_id);
 create trigger trig_updated_ts before update on my_accounts for each row execute procedure tf_updated_ts();
 
 create table my_cities (
