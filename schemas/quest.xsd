@@ -32,7 +32,7 @@
 			<xs:attribute name="row_no" use="required" type="xs:integer" />
 			<xs:attribute name="qname_id" use="required" type="uid_t" />
 			<xs:attribute name="qrow_id" use="required" type="uid_t" />
-			<xs:attribute name="value" use="required" type="xs:string" />
+			<xs:attribute name="value" use="optional" type="xs:string" default="" />
 		    </xs:complexType>
 		</xs:element>
 	    </xs:sequence>
