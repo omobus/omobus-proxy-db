@@ -1,55 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <kernel module="kern_tasks">
-<set_closed_status>
-  <![CDATA[
-do $$
-declare
-    depth int default 4; /* close depth in days */
-    c_id uid_t;
-    b date_t;
-    e date_t;
-    no int32_t;
-begin
-    for c_id, b, e, no in 
-	select cycle_id, b_date, e_date, cycle_no from route_cycles 
-	    where hidden = 0 and (status is null or status != 'closed') and (e_date::date - current_date) <= depth
-	order by b_date
-    loop
-	update route_cycles set status = 'closed'
-	    where cycle_id = c_id and (status is null or status != 'closed');
-
-	raise notice 'cycles: cycle_id=[%] has been closed (cycle_no=[%/%], b_date=[%], e_date=[%]).', 
-	    c_id, no, extract(year from b::date), b, e;
-    end loop;
-end;
-$$
-  ]]>
-</set_closed_status>
-<set_inprogress_status>
-  <![CDATA[
-do $$
-declare
-    depth int default 3; /* inprogress depth in days */
-    c_id uid_t;
-    b date_t;
-    e date_t;
-    no int32_t;
-begin
-    for c_id, b, e, no in 
-	select cycle_id, b_date, e_date, cycle_no from route_cycles 
-	    where hidden = 0 and status is null and (b_date::date - current_date) <= depth
-	order by b_date
-    loop
-	update route_cycles set status = 'inprogress'
-	    where cycle_id = c_id and status is null;
-
-	raise notice 'cycles: cycle_id=[%] has been set as [inprogress] (cycle_no=[%/%], b_date=[%], e_date=[%]).', 
-	    c_id, no, extract(year from b::date), b, e;
-    end loop;
-end;
-$$
-  ]]>
-</set_inprogress_status>
 <compile_route>
   <![CDATA[
 do $$
@@ -181,6 +131,56 @@ end;
 $$
   ]]>
 </compile_route>
+<set_closed_status>
+  <![CDATA[
+do $$
+declare
+    depth int default 4; /* close depth in days */
+    c_id uid_t;
+    b date_t;
+    e date_t;
+    no int32_t;
+begin
+    for c_id, b, e, no in 
+	select cycle_id, b_date, e_date, cycle_no from route_cycles 
+	    where hidden = 0 and (status is null or status != 'closed') and (e_date::date - current_date) <= depth
+	order by b_date
+    loop
+	update route_cycles set status = 'closed'
+	    where cycle_id = c_id and (status is null or status != 'closed');
+
+	raise notice 'cycles: cycle_id=[%] has been closed (cycle_no=[%/%], b_date=[%], e_date=[%]).', 
+	    c_id, no, extract(year from b::date), b, e;
+    end loop;
+end;
+$$
+  ]]>
+</set_closed_status>
+<set_inprogress_status>
+  <![CDATA[
+do $$
+declare
+    depth int default 3; /* inprogress depth in days */
+    c_id uid_t;
+    b date_t;
+    e date_t;
+    no int32_t;
+begin
+    for c_id, b, e, no in 
+	select cycle_id, b_date, e_date, cycle_no from route_cycles 
+	    where hidden = 0 and status is null and (b_date::date - current_date) <= depth
+	order by b_date
+    loop
+	update route_cycles set status = 'inprogress'
+	    where cycle_id = c_id and status is null;
+
+	raise notice 'cycles: cycle_id=[%] has been set as [inprogress] (cycle_no=[%/%], b_date=[%], e_date=[%]).', 
+	    c_id, no, extract(year from b::date), b, e;
+    end loop;
+end;
+$$
+  ]]>
+</set_inprogress_status>
 <clone_route>
   <![CDATA[
 do $$
