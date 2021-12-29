@@ -418,7 +418,12 @@ order by fix_dt
 	<quests_L1>
   <![CDATA[
 select t.doc_id, t.row_no, n.descr qname, quest_path(null, r.qname_id, r.pid) qpath, r.descr qrow, t.value, format('%s!%s',t.qname_id,t.qrow_id) _pkey from (
-	select doc_id, row_no, qname_id, qrow_id, "value" from t_quest where doc_id in (
+	select 
+	    x.doc_id, x.row_no, x.qname_id, x.qrow_id, coalesce(i.descr, x.value) "value" 
+	from t_quest x
+	    left join quest_rows z on z.qname_id = x.qname_id and z.qrow_id = x.qrow_id and z.qtype = 'selector'
+	    left join quest_items i on i.qname_id = z.qname_id and i.qrow_id = z.qrow_id
+	where doc_id in (
 	    select doc_id from h_quest where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
     ) t

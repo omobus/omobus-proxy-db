@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <quests_history templ="%fix_date%;%account_id%;%qname_id%;%qrow_id%;%value%;%latest%;" empty="no">
   <![CDATA[ 
-select fix_date, account_id, qname_id, qrow_id, value, "_isRecentData" latest from dyn_quests
-    where fix_date >= (current_date - "paramInteger"('quests_history:depth'))::date_t
+select 
+    d.fix_date, 
+    d.account_id, 
+    d.qname_id, 
+    d.qrow_id, 
+    coalesce(i.descr, d.value) "value", 
+    d."_isRecentData" latest 
+from dyn_quests d
+    left join quest_rows r on r.qname_id = d.qname_id  and r.qname_id = d.qname_id and r.qtype = 'selector'
+    left join quest_items i on i.qname_id = r.qname_id  and i.qname_id = r.qname_id and i.qitem_id = d.value 
+where d.fix_date >= (current_date - "paramInteger"('quests_history:depth'))::date_t
 order by 2, 3, 4, 1 desc
   ]]>
 </quests_history>

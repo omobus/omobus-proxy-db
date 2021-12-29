@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<quest_names templ="%qname_id%;%descr%;">
+<quest_names templ="%qname_id%;%descr%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from quest_names
 </check_exist>
 <update>
   <![CDATA[
-update quest_names set descr=trim(both from '%descr%'), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update quest_names set descr=trim(both from '%descr%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where qname_id = '%qname_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into quest_names (qname_id, descr, hidden, db_ids)
-    values ('%qname_id%', trim(both from '%descr%'), 0, array['%ErpCode%'])
+insert into quest_names (qname_id, descr, row_no, hidden, db_ids)
+    values ('%qname_id%', trim(both from '%descr%'), NIL(%row_no%), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>

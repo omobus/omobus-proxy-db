@@ -2250,9 +2250,26 @@ create table promo_values (
 create index i_db_ids_promo_values on promo_values using GIN (db_ids);
 create trigger trig_updated_ts before update on promo_values for each row execute procedure tf_updated_ts();
 
+create table quest_items (
+    qname_id 		uid_t 		not null,
+    qrow_id 		uid_t 		not null,
+    qitem_id 		uid_t 		not null default man_id(),
+    descr 		descr_t 	not null,
+    row_no 		int32_t 	null, -- ordering
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    primary key(qname_id, qrow_id, qitem_id)
+);
+
+create index i_db_ids_quest_items on quest_items using GIN (db_ids);
+create trigger trig_updated_ts before update on quest_items for each row execute procedure tf_updated_ts();
+
 create table quest_names (
     qname_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
+    row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -2268,9 +2285,10 @@ create table quest_rows (
     pid 		uid_t 		null,
     ftype 		ftype_t 	not null,
     descr 		descr_t 	not null,
-    qtype 		varchar(7) 	null check(ftype=0 and qtype in ('boolean','integer') or (ftype<>0 and qtype is null)),
+    qtype 		varchar(10) 	null check(ftype=0 and qtype in ('boolean','triboolean','integer','text','selector') or (ftype<>0 and qtype is null)),
     extra_info 		note_t 		null,
     country_ids 	countries_t 	null,
+    dep_ids		uids_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,

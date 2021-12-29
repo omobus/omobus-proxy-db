@@ -3,6 +3,6 @@
   <![CDATA[ 
 select qname_id, descr from quest_names
     where hidden = 0
-order by 1
+order by row_no, descr
   ]]>
 </quest_names>

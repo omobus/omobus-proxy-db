@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<quest_items templ="%qname_id%;%qrow_id%;%qitem_id%;%descr%;" empty="no">
+  <![CDATA[ 
+select 
+    format('%s+%s',qname_id,qrow_id) fid,
+    qname_id, 
+    qrow_id,
+    qitem_id,
+    descr 
+from quest_items
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</quest_items>

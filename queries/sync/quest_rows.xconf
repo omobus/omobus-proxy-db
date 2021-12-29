@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <quest_rows templ="%qname_id%;%qrow_id%;%descr%;%qtype%;%extra_info%;%delim%;" empty="no">
   <![CDATA[ 
-select format('%s+%s',qname_id,qrow_id) fid, qrow_id, qname_id, qrow_id, case when pid is null then null else format('%s+%s',qname_id,pid) end pid, ftype, descr, qtype, extra_info, case when ftype=0 then null else 1 end delim from quest_rows
+select 
+    format('%s+%s',qname_id,qrow_id) fid, 
+    qname_id, 
+    qrow_id, 
+    case when pid is null then null else format('%s+%s',qname_id,pid) end pid, 
+    ftype, 
+    descr, 
+    qtype, 
+    extra_info, 
+    case when ftype=0 then null else 1 end delim 
+from quest_rows
     where hidden = 0
 order by qname_id, row_no, descr, qrow_id
   ]]>

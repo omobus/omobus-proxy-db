@@ -4,22 +4,33 @@
 	<L>
   <![CDATA[
 select
-    x.user_id, u.descr u_name, u.dev_login,
+    x.user_id, 
+    u.descr u_name, 
+    u.dev_login,
     x.fix_dt,
     x.inserted_ts,
-    x.account_id, a.code a_code, a.descr a_name, a.address,
+    x.account_id, 
+    a.code a_code, 
+    a.descr a_name, 
+    a.address,
     reg.descr region,
     c.descr city,
-    a.rc_id, r.descr rc, r.ka_type,
+    a.rc_id, 
+    r.descr rc, 
+    r.ka_type,
     p.descr poten,
-    a.chan_id, ch.descr chan,
-    x.qname_id, n.descr qname,
-    x.qrow_id, quest_path(null, z.qname_id, z.pid) qpath, z.descr qrow,
-    x.value,
+    a.chan_id, 
+    ch.descr chan,
+    x.qname_id, 
+    n.descr qname,
+    x.qrow_id, 
+    quest_path(null, z.qname_id, z.pid) qpath, z.descr qrow,
+    coalesce(i.descr, x.value) "value",
     u.executivehead_id head_id, ex.descr head_name
 from dyn_quests x
     left join quest_names n on n.qname_id = x.qname_id
     left join quest_rows z on z.qname_id = x.qname_id and z.qrow_id = x.qrow_id
+    left join quest_items i on i.qname_id = z.qname_id and i.qrow_id = z.qrow_id and z.qtype = 'selector'
     left join accounts a on a.account_id = x.account_id
     left join potentials p on a.poten_id = p.poten_id
     left join channels ch on a.chan_id = ch.chan_id

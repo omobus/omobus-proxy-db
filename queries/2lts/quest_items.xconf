@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<quest_items templ="%qname_id%;%qrow_id%;%qitem_id%;%descr%;%row_no%;">
+  <![CDATA[
+select qname_id, qrow_id, qitem_id, descr, row_no from quest_items
+    where hidden = 0
+order by 1
+  ]]>
+</quest_items>

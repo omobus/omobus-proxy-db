@@ -103,6 +103,7 @@
 <xi:include href="../queries/2lts/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/profiles.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/presentations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/quest_items.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/quest_names.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/quest_rows.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/rating_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -213,6 +214,7 @@
     <products />
     <profiles />
     <presentations />
+    <quest_items />
     <quest_names />
     <quest_rows />
     <rating_criterias />
