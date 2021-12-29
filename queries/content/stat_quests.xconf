@@ -30,7 +30,7 @@ select
 from dyn_quests x
     left join quest_names n on n.qname_id = x.qname_id
     left join quest_rows z on z.qname_id = x.qname_id and z.qrow_id = x.qrow_id
-    left join quest_items i on i.qname_id = z.qname_id and i.qrow_id = z.qrow_id and z.qtype = 'selector'
+    left join quest_items i on i.qname_id = z.qname_id and i.qrow_id = z.qrow_id and i.qitem_id = x.value and z.qtype = 'selector'
     left join accounts a on a.account_id = x.account_id
     left join potentials p on a.poten_id = p.poten_id
     left join channels ch on a.chan_id = ch.chan_id
