@@ -851,11 +851,7 @@ begin
     update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'route_compliance' 
 	and ((b_date = new.f_date and e_date = new.f_date) or (b_date = new.t_date and e_date = new.t_date));
     update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'time' 
-	and (
-	    (b_date = "monthDate_First"(new.f_date)::date_t and e_date = "monthDate_Last"(new.f_date)::date_t) 
-		or
-	    (b_date = "monthDate_First"(new.t_date)::date_t and e_date = "monthDate_Last"(new.t_date)::date_t)
-	);
+	and ((b_date <= new.f_date and new.f_date <= e_date) or (b_date <= new.t_date and new.t_date <= e_date));
     return null;
 end;
 $body$
