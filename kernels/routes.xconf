@@ -143,7 +143,7 @@ declare
 begin
     for c_id, b, e, no in 
 	select cycle_id, b_date, e_date, cycle_no from route_cycles 
-	    where hidden = 0 and (status is null or status != 'closed') and (e_date::date - current_date) <= depth
+	    where hidden = 0 and (status is null or status != 'closed') and (e_date::date - (current_timestamp + interval '1 hour')::date) <= depth
 	order by b_date
     loop
 	update route_cycles set status = 'closed'
