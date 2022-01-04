@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<autocompletes templ="%mod_code%;%descr%;" empty="no">
+  <![CDATA[ 
+select mod_code, descr from autocompletes
+    where hidden = 0 and trim(mod_code) <> '' and trim(descr) <> ''
+order by mod_code, descr
+  ]]>
+</autocompletes>

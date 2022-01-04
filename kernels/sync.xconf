@@ -39,6 +39,7 @@
 <xi:include href="../queries/sync/attributes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" /> 
 <xi:include href="../queries/sync/audit_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/audit_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/autocompletes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/blacklist.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/brands.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/canceling_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -211,6 +212,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
     <addition_types />
     <audit_criterias />
     <audit_scores />
+    <autocompletes />
     <canceling_types />
     <comment_types />
     <confirmation_types />

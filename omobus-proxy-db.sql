@@ -1213,6 +1213,20 @@ create table audit_scores (
 create index i_db_ids_audit_scores on audit_scores using GIN (db_ids);
 create trigger trig_updated_ts before update on audit_scores for each row execute procedure tf_updated_ts();
 
+create table autocompletes (
+    auto_id 		uid_t 		not null primary key default man_id(),
+    mod_code 		code_t 		not null check(mod_code in ('confirmation','regret','target')), 
+    descr 		descr_t 	not null,
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null /* row from the external sources */
+);
+
+create index i_db_ids_autocompletes on autocompletes using GIN (db_ids);
+create trigger trig_updated_ts before update on autocompletes for each row execute procedure tf_updated_ts();
+
 create table blacklist (
     distr_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
@@ -1342,7 +1356,7 @@ create table confirmation_types (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null /* data from the external sources */
+    "_isAlienData" 	bool_t 		null /* row from the external sources */
 );
 
 create trigger trig_updated_ts before update on confirmation_types for each row execute procedure tf_updated_ts();
@@ -1369,7 +1383,7 @@ create table contacts (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null, /* contact from the external sources */
+    "_isAlienData" 	bool_t 		null, /* row from the external sources */
     "_dataTimestamp" 	datetime_t 	null
 );
 
@@ -1495,7 +1509,7 @@ create table equipments (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null, /* equipment from the external sources */
+    "_isAlienData" 	bool_t 		null, /* row from the external sources */
     "_dataTimestamp" 	datetime_t 	null
 );
 
@@ -1866,7 +1880,7 @@ create table my_hints (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null, /* KPI from the external sources */
+    "_isAlienData" 	bool_t 		null, /* row from the external sources */
     primary key (user_id, join_code, row_no)
 );
 
@@ -2154,7 +2168,7 @@ create table pos_materials ( /* Point-of-Sale and Point-of-Purchase materials */
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null /* pos_material from the external sources */
+    "_isAlienData" 	bool_t 		null /* row from the external sources */
 );
 
 create index i_db_ids_pos_materials on pos_materials using GIN (db_ids);
@@ -2689,7 +2703,7 @@ create table targets (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null, /* target from the external sources */
+    "_isAlienData" 	bool_t 		null, /* row from the external sources */
     "_isSuppressedData" bool_t 		null
 );
 
@@ -2718,7 +2732,7 @@ create table target_types (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    "_isAlienData" 	bool_t 		null /* data from the external sources */
+    "_isAlienData" 	bool_t 		null /* row from the external sources */
 );
 
 create trigger trig_updated_ts before update on target_types for each row execute procedure tf_updated_ts();
