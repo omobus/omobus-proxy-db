@@ -1,8 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<user_activities templ="%user_id%;%account_id%;%w_cookie%;%a_cookie%;%activity_type_id%;%fix_date%;%route_date%;%b_dt%;%b_la%;%b_lo%;%b_sat_dt%;%e_dt%;%e_la%;%e_lo%;%e_sat_dt%;%employee_id%;%extra_info%;%docs%;%zstatus%;%znote%;%zauthor_id%;">
+<user_activities templ="%user_id%;%account_id%;%w_cookie%;%a_cookie%;%activity_type_id%;%fix_date%;%route_date%;%b_dt%;%b_la%;%b_lo%;%b_sat_dt%;%e_dt%;%e_la%;%e_lo%;%e_sat_dt%;%employee_id%;%extra_info%;%docs%;%mileage%;%zstatus%;%znote%;%zauthor_id%;">
   <![CDATA[
-select user_id, account_id, w_cookie, a_cookie, activity_type_id, fix_date, route_date, b_dt, b_la, b_lo, b_sat_dt, e_dt, e_la, e_lo, e_sat_dt, employee_id, extra_info, docs, zstatus, znote, zauthor_id from j_user_activities
-    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"() and fix_date is not null
+select 
+    j.user_id, 
+    j.account_id, 
+    j.w_cookie, 
+    j.a_cookie, 
+    j.activity_type_id, 
+    j.fix_date, 
+    j.route_date, 
+    j.b_dt, 
+    j.b_la, 
+    j.b_lo, 
+    j.b_sat_dt, 
+    j.e_dt, 
+    j.e_la, 
+    j.e_lo, 
+    j.e_sat_dt, 
+    j.employee_id, 
+    j.extra_info, 
+    j.docs, 
+    case when t.strict = 1 then m.data->(format('%s %s', substring(j.b_dt, 12, 5), substring(j.e_dt, 12, 5))) else null end mileage,
+    j.zstatus, 
+    j.znote, 
+    j.zauthor_id 
+from j_user_activities j
+    left join activity_types t on t.activity_type_id = j.activity_type_id
+    left join mileage_stream m on m.user_id = j.user_id and m.fix_date = j.fix_date and t.strict = 1
+where j.fix_date is not null and (
+    ("LTS_aging_L"() <= j.updated_ts and j.updated_ts <= "LTS_aging_R"())
+	or
+    ("LTS_aging_L"() <= m.content_ts and m.content_ts <= "LTS_aging_R"())
+)
 order by 1, 2, 3, 4
   ]]>
 </user_activities>

@@ -79,6 +79,7 @@
 <xi:include href="../queries/2lts/loyalty_levels.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/manufacturers.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/matrices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/mileages.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/my_accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/my_cities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/my_habitats.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -190,6 +191,7 @@
     <loyalty_levels />
     <manufacturers />
     <matrices />
+    <mileages />
     <my_accounts />
     <my_cities />
     <my_habitats />

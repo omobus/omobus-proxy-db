@@ -14,6 +14,7 @@ declare
     z0 time_t;
     z1 time_t;
     t int;
+    r int32_t;
 begin
     for u, d in 
 	select m.user_id, m.fix_date from mileage_stream m, "mileage_stream.ghost" g
@@ -42,7 +43,11 @@ begin
 
 	/* route mileage */
 	if z0 is not null and z1 is not null and t > 1 then
-	    hs := hs || hstore(array[format('%s %s', z0, z1), (mileage_calc(u, d, z0, z1))::text]);
+	    r := mileage_calc(u, d, z0, z1);
+	    /* as first and last times: */
+	    hs := hs || hstore(array[format('%s %s', z0, z1), (r)::text]);
+	    /* as route value: */
+	    hs := hs || hstore(array['route', (r)::text]);
 	end if;
 
 	update mileage_stream set data = hs, content_ts = current_timestamp

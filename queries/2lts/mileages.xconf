@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mileages templ="%user_id%;%fix_date%;%total%;%route%;">
+  <![CDATA[
+select
+    user_id, 
+    fix_date,
+    data->'' total,
+    data->'route' route
+from mileage_stream
+    where "LTS_aging_L"() <= content_ts and content_ts <= "LTS_aging_R"()
+order by 1, 2
+  ]]>
+</mileages>
