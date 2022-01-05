@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<departments templ="%dep_id%;%descr%;">
+<departments templ="%dep_id%;%descr%;%hidden%;">
   <![CDATA[
-select dep_id, descr from departments
-    where hidden = 0
+select 
+    dep_id, 
+    descr,
+    hidden 
+from departments
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </departments>

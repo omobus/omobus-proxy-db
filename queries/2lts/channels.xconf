@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<channels templ="%chan_id%;%descr%;">
+<channels templ="%chan_id%;%descr%;%hidden%;">
   <![CDATA[
-select chan_id, descr from channels
-    where hidden = 0
+select 
+    chan_id, 
+    descr, 
+    hidden
+from channels
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </channels>

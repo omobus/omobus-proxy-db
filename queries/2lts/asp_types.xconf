@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<asp_types templ="%asp_type_id%;%descr%;%row_no%;%props%;">
+<asp_types templ="%asp_type_id%;%descr%;%row_no%;%props%;%hidden%;">
   <![CDATA[ 
-select asp_type_id, descr, row_no, props from asp_types
-    where hidden = 0
+select 
+    asp_type_id, 
+    descr, 
+    row_no, 
+    props,
+    hidden
+from asp_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by descr
   ]]>
 </asp_types>

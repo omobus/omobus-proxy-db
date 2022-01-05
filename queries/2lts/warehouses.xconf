@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<warehouses templ="%distr_id%;%wareh_id%;%descr%;">
+<warehouses templ="%distr_id%;%wareh_id%;%descr%;%hidden%;">
   <![CDATA[
-select distr_id, wareh_id, descr from warehouses
-    where hidden = 0
+select 
+    distr_id, 
+    wareh_id, 
+    descr,
+    hidden
+from warehouses
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2
   ]]>
 </warehouses>

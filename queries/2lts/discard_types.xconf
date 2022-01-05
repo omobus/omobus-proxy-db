@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<discard_types templ="%discard_type_id%;%descr%;%row_no%;">
+<discard_types templ="%discard_type_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select discard_type_id, descr, row_no from discard_types
-    where hidden = 0
+select 
+    discard_type_id, 
+    descr, 
+    row_no, 
+    hidden
+from discard_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </discard_types>

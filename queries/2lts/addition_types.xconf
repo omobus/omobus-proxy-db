@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addition_types templ="%addition_type_id%;%descr%;">
+<addition_types templ="%addition_type_id%;%descr%;%hidden%;">
   <![CDATA[
-select addition_type_id, descr from addition_types
-    where hidden = 0
+select 
+    addition_type_id, 
+    descr,
+    hidden
+from addition_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </addition_types>

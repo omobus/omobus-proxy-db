@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<reclamation_types templ="%reclamation_type_id%;%descr%;">
+<reclamation_types templ="%reclamation_type_id%;%descr%;%hidden%;">
   <![CDATA[
-select reclamation_type_id, descr from reclamation_types
-    where hidden = 0
+select 
+    reclamation_type_id, 
+    descr, 
+    hidden
+from reclamation_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </reclamation_types>

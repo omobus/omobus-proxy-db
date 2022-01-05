@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<job_titles templ="%job_title_id%;%descr%;">
+<job_titles templ="%job_title_id%;%descr%;%hidden%;">
   <![CDATA[
-select job_title_id, descr from job_titles
-    where hidden = 0
+select 
+    job_title_id, 
+    descr, 
+    hidden
+from job_titles
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </job_titles>

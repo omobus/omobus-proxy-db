@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<target_types templ="%target_type_id%;%descr%;%row_no%;">
+<target_types templ="%target_type_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select target_type_id, descr, row_no from target_types
-    where hidden = 0
+select 
+    target_type_id, 
+    descr, 
+    row_no, 
+    hidden
+from target_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </target_types>

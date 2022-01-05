@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<products templ="%prod_id%;%pid%;%ftype%;%code%;%descr%;%kind_id%;%brand_id%;%categ_id%;%shelf_life_id%;%art%;%obsolete%;%novelty%;%promo%;%barcodes%;%units%;%country_ids%;%dep_ids%;%row_no%;">
+<products templ="%prod_id%;%pid%;%ftype%;%code%;%descr%;%kind_id%;%brand_id%;%categ_id%;%shelf_life_id%;%art%;%obsolete%;%novelty%;%promo%;%barcodes%;%units%;%country_ids%;%dep_ids%;%row_no%;%hidden%;">
   <![CDATA[
-select prod_id, pid, ftype, code, descr, art, kind_id, brand_id, categ_id, shelf_life_id, obsolete, novelty, promo, array_to_string(ean13_out(barcodes),',') barcodes, units, array_to_string(country_ids,',') country_ids, array_to_string(dep_ids,',') dep_ids, row_no from products
-    where hidden = 0
+select 
+    prod_id, 
+    pid, 
+    ftype, 
+    code, 
+    descr, 
+    art, 
+    kind_id, 
+    brand_id, 
+    categ_id, 
+    shelf_life_id, 
+    obsolete, 
+    novelty, 
+    promo, 
+    array_to_string(ean13_out(barcodes),',') barcodes, 
+    units, 
+    array_to_string(country_ids,',') country_ids, 
+    array_to_string(dep_ids,',') dep_ids, 
+    row_no,
+    hidden
+from products
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </products>

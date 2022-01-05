@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<order_types templ="%order_type_id%;%descr%;">
+<order_types templ="%order_type_id%;%descr%;%hidden%;">
   <![CDATA[
-select order_type_id, descr from order_types
-    where hidden = 0
+select 
+    order_type_id, 
+    descr,
+    hidden
+from order_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </order_types>

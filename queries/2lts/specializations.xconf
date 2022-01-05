@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<specializations templ="%spec_id%;%descr%;">
+<specializations templ="%spec_id%;%descr%;%hidden%;">
   <![CDATA[
-select spec_id, descr from specializations
-    where hidden = 0
+select 
+    spec_id, 
+    descr, 
+    hidden
+from specializations
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </specializations>

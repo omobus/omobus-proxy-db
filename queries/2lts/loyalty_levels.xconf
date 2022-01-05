@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<loyalty_levels templ="%loyalty_level_id%;%descr%;%row_no%;">
+<loyalty_levels templ="%loyalty_level_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select loyalty_level_id, descr, row_no from loyalty_levels
-    where hidden = 0
+select 
+    loyalty_level_id, 
+    descr, 
+    row_no,
+    hidden
+from loyalty_levels
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </loyalty_levels>

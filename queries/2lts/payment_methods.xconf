@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<payment_methods templ="%payment_method_id%;%descr%;%encashment%;%row_no%;">
+<payment_methods templ="%payment_method_id%;%descr%;%encashment%;%row_no%;%hidden%;">
   <![CDATA[ 
-select payment_method_id, descr, encashment, row_no from payment_methods
-    where hidden = 0
+select 
+    payment_method_id, 
+    descr, 
+    encashment, 
+    row_no, 
+    hidden
+from payment_methods
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </payment_methods>

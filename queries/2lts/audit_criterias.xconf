@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<audit_criterias templ="%audit_criteria_id%;%descr%;%row_no%;">
+<audit_criterias templ="%audit_criteria_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select audit_criteria_id, descr, row_no from audit_criterias
-    where hidden = 0
+select 
+    audit_criteria_id, 
+    descr, 
+    row_no, 
+    hidden
+from audit_criterias
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </audit_criterias>

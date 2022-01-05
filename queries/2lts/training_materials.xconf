@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<training_materials templ="%tm_id%;%descr%;%brand_ids%;%country_id%;%dep_ids%;%b_date%;%e_date%;%author_id%;">
+<training_materials templ="%tm_id%;%descr%;%brand_ids%;%country_id%;%dep_ids%;%b_date%;%e_date%;%author_id%;%hidden%;">
   <![CDATA[
-select tm_id, descr, array_to_string(brand_ids,',') brand_ids, country_id, array_to_string(dep_ids,',') dep_ids, b_date, e_date, author_id from training_materials
-    where hidden = 0
+select 
+    tm_id, 
+    descr, 
+    array_to_string(brand_ids,',') brand_ids, 
+    country_id, 
+    array_to_string(dep_ids,',') dep_ids, 
+    b_date, 
+    e_date, 
+    author_id,
+    hidden
+from training_materials
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </training_materials>

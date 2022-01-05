@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<distributors templ="%distr_id%;%descr%;%country_id%;">
+<distributors templ="%distr_id%;%descr%;%country_id%;%hidden%;">
   <![CDATA[
-select distr_id, descr, country_id from distributors
-    where hidden = 0
+select 
+    distr_id, 
+    descr, 
+    country_id,
+    hidden
+from distributors
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </distributors>

@@ -2,7 +2,13 @@
 <presentations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%participants%;%tm_ids%;%doc_note%;%photos%;">
   <![CDATA[
 select 
-    x.doc_id, x.fix_dt, x.user_id, x.account_id, x.participants, array_to_string(x.tm_ids,',') tm_ids, x.doc_note,
+    x.doc_id, 
+    x.fix_dt, 
+    x.user_id, 
+    x.account_id, 
+    x.participants, 
+    array_to_string(x.tm_ids,',') tm_ids, 
+    x.doc_note,
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(x.photos)) photos
 from h_presentation x
     where "LTS_aging_L"() <= x.inserted_ts and x.inserted_ts <= "LTS_aging_R"()

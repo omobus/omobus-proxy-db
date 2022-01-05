@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<brands templ="%brand_id%;%descr%;%manuf_id%;%row_no%;">
+<brands templ="%brand_id%;%descr%;%manuf_id%;%row_no%;%hidden%;">
   <![CDATA[
-select brand_id, descr, manuf_id, row_no from brands
-    where hidden = 0
+select 
+    brand_id, 
+    descr, 
+    manuf_id, 
+    row_no, 
+    hidden
+from brands
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </brands>

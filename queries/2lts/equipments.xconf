@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<equipments templ="%equipment_id%;%account_id%;%serial_number%;%equipment_type_id%;%ownership_type_id%;%extra_info%;%author_id%;">
+<equipments templ="%equipment_id%;%account_id%;%serial_number%;%equipment_type_id%;%ownership_type_id%;%extra_info%;%author_id%;%hidden%;">
   <![CDATA[
-select equipment_id, account_id, serial_number, equipment_type_id, ownership_type_id, extra_info, author_id from equipments
-    where hidden = 0
+select 
+    equipment_id, 
+    account_id, 
+    serial_number, 
+    equipment_type_id, 
+    ownership_type_id, 
+    extra_info, 
+    author_id, 
+    hidden
+from equipments
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2
   ]]>
 </equipments>

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<training_types templ="%training_type_id%;%descr%;%row_no%;">
+<training_types templ="%training_type_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select training_type_id, descr, row_no from training_types
-    where hidden = 0
+select 
+    training_type_id, 
+    descr, 
+    row_no,
+    hidden
+from training_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </training_types>

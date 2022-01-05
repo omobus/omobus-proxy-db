@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<placements templ="%placement_id%;%descr%;%row_no%;">
+<placements templ="%placement_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select placement_id, descr, row_no from placements
-    where hidden = 0
+select 
+    placement_id, 
+    descr, 
+    row_no,
+    hidden
+from placements
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </placements>

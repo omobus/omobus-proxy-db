@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<potentials templ="%poten_id%;%descr%;">
+<potentials templ="%poten_id%;%descr%;%hidden%;">
   <![CDATA[
-select poten_id, descr from potentials
-    where hidden = 0
+select 
+    poten_id, 
+    descr, 
+    hidden
+from potentials
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </potentials>

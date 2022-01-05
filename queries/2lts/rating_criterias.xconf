@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rating_criterias templ="%rating_criteria_id%;%descr%;%row_no%;">
+<rating_criterias templ="%rating_criteria_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select rating_criteria_id, descr, row_no from rating_criterias
-    where hidden = 0
+select 
+    rating_criteria_id, 
+    descr, 
+    row_no, 
+    hidden
+from rating_criterias
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </rating_criterias>

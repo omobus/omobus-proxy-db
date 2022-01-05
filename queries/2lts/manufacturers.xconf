@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manufacturers templ="%manuf_id%;%descr%;%competitor%;">
+<manufacturers templ="%manuf_id%;%descr%;%competitor%;%hidden%;">
   <![CDATA[
-select manuf_id, descr, competitor from manufacturers
-    where hidden = 0
+select 
+    manuf_id, 
+    descr, 
+    competitor, 
+    hidden
+from manufacturers
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </manufacturers>

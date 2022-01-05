@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shelf_lifes templ="%shelf_life_id%;%descr%;%days%;">
+<shelf_lifes templ="%shelf_life_id%;%descr%;%days%;%hidden%;">
   <![CDATA[ 
-select shelf_life_id, descr, days from shelf_lifes
-    where hidden = 0
+select 
+    shelf_life_id, 
+    descr, 
+    days, 
+    hidden
+from shelf_lifes
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by descr
   ]]>
 </shelf_lifes>

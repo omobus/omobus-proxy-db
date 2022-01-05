@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <revocations templ="%doc_id%;%doc_type%;%hidden%;">
   <![CDATA[
-select doc_id, doc_type, hidden from j_revocations
+select 
+    doc_id, 
+    doc_type, 
+    hidden 
+from j_revocations
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>

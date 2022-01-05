@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<order_params templ="%distr_id%;%order_param_id%;%descr%;">
+<order_params templ="%distr_id%;%order_param_id%;%descr%;%hidden%;">
   <![CDATA[
-select distr_id, order_param_id, descr from order_params
-    order by 1, 2
+select 
+    distr_id, 
+    order_param_id, 
+    descr,
+    hidden
+from order_params
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
+order by 1, 2
   ]]>
 </order_params>

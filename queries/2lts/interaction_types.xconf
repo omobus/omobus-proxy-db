@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<interaction_types templ="%interaction_type_id%;%descr%;%row_no%;">
+<interaction_types templ="%interaction_type_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select interaction_type_id, descr, row_no from interaction_types
-    where hidden = 0
+select 
+    interaction_type_id, 
+    descr, 
+    row_no, 
+    hidden
+from interaction_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </interaction_types>

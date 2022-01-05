@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<confirmation_types templ="%confirmation_type_id%;%descr%;%succeeded%;%row_no%;%props%;">
+<confirmation_types templ="%confirmation_type_id%;%descr%;%succeeded%;%row_no%;%props%;%hidden%;">
   <![CDATA[ 
-select confirmation_type_id, descr, succeeded, row_no, props from confirmation_types
-    where hidden = 0
+select 
+    confirmation_type_id, 
+    descr, 
+    succeeded, 
+    row_no, 
+    props, 
+    hidden
+from confirmation_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by descr
   ]]>
 </confirmation_types>

@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<quest_rows templ="%qname_id%;%qrow_id%;%pid%;%ftype%;%descr%;%qtype%;%country_ids%;%dep_ids%;%row_no%;">
+<quest_rows templ="%qname_id%;%qrow_id%;%pid%;%ftype%;%descr%;%qtype%;%country_ids%;%dep_ids%;%row_no%;%hidden%;">
   <![CDATA[
-select qname_id, qrow_id, pid, ftype, descr, qtype, array_to_string(country_ids,',') country_ids, array_to_string(dep_ids,',') dep_ids, row_no from quest_rows
-    where hidden = 0 and ftype = 0
+select 
+    qname_id, 
+    qrow_id, 
+    pid, 
+    ftype, 
+    descr, 
+    qtype, 
+    array_to_string(country_ids,',') country_ids, 
+    array_to_string(dep_ids,',') dep_ids, 
+    row_no,
+    hidden
+from quest_rows
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"() /*and ftype = 0*/
 order by 1, 2
   ]]>
 </quest_rows>

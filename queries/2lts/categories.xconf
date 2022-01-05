@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<categories templ="%categ_id%;%descr%;%row_no%;">
+<categories templ="%categ_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select categ_id, descr, row_no from categories
-    where hidden = 0
+select 
+    categ_id, 
+    descr, 
+    row_no,
+    hidden 
+from categories
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </categories>

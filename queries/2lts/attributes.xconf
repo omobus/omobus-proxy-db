@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<attributes templ="%attr_id%;%descr%;%row_no%;">
+<attributes templ="%attr_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select attr_id, descr, row_no from attributes
-    order by 1
+select 
+    attr_id, 
+    descr, 
+    row_no,
+    hidden
+from attributes
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
+order by 1
   ]]>
 </attributes>

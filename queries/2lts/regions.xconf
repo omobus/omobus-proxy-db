@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<regions templ="%region_id%;%descr%;%country_id%;">
+<regions templ="%region_id%;%descr%;%country_id%;%hidden%;">
   <![CDATA[
-select region_id, descr, country_id from regions
-    where hidden = 0
+select 
+    region_id, 
+    descr, 
+    country_id, 
+    hidden
+from regions
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </regions>

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<equipment_types templ="%equipment_type_id%;%descr%;%row_no%;">
+<equipment_types templ="%equipment_type_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select equipment_type_id, descr, row_no from equipment_types
-    where hidden = 0
+select 
+    equipment_type_id, 
+    descr, 
+    row_no, 
+    hidden 
+from equipment_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </equipment_types>

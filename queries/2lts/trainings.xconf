@@ -2,7 +2,14 @@
 <trainings templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%training_type_id%;%contact_ids%;%tm_ids%;%doc_note%;%photos%;">
   <![CDATA[
 select 
-    doc_id, fix_dt, user_id, account_id, training_type_id, array_to_string(contact_ids,',') contact_ids, array_to_string(tm_ids,',') tm_ids, doc_note,
+    doc_id, 
+    fix_dt, 
+    user_id, 
+    account_id, 
+    training_type_id, 
+    array_to_string(contact_ids,',') contact_ids, 
+    array_to_string(tm_ids,',') tm_ids, 
+    doc_note,
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(photos)) photos
 from h_training
     where "LTS_aging_L"() <= inserted_ts and inserted_ts <= "LTS_aging_R"()

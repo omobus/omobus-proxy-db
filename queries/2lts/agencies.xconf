@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<agencies templ="%agency_id%;%descr%;">
+<agencies templ="%agency_id%;%descr%;%hidden%;">
   <![CDATA[
-select agency_id, descr from agencies
-    where hidden = 0
+select 
+    agency_id, 
+    descr,
+    hidden
+from agencies
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </agencies>

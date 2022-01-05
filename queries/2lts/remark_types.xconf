@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<remark_types templ="%remark_type_id%;%descr%;%row_no%;">
+<remark_types templ="%remark_type_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[ 
-select remark_type_id, descr, row_no from remark_types
-    where hidden = 0
+select 
+    remark_type_id, 
+    descr, 
+    row_no, 
+    hidden
+from remark_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by descr
   ]]>
 </remark_types>

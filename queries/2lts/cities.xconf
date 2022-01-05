@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cities templ="%city_id%;%pid%;%ftype%;%descr%;%country_id%;">
+<cities templ="%city_id%;%pid%;%ftype%;%descr%;%country_id%;%hidden%;">
   <![CDATA[
-select city_id, pid, ftype, descr, country_id from cities
-    where hidden = 0
+select 
+    city_id, 
+    pid, 
+    ftype, 
+    descr, 
+    country_id, 
+    hidden
+from cities
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </cities>

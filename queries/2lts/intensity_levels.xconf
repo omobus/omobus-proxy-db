@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<intensity_levels templ="%intensity_level_id%;%descr%;%row_no%;">
+<intensity_levels templ="%intensity_level_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select intensity_level_id, descr, row_no from intensity_levels
-    where hidden = 0
+select 
+    intensity_level_id, 
+    descr, 
+    row_no, 
+    hidden
+from intensity_levels
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </intensity_levels>

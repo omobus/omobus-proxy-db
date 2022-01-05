@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rating_scores templ="%rating_score_id%;%descr%;%score%;%row_no%;">
+<rating_scores templ="%rating_score_id%;%descr%;%score%;%row_no%;%hidden%;">
   <![CDATA[
-select rating_score_id, descr, score, row_no from rating_scores
-    where hidden = 0
+select 
+    rating_score_id, 
+    descr, 
+    score, 
+    row_no, 
+    hidden
+from rating_scores
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </rating_scores>

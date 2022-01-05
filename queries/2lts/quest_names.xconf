@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<quest_names templ="%qname_id%;%descr%;%row_no%;">
+<quest_names templ="%qname_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select qname_id, descr, row_no from quest_names
-    where hidden = 0
+select 
+    qname_id, 
+    descr, 
+    row_no,
+    hidden
+from quest_names
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </quest_names>

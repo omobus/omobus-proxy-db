@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ownership_types templ="%ownership_type_id%;%descr%;%row_no%;">
+<ownership_types templ="%ownership_type_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select ownership_type_id, descr, row_no from ownership_types
-    where hidden = 0
+select 
+    ownership_type_id, 
+    descr, 
+    row_no, 
+    hidden
+from ownership_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </ownership_types>

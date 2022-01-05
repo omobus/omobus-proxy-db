@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<influence_levels templ="%influence_level_id%;%descr%;%row_no%;">
+<influence_levels templ="%influence_level_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select influence_level_id, descr, row_no from influence_levels
-    where hidden = 0
+select 
+    influence_level_id, 
+    descr, 
+    row_no, 
+    hidden
+from influence_levels
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </influence_levels>

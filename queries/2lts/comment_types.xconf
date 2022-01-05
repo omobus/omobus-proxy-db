@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<comment_types templ="%comment_type_id%;%descr%;">
+<comment_types templ="%comment_type_id%;%descr%;%hidden%;">
   <![CDATA[
-select comment_type_id, descr from comment_types
-    where hidden = 0
+select 
+    comment_type_id, 
+    descr, 
+    hidden
+from comment_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </comment_types>

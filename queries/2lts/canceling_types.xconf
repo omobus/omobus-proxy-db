@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<canceling_types templ="%canceling_type_id%;%descr%;">
+<canceling_types templ="%canceling_type_id%;%descr%;%hidden%;">
   <![CDATA[
-select canceling_type_id, descr from canceling_types
-    where hidden = 0
+select 
+    canceling_type_id, 
+    descr,
+    hidden 
+from canceling_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </canceling_types>

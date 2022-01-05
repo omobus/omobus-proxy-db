@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<audit_scores templ="%audit_score_id%;%descr%;%score%;%row_no%;">
+<audit_scores templ="%audit_score_id%;%descr%;%score%;%row_no%;%hidden%;">
   <![CDATA[
-select audit_score_id, descr, row_no, score from audit_scores
-    where hidden = 0
+select 
+    audit_score_id, 
+    descr, 
+    row_no, 
+    score, 
+    hidden
+from audit_scores
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </audit_scores>

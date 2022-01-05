@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<photo_params templ="%photo_param_id%;%descr%;%row_no%;">
+<photo_params templ="%photo_param_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select photo_param_id, descr, row_no from photo_params
-    where hidden = 0
+select 
+    photo_param_id, 
+    descr, 
+    row_no, 
+    hidden
+from photo_params
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </photo_params>

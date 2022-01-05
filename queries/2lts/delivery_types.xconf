@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<delivery_types templ="%delivery_type_id%;%descr%;%row_no%;">
+<delivery_types templ="%delivery_type_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[ 
-select delivery_type_id, descr, row_no from delivery_types
-    where hidden = 0
+select 
+    delivery_type_id, 
+    descr, 
+    row_no, 
+    hidden
+from delivery_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by descr
   ]]>
 </delivery_types>

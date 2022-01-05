@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<users templ="%user_id%;%pids%;%descr%;%role%;%country_id%;%dep_ids%;%distr_ids%;%agency_id%;%mobile%;%email%;%area%;%executivehead_id%;%props%;%rules:wd_begin%;%rules:wd_end%;">
+<users templ="%user_id%;%pids%;%descr%;%role%;%country_id%;%dep_ids%;%distr_ids%;%agency_id%;%mobile%;%email%;%area%;%executivehead_id%;%props%;%rules:wd_begin%;%rules:wd_end%;%hidden%;">
   <![CDATA[
-select user_id, array_to_string(pids,',') pids, descr, role, country_id, array_to_string(dep_ids,',') dep_ids, array_to_string(distr_ids,',') distr_ids, agency_id, mobile, email, area, executivehead_id, props, case when "rules:wd_begin" is null then "paramUID"('rules:wd_begin')::time_t else "rules:wd_begin" end "rules:wd_begin", case when "rules:wd_end" is null then "paramUID"('rules:wd_end')::time_t else "rules:wd_end" end "rules:wd_end" from users
-    where hidden = 0
+select 
+    user_id, 
+    array_to_string(pids,',') pids, 
+    descr, 
+    role, 
+    country_id, 
+    array_to_string(dep_ids,',') dep_ids, 
+    array_to_string(distr_ids,',') distr_ids, 
+    agency_id, 
+    mobile, 
+    email, 
+    area, 
+    executivehead_id, 
+    props, 
+    case when "rules:wd_begin" is null then "paramUID"('rules:wd_begin')::time_t else "rules:wd_begin" end "rules:wd_begin", 
+    case when "rules:wd_end" is null then "paramUID"('rules:wd_end')::time_t else "rules:wd_end" end "rules:wd_end",
+    hidden
+from users
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </users>

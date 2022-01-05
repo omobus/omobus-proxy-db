@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<holidays templ="%h_date%;%country_id%;%note%;">
+<holidays templ="%h_date%;%country_id%;%note%;%hidden%;">
   <![CDATA[
-select h_date, country_id, descr note from sysholidays
-    where hidden = 0
+select 
+    h_date, 
+    country_id, 
+    descr note,
+    hidden 
+from sysholidays
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2
   ]]>
 </holidays>

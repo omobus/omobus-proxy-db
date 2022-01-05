@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<packs templ="%pack_id%;%prod_id%;%descr%;%pack%;%weight%;%volume%;%precision%;">
+<packs templ="%pack_id%;%prod_id%;%descr%;%pack%;%weight%;%volume%;%precision%;%hidden%;">
   <![CDATA[
-select pack_id, prod_id, descr, pack, weight, volume, precision from packs
-    where hidden = 0
+select 
+    pack_id, 
+    prod_id, 
+    descr, 
+    pack, 
+    weight, 
+    volume, 
+    precision, 
+    hidden
+from packs
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </packs>

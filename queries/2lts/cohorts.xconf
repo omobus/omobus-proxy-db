@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cohorts templ="%cohort_id%;%descr%;%row_no%;">
+<cohorts templ="%cohort_id%;%descr%;%row_no%;%hidden%;">
   <![CDATA[
-select cohort_id, descr, row_no from cohorts
-    where hidden = 0
+select 
+    cohort_id, 
+    descr, 
+    row_no, 
+    hidden
+from cohorts
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </cohorts>

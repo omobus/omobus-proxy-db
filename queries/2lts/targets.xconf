@@ -2,7 +2,17 @@
 <targets templ="%target_id%;%target_type_id%;%subject%;%body%;%b_date%;%e_date%;%image%;%author_id%;%myself%;%hidden%;%props%;">
   <![CDATA[
 select 
-    x.target_id, x.target_type_id, x.subject, x.body, x.b_date, x.e_date, ts.guid image, x.author_id, x.myself, x.hidden, x.props 
+    x.target_id, 
+    x.target_type_id, 
+    x.subject, 
+    x.body, 
+    x.b_date, 
+    x.e_date, 
+    ts.guid image, 
+    x.author_id, 
+    x.myself, 
+    x.hidden, 
+    x.props 
 from targets x
     left join thumbnail_stream ts on ts.photo = x.image
 where "LTS_aging_L"() <= x.updated_ts and x.updated_ts <= "LTS_aging_R"()

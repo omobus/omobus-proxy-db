@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<activity_types templ="%activity_type_id%;%descr%;%strict%;%joint%;">
+<activity_types templ="%activity_type_id%;%descr%;%strict%;%joint%;%hidden%;">
   <![CDATA[
-select activity_type_id, descr, strict, joint from activity_types
-    where hidden = 0
+select 
+    activity_type_id, 
+    descr, 
+    strict, 
+    joint,
+    hidden
+from activity_types
+    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1
   ]]>
 </activity_types>
