@@ -106,7 +106,12 @@ from (
 		and (distance(a.latitude, a.longitude, r.latitude, r.longitude) > "paramInteger"('rules:max_distance') or
 		    distance(a.latitude, a.longitude, r.latitude_e, r.longitude_e) > "paramInteger"('rules:max_distance'))
 	    then 1 else null end warn_max_distance
-	from user_routes(null, '%b_date%', '%e_date%', 1::bool_t) r
+	from (
+	    select distinct user_id u_id from my_routes where '%b_date%' <= p_date and p_date <= '%e_date%'
+		union
+	    select distinct user_id u_id from sysstats where '%b_date%' <= fix_date and fix_date <= '%e_date%'
+	) x
+	    left join user_routes(null, '%b_date%', '%e_date%', 1::bool_t) r on r.user_id = x.u_id
 	    left join activity_types t on t.activity_type_id = r.activity_type_id
 	    left join canceling_types c on c.canceling_type_id = r.canceling_type_id
 	    left join accounts a on a.account_id = r.account_id
@@ -175,7 +180,9 @@ order by x.user_id, a.descr, a.address, a.account_id
 	<users>
   <![CDATA[
 select 
-    u.user_id, u.descr u_name, u.dev_login,
+    u.user_id, 
+    u.descr u_name, 
+    u.dev_login,
     u.area,
     (
 	select array_to_string(array_agg(descr::text),'|') from distributors aa,
