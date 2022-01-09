@@ -70,8 +70,14 @@ order by 1, 2
   <![CDATA[
 select unnest(array['admins','analitics']) person_id, null pid, user_id from users
     union
-select x.role preson_id, case when u.pids is null then null else unnest(u.pids) end pid, u.user_id from (select distinct role from users where hidden=0 and role is not null and role <> '') x 
-    left join users u on u.hidden=0
+select x.role preson_id, u.pid, u.user_id from (
+	select distinct role from users where hidden=0 and NIL(role) is not null
+    ) x, (
+	select null pid, user_id from users where hidden = 0 and pids is null
+	    union
+	select unnest(pids) pid, user_id from users where hidden = 0 and pids is not null
+    ) u
+
 order by user_id
   ]]>
 </users>

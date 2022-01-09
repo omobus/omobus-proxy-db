@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <activity_types templ="%activity_type_id%;%descr%;%note%;%docs_needed%;%exec_limit%;%selectable%;%joint%;%strict%;">
   <![CDATA[ 
-select case when roles is null then null else unnest(roles) end person_id, activity_type_id, descr, note, docs_needed, exec_limit, selectable, joint, strict from activity_types
-    where hidden = 0 
+select null person_id, activity_type_id, descr, note, docs_needed, exec_limit, selectable, joint, strict, row_no from activity_types
+    where hidden = 0  and roles is null
+	union
+select unnest(roles) person_id, activity_type_id, descr, note, docs_needed, exec_limit, selectable, joint, strict, row_no from activity_types
+    where hidden = 0  and roles is not null
+
 order by row_no, descr
   ]]>
 </activity_types>
