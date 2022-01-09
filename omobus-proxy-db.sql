@@ -5097,6 +5097,7 @@ create table dyn_presences (
 );
 
 create index i_2lts_dyn_presences on dyn_presences (updated_ts);
+create index i_isrecent_dyn_presences on dyn_presences using btree (account_id, prod_id, "_isRecentData");
 create index i_whereis_dyn_presences on dyn_presences using btree (fix_date, stock, "_isRecentData");
 
 create trigger trig_updated_ts before update on dyn_presences for each row execute procedure tf_updated_ts();
@@ -5229,6 +5230,7 @@ create table dyn_stocks (
 );
 
 create index i_2lts_dyn_stocks on dyn_stocks (updated_ts);
+create index i_isrecent_dyn_stocks on dyn_stocks using btree (account_id, prod_id, "_isRecentData");
 create index i_whereis_dyn_stocks on dyn_stocks using btree (fix_date, stock, "_isRecentData");
 
 create trigger trig_updated_ts before update on dyn_stocks for each row execute procedure tf_updated_ts();
