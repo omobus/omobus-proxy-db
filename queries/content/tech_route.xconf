@@ -37,6 +37,16 @@ select 1 control_point, fix_dt, satellite_dt, latitude, longitude, accuracy from
 order by fix_dt
   ]]>
 	</trace>
+	<cancellation>
+  <![CDATA[
+select 
+    t.descr canceling_type,
+    NIL(j.note) note
+from j_cancellations j
+    left join canceling_types t on t.canceling_type_id = j.canceling_type_id
+where j.user_id = '%user_id%' and j.route_date = '%b_date%' /*%e_date%*/ and j.hidden = 0
+  ]]>
+	</cancellation>
 	<route>
   <![CDATA[
 select
@@ -561,7 +571,13 @@ order by fix_dt, doc_id
 	<stats>
   <![CDATA[
 select 
-    u.dev_login, u.descr u_name, u.area, u.email, u.mobile, ex.descr head_name, a.descr agency,
+    u.dev_login, 
+    u.descr u_name, 
+    u.area, 
+    u.email, 
+    u.mobile, 
+    ex.descr head_name, 
+    a.descr agency,
     (
 	select array_to_string(array_agg(descr::text),'|') from distributors aa,
 	    (select uu distr_id, row_number() over() rowno from unnest(u.distr_ids) uu) bb
@@ -1281,6 +1297,11 @@ if tb.route ~= nil and #tb.route > 0 then
     end
 end
 
+if rowset_rows(_cancellation) > 0 then
+    tb.cancellation = {}
+    tb.cancellation.type = rowset_value(_cancellation, 0, rowset_colid(_cancellation, "canceling_type"))
+    tb.cancellation.note = rowset_value(_cancellation, 0, rowset_colid(_cancellation, "note"))
+end
 
 set_param(_content, "rows", rowset_rows(_route) + rowset_rows(_additions) + rowset_rows(_unsched))
 write_stream(_content, json.encode(tb))
