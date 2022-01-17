@@ -4,13 +4,20 @@
 	<L>
   <![CDATA[
 select 
-    u.user_id, u.descr u_name, u.dev_login, u.area, 
-    exch_sync_success_total, exch_sync_success_time,
-    exch_docs_success_total, exch_docs_success_time, 
+    u.user_id, 
+    u.descr u_name, 
+    u.dev_login, 
+    u.area, 
+    exch_sync_success_total, 
+    exch_sync_success_time,
+    exch_docs_success_total, 
+    exch_docs_success_time, 
     w0.fix_dt wd_begin,
     case when w0.fix_dt > w1.fix_dt then null else w1.fix_dt end wd_end,
-    acts_total, acts_time, 
-    docs_total, docs_time, 
+    acts_total, 
+    acts_time, 
+    docs_total, 
+    docs_time, 
     pause, 
     case when pause=0 and pos_exist>0 then mileage_get(u.user_id, '%b_date%') else null end dist,
     (
@@ -49,7 +56,11 @@ from users u
 		select user_id, max(fix_date) fix_date from sysstats where fix_date <= '%b_date%' group by user_id
 	    ) q where fix_date <= '%b_date%' and '%b_date%' <= (current_date + 1)::date_t
 	) p on u.user_id = p.user_id
-where u.hidden = 0 or u.user_id in (select user_id from sysstats where fix_date = '%b_date%') or u.user_id in (select distinct user_id from my_routes where p_date = '%b_date%')
+where u.hidden = 0 or u.user_id in (
+    select user_id from sysstats where fix_date = '%b_date%'
+	union
+    select distinct user_id from my_routes where p_date = '%b_date%'
+)
 order by u.descr
   ]]>
 	</L>
