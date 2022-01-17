@@ -8,6 +8,7 @@ select
     data->'route' route
 from mileage_stream
     where "LTS_aging_L"() <= content_ts and content_ts <= "LTS_aging_R"()
+	and data->'' is not null and (data->'')::int > 0
 order by 1, 2
   ]]>
 </mileages>
