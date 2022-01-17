@@ -61,6 +61,7 @@ begin
 		perform evmail_add('%user_id_sys%','canceling/caption:revoke','canceling/body:autorevoke',2::smallint /*high*/,array['route_date',"L"(r)]);
 	    end if;
 	end if;
+	perform content_add('tech', '', r, r);
 	perform content_add('tech_route', '%user_id_sys%', r, r);
 	perform content_add('route_compliance', '', r, r);
 	perform content_add('time', '', "monthDate_First"(r), "monthDate_Last"(r));
