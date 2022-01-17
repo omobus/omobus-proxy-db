@@ -28,6 +28,7 @@ begin
 		update j_cancellations set hidden=1 where user_id = u_id and route_date = r;
 	    end if;
 	end if;
+	perform content_add('tech', '', r, r);
 	perform content_add('tech_route', u_id, r, r);
 	perform content_add('route_compliance', '', r, r);
 	perform content_add('time', '', "monthDate_First"(r), "monthDate_Last"(r));
