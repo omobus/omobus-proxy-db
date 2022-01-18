@@ -4,20 +4,35 @@
 	<L0>
   <![CDATA[
 select 
-    x.target_id, t.subject, t.body, t.b_date, t.e_date,
-    t.target_type_id, z.descr target_type,
-    t.author_id, case when u.descr is null then t.author_id else u.descr end author_name,
-    x.account_id, a.code a_code, a.descr a_name, a.address,
+    x.target_id, 
+    t.subject, 
+    t.body, 
+    t.b_date, 
+    t.e_date,
+    t.target_type_id, 
+    z.descr target_type,
+    t.author_id, 
+    case when u.descr is null then t.author_id else u.descr end author_name,
+    x.account_id, 
+    a.code a_code, 
+    a.descr a_name, 
+    a.address,
     reg.descr region,
     c.descr city,
-    a.rc_id, r.descr rc, r.ka_type,
+    a.rc_id, 
+    r.descr rc, 
+    r.ka_type,
     p.descr poten,
-    a.chan_id, ch.descr chan,
-    t.image::varchar blob_id, ts.guid::varchar "ref",
-    NIL(t.dep_id) dep_id, t.myself,
+    a.chan_id, 
+    ch.descr chan,
+    t.image::varchar blob_id, 
+    ts.guid::varchar "ref",
+    NIL(t.dep_id) dep_id, 
+    t.myself,
     t.hidden,
     a.hidden a_hidden,
-    t.inserted_ts, t.updated_ts
+    t.inserted_ts, 
+    t.updated_ts
 from (
     select target_id, account_id, max(inserted_ts) inserted_ts from (
 /* only operative targets (from mobile devices and web-console photos/posms/confirmations reports): */
@@ -55,17 +70,22 @@ order by x.inserted_ts desc nulls last, t.b_date desc, t.e_date, t.subject, a.de
 	<L1>
   <![CDATA[
 select
-    h.account_id, h.target_id,
+    h.account_id, 
+    h.target_id,
     h.doc_id,
-    h.user_id performer_id, u.descr performer_name,
+    h.user_id performer_id, 
+    u.descr performer_name,
     h.fix_dt,
-    h.confirmation_type_id, f.descr confirm,
+    h.confirmation_type_id, 
+    f.descr confirm,
+    coalesce(f.succeeded,0) succeeded,
     h.doc_note,
     array_to_string(h.photos,',') photos,
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(h.photos)) refs,
     j.status restatus,
     j.note renote,
-    u.executivehead_id head_id, ex.descr head_name
+    u.executivehead_id head_id, 
+    ex.descr head_name
 from h_confirmation h
     left join confirmation_types f on f.confirmation_type_id = h.confirmation_type_id
     left join users u on u.user_id = h.user_id
@@ -123,6 +143,8 @@ if rows > 0 and cols > 0 then
 		if a ~= nil and n ~= "target_id" and n ~= "account_id" then
 		    if std.contains({'photos','refs'}, n) then
 			x[n] = std.split(a, ',')
+		    elseif( std.contains({'succeeded'}, n) ) then
+			x[n] = tonumber(a)
 		    elseif( n == 'restatus' and a ~= nil ) then
 			if( x.remark == nil ) then
 			    x.remark = {}

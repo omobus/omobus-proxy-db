@@ -5,26 +5,43 @@
   <![CDATA[
 select
     h.doc_id, 
-    h.user_id, u.descr u_name, 
+    h.user_id, 
+    u.descr u_name, 
     h.fix_dt, 
     h.inserted_ts, 
-    h.account_id, a.code a_code, a.descr a_name, a.address, 
+    h.account_id, 
+    a.code a_code, 
+    a.descr 
+    a_name, a.address, 
     reg.descr region, 
     c.descr city, 
-    a.rc_id, r.descr rc, r.ka_type,
+    a.rc_id, 
+    r.descr rc, 
+    r.ka_type,
     p.descr poten,
-    a.chan_id, ch.descr chan,
-    t.target_id, t.subject, t.body, t.b_date, t.e_date, t.image::text blob_id, ts.guid::varchar "ref",
+    a.chan_id, 
+    ch.descr chan,
+    t.target_id, 
+    t.subject, 
+    t.body, 
+    t.b_date, 
+    t.e_date, 
+    t.image::text blob_id, 
+    ts.guid::varchar "ref",
     tt.descr target_type, 
-    h.confirmation_type_id, f.descr confirm, 
+    h.confirmation_type_id, 
+    f.descr confirm, 
+    coalesce(f.succeeded,0) succeeded,
     h.doc_note,
     array_to_string(h.photos,',') photos, 
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(h.photos)) refs,
     j.status restatus,
     k.descr retype,
     j.note renote,
-    u.executivehead_id head_id, ex.descr head_name,
-    t.author_id, case when z.descr is null then t.author_id else z.descr end author_name,
+    u.executivehead_id head_id, 
+    ex.descr head_name,
+    t.author_id, 
+    case when z.descr is null then t.author_id else z.descr end author_name,
     t.updated_ts
 from h_confirmation h
     left join j_remarks j on j.doc_id = h.doc_id
@@ -53,6 +70,8 @@ local std = require('stdlib')
 require('rtlib').main("confirmations", true, function(r, n, a) 
     if( std.contains({'photos','refs'}, n) ) then
 	r[n] = std.split(a, ',')
+    elseif( std.contains({'succeeded'}, n) ) then
+	r[n] = tonumber(a)
     elseif( n == 'restatus' and a ~= nil ) then
 	if( r.remark == nil ) then
 	    r.remark = {}
