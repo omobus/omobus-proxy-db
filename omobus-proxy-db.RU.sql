@@ -99,8 +99,9 @@ insert into delivery_types(delivery_type_id, descr) values('0', 'Доставк�
 insert into delivery_types(delivery_type_id, descr) values('1', 'Самовывоз заказчиком');
 
 delete from departments;
-insert into departments(dep_id, descr) values('0', 'MASS');
-insert into departments(dep_id, descr) values('1', 'OTC');
+insert into departments(dep_id, descr) values('dsf', 'DSF');
+insert into departments(dep_id, descr) values('instore', 'InStore');
+insert into departments(dep_id, descr) values('otc', 'OTC');
 
 delete from discard_types;
 insert into discard_types(discard_type_id, descr, row_no) values('0', 'Ошибочно добавлена в маршрут', 0);
