@@ -8,8 +8,13 @@ select count(*) from data_stream
 </verification>
 <begin>
   <![CDATA[
-/* store max route date */
-insert into ".sesparams"(f, "X") select '%uid%#p_date', max(p_date) from my_routes on conflict do nothing;
+create temp table ".my_routes_hs" as
+    select p_date, user_id, md5(array_to_string(array_agg(account_id::text order by account_id),'-')) hs from my_routes 
+	where p_date > current_date::date_t
+    group by p_date, user_id
+    order by p_date, user_id;
+
+analyze ".my_routes_hs";
 
 delete from my_routes
     where p_date > current_date::date_t and db_ids = (array['%ErpCode%'])::uids_t;
@@ -38,18 +43,32 @@ declare
     c int;
     u uid_t;
     x date_t;
+    z text;
+    k text;
 begin
     delete from my_routes where user_id='';
     delete from my_routes where account_id='';
 
-    for x in select generate_series::date_t from generate_series(current_date + 1, greatest(
-	(select max(p_date)::date d from my_routes),(select "X"::date d from ".sesparams" where f='%uid%#p_date')), '1 day')
+    for x, u, z in
+	select p_date, user_id, md5(array_to_string(array_agg(account_id::text order by account_id),'-')) hs from my_routes 
+	    where p_date > current_date::date_t
+	group by p_date, user_id
+	order by p_date, user_id
+    loop
+	select hs from ".my_routes_hs" where p_date = x and user_id = u
+	    into k;
+	if k is null then
+	    insert into ".my_routes_hs"(p_date, user_id, hs) values(x, u, z);
+	elsif k = z then
+	    delete from ".my_routes_hs" where p_date = x and user_id = u;
+	end if;
+    end loop;
+
+    for x in select generate_series::date_t from generate_series(current_date + 1, (select max(p_date)::date from ".my_routes_hs"), '1 day')
     loop
 	c := 0;
 	for u in
-	    select distinct user_id from my_routes where p_date = x
-		union
-	    select distinct user_id from content_stream where b_date=x and e_date=x and content_code='tech_route'
+	    select distinct user_id from ".my_routes_hs" where p_date = x
 	loop
 	    insert into ".content"(content_code, user_id, b_date, e_date)
 		values('tech_route', u, x, x)
@@ -60,12 +79,14 @@ begin
 	    insert into ".content"(content_code, user_id, b_date, e_date)
 		values('tech', '', x, x)
 	    on conflict do nothing;
-	    raise notice 'Refreshed content_stream tech/route reports: %.', x;
+	    raise notice '[my_routes] (content_stream: tech and tech_route) refreshed % row(-s) at %.', c, x;
 	end if;
     end loop;
 
     /* set flag for refreshing [ownerless] attribute: */
     insert into ".sesparams" values('%uid%#ownerless') on conflict do nothing;
+
+    drop table if exists ".my_routes_hs";
 
     perform stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
 end;
