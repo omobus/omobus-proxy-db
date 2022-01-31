@@ -13,6 +13,7 @@ ExecStop=/bin/kill -s USR1 $MAINPID
 #RemainAfterExit=no
 #Restart=on-failure
 #RestartSec=5s
+TimeoutStopSec=15s
 
 [Install]
 WantedBy=multi-user.target
