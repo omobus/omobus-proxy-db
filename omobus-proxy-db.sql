@@ -5077,6 +5077,7 @@ create table dyn_oos (
 );
 
 create index i_2lts_dyn_oos on dyn_oos (updated_ts);
+create index i_isrecent_dyn_oos on dyn_oos using btree (account_id, prod_id, "_isRecentData");
 
 create trigger trig_updated_ts before update on dyn_oos for each row execute procedure tf_updated_ts();
 
@@ -5122,6 +5123,7 @@ create table dyn_prices (
 );
 
 create index i_2lts_dyn_prices on dyn_prices (updated_ts);
+create index i_isrecent_dyn_prices on dyn_prices using btree (account_id, prod_id, "_isRecentData");
 
 create trigger trig_updated_ts before update on dyn_prices for each row execute procedure tf_updated_ts();
 
