@@ -2295,7 +2295,7 @@ create table quest_rows (
     pid 		uid_t 		null,
     ftype 		ftype_t 	not null,
     descr 		descr_t 	not null,
-    qtype 		varchar(10) 	null check(ftype=0 and qtype in ('boolean','triboolean','integer','text','selector') or (ftype<>0 and qtype is null)),
+    qtype 		varchar(10) 	null check(ftype=0 and qtype in ('boolean','triboolean','integer','float','text','selector') or (ftype<>0 and qtype is null)),
     extra_info 		note_t 		null,
     country_ids 	countries_t 	null,
     dep_ids		uids_t		null,
