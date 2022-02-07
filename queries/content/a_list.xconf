@@ -4,7 +4,13 @@
 	<L>
   <![CDATA[
 select
-    j.user_id, j.act_code, j.dev_pack, j.dev_id, j.dev_login, j.fix_dt, cast(j.inserted_ts as datetime_t) inserted_ts,
+    j.user_id, 
+    j.act_code, 
+    j.dev_pack, 
+    j.dev_id, 
+    j.dev_login, 
+    j.fix_dt, 
+    j.inserted_ts,
     case when j.satellite_dt = '0000-00-00 00:00:00' then null else j.satellite_dt end satellite_dt,
     case when j.latitude = 0 then null else j.latitude end latitude,
     case when j.longitude = 0 then null else j.longitude end longitude,
