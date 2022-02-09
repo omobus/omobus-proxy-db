@@ -122,6 +122,7 @@ begin
     end loop;
     delete from h_pending where left(fix_dt,10) < gc_date;
     delete from h_photo where left(fix_dt,10) < gc_date;
+    delete from h_posm where left(fix_dt,10) < gc_date;
     for i in select doc_id from h_presence where left(fix_dt,10) < gc_date loop
 	delete from t_presence where doc_id = i;
 	delete from h_presence where doc_id = i;
