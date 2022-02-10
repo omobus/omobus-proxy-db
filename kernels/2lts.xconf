@@ -99,6 +99,7 @@
 <xi:include href="../queries/2lts/photo_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/placements.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/pos_materials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2lts/posms.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/potentials.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/priorities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -211,6 +212,7 @@
     <photo_types />
     <placements />
     <pos_materials />
+    <posms />
     <potentials />
     <priorities />
     <products />

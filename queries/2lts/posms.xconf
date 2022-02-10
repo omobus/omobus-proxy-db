@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<posms templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%placement_id%;%posm_id%;%photo%;%doc_note%;">
+  <![CDATA[
+select 
+    x.doc_id, 
+    x.fix_dt, 
+    x.user_id, 
+    x.account_id, 
+    x.placement_id, 
+    x.posm_id, 
+    ts.guid photo,
+    x.doc_note
+from h_posm x, thumbnail_stream ts
+    where "LTS_aging_L"() <= x.inserted_ts and x.inserted_ts <= "LTS_aging_R"() and x.photo = ts.photo
+order by 1
+  ]]>
+</posms>
