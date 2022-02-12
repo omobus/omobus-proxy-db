@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <quest_names templ="%qname_id%;%descr%;" empty="no">
   <![CDATA[ 
-select qname_id, descr from quest_names
+select 
+    qname_id, 
+    descr 
+from quest_names
     where hidden = 0
 order by row_no, descr
   ]]>
