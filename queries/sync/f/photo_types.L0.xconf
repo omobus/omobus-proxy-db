@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<photo_typesL0>
+     <![CDATA[
+select unnest(db_ids) db_id, photo_type_id from photo_types where db_ids is not null and hidden = 0
+    union
+select null db_id, photo_type_id from photo_types where db_ids is not null and hidden = 0
+    order by 1, 2
+    ]]>
+</photo_typesL0>

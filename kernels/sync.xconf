@@ -180,6 +180,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 <xi:include href="../queries/sync/f/oos_types.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/photo_params.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/photo_params.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/photo_types.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/photo_types.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/photo_types.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/planograms.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -191,8 +192,11 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 <xi:include href="../queries/sync/f/products.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/products.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/products.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/f/quests.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/f/quests.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/quest_items.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/quest_names.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/quest_rows.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/quest_rows.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/quest_rows.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/rating_criterias.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/specializations.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/training_materials.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -261,9 +265,9 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<productsL1 key="country_id">
 	    <products key="fid" />
 	</productsL1>
-	<questsL1 key="country_id">
+	<quest_rowsL1 key="country_id">
 	    <quest_rows key="fid" />
-	</questsL1>
+	</quest_rowsL1>
 	<retail_chains key="country_id" strict="yes" />
 	<support key="country_id" />
 	<training_materials key="country_id" strict="yes" />
@@ -318,9 +322,9 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<productsL2 key="dep_id">
 	    <products key="fid" />
 	</productsL2>
-	<questsL2 key="dep_id">
+	<quest_rowsL2 key="dep_id">
 	    <quest_rows key="fid" />
-	</questsL2>
+	</quest_rowsL2>
 	<rating_criteriasL2 key="dep_id">
 	    <rating_criterias key="fid" />
 	</rating_criteriasL2>
@@ -338,10 +342,22 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 <!--
     <my_dbs personalize="ErpId">
 	<highlights key="db_id" />
+	<photo_typesL0 key="db_id">
+	    <photo_types key="photo_type_id" />
+	</photo_typesL0>
 	<pmlist key="db_id" />
 	<productsL0 key="db_id">
 	    <products key="fid" />
 	</productsL0>
+	<quest_itemsL0 key="db_id">
+	    <quest_items key="fid" />
+	</quest_itemsL0>
+	<quest_namesL0 key="db_id">
+	    <quest_names key="qname_id" />
+	</quest_namesL0>
+	<quest_rowsL0 key="db_id">
+	    <quest_rows key="fid" />
+	</quest_rowsL0>
 	<recom_shares key="db_id" />
 	<vf_accounts key="db_id" />
 	<vf_names key="db_id" />

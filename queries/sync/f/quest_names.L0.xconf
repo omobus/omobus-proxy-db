@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<quest_namesL0>
+     <![CDATA[
+select unnest(db_ids) db_id, qname_id from quest_names where db_ids is not null and hidden = 0
+    union
+select null db_id, qname_id from quest_names where db_ids is not null and hidden = 0
+    order by 1, 2
+    ]]>
+</quest_namesL0>
