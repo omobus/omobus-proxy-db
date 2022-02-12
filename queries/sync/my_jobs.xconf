@@ -15,21 +15,19 @@ union
 	and r.account_ids is null and r.region_ids is null and r.city_ids is null and r.rc_ids is null and r.chan_ids is null and r.poten_ids is null
 ) x
 left join (
-    select user_id, account_id, doc_type, 'once_a_month'::code_t frequency, count(act_id) qty from a_user_document 
-	where "monthDate_First"(current_date)::date_t <= left(fix_dt,10) and left(fix_dt,10) <= "monthDate_Last"(current_date)::date_t
-    group by user_id, account_id, doc_type
-) f0 on x.user_id = f0.user_id and x.account_id = f0.account_id and x.doc_type = f0.doc_type and x.frequency = f0.frequency
-left join (
-    select user_id, account_id, doc_type, 'once_a_week'::code_t frequency, count(act_id) qty from a_user_document 
+    select user_id, account_id, doc_type, 'once_a_week'::code_t frequency, count(act_id) qty from a_user_document
 	where date_trunc('week', current_date)::date_t <= left(fix_dt,10) and left(fix_dt,10) <= (date_trunc('week', current_date) + '6 days')::date_t
     group by user_id, account_id, doc_type
-) f1 on x.user_id = f1.user_id and x.account_id = f1.account_id and x.doc_type = f1.doc_type and x.frequency = f1.frequency
-left join (
-    select user_id, account_id, doc_type, 'once_a_quarter'::code_t frequency, count(act_id) qty from a_user_document 
+	union
+    select user_id, account_id, doc_type, 'once_a_month'::code_t frequency, count(act_id) qty from a_user_document
+	where "monthDate_First"(current_date)::date_t <= left(fix_dt,10) and left(fix_dt,10) <= "monthDate_Last"(current_date)::date_t
+    group by user_id, account_id, doc_type
+	union
+    select user_id, account_id, doc_type, 'once_a_quarter'::code_t frequency, count(act_id) qty from a_user_document
 	where "quarterDate_First"(current_date)::date_t <= left(fix_dt,10) and left(fix_dt,10) <= "quarterDate_Last"(current_date)::date_t
     group by user_id, account_id, doc_type
-) f2 on x.user_id = f2.user_id and x.account_id = f2.account_id and x.doc_type = f2.doc_type and x.frequency = f2.frequency
-where f0.qty is null and f1.qty is null and f2.qty is null
+) f on x.user_id = f.user_id and x.account_id = f.account_id and x.doc_type = f.doc_type and x.frequency = f.frequency
+where f.qty is null
 group by x.user_id, x.account_id
 order by x.user_id, x.account_id
   ]]> 
