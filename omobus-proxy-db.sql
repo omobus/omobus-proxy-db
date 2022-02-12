@@ -651,6 +651,46 @@ end;
 $body$ 
 language plpgsql IMMUTABLE;
 
+create or replace function "quarterDate_First" (d date) returns date as
+$body$
+select
+    cast (extract('year' from d) || '-' ||
+	case extract('quarter' from d)
+	    when 1 then '01-01'
+	    when 2 then '04-10'
+	    when 3 then '07-01'
+	    else        '10-01'
+        end
+    as date)
+$body$
+language sql IMMUTABLE;
+
+create or replace function "quarterDate_First" (d date_t) returns date as
+$body$
+    select "quarterDate_First"(d::date)
+$body$
+language sql IMMUTABLE;
+
+create or replace function "quarterDate_Last" (d date) returns date as
+$body$
+select
+    cast (extract('year' from d) || '-' ||
+	case extract('quarter' from d)
+	    when 1 then '03-31'
+	    when 2 then '06-30'
+	    when 3 then '09-30'
+	    else        '12-31'
+	end
+    as date)
+$body$
+language sql IMMUTABLE;
+
+create or replace function "quarterDate_Last" (d date_t) returns date as
+$body$
+    select "quarterDate_Last"(d::date)
+$body$
+language sql IMMUTABLE;
+
 create or replace function "paramUID"(code uid_t) returns uid_t
 as
 $body$
@@ -2553,7 +2593,7 @@ create trigger trig_updated_ts before update on routes for each row execute proc
 create table rules (
     doc_type 		doctype_t 	not null,
     role 		code_t 		not null,
-    frequency 		code_t 		not null check(frequency in ('everytime','once_a_week','once_a_month')),
+    frequency 		code_t 		not null check(frequency in ('everytime','once_a_week','once_a_month','once_a_quarter')),
 /* extra attributes for the my_jobs stream (accounts filter) BEGIN */
     account_ids 	uids_t 		null,
     region_ids 		uids_t		null,

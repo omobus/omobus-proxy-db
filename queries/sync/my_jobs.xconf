@@ -24,7 +24,12 @@ left join (
 	where date_trunc('week', current_date)::date_t <= left(fix_dt,10) and left(fix_dt,10) <= (date_trunc('week', current_date) + '6 days')::date_t
     group by user_id, account_id, doc_type
 ) f1 on x.user_id = f1.user_id and x.account_id = f1.account_id and x.doc_type = f1.doc_type and x.frequency = f1.frequency
-where f0.qty is null and f1.qty is null
+left join (
+    select user_id, account_id, doc_type, 'once_a_quarter'::code_t frequency, count(act_id) qty from a_user_document 
+	where "quarterDate_First"(current_date)::date_t <= left(fix_dt,10) and left(fix_dt,10) <= "quarterDate_Last"(current_date)::date_t
+    group by user_id, account_id, doc_type
+) f2 on x.user_id = f2.user_id and x.account_id = f2.account_id and x.doc_type = f2.doc_type and x.frequency = f2.frequency
+where f0.qty is null and f1.qty is null and f2.qty is null
 group by x.user_id, x.account_id
 order by x.user_id, x.account_id
   ]]> 
