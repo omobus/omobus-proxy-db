@@ -164,6 +164,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 <xi:include href="../queries/sync/f/attributes.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/channels.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/cohorts.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/comment_types.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/influence_levels.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/info_materials.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/info_materials.L3.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -218,7 +219,6 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
     <audit_scores />
     <autocompletes />
     <canceling_types />
-    <comment_types />
     <confirmation_types />
     <delivery_types />
     <discard_types />
@@ -339,8 +339,10 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	    <training_types key="training_type_id" />
 	</training_typesL2>
     </my_departments>
-<!--
     <my_dbs personalize="ErpId">
+	<comment_typesL0 key="db_id">
+	    <comment_types key="comment_type_id" />
+	</comment_typesL0>
 	<highlights key="db_id" />
 	<photo_typesL0 key="db_id">
 	    <photo_types key="photo_type_id" />
@@ -363,7 +365,6 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<vf_names key="db_id" />
 	<vf_products key="db_id" />
     </my_dbs>
--->
     <my_distributors personalize="ErpId">
 	<distributors key="distr_id" strict="yes" />
     </my_distributors>
