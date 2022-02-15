@@ -14,7 +14,7 @@
 
 company_name = (DEMO)
 user_name = %%cn%%
-role = Trade Marketing executive
+role = Trade Marketing manager/executive
 user_id = %%uid%%
 user_key = %%userPassword%%
 #currency_precision = 2
