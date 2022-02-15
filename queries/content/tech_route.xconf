@@ -573,6 +573,7 @@ order by fix_dt, doc_id
 select 
     u.dev_login, 
     u.descr u_name, 
+    coalesce(c.descr,u.country_id) country,
     u.area, 
     u.email, 
     u.mobile, 
@@ -626,6 +627,7 @@ select
 	else null 
     end rd_mileage
 from users u
+    left join countries c on c.country_id = u.country_id
     left join agencies a on a.agency_id = u.agency_id
     left join users ex on ex.user_id = u.executivehead_id
     left join sysstats s on s.fix_date='%b_date%' and s.user_id=u.user_id
@@ -1181,6 +1183,7 @@ end)
 if rowset_rows(_stats) > 0 then
     tb.dev_login = rowset_value(_stats, 0, rowset_colid(_stats, "dev_login"))
     tb.u_name = rowset_value(_stats, 0, rowset_colid(_stats, "u_name"))
+    tb.country = rowset_value(_stats, 0, rowset_colid(_stats, "country"))
     tb.area = rowset_value(_stats, 0, rowset_colid(_stats, "area"))
     tb.email = rowset_value(_stats, 0, rowset_colid(_stats, "email"))
     tb.mobile = rowset_value(_stats, 0, rowset_colid(_stats, "mobile"))
