@@ -2,7 +2,8 @@
 <quest_items templ="%qname_id%;%qrow_id%;%qitem_id%;%descr%;" empty="no">
   <![CDATA[ 
 select 
-    format('%s+%s+%s',qname_id,qrow_id,qitem_id) fid,
+    format('%s+%s+%s',qname_id,qrow_id,qitem_id) qitem_pkey,
+    format('%s+%s',qname_id,qrow_id) qrow_pkey,
     qname_id, 
     qrow_id,
     qitem_id,

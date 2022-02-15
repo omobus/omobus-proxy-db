@@ -2,7 +2,7 @@
 <quest_rows templ="%qname_id%;%qrow_id%;%descr%;%qtype%;%extra_info%;%delim%;" empty="no">
   <![CDATA[ 
 select 
-    format('%s+%s',qname_id,qrow_id) fid, 
+    format('%s+%s',qname_id,qrow_id) qrow_pkey, 
     qname_id, 
     qrow_id, 
     case when pid is null then null else format('%s+%s',qname_id,pid) end pid, 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <quest_rowsL0>
      <![CDATA[
-select unnest(db_ids) db_id, format('%s+%s+%s',qname_id,qrow_id) fid from quest_rows where db_ids is not null and hidden = 0
+select unnest(db_ids) db_id, format('%s+%s',qname_id,qrow_id) qrow_pkey from quest_rows where db_ids is not null and hidden = 0
     union
-select null db_id, format('%s+%s+%s',qname_id,qrow_id) fid from quest_rows where db_ids is not null and hidden = 0
+select null db_id, format('%s+%s',qname_id,qrow_id) qrow_pkey from quest_rows where db_ids is null and hidden = 0
     order by 1, 2
     ]]>
 </quest_rowsL0>

@@ -266,7 +266,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	    <products key="fid" />
 	</productsL1>
 	<quest_rowsL1 key="country_id">
-	    <quest_rows key="fid" />
+	    <quest_rows key="qrow_pkey" />
 	</quest_rowsL1>
 	<retail_chains key="country_id" strict="yes" />
 	<support key="country_id" />
@@ -323,7 +323,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	    <products key="fid" />
 	</productsL2>
 	<quest_rowsL2 key="dep_id">
-	    <quest_rows key="fid" />
+	    <quest_rows key="qrow_pkey" />
 	</quest_rowsL2>
 	<rating_criteriasL2 key="dep_id">
 	    <rating_criterias key="fid" />
@@ -350,13 +350,13 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	    <products key="fid" />
 	</productsL0>
 	<quest_itemsL0 key="db_id">
-	    <quest_items key="fid" />
+	    <quest_items key="qitem_pkey" />
 	</quest_itemsL0>
 	<quest_namesL0 key="db_id">
 	    <quest_names key="qname_id" />
 	</quest_namesL0>
 	<quest_rowsL0 key="db_id">
-	    <quest_rows key="fid" />
+	    <quest_rows key="qrow_pkey" />
 	</quest_rowsL0>
 	<recom_shares key="db_id" />
 	<vf_accounts key="db_id" />
@@ -536,9 +536,9 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<quests_history key="qname_id" Xstrict="yes" />
 	<quest_rows key="qname_id" Xstrict="yes" />
     </quest_names>
-    <quest_rows hierarchy="fid">
-	<quests_history key="qrow_id" strict="yes" />
-	<quest_items key="fid" strict="yes" />
+    <quest_rows hierarchy="qrow_pkey">
+	<quests_history key="qrow_pkey" strict="yes" />
+	<quest_items key="qrow_pkey" strict="yes" />
 	<quest_names key="qname_id" strict="yes" />
     </quest_rows>
     <vf_names>

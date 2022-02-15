@@ -2,6 +2,7 @@
 <quests_history templ="%fix_date%;%account_id%;%qname_id%;%qrow_id%;%value%;%latest%;" empty="no">
   <![CDATA[ 
 select 
+    format('%s+%s',qname_id,qrow_id) qrow_pkey,
     fix_date, 
     account_id, 
     qname_id, 
