@@ -25,6 +25,7 @@
 <xi:include href="../roles/asm.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../roles/cdm.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../roles/ise.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../roles/ism.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../roles/kam.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../roles/ksr.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../roles/merch.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

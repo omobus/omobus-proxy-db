@@ -151,13 +151,13 @@ dn: ou=mr,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
 ou: mr
-description: Medical representative
+description: Medical representatives
 
 dn: ou=sr,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
 ou: sr
-description: Sales representative
+description: Sales representatives
 
 dn: ou=sv,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
@@ -169,19 +169,25 @@ dn: ou=asm,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
 ou: asm
-description: Area Sales (or InStore) managers
+description: Area Sales managers
 
 dn: ou=cdm,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
 ou: cdm
-description: Customer development manager
+description: Customer development managers
 
 dn: ou=ise,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
 ou: ise
-description: InStore executive
+description: InStore executives
+
+dn: ou=ism,ou=users,dc=omobus,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: ism
+description: InStore managers
 
 dn: ou=kam,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
@@ -193,13 +199,13 @@ dn: ou=ksr,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
 ou: ksr
-description: Key account Sales representative
+description: Key account Sales representatives
 
 dn: ou=tme,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
 ou: tme
-description: Trade marketing executive
+description: Trade marketing executives
 
 dn: ou=_dev,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
@@ -240,7 +246,9 @@ homeDirectory: /var/ftp/users/mr/xz_mr_1
 uid: xz_mr_1
 uidNumber: 902
 userPassword:: MQ==
+beginWorkingTime: 06:00
 consoleStatus: enabled
+endWorkingTime: 21:00
 ErpId: mr01
 exchangeStatus: enabled
 FTPStatus: enabled
@@ -266,6 +274,8 @@ FTPStatus: enabled
 groupName: sr
 mailStatus: enabled
 orderUnavailableProducts: yes
+presenceStock: yes
+terminalList: quest
 
 dn: uid=xz_sr_2,ou=sr,ou=users,dc=omobus,dc=local
 objectClass: account
@@ -360,10 +370,11 @@ uidNumber: 902
 userPassword:: MQ==
 consoleStatus: enabled
 ErpId: cdm01
-exchangeStatus: disabled
+exchangeStatus: enabled
 FTPStatus: enabled
 groupName: cdm
 mailStatus: enabled
+terminalList: quest
 
 dn: uid=xz_ise_1,ou=ise,ou=users,dc=omobus,dc=local
 objectClass: account
@@ -383,6 +394,25 @@ exchangeStatus: disabled
 FTPStatus: enabled
 groupName: ise
 mailStatus: enabled
+
+dn: uid=xz_ism_1,ou=ism,ou=users,dc=omobus,dc=local
+objectClass: account
+objectClass: omobusUser
+objectClass: posixAccount
+objectClass: PureFTPdUser
+objectClass: top
+cn: ISM:1
+gidNumber: 905
+homeDirectory: /var/ftp/users/ism/xz_ism_1
+uid: xz_ism_1
+uidNumber: 902
+userPassword:: MQ==
+consoleStatus: disabled
+ErpId: -
+exchangeStatus: disabled
+FTPStatus: disabled
+groupName: ism
+mailStatus: disabled
 
 dn: uid=xz_kam_1,ou=kam,ou=users,dc=omobus,dc=local
 objectClass: account
@@ -573,10 +603,10 @@ dn: uid=noreply,ou=system-users,dc=omobus,dc=local
 objectClass: account
 objectClass: omobusMail
 objectClass: top
-mailStatus: enabled
 uid: noreply
 userPassword:: MA==
 cn: Mailbox for sending notifications
+mailStatus: enabled
 
 dn: uid=wheris1,ou=whereis-users,dc=omobus,dc=local
 objectClass: account

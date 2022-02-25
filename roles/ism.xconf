@@ -14,7 +14,7 @@
 
 company_name = (DEMO)
 user_name = %%cn%%
-role = InStore executive
+role = InStore manager
 user_id = %%uid%%
 user_key = %%userPassword%%
 #currency_precision = 2
@@ -59,7 +59,7 @@ activity->begin = sync acts
 activity->end = docs acts sync push
 activity->allow_joint = yes
 notice->lifetime = 5
-location->radius = 2000
+location->radius = 5000
 target->calendar->left = 0
 #target->calendar->right = 60
 target->everyone = yes
