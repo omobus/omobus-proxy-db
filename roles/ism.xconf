@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<group name="ise">
+<group name="ism">
     <local_source path="core/" />
 
     <template_source name="omobus-droid.conf" enc="utf-8">
