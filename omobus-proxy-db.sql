@@ -2252,7 +2252,6 @@ create table products (
     brand_id 		uid_t 		null,
     categ_id 		uid_t 		null,
     shelf_life_id 	uid_t 		null,
-    art 		code_t 		null,
     obsolete 		bool_t 		null,
     novelty 		bool_t 		null,
     promo 		bool_t 		null,

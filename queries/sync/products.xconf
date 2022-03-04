@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<products templ="%pid%;%prod_id%;%ftype%;%code%;%art%;%descr%;%brand_id%;%categ_id%;%shelf_life_id%;%novelty%;%promo%;%obsolete%;%barcodes%;%image%;">
+<products templ="%pid%;%prod_id%;%ftype%;%code%;%descr%;%brand_id%;%categ_id%;%shelf_life_id%;%novelty%;%promo%;%obsolete%;%barcodes%;%image%;">
   <![CDATA[ 
 select case when ftype=0 then prod_id else null end fid,
-    pid, prod_id, descr, ftype, code, art, brand_id, categ_id, shelf_life_id, novelty, promo, obsolete, image, array_to_string(ean13_out(barcodes),',') barcodes, row_no
+    pid, prod_id, descr, ftype, code, brand_id, categ_id, shelf_life_id, novelty, promo, obsolete, image, array_to_string(ean13_out(barcodes),',') barcodes, row_no
 from products
     where hidden = 0
 order by ftype desc, row_no, descr
