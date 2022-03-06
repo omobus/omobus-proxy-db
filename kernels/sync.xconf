@@ -207,11 +207,11 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 </queries>
 <pack strict="yes" Xtrace="yes">
     <!-- role: BEGIN -->
-    <photos_history role="asm,ise,kam,sv,tme" />
-    <posms_history role="asm,ise,kam,sv,tme" />
-    <rating_criterias role="asm,ise,sv" />
-    <rating_scores role="asm,ise,sv" />
-    <ratings_history role="asm,ise,sv" />
+    <photos_history role="asm,sv,ism,ise,kam,tme" />
+    <posms_history role="asm,sv,ism,ise,kam,tme" />
+    <rating_criterias role="asm,sv,ism,ise" />
+    <rating_scores role="asm,sv,ism,ise" />
+    <ratings_history role="asm,sv,ism,ise" />
     <!-- role: END -->
     <activity_types personalize="groupName" />
     <addition_types />

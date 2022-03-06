@@ -10,9 +10,9 @@ insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limi
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, selectable)
     values('3', 'Анализ информации', 'Просмотр отчетов. Не влияет на выполнение планов по посещениям.', 0, 255, 1);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, row_no)
-    values('4', 'Контрольное посещение', 'Посещение клиента для контроля/аудита результатов работы сотрудников.', 0, 2, 1, 1, array['sv','ise','asm','kam','tme']::uids_t, 0);
+    values('4', 'Контрольное посещение', 'Посещение клиента для контроля/аудита результатов работы сотрудников.', 0, 2, 1, 1, array['sv','ise','ism','asm','kam','tme']::uids_t, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, joint, row_no)
-    values('5', 'Совместное посещение', 'Посещение клиента совместно с подчиненным.', 0, 2, 1, 1, array['sv','ise','asm']::uids_t, 1, 0);
+    values('5', 'Совместное посещение', 'Посещение клиента совместно с подчиненным.', 0, 2, 1, 1, array['sv','ise','ism','asm']::uids_t, 1, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, roles, hidden, row_no)
     values('6', 'Повторное посещение', 'Выполнение повторного визита к клиенту из планового маршрута. Не влияет на выполнение планов по посещениям.', 1, 1, 1, 1, array['merch','mr','ksr','sr','cdm']::uids_t, 1, 0);
 insert into activity_types(activity_type_id, descr, note, docs_needed, exec_limit, strict, selectable, important)
