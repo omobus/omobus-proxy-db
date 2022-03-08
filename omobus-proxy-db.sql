@@ -5492,6 +5492,7 @@ create table j_user_activities (
     zstatus 		varchar(8) 	null check(zstatus in ('accepted','rejected') and zstatus = lower(zstatus)),
     znote 		note_t 		null,
     zauthor_id 		uid_t 		null,
+    zreq_dt 		datetime_t 	null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts		ts_auto_t 	not null,
     guid 		uuid 		not null default uuid_generate_v4(),
