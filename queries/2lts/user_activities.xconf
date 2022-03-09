@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<user_activities templ="%user_id%;%account_id%;%w_cookie%;%a_cookie%;%activity_type_id%;%fix_date%;%route_date%;%b_dt%;%b_la%;%b_lo%;%b_sat_dt%;%e_dt%;%e_la%;%e_lo%;%e_sat_dt%;%employee_id%;%extra_info%;%docs%;%mileage%;%zstatus%;%znote%;%zauthor_id%;">
+<user_activities templ="%user_id%;%account_id%;%w_cookie%;%a_cookie%;%activity_type_id%;%fix_date%;%route_date%;%b_dt%;%b_la%;%b_lo%;%b_sat_dt%;%e_dt%;%e_la%;%e_lo%;%e_sat_dt%;%employee_id%;%extra_info%;%docs%;%mileage%;%zstatus%;%znote%;%zauthor_id%;%zreq_dt%;">
   <![CDATA[
 select 
     j.user_id, 
@@ -23,7 +23,8 @@ select
     case when t.strict = 1 then m.data->(format('%s %s', substring(j.b_dt, 12, 5), substring(j.e_dt, 12, 5))) else null end mileage,
     j.zstatus, 
     j.znote, 
-    j.zauthor_id 
+    j.zauthor_id, 
+    j.zreq_dt
 from j_user_activities j
     left join activity_types t on t.activity_type_id = j.activity_type_id
     left join mileage_stream m on m.user_id = j.user_id and m.fix_date = j.fix_date and t.strict = 1
