@@ -9,9 +9,9 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 update quest_items set db_ids=array_remove(db_ids,'%ErpCode%')
-    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+    where hidden=0 and "_isAlienData"=1 and db_ids @> (array['%ErpCode%'])::uids_t;
 update quest_items set hidden=1, db_ids=null
-    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+    where hidden=0 and "_isAlienData"=1 and (db_ids is null or cardinality(db_ids)=0);
   ]]>
 </begin>
 <check_exist>
@@ -23,13 +23,13 @@ select count(*) from quest_items
 <update>
   <![CDATA[
 update quest_items set descr=trim(both from '%descr%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
-    where qname_id = '%qname_id%' and qrow_id = '%qrow_id%' and qitem_id = '%qitem_id%'
+    where qname_id = '%qname_id%' and qrow_id = '%qrow_id%' and qitem_id = '%qitem_id%' and "_isAlienData" = 1
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into quest_items (qname_id, qrow_id, qitem_id, descr, row_no, hidden, db_ids)
-    values ('%qname_id%', '%qrow_id%', '%qitem_id%', trim(both from '%descr%'), NIL(%row_no%), 0, array['%ErpCode%'])
+insert into quest_items (qname_id, qrow_id, qitem_id, descr, row_no, hidden, db_ids, "_isAlienData")
+    values ('%qname_id%', '%qrow_id%', '%qitem_id%', trim(both from '%descr%'), NIL(%row_no%), 0, array['%ErpCode%'], 1)
   ]]>
 </insert>
 <end>

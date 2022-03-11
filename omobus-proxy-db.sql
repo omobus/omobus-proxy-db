@@ -2311,6 +2311,7 @@ create table quest_items (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null, /* row from the external sources */
     primary key(qname_id, qrow_id, qitem_id)
 );
 
@@ -2324,7 +2325,8 @@ create table quest_names (
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null /* row from the external sources */
 );
 
 create index i_db_ids_quest_names on quest_names using GIN (db_ids);
@@ -2345,6 +2347,7 @@ create table quest_rows (
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null, /* row from the external sources */
     primary key(qname_id, qrow_id)
 );
 
