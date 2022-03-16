@@ -3,7 +3,7 @@
 <check_user>
   <![CDATA[
 select user_id as user_id_sys from users 
-    where lower(user_id)=lower('%ErpId%') /*%user_id%*/
+    where user_id='%ErpId%' /*%user_id%*/
   ]]>
 </check_user>
 <check_exist>
