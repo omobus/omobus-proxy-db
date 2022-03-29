@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<onsuccess>
+  <![CDATA[ 
+update sms_stream set msg_id = '%msg_id%', sent_ts = current_timestamp
+    where ev_id = '%ev_id%'
+  ]]> 
+</onsuccess>

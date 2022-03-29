@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kernel 
+    module="kern_sms" 
+    smpp.host="smpp.smsc.ru"
+    Xsmpp.port="3700"
+    smpp.port="3443"
+    smpp.tls="yes"
+    smpp.system_id="akobs"
+    smpp.password="035bfa9b"
+    smpp.system_type="type01"
+    smpp.from="OMOBUS"
+    threads="2"
+    >
+<xi:include href="../queries/evsms/onload.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/evsms/onsuccess.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/evsms/onerror.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+</kernel>

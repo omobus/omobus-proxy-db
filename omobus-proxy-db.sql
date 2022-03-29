@@ -10,6 +10,7 @@ create sequence seq_documents;
 create sequence seq_mail_stream;
 create sequence seq_manuals;
 create sequence seq_pack_stream;
+create sequence seq_sms_stream;
 create sequence seq_spam_stream;
 create sequence seq_tickets;
 
@@ -6054,6 +6055,19 @@ create table pack_stream (
 );
 
 create trigger trig_lock_update before update on pack_stream for each row execute procedure tf_lock_update();
+
+create table sms_stream (
+    ev_id		int64_t		not null primary key default nextval('seq_sms_stream'),
+    sms_from		phone_t 	null,
+    rcpt_to		phone_t		not null,
+    msg			varchar(256)	not null,
+    step		int32_t 	not null default 0,
+    inserted_ts		ts_auto_t 	not null,
+    sent_ts		ts_t 		null,
+    msg_id 		text 		null
+);
+
+create index i_sent_ts_step_sms_stream on sms_stream (step, sent_ts);
 
 
 create table spam_stream (

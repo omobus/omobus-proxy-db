@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<onerror>
+  <![CDATA[ 
+update sms_stream set step = step+1
+    where ev_id = '%ev_id%'
+  ]]> 
+</onerror>
