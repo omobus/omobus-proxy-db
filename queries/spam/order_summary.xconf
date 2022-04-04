@@ -27,9 +27,9 @@ where j.spam_id = '%spam_id%'
   <![CDATA[
 select 
     t.row_no + 1 row_no, 
+    p.prod_id,
     p.code p_code,
     p.descr prod, 
-    p.art art,
     array_to_string(ean13_out(p.barcodes),' ') barcodes,
     t.qty, 
     x.descr pack, 
@@ -76,7 +76,7 @@ td.numeric{text-align: right;}
     <div>Автор: <i>$(u_name)</i>.</div>$(delivery_date)$(delivery_note)$(doc_note)
     <br/>
     <table>
-	<thead><tr><th>#</th><th>Код</th><th>Артикул</th><th>Штрихкод</th><th>Название</th><th>Цена</th><th>Кол-во</th><th>Упак.</th><th>Сумма</th></tr></thead
+	<thead><tr><th>#</th><th>ID</th><th>Код</th><th>Штрихкод</th><th>Название</th><th>Цена</th><th>Кол-во</th><th>Упак.</th><th>Сумма</th></tr></thead
 	<tbody>$(tbody)</tbody>
     </table>
     <br/>
@@ -86,7 +86,7 @@ td.numeric{text-align: right;}
     ]]>
 	</body>
 	<tbody>
-    <![CDATA[<tr><td class="autoincrement">$(row_no)</td><td>$(p_code)</td><td>$(art)</td><td>$(barcodes)</td><td>$(prod)</td><td class="numeric">$(unit_price)</td><td class="int">$(qty)</td><td class="int">$(pack)</td><td class="numeric">$(amount)</td></tr>]]>
+    <![CDATA[<tr><td class="autoincrement">$(row_no)</td><td>$(prod_id)</td><td>$(p_code)</td><td>$(barcodes)</td><td>$(prod)</td><td class="numeric">$(unit_price)</td><td class="int">$(qty)</td><td class="int">$(pack)</td><td class="numeric">$(amount)</td></tr>]]>
 	</tbody>
 	<delivery_date>
     <![CDATA[<div>Планируемая дата поставки: <i>$(delivery_date)</i>.</div>]]>
@@ -115,13 +115,13 @@ $(items)
 	<attachment_item>
     <![CDATA[
     <item num="$(row_no)">
+	<product_id>$(prod_id)</product_id>
 	<product_code>$(p_code)</product_code>
 	<product_name>$(prod)</product_name>
 	<quantity>$(qty)</quantity>
 	<pack_name>$(pack)</pack_name>
 	<unit_price>$(unit_price)</unit_price>
 	<amount>$(amount)</amount>
-	<art>$(art)</art>
 	<barcodes>$(barcodes)</barcodes>
     </item>
     ]]>
@@ -155,6 +155,7 @@ local function rows()
         for i = 0, rows-1 do
 	    x = _tbody
 	    x = set(x, "row_no", R(i, "row_no"))
+	    x = set(x, "prod_id", R(i, "prod_id"))
 	    x = set(x, "p_code", R(i, "p_code"))
 	    x = set(x, "prod", R(i, "prod"))
 	    x = set(x, "qty", R(i, "qty"))
@@ -162,7 +163,6 @@ local function rows()
 	    x = set(x, "unit_price", R(i, "unit_price"))
 	    x = set(x, "amount", R(i, "amount"))
 	    x = set(x, "barcodes", R(i, "barcodes"))
-	    x = set(x, "art", R(i, "art"))
 	    a = a .. x
 	end
     end
@@ -195,9 +195,9 @@ local function items()
         for i = 0, rows-1 do
 	    x = _attachment_item
 	    x = set(x, "row_no", R(i, "row_no"))
+	    x = set(x, "prod_id", R(i, "prod_id"))
 	    x = set(x, "p_code", R(i, "p_code"))
 	    x = set(x, "prod", R(i, "prod"))
-	    x = set(x, "art", R(i, "art"))
 	    x = set(x, "barcodes", R(i, "barcodes"))
 	    x = set(x, "qty", R(i, "qty"))
 	    x = set(x, "pack", R(i, "pack"))
