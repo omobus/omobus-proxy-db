@@ -63,7 +63,7 @@
 	    <xs:attribute name="account" use="required" type="xs:string" />
 	    <xs:attribute name="address" use="required" type="xs:string" />
 	    <xs:attribute name="addition_type_id" use="optional" type="uid_t" default="" />
-	    <xs:attribute name="number" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="tax_number" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="chan_id" use="optional" type="uid_t" default="" />
 	    <xs:attribute name="phone" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="workplaces" use="optional" type="int_t" default="" />

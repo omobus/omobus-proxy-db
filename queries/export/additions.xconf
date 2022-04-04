@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<additions templ="%doc_id%;%fix_dt%;%user_id%;%account%;%address%;%number%;%addition_type_id%;%note%;%chan_id%;%attr_ids%;%photos%;%account_id%;%validator_id%;%validated%;%hidden%;%geo_address%;%latitude%;%longitude%;">
+<additions templ="%doc_id%;%fix_dt%;%user_id%;%account%;%address%;%tax_number%;%addition_type_id%;%note%;%chan_id%;%attr_ids%;%photos%;%account_id%;%validator_id%;%validated%;%hidden%;%geo_address%;%latitude%;%longitude%;">
   <![CDATA[
 select
     j.doc_id, 
@@ -7,7 +7,7 @@ select
     j.fix_dt, 
     j.account, 
     j.address, 
-    j.number, 
+    j.tax_number, 
     j.addition_type_id, 
     j.note, 
     j.chan_id, 

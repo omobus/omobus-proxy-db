@@ -102,7 +102,7 @@ select
     h.doc_id, 
     h.account, 
     h.address, 
-    h.number, 
+    h.tax_number, 
     h.doc_note, 
     t.descr addition_type, 
     c.descr chan, 
