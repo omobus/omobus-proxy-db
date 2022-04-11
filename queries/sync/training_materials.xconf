@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<training_materials templ="%tm_id%;%descr%;%brand_ids%;%blob%;%content_type%;%b_date%;%e_date%;" empty="no">
+<training_materials templ="%tm_id%;%descr%;%brand_ids%;%blob%;%content_type%;%b_date%;%e_date%;%shared%;" empty="no">
   <![CDATA[ 
 select 
     tm_id, 
     descr, 
-    blob, 
-    content_type, 
     array_to_string(brand_ids,',') brand_ids, 
     b_date, 
     e_date, 
+    blob, 
+    content_type, 
+    shared,
     country_id
 from training_materials
     where hidden = 0 and blob is not null and (

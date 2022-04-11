@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<info_materials templ="%infom_id%;%descr%;%rc_id%;%chan_ids%;%blob%;%content_type%;" empty="no">
+<info_materials templ="%infom_id%;%descr%;%rc_id%;%chan_ids%;%blob%;%content_type%;%shared%;" empty="no">
   <![CDATA[ 
 select 
     infom_id, 
     descr, 
-    blob, 
-    content_type, 
     rc_id, 
     array_to_string(chan_ids,',') chan_ids, 
+    blob, 
+    content_type, 
+    shared,
     country_id 
 from info_materials
     where hidden = 0 and blob is not null and (

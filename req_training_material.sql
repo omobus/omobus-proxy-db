@@ -6,7 +6,8 @@ create type console.training_material_t as (
     country_id uid_t,
     dep_ids uids_t,
     b_date date_t,
-    e_date date_t
+    e_date date_t,
+    shared bool_t
 );
 
 create or replace function console.req_training_material(_login uid_t, _reqdt datetime_t, _cmd code_t, /*attrs:*/ _tm_id uid_t, _opt console.training_material_t) returns int
@@ -39,6 +40,7 @@ begin
 	    dep_ids = (_opt).dep_ids,
 	    b_date = (_opt).b_date, 
 	    e_date = (_opt).e_date, 
+	    shared = (_opt).shared,
 	    author_id = _login
 	where tm_id = _tm_id and hidden = 0;
 	GET DIAGNOSTICS rv = ROW_COUNT;
@@ -49,6 +51,7 @@ begin
     hs := hstore(array['tm_id',_tm_id]);
     if( _opt is not null ) then
 	hs := hs || hstore(array['descr',(_opt).descr]);
+	hs := hs || hstore(array['shared',(_opt).shared::text]);
 	if( (_opt).brand_ids is not null ) then
 	    hs := hs || hstore(array['brand_ids',array_to_string((_opt).brand_ids,',')]);
 	end if;

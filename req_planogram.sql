@@ -8,7 +8,8 @@ create type console.planogram_t as (
     rc_id uid_t,
     chan_ids uids_t,
     b_date date_t,
-    e_date date_t
+    e_date date_t,
+    shared bool_t
 );
 
 create or replace function console.req_planogram(_login uid_t, _reqdt datetime_t, _cmd code_t, /*attrs:*/ _pl_id uid_t, _opt console.planogram_t) returns int
@@ -43,6 +44,7 @@ begin
 	    chan_ids = (_opt).chan_ids, 
 	    b_date = (_opt).b_date, 
 	    e_date = (_opt).e_date, 
+	    shared = (_opt).shared,
 	    author_id = _login
 	where pl_id = _pl_id and hidden = 0;
 	GET DIAGNOSTICS rv = ROW_COUNT;
@@ -53,6 +55,7 @@ begin
     hs := hstore(array['pl_id',_pl_id]);
     if( _opt is not null ) then
 	hs := hs || hstore(array['descr',(_opt).descr]);
+	hs := hs || hstore(array['shared',(_opt).shared::text]);
 	hs := hs || hstore(array['brand_ids',array_to_string((_opt).brand_ids,',')]);
 	hs := hs || hstore(array['country_id',(_opt).country_id]);
 	if( (_opt).dep_ids is not null ) then

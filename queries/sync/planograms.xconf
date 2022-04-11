@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<planograms templ="%pl_id%;%descr%;%rc_id%;%chan_ids%;%blob%;%content_type%;" empty="no">
+<planograms templ="%pl_id%;%descr%;%rc_id%;%chan_ids%;%blob%;%content_type%;%shared%;" empty="no">
   <![CDATA[ 
 select
     pl_id, 
@@ -9,6 +9,7 @@ select
     array_to_string(chan_ids,',') chan_ids, 
     blob, 
     content_type,
+    shared,
     country_id
 from planograms, (select count(*) f from planograms where hidden = 0 and brand_ids is not null and cardinality(brand_ids) = 1) a
     where hidden = 0 and blob is not null and cardinality(brand_ids) > 0 and (
