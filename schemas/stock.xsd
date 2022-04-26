@@ -37,7 +37,6 @@
 		    <xs:complexType>
 			<xs:attribute name="row_no" use="required" type="xs:integer" />
 			<xs:attribute name="prod_id" use="required" type="uid_t" />
-<!-- obsolete: --><xs:attribute name="manuf_date" use="optional" type="date_t" default="" />
 			<xs:attribute name="qty" use="required" type="xs:integer" />
 			<xs:attribute name="scratch" use="optional" type="date_t" default="" />
 		    </xs:complexType>
