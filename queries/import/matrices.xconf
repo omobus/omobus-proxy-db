@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<matrices templ="%account_id%;%prod_id%;%placement_ids%;%row_no%;">
+<matrices templ="%account_id%;%prod_id%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -18,8 +18,8 @@ delete from matrices
 </begin>
 <insert>
   <![CDATA[
-insert into matrices (account_id, prod_id, placement_ids, row_no, db_ids)
-    values ('%account_id%', '%prod_id%', string_to_array(NIL('%placement_ids%'),','), NIL(%row_no%), array['%ErpCode%'])
+insert into matrices (account_id, prod_id, row_no, db_ids)
+    values ('%account_id%', '%prod_id%', NIL(%row_no%), array['%ErpCode%'])
 on conflict do nothing
   ]]>
 </insert>

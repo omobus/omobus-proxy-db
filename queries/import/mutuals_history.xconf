@@ -28,6 +28,7 @@ execute ".plan.mutuals_history"('%distr_id%', '%account_id%', '%erp_id%', '%erp_
 </insert>
 <end>
   <![CDATA[
+deallocate prepare ".plan.mutuals_history";
 select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
   ]]>
 </end>

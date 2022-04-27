@@ -28,6 +28,7 @@ execute ".plan.mutuals"('%distr_id%', '%account_id%', %mutual%)
 </insert>
 <end>
   <![CDATA[
+deallocate prepare ".plan.mutuals";
 select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
   ]]>
 </end>

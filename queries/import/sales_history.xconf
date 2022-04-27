@@ -8,7 +8,7 @@ select count(*) from data_stream
 </verification>
 <begin>
   <![CDATA[
-prepare ".plan.sales"(varchar, varchar, varchar, numeric, varchar, numeric, numeric, varchar, numeric) as 
+prepare ".plan.sales_history"(varchar, varchar, varchar, numeric, varchar, numeric, numeric, varchar, numeric) as 
     insert into sales_history (account_id, prod_id, s_date, amount_c, pack_c_id, qty_c, amount_r, pack_r_id, qty_r, db_ids)
 	values($1, $2, $3, $4, $5, $6, $7, $8, $9, array['%ErpCode%'])
     on conflict do nothing;
@@ -23,12 +23,12 @@ delete from sales_history
 </begin>
 <insert>
   <![CDATA[
-execute ".plan.sales"('%account_id%', '%prod_id%', '%s_date%', NIL(%amount_c%), NIL('%pack_c_id%'), NIL(%qty_c%), NIL(%amount_r%), NIL('%pack_r_id%'), NIL(%qty_r%))
+execute ".plan.sales_history"('%account_id%', '%prod_id%', '%s_date%', NIL(%amount_c%), NIL('%pack_c_id%'), NIL(%qty_c%), NIL(%amount_r%), NIL('%pack_r_id%'), NIL(%qty_r%))
   ]]>
 </insert>
 <end>
   <![CDATA[
-deallocate prepare ".plan.sales";
+deallocate prepare ".plan.sales_history";
 select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
   ]]>
 </end>

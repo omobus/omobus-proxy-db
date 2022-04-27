@@ -28,6 +28,7 @@ execute ".plan.permitted_returns"('%distr_id%', '%account_id%', '%prod_id%', '%p
 </insert>
 <end>
   <![CDATA[
+deallocate prepare ".plan.permitted_returns";
 select stor_data_stream('//%uid%/%pack_code%', '%pack_digest%', '%server_hostname%')
   ]]>
 </end>
