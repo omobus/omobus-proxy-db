@@ -52,6 +52,7 @@ traffic->read_timeout = 15
 upd->wakeup = 40
 
 terminals = logo support watermark obsolete oom update_required title user gps work route account location hints reminders targets route_history orders_history reclamations_history sales_history mutuals debts refunds stats delim checkup presence price photo stock oos delim distributors shipments ordered_products returned_products order reclamation delim comment target contact equipment deletion wish addition canceling unsched %%terminalList%% delim planograms pos_materials info_materials notice docs sync version
+
 sync->outdated = 6
 oom->panic = 200
 work->begin = gpsmon sync upd
@@ -59,12 +60,22 @@ work->end = docs acts push logs
 work->pos_needed = yes
 activity->begin = sync acts
 activity->end = docs acts sync push
+
 #canceling->calendar->left = 0
 #canceling->calendar->right = 45
+#checkup->data_type = boolean
+#contact->cohort = yes
+#contact->start_year = yes
+delivery_calendar->left = 1
+delivery_calendar->right = 10
+#delivery_calendar->default = 1
 notice->lifetime = 5
 #location->radius = 0
-#target->calendar->left = 1
-#target->calendar->right = 60
+order->unavailable_products = %%orderUnavailableProducts%%
+order->payment_delay = yes
+order->bonus = yes
+order->delivery_note = yes
+presence->stock = %%presenceStock%%
 profile->channel = yes
 profile->potential = yes
 profile->phone = yes
@@ -74,16 +85,8 @@ profile->interaction = yes
 profile->attrs = yes
 profile->contact = yes
 profile->equipment = yes
-#contact->cohort = yes
-#contact->start_year = yes
-presence->stock = %%presenceStock%%
-order->unavailable_products = %%orderUnavailableProducts%%
-order->payment_delay = yes
-order->bonus = yes
-order->delivery_note = yes
-delivery_calendar->left = 1
-delivery_calendar->right = 10
-#delivery_calendar->default = 1
+#target->calendar->left = 1
+#target->calendar->right = 60
 #wish->weeks = 4
 
 # The end of the %%filename%%.
