@@ -49,6 +49,7 @@ declare
     s_wf wf_t;
     s int32_t;
     n note_t;
+    w ts_t;
 begin
 -- **** rating --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, employee_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, c_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
@@ -71,15 +72,14 @@ begin
     /* removes obsolete entires */
     delete from dyn_ratings where account_id = '%account_id%' and employee_id = '%employee_id%' and fix_date = f_date;
     /* recompiles data */
-    for c_id, s_id, x, u_id, d_id, c_wf, s_wf, s, n in
-	select t.rating_criteria_id, t.rating_score_id, h.fix_dt, h.user_id, h.doc_id, t.criteria_wf, t.score_wf, t.score, t.note from t_rating t
-	    left join h_rating h on t.doc_id = h.doc_id
-	where h.account_id = '%account_id%' and h.employee_id = '%employee_id%' and left(h.fix_dt,10) = f_date
+    for c_id, s_id, x, u_id, d_id, c_wf, s_wf, s, n, w in
+	select t.rating_criteria_id, t.rating_score_id, h.fix_dt, h.user_id, h.doc_id, t.criteria_wf, t.score_wf, t.score, t.note, h.inserted_ts from t_rating t, h_rating h
+	    where t.doc_id = h.doc_id and h.account_id = '%account_id%' and h.employee_id = '%employee_id%' and left(h.fix_dt,10) = f_date
 	order by h.fix_dt
     loop
 	if( (select count(*) from dyn_ratings where account_id = '%account_id%' and employee_id='%employee_id%' and rating_criteria_id=c_id and fix_date=f_date) = 0 ) then
-	    insert into dyn_ratings(fix_date, account_id, employee_id, rating_criteria_id, rating_score_id, criteria_wf, score_wf, score, note, fix_dt, user_id, doc_id)
-		values(f_date, '%account_id%', '%employee_id%', c_id, s_id, c_wf, s_wf, s, n, x, u_id, d_id);
+	    insert into dyn_ratings(fix_date, account_id, employee_id, rating_criteria_id, rating_score_id, criteria_wf, score_wf, score, note, fix_dt, user_id, doc_id, inserted_ts)
+		values(f_date, '%account_id%', '%employee_id%', c_id, s_id, c_wf, s_wf, s, n, x, u_id, d_id, w);
 	else
 	    update dyn_ratings set rating_score_id = s_id, criteria_wf = c_wf, score_wf = s_wf, score = s, note = n, fix_dt = x, user_id = u_id, doc_id = d_id, updated_ts = current_timestamp
 		where account_id = '%account_id%' and employee_id = '%employee_id%' and rating_criteria_id = c_id and fix_date = f_date;

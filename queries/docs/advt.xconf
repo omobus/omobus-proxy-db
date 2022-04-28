@@ -47,6 +47,7 @@ declare
     f_dt datetime_t;
     z int32_t;
     s date_t;
+    w ts_t;
 begin
 -- **** advt --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
@@ -69,15 +70,14 @@ begin
     /* removes obsolete entires */
     delete from dyn_advt where account_id = '%account_id%' and fix_date = f_date;
     /* recompiles data */
-    for g_id, m_id, f_dt, u_id, d_id, z, s in
-	select t.placement_id, t.posm_id, h.fix_dt, h.user_id, h.doc_id, t.qty, t.scratch from t_advt t 
-	    left join h_advt h on t.doc_id = h.doc_id
-	where h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
+    for g_id, m_id, f_dt, u_id, d_id, z, s, w in
+	select t.placement_id, t.posm_id, h.fix_dt, h.user_id, h.doc_id, t.qty, t.scratch, h.inserted_ts from t_advt t, h_advt h
+	    where t.doc_id = h.doc_id and h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
 	order by h.fix_dt
     loop
 	if( (select count(*) from dyn_advt where account_id='%account_id%' and placement_id=g_id and posm_id=m_id and fix_date=f_date) = 0 ) then
-	    insert into dyn_advt(fix_date, account_id, placement_id, posm_id, qty, fix_dt, user_id, doc_id, scratch)
-		values(f_date, '%account_id%', g_id, m_id, z, f_dt, u_id, d_id, s);
+	    insert into dyn_advt(fix_date, account_id, placement_id, posm_id, qty, fix_dt, user_id, doc_id, scratch, inserted_ts)
+		values(f_date, '%account_id%', g_id, m_id, z, f_dt, u_id, d_id, s, w);
 	else
 	    update dyn_advt set qty = z, fix_dt = f_dt, user_id = u_id, doc_id = d_id, scratch = s, updated_ts = current_timestamp
 		where account_id = '%account_id%' and placement_id = g_id and posm_id = m_id and fix_date = f_date;

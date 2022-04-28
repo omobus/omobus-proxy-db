@@ -46,6 +46,7 @@ declare
     d_id uid_t;
     n datetime_t;
     x_note t_oos.note%TYPE;
+    w ts_t;
 begin
 -- **** oos --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
@@ -68,14 +69,14 @@ begin
     /* removes obsolete entires */
     delete from dyn_oos where account_id = '%account_id%' and fix_date = f_date;
     /* recompiles data */
-    for p_id, t_id, x_note, n, u_id, d_id in
-	select t.prod_id, t.oos_type_id, t.note, h.fix_dt, h.user_id, h.doc_id from t_oos t left join h_oos h on t.doc_id = h.doc_id
-	    where h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
+    for p_id, t_id, x_note, n, u_id, d_id, w in
+	select t.prod_id, t.oos_type_id, t.note, h.fix_dt, h.user_id, h.doc_id, h.inserted_ts from t_oos t, h_oos h
+	    where t.doc_id = h.doc_id and h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
 	order by h.fix_dt
     loop
 	if( (select count(*) from dyn_oos where account_id='%account_id%' and prod_id=p_id and fix_date=f_date) = 0 ) then
-	    insert into dyn_oos(fix_date, account_id, prod_id, oos_type_id, note, fix_dt, user_id, doc_id)
-		values(f_date, '%account_id%', p_id, t_id, x_note, n, u_id, d_id);
+	    insert into dyn_oos(fix_date, account_id, prod_id, oos_type_id, note, fix_dt, user_id, doc_id, inserted_ts)
+		values(f_date, '%account_id%', p_id, t_id, x_note, n, u_id, d_id, w);
         else
 	    update dyn_oos set oos_type_id = t_id, note = x_note, fix_dt = n, user_id = u_id, doc_id = d_id, updated_ts = current_timestamp
 		where account_id = '%account_id%' and prod_id = p_id and fix_date = f_date;

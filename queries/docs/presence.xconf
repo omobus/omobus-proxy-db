@@ -47,6 +47,7 @@ declare
     f int32_t;
     s int32_t;
     x date_t;
+    w ts_t;
 begin
 -- **** presence --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
@@ -69,14 +70,14 @@ begin
     /* removes obsolete entires */
     delete from dyn_presences where account_id = '%account_id%' and fix_date = f_date;
     /* recompiles data */
-    for p_id, n, u_id, d_id, f, s, x in
-	select t.prod_id, h.fix_dt, h.user_id, h.doc_id, t.facing, t.stock, t.scratch from t_presence t left join h_presence h on t.doc_id = h.doc_id
-	    where h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
+    for p_id, n, u_id, d_id, f, s, x, w in
+	select t.prod_id, h.fix_dt, h.user_id, h.doc_id, t.facing, t.stock, t.scratch, h.inserted_ts from t_presence t, h_presence h
+	    where t.doc_id = h.doc_id and h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
 	order by h.fix_dt
     loop
 	if( (select count(*) from dyn_presences where account_id='%account_id%' and prod_id=p_id and fix_date=f_date) = 0 ) then
-	    insert into dyn_presences(fix_date, account_id, prod_id, facing, stock, fix_dt, user_id, doc_id, scratch)
-		values(f_date, '%account_id%', p_id, f, s, n, u_id, d_id, x);
+	    insert into dyn_presences(fix_date, account_id, prod_id, facing, stock, fix_dt, user_id, doc_id, scratch, inserted_ts)
+		values(f_date, '%account_id%', p_id, f, s, n, u_id, d_id, x, w);
 	else
 	    update dyn_presences set facing = f, stock = s, fix_dt = n, user_id = u_id, doc_id = d_id, scratch = x, updated_ts = current_timestamp
 		where account_id = '%account_id%' and prod_id = p_id and fix_date = f_date;

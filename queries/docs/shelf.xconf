@@ -78,10 +78,9 @@ begin
 	/* removes obsolete entires */
 	delete from dyn_shelfs where account_id = '%account_id%' and fix_date = f_date and categ_id = '%categ_id%';
 	/* recompiles data */
-	insert into dyn_shelfs(fix_date, account_id, categ_id, brand_id, facing, assortment, sos_target, soa_target, sos, soa, photos, fix_dt, user_id, doc_id)
-	    select f_date, h.account_id, h.categ_id, t.brand_id, t.facing, t.assortment, h.sos_target, h.soa_target, h.sos, h.soa, h.photos, h.fix_dt, h.user_id, h.doc_id from h_shelf h
-		left join t_shelf t on t.doc_id=h.doc_id
-	    where h.doc_id='%doc_id_sys%';
+	insert into dyn_shelfs(fix_date, account_id, categ_id, brand_id, facing, assortment, sos_target, soa_target, sos, soa, photos, fix_dt, user_id, doc_id, inserted_ts)
+	    select f_date, h.account_id, h.categ_id, t.brand_id, t.facing, t.assortment, h.sos_target, h.soa_target, h.sos, h.soa, h.photos, h.fix_dt, h.user_id, h.doc_id, h.inserted_ts from h_shelf h, t_shelf t
+		where t.doc_id=h.doc_id and h.doc_id='%doc_id_sys%';
 
 	if( f_date >= (select max(fix_dt::date_t) from h_shelf where account_id='%account_id%' and categ_id = '%categ_id%' group by account_id) ) then
 	    update dyn_shelfs set "_isRecentData" = null where account_id='%account_id%' /*and categ_id = '%categ_id%'*/ and "_isRecentData" = 1;

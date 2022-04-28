@@ -107,10 +107,9 @@ begin
 	/* removes obsolete entires */
 	delete from dyn_audits where account_id = '%account_id%' and fix_date = f_date and categ_id = '%categ_id%';
 	/* recompiles data */
-	insert into dyn_audits(fix_date, account_id, categ_id, audit_criteria_id, audit_score_id, criteria_wf, score_wf, score, note, wf, sla, photos, fix_dt, user_id, doc_id)
-	    select f_date, h.account_id, h.categ_id, t.audit_criteria_id, t.audit_score_id, t.criteria_wf, t.score_wf, t.score, t.note, h.wf, h.sla, h.photos, h.fix_dt, h.user_id, h.doc_id from h_audit h
-		left join t_audit t on t.doc_id=h.doc_id
-	    where h.doc_id='%doc_id_sys%';
+	insert into dyn_audits(fix_date, account_id, categ_id, audit_criteria_id, audit_score_id, criteria_wf, score_wf, score, note, wf, sla, photos, fix_dt, user_id, doc_id, inserted_ts)
+	    select f_date, h.account_id, h.categ_id, t.audit_criteria_id, t.audit_score_id, t.criteria_wf, t.score_wf, t.score, t.note, h.wf, h.sla, h.photos, h.fix_dt, h.user_id, h.doc_id, h.inserted_ts from h_audit h, t_audit t
+		where t.doc_id=h.doc_id and h.doc_id='%doc_id_sys%';
 
 	if( f_date >= (select max(fix_dt::date_t) from h_audit where account_id='%account_id%' and categ_id = '%categ_id%' group by account_id) ) then
 	    update dyn_audits set "_isRecentData" = null where account_id='%account_id%' /*and categ_id = '%categ_id%'*/ and "_isRecentData" = 1;
