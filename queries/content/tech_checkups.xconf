@@ -4,11 +4,19 @@
 	<L>
   <![CDATA[
 select 
-    h.doc_id, h.fix_dt, h.inserted_ts, h.account_id, a.code a_code, a.descr a_name, a.address, p.code p_code, p.descr prod, g.descr placement, t.exist
+    h.doc_id, 
+    h.fix_dt, 
+    h.inserted_ts, 
+    h.account_id, 
+    a.code a_code, 
+    a.descr a_name, 
+    a.address, 
+    p.code p_code, 
+    p.descr prod, 
+    t.exist
 from t_checkup t
     left join h_checkup h on h.doc_id = t.doc_id
     left join accounts a on a.account_id = h.account_id
-    left join placements g on g.placement_id = t.placement_id
     left join products p on p.prod_id = t.prod_id
 where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
 order by h.fix_dt, p.descr

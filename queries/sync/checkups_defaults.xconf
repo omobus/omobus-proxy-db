@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<checkups_defaults templ="%account_id%;%prod_id%;%exist%;" empty="no">
+  <![CDATA[
+select '' account_id, 'Z1' prod_id, 1 exist
+    union
+select '' account_id, '20762' prod_id, 1 exist
+    order by 1, 2
+
+/*select x.account_id, x.placement_id, x.prod_id, x.exist from dyn_checkups x, products p
+    where x."_isRecentData" = 1 and x.prod_id = p.prod_id and (x.exist > 0 or (x.exist = 0 and x.fix_dt::date >= (current_date - (select "paramInteger"('checkups:depth')))))
+order by 1, 2, p.row_no, p.descr*/
+  ]]>
+</checkups_defaults>

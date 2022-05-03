@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<matrices templ="%account_id%;%prod_id%;%placement_ids%;" empty="no">
+<matrices templ="%account_id%;%prod_id%;" empty="no">
   <![CDATA[ 
-select m.account_id, m.prod_id, array_to_string(m.placement_ids,',') placement_ids from matrices m, products p
+select m.account_id, m.prod_id from matrices m, products p
     where m.prod_id=p.prod_id
 order by NIL(m.account_id), m.row_no, p.descr
   ]]>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<matrices templ="%slice_date%;%account_id%;%prod_id%;%placement_ids%;%row_no%;">
+<matrices templ="%slice_date%;%account_id%;%prod_id%;%row_no%;">
   <![CDATA[
-select slice_date, account_id, prod_id, array_to_string(placement_ids,',') placement_ids, row_no from slices.matrices
+select slice_date, account_id, prod_id, row_no from slices.matrices
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2, 3
   ]]>

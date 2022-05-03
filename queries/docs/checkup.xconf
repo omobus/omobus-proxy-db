@@ -30,8 +30,8 @@ insert into h_checkup(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login
 </write_body>
 <write_row>
   <![CDATA[ 
-insert into t_checkup(doc_id, row_no, placement_id, prod_id, exist)
-    values('%doc_id_sys%', %row_no%, '%placement_id%', '%prod_id%', %exist%)
+insert into t_checkup(doc_id, row_no, prod_id, exist, scratch)
+    values('%doc_id_sys%', %row_no%, '%prod_id%', %exist%, NIL('%scratch%'))
   ]]>
 </write_row>
 <close>
@@ -41,11 +41,12 @@ declare
     f_date date_t default left('%fix_dt%', 10);
     f_time time_t default substring('%fix_dt%', 12, 5);
     p_id uid_t;
-    g_id uid_t;
     u_id uid_t;
     d_id uid_t;
     n datetime_t;
     e int32_t;
+    x date_t;
+    w ts_t;
 begin
 -- **** checkup --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
@@ -68,17 +69,17 @@ begin
     /* removes obsolete entires */
     delete from dyn_checkups where account_id = '%account_id%' and fix_date = f_date;
     /* recompiles data */
-    for p_id, g_id, n, u_id, d_id, e in
-	select t.prod_id, t.placement_id, h.fix_dt, h.user_id, h.doc_id, t.exist from t_checkup t left join h_checkup h on t.doc_id = h.doc_id
-	    where h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
+    for p_id, n, u_id, d_id, e, x, w in
+	select t.prod_id, h.fix_dt, h.user_id, h.doc_id, t.exist, t.scratch, h.inserted_ts from t_checkup t, h_checkup h 
+	    where t.doc_id = h.doc_id and h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
 	order by h.fix_dt
     loop
-	if( (select count(*) from dyn_checkups where account_id='%account_id%' and prod_id=p_id and placement_id=g_id and fix_date=f_date) = 0 ) then
-	    insert into dyn_checkups(fix_date, account_id, prod_id, placement_id, exist, fix_dt, user_id, doc_id)
-		values(f_date, '%account_id%', p_id, g_id, e, n, u_id, d_id);
+	if( (select count(*) from dyn_checkups where account_id='%account_id%' and prod_id=p_id and fix_date=f_date) = 0 ) then
+	    insert into dyn_checkups(fix_date, account_id, prod_id, exist, fix_dt, user_id, doc_id, scratch, inserted_ts)
+		values(f_date, '%account_id%', p_id, e, n, u_id, d_id, x, w);
         else
-	    update dyn_checkups set exist = e, fix_dt = n, user_id = u_id, doc_id = d_id, updated_ts = current_timestamp
-		where account_id = '%account_id%' and prod_id = p_id and placement_id = g_id and fix_date = f_date;
+	    update dyn_checkups set exist = e, fix_dt = n, user_id = u_id, doc_id = d_id, scratch = x, updated_ts = current_timestamp
+		where account_id = '%account_id%' and prod_id = p_id and fix_date = f_date;
 	end if;
     end loop;
 

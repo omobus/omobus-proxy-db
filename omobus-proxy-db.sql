@@ -1814,7 +1814,6 @@ create trigger trig_updated_ts before update on manufacturers for each row execu
 create table matrices (
     account_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
-    placement_ids 	uids_t 		null,
     row_no 		int32_t 	null, -- ordering
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
@@ -3827,10 +3826,10 @@ create table h_checkup (
 create table t_checkup (
     doc_id 		uid_t 		not null,
     row_no 		int32_t 	not null check (row_no >= 0),
-    placement_id 	uid_t 		not null,
     prod_id 		uid_t 		not null,
     exist 		int32_t 	not null check (exist between 0 and 2),
-    primary key (doc_id, placement_id, prod_id)
+    scratch 		date_t 		null,
+    primary key (doc_id, prod_id)
 );
 
 create index i_user_id_h_checkup on h_checkup (user_id);
@@ -5093,16 +5092,16 @@ create trigger trig_updated_ts before update on dyn_audits for each row execute 
 create table dyn_checkups (
     fix_date		date_t 		not null,
     account_id 		uid_t 		not null,
-    placement_id 	uid_t 		not null,
     prod_id 		uid_t 		not null,
     exist 		int32_t 	not null,
     fix_dt		datetime_t 	not null,
     user_id 		uid_t 		not null,
     doc_id 		uid_t 		not null,
+    scratch 		date_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts		ts_auto_t 	not null,
     "_isRecentData"	bool_t 		null,
-    primary key(fix_date, account_id, placement_id, prod_id)
+    primary key(fix_date, account_id, prod_id)
 );
 
 create index i_2lts_dyn_checkups on dyn_checkups (updated_ts);
@@ -6666,6 +6665,7 @@ $body$ language sql STABLE;
 
 insert into sysparams values('advt_history:depth', '60', 'The maximum depth of the advt_history in days.');
 insert into sysparams values('checkups:depth', '30', 'How long (in days) empty data from the dyn_checkups is used.');
+insert into sysparams values('checkups_history:depth', '60', 'The maximum depth of the checkups_history in days.');
 insert into sysparams values('db:created_ts', current_timestamp, 'Database creation datetime.');
 insert into sysparams values('db:id', 'PRI', 'Database unique ID.');
 insert into sysparams values('dumps:depth', null, 'Dumps depth (days).');

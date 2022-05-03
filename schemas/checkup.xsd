@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="date_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="(|[0-9]{4}\-[0-9]{2}\-[0-9]{2})" />
+	</xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="datetime_t">
 	<xs:restriction base="xs:string">
 	    <xs:pattern value="[0-9]{4}\-[0-9]{2}\-[0-9]{2}( |T){1}[0-9]{2}:[0-9]{2}:[0-9]{2}" />
@@ -38,9 +44,9 @@
 		<xs:element name="row">
 		    <xs:complexType>
 			<xs:attribute name="row_no" use="required" type="xs:integer" />
-			<xs:attribute name="placement_id" use="optional" type="uid_t" default="" />
 			<xs:attribute name="prod_id" use="required" type="uid_t" />
 			<xs:attribute name="exist" use="required" type="trigger_t" />
+			<xs:attribute name="scratch" use="optional" type="date_t" default="" />
 		    </xs:complexType>
 		</xs:element>
 	    </xs:sequence>

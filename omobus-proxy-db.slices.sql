@@ -49,7 +49,6 @@ create table slices.matrices(
     slice_date 		date_t 		not null,
     account_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
-    placement_ids 	uids_t 		null,
     row_no 		int32_t 	null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,

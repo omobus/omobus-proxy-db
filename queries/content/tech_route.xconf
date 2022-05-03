@@ -19,7 +19,7 @@ from (
 	    union
 	select account_id, 1 route from my_routes where user_id='%user_id%' and p_date='%b_date%' /*%e_date%*/
 	    union
-	select account_id, null route from j_user_activities where user_id='%user_id%' and /*left(b_dt,10)*/fix_date='%b_date%' /*%e_date%*/
+	select account_id, null route from j_user_activities where user_id='%user_id%' and fix_date='%b_date%' /*%e_date%*/
     ) z group by account_id
 ) q
     left join accounts a on a.account_id = q.account_id
@@ -172,6 +172,20 @@ where x.user_id='%user_id%' and left(x.fix_dt, 10)='%b_date%' /*%e_date%*/
 order by x.fix_dt
   ]]>
 	</joints>
+	<matrices>
+  <![CDATA[
+select 
+    m.account_id, 
+    p.code p_code, 
+    p.descr prod, 
+    m.prod_id _pkey 
+from slices.matrices m, products p
+    where m.slice_date='%b_date%' /*'%e_date%'*/ and m.account_id in (
+	select distinct account_id from j_user_activities where user_id='%user_id%' and fix_date='%b_date%' /*%e_date%*/
+    ) and m.prod_id = p.prod_id
+order by m.account_id, m.row_no, p.descr, m.prod_id
+  ]]>
+	</matrices>
 	<advt_L0>
   <![CDATA[
 select 
@@ -224,12 +238,11 @@ order by fix_dt
 	</checkups_L0>
 	<checkups_L1>
   <![CDATA[
-select t.doc_id, t.row_no, p.code p_code, p.descr prod, g.descr placement, t.exist, format('%s!%s',t.placement_id,t.prod_id) _pkey from (
-	select doc_id, row_no, placement_id, prod_id, exist from t_checkup where doc_id in (
+select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.exist, t.scratch, t.prod_id _pkey from (
+	select doc_id, row_no, prod_id, exist, scratch from t_checkup where doc_id in (
 	    select doc_id from h_checkup where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
 	)
     ) t
-    left join placements g on g.placement_id = t.placement_id
     left join products p on p.prod_id = t.prod_id
 order by t.doc_id, t.row_no
   ]]>
@@ -325,7 +338,14 @@ order by h.fix_dt
 	<posms>
   <![CDATA[
 select
-    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, 
+    h.doc_id, 
+    h.doc_no, 
+    h.account_id, 
+    h.a_cookie, 
+    h.fix_dt, 
+    datediff('second', 
+    h.created_dt, 
+    h.closed_dt) duration, 
     g.descr placement, 
     m.descr posm, 
     h.doc_note, 
@@ -765,6 +785,8 @@ if tb.map == nil and tb.my_accounts ~= nil then
 	end
     end
 end
+
+tb.matrices = rt.groups(_matrices, "account_id")
 
 idx = {}; tb.advt = rt.groups(_advt_L0, "account_id", function(r, n, a)
     if n == "doc_id" then

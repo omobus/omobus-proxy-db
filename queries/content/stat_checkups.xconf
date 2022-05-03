@@ -4,21 +4,34 @@
 	<L>
   <![CDATA[
 select
-    x.user_id, u.descr u_name, u.dev_login,
+    x.user_id, 
+    u.descr u_name, 
+    u.dev_login,
     x.fix_dt,
     x.inserted_ts,
-    x.account_id, a.code a_code, a.descr a_name, a.address,
+    x.account_id, 
+    a.code a_code, 
+    a.descr a_name, 
+    a.address,
     reg.descr region,
     c.descr city,
-    a.rc_id, r.descr rc, r.ka_type,
+    a.rc_id, 
+    r.descr rc, 
+    r.ka_type,
     p.descr poten,
-    a.chan_id, ch.descr chan,
-    z.prod_id, z.code p_code, z.descr prod, 
-    z.categ_id, f.descr categ,
-    z.brand_id, b.descr brand,
-    x.placement_id, k.descr placement,
+    a.chan_id, 
+    ch.descr chan,
+    z.prod_id, 
+    z.code p_code, 
+    z.descr prod, 
+    z.categ_id, 
+    f.descr categ,
+    z.brand_id, 
+    b.descr brand,
     x.exist,
-    u.executivehead_id head_id, ex.descr head_name
+    x.scratch,
+    u.executivehead_id head_id, 
+    ex.descr head_name
 from dyn_checkups x
     left join accounts a on a.account_id = x.account_id
     left join potentials p on a.poten_id = p.poten_id
@@ -29,7 +42,6 @@ from dyn_checkups x
     left join products z on z.prod_id = x.prod_id
     left join categories f on f.categ_id = z.categ_id
     left join brands b on b.brand_id = z.brand_id
-    left join placements k on k.placement_id = x.placement_id
     left join users u on u.user_id = x.user_id
     left join users ex on ex.user_id = u.executivehead_id
 where '%b_date%'<=x.fix_date and x.fix_date<='%e_date%'

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dyn_checkups templ="%fix_date%;%account_id%;%placement_id%;%prod_id%;%exist%;%fix_dt%;%user_id%;%doc_id%;%_isrecentdata%;">
+<dyn_checkups templ="%fix_date%;%account_id%;%prod_id%;%exist%;%fix_dt%;%user_id%;%doc_id%;%_isrecentdata%;">
   <![CDATA[
-select fix_date, account_id, placement_id, prod_id, exist, fix_dt, user_id, doc_id, "_isRecentData" from dyn_checkups
+select fix_date, account_id, prod_id, exist, fix_dt, user_id, doc_id, "_isRecentData" from dyn_checkups
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2, 3, 4
   ]]>
