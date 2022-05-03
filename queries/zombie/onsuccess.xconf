@@ -21,8 +21,10 @@ begin
     end if;
 
 /* send notification: */
-    insert into mail_stream(rcpt_to, cap, msg, priority, content)
-	select string_to_array(NIL('%rcpt_to%'),','), '%msg_cap%', '%msg_body%', 1, '%msg_content%' where NIL('%msg_content%') is not null and NIL('%rcpt_to%') is not null;
+    if NIL('%msg_cap%') is not null and NIL('%msg_content%') is not null and NIL('%rcpt_to%') is not null then
+	insert into mail_stream(rcpt_to, cap, msg, priority, content)
+	    values(string_to_array(NIL('%rcpt_to%'),','), '%msg_cap%', '%msg_body%', 1, '%msg_content%');
+    end if;
 end;
 $$;
   ]]>

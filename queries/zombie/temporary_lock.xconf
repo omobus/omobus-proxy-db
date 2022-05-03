@@ -9,7 +9,7 @@ require("core").for_each_u(_user_id, function(ses, dn, attrs)
     if count == 0 then
 -- ** temporary lock inactive user: **
 	if attrs.syncErpId == nil and (attrs.exchangeStatus == "enabled" or attrs.FTPStatus == "disabled" or attrs.mailStatus == "disabled" or attrs.dumpsStatus == "disabled" or attrs.consoleStatus == "disabled") then
-	    local ar = {'='}
+	    local ar = {'=', cn=_descr}
 	    if attrs.FTPStatus == "disabled" then
 		ar.FTPStatus="enabled"
 	    end
@@ -28,13 +28,16 @@ require("core").for_each_u(_user_id, function(ses, dn, attrs)
 	    ses:modify(dn, ar)
 	    log_msg(string.format("UID=%s, ErpId=%s has been temporary locked", attrs.uid, attrs.ErpId))
 	    f = true
+	elseif attrs.cn ~= _descr then
+	    ses:modify(dn, {'=', cn=_descr})
+	    log_msg(string.format("UID=%s, ErpId=%s has been updated", attrs.uid, attrs.ErpId))
 	end
 	uid = attrs.uid
 	role = attrs.groupName
     else
 -- ** remove duplicate ErpId link: **
 	if attrs.syncErpId == nil then
-	    local ar = {'=', ErpId="-"}
+	    local ar = {'=', ErpId="-", cn="-"}
 	    if attrs.FTPStatus == "enabled" then
 		ar.FTPStatus="disabled"
 	    end

@@ -8,7 +8,7 @@ require("core").for_each_u(_user_id, function(ses, dn, attrs)
     if count == 0 then
 -- ** permanently lock hidden user: **
 	if attrs.syncErpId == nil and (attrs.FTPStatus == "enabled" or attrs.mailStatus == "enabled" or attrs.exchangeStatus == "enabled" or attrs.dumpsStatus == "enabled" or attrs.consoleStatus == "enabled") then
-	    local ar = {'='}
+	    local ar = {'=', cn="-"}
 	    if attrs.FTPStatus == "enabled" then
 		ar.FTPStatus="disabled"
 	    end
@@ -32,7 +32,7 @@ require("core").for_each_u(_user_id, function(ses, dn, attrs)
     else
 -- ** remove duplicate ErpId link: **
 	if attrs.syncErpId == nil then
-	    local ar = {'=', ErpId="-"}
+	    local ar = {'=', ErpId="-", cn="-"}
 	    if attrs.FTPStatus == "enabled" then
 		ar.FTPStatus="disabled"
 	    end
