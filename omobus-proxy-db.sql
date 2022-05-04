@@ -3317,7 +3317,7 @@ create table a_package (
     status 		varchar(7) 	not null check (status in ('added','removed','changed') and status = lower(status)),
     package 		varchar(256) 	not null,
     enabled 		bool_t 		not null,
-    name 		varchar(128) 	null,
+    name 		varchar(512) 	null,
     system 		bool_t 		null,
     debuggable 		bool_t 		null
 );
