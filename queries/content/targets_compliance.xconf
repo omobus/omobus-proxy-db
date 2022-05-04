@@ -78,7 +78,7 @@ select
     h.fix_dt,
     h.confirmation_type_id, 
     f.descr confirm,
-    coalesce(f.succeeded,0) succeeded,
+    coalesce(f.succeeded,'no') succeeded,
     h.doc_note,
     array_to_string(h.photos,',') photos,
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(h.photos)) refs,
@@ -143,8 +143,6 @@ if rows > 0 and cols > 0 then
 		if a ~= nil and n ~= "target_id" and n ~= "account_id" then
 		    if std.contains({'photos','refs'}, n) then
 			x[n] = std.split(a, ',')
-		    elseif( std.contains({'succeeded'}, n) ) then
-			x[n] = tonumber(a)
 		    elseif( n == 'restatus' and a ~= nil ) then
 			if( x.remark == nil ) then
 			    x.remark = {}

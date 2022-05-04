@@ -31,7 +31,7 @@ select
     tt.descr target_type, 
     h.confirmation_type_id, 
     f.descr confirm, 
-    coalesce(f.succeeded,0) succeeded,
+    coalesce(f.succeeded,'no') succeeded,
     h.doc_note,
     array_to_string(h.photos,',') photos, 
     (select array_to_string(array_agg(guid::varchar),',') from thumbnail_stream ts where ts.photo = any(h.photos)) refs,
@@ -70,8 +70,6 @@ local std = require('stdlib')
 require('rtlib').main("confirmations", true, function(r, n, a) 
     if( std.contains({'photos','refs'}, n) ) then
 	r[n] = std.split(a, ',')
-    elseif( std.contains({'succeeded'}, n) ) then
-	r[n] = tonumber(a)
     elseif( n == 'restatus' and a ~= nil ) then
 	if( r.remark == nil ) then
 	    r.remark = {}
