@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vf_accounts templ="%vf_id%;%account_id%;%row_no%;">
+<vf_accounts templ="%vf_id%;%user_id%;%account_id%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -14,8 +14,8 @@ delete from vf_accounts
 </begin>
 <insert>
   <![CDATA[ 
-insert into vf_accounts (db_id, vf_id, account_id, row_no)
-    values ('%ErpCode%', '%vf_id%', '%account_id%', NIL(%row_no%))
+insert into vf_accounts (db_id, vf_id, user_id, account_id, row_no)
+    values ('%ErpCode%', '%vf_id%', '%user_id%', '%account_id%', NIL(%row_no%))
 on conflict do nothing
   ]]>
 </insert>

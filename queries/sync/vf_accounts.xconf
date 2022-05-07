@@ -3,6 +3,7 @@
   <![CDATA[
 select 
     v.db_id, 
+    v.user_id person_id,
     v.vf_id, 
     v.account_id 
 from vf_accounts v, accounts a

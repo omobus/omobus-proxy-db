@@ -2893,11 +2893,12 @@ create trigger trig_updated_ts before update on users for each row execute proce
 create table vf_accounts (
     db_id 		uid_t 		not null,
     vf_id 		uid_t 		not null,
+    user_id 		uid_t 		not null default '',
     account_id 		uid_t 		not null,
     row_no 		int32_t 	null, -- ordering
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    primary key (db_id, vf_id, account_id)
+    primary key (db_id, vf_id, user_id, account_id)
 );
 
 create index i_db_id_vf_accounts on vf_accounts (db_id);
@@ -2919,8 +2920,8 @@ create trigger trig_updated_ts before update on vf_names for each row execute pr
 
 create table vf_products (
     db_id 		uid_t 		not null,
-    account_id 		uid_t 		not null,
     vf_id 		uid_t 		not null,
+    account_id 		uid_t 		not null default '',
     prod_id 		uid_t 		not null,
     row_no 		int32_t 	null, -- ordering
     inserted_ts 	ts_auto_t 	not null,
