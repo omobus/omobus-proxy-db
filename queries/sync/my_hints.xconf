@@ -3,7 +3,7 @@
   <![CDATA[ 
 select user_id person_id, join_code, descr0, descr1, extra_info, attention, row_no from my_hints
 
-/* visit compliance (totals) */ union /* previous month */
+/* visit compliance (totals) (previous month) */ union
 
 select 
     r.user_id person_id, 

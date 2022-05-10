@@ -1059,12 +1059,12 @@ create table account_hints (
     descr1 		descr_t 	not null,
     extra_info 		note_t 		null,
     attention 		bool_t 		null,
-    row_no 		int32_t 	not null, -- ordering
+    row_no 		int32_t 	null, -- ordering
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
     "_isAlienData" 	bool_t 		null, /* row from the external sources */
-    primary key (account_id, join_code, row_no)
+    primary key (account_id, join_code, descr0)
 );
 
 create index i_db_ids_account_hints on account_hints using GIN (db_ids);
@@ -1918,12 +1918,12 @@ create table my_hints (
     descr1 		descr_t 	not null,
     extra_info 		note_t 		null,
     attention 		bool_t 		null,
-    row_no 		int32_t 	not null, -- ordering
+    row_no 		int32_t 	null, -- ordering
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
     "_isAlienData" 	bool_t 		null, /* row from the external sources */
-    primary key (user_id, join_code, row_no)
+    primary key (user_id, join_code, descr0)
 );
 
 create index i_db_ids_my_hints on my_hints using GIN (db_ids);

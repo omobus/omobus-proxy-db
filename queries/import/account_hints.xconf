@@ -19,7 +19,7 @@ delete from account_hints
 <insert>
   <![CDATA[
 insert into account_hints (account_id, join_code, descr0, descr1, extra_info, attention, row_no, db_ids, "_isAlienData")
-    values ('%account_id%', '%join_code%', '%descr0%', '%descr1%', NIL('%extra_info%'), NIL(%attention%), 0%row_no%, array['%ErpCode%'], 1)
+    values ('%account_id%', '%join_code%', '%descr0%', '%descr1%', NIL('%extra_info%'), NIL(%attention%), NIL(%row_no%), array['%ErpCode%'], 1)
 on conflict do nothing
   ]]>
 </insert>
