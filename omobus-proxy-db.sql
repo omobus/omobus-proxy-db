@@ -658,7 +658,7 @@ select
     cast (extract('year' from d) || '-' ||
 	case extract('quarter' from d)
 	    when 1 then '01-01'
-	    when 2 then '04-10'
+	    when 2 then '04-01'
 	    when 3 then '07-01'
 	    else        '10-01'
         end
