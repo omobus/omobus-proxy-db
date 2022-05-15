@@ -22,14 +22,14 @@ select count(*) from confirmation_types
 </check_exist>
 <update>
   <![CDATA[
-update confirmation_types set descr=trim(both from '%descr%'), min_note_length=NIL(%min_note_length%), photo_needed=NIL(%photo_needed%), accomplished=NIL(%accomplished%), succeeded=NIL(%succeeded%), extra_info=NIL('%extra_info%'), target_type_ids=string_to_array(NIL('%target_type_ids%'),','), row_no=NIL(%row_no%), props=NIL('%props%')::hstore, hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update confirmation_types set descr=trim(both from '%descr%'), min_note_length=NIL(%min_note_length%), photo_needed=NIL(%photo_needed%), accomplished=NIL(%accomplished%), succeeded=NIL('%succeeded%'), extra_info=NIL('%extra_info%'), target_type_ids=string_to_array(NIL('%target_type_ids%'),','), row_no=NIL(%row_no%), props=NIL('%props%')::hstore, hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where confirmation_type_id = '%confirmation_type_id%' and "_isAlienData" = 1
   ]]>
 </update>
 <insert>
   <![CDATA[
 insert into confirmation_types (confirmation_type_id, descr, min_note_length, photo_needed, accomplished, succeeded, extra_info, target_type_ids, row_no, props, hidden, db_ids, "_isAlienData")
-    values ('%confirmation_type_id%', trim(both from '%descr%'), NIL(%min_note_length%), NIL(%photo_needed%), NIL(%accomplished%), NIL(%succeeded%), NIL('%extra_info%'), string_to_array(NIL('%target_type_ids%'),','),  NIL(%row_no%), NIL('%props%')::hstore, 0, array['%ErpCode%'], 1)
+    values ('%confirmation_type_id%', trim(both from '%descr%'), NIL(%min_note_length%), NIL(%photo_needed%), NIL(%accomplished%), NIL('%succeeded%'), NIL('%extra_info%'), string_to_array(NIL('%target_type_ids%'),','),  NIL(%row_no%), NIL('%props%')::hstore, 0, array['%ErpCode%'], 1)
   ]]>
 </insert>
 <end>
