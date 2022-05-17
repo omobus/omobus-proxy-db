@@ -84,11 +84,11 @@ order by user_id
 <!-- **** FILTERS: END **** -->
 </queries>
 <pack strict="yes" Xtrace="yes" comments="no">
-    <users personalize="groupName" hierarchy="user_id" root="ErpId" empty="yes" group="user_id" bruteforce="no">
+    <users personalize="groupName" hierarchy="user_id" root="ErpId" empty="yes" group="user_id" bruteforce="no" index="user_id">
 	<access-log key="user_id" strict="yes" />
 	<action-log key="user_id" strict="yes" />
 	<locstate-log key="user_id" strict="yes" />
-	<my_habitat key="user_id" strict="yes">
+	<my_habitat key="user_id" strict="yes" index="account_id">
 	    <accounts key="account_id" strict="yes" />
 	    <!-- temporarily locked: <advt key="account_id" strict="yes" />-->
 	    <!-- temporarily locked: <audits key="account_id" strict="yes" />-->
