@@ -231,18 +231,33 @@ order by t.doc_id, t.row_no, x.descr
 	</audits_L1>
 	<checkups_L0>
   <![CDATA[
-select doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration from h_checkup
+select 
+    doc_id, 
+    doc_no, 
+    account_id, 
+    a_cookie, 
+    fix_dt, 
+    datediff('second', created_dt, closed_dt) duration 
+from h_checkup
     where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
 order by fix_dt
   ]]>
 	</checkups_L0>
 	<checkups_L1>
   <![CDATA[
-select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.exist, t.scratch, t.prod_id _pkey from (
-	select doc_id, row_no, prod_id, exist, scratch from t_checkup where doc_id in (
-	    select doc_id from h_checkup where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
-	)
-    ) t
+select 
+    t.doc_id, 
+    t.row_no, 
+    p.code p_code, 
+    p.descr prod, 
+    t.exist, 
+    t.scratch, 
+    t.prod_id _pkey 
+from (
+    select doc_id, row_no, prod_id, exist, scratch from t_checkup where doc_id in (
+	select doc_id from h_checkup where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+    )
+) t
     left join products p on p.prod_id = t.prod_id
 order by t.doc_id, t.row_no
   ]]>
@@ -250,8 +265,15 @@ order by t.doc_id, t.row_no
 	<comments>
   <![CDATA[
 select
-    h.doc_id, h.doc_no, h.account_id, h.a_cookie, h.fix_dt, datediff('second', h.created_dt, h.closed_dt) duration, t.descr comment_type, 
-    doc_note, h.photo::varchar blob_id
+    h.doc_id, 
+    h.doc_no, 
+    h.account_id, 
+    h.a_cookie, 
+    h.fix_dt, 
+    datediff('second', h.created_dt, h.closed_dt) duration, 
+    t.descr comment_type, 
+    doc_note, 
+    h.photo::varchar blob_id
 from h_comment h
     left join comment_types t on t.comment_type_id = h.comment_type_id
 where h.user_id='%user_id%' and left(h.fix_dt, 10)='%b_date%' /*'%e_date%'*/
@@ -389,18 +411,38 @@ order by fix_dt, doc_id
 	</presentations>
 	<prices_L0>
   <![CDATA[
-select doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration from h_price
+select 
+    doc_id, 
+    doc_no, 
+    account_id, 
+    a_cookie, 
+    fix_dt, 
+    datediff('second', created_dt, closed_dt) duration 
+from h_price
     where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
 order by fix_dt
   ]]>
 	</prices_L0>
 	<prices_L1>
   <![CDATA[
-select t.doc_id, t.row_no, p.code p_code, p.descr prod, t.price, t.promo, t.discount, t.rrp, t.scratch, t.prod_id _pkey from (
-	select doc_id, row_no, prod_id, price, promo, discount, rrp, scratch from t_price where doc_id in (
-	    select doc_id from h_price where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
-	)
-    ) t
+select 
+    t.doc_id, 
+    t.row_no, 
+    p.code p_code, 
+    p.descr prod, 
+    t.price, 
+    t.promo, 
+    t.discount, 
+    t.note,
+    t.photo::varchar blob_id,
+    t.rrp, 
+    t.scratch, 
+    t.prod_id _pkey 
+from (
+    select doc_id, row_no, prod_id, price, promo, discount, note, photo, rrp, scratch from t_price where doc_id in (
+	select doc_id from h_price where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
+    )
+) t
     left join products p on p.prod_id = t.prod_id
 order by t.doc_id, t.row_no
   ]]>

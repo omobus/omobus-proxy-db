@@ -16,6 +16,8 @@ select
     t.price, 
     t.promo, 
     t.discount, 
+    t.note,
+    t.photo::varchar blob_id,
     t.rrp, 
     t.scratch
 from t_price t

@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dyn_prices templ="%fix_date%;%account_id%;%prod_id%;%price%;%promo%;%discount%;%note%;%rrp%;%fix_dt%;%user_id%;%doc_id%;%_isrecentdata%;">
+<dyn_prices templ="%fix_date%;%account_id%;%prod_id%;%price%;%promo%;%discount%;%note%;%photo%;%rrp%;%fix_dt%;%user_id%;%doc_id%;%_isrecentdata%;">
   <![CDATA[
-select fix_date, account_id, prod_id, price, promo, discount, note, rrp, fix_dt, user_id, doc_id, "_isRecentData" from dyn_prices
-    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
+select 
+    d.fix_date, 
+    d.account_id, 
+    d.prod_id, 
+    d.price, 
+    d.promo, 
+    d.discount, 
+    d.note, 
+    ts.guid photo,
+    d.rrp, 
+    d.fix_dt, 
+    d.user_id, 
+    d.doc_id, 
+    d."_isRecentData" 
+from dyn_prices d
+    left join thumbnail_stream ts on ts.photo = d.photo
+where "LTS_aging_L"() <= d.updated_ts and d.updated_ts <= "LTS_aging_R"()
 order by 1, 2, 3
   ]]>
 </dyn_prices>

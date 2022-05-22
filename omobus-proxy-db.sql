@@ -2187,6 +2187,7 @@ create table pmlist ( /* Price Monitoring List - allowed products for the [price
     db_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
+    strict 		bool_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     primary key (db_id, account_id, prod_id)
@@ -4478,6 +4479,7 @@ create table t_price (
     promo 		currency_t 	null,
     discount 		bool_t 		not null default 0,
     note 		note_t 		null,
+    photo 		blob_t 		null,
     rrp 		currency_t 	null,
     scratch 		date_t 		null,
     primary key (doc_id, prod_id),
@@ -5161,6 +5163,7 @@ create table dyn_prices (
     promo 		currency_t 	null,
     discount 		bool_t 		not null,
     note 		note_t 		null,
+    photo 		blob_t 		null,
     rrp 		currency_t 	null,
     fix_dt		datetime_t 	not null,
     user_id 		uid_t 		not null,

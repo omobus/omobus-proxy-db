@@ -30,8 +30,8 @@ insert into h_price(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, 
 </write_body>
 <write_row>
   <![CDATA[
-insert into t_price(doc_id, row_no, prod_id, price, promo, discount, note, rrp, scratch)
-    values('%doc_id_sys%', %row_no%, '%prod_id%', NIL(%price%), NIL(%promo%), "toBoolean"('%discount%'), NIL('%note%'), NIL(%rrp%), NIL('%scratch%'))
+insert into t_price(doc_id, row_no, prod_id, price, promo, discount, note, photo, rrp, scratch)
+    values('%doc_id_sys%', %row_no%, '%prod_id%', NIL(%price%), NIL(%promo%), "toBoolean"('%discount%'), NIL('%note%'), $1:blob::OID, NIL(%rrp%), NIL('%scratch%'))
   ]]>
 </write_row>
 <close>
@@ -51,6 +51,7 @@ declare
     s date_t;
     w ts_t;
     a1 note_t;
+    a2 blob_t;
 begin
 -- **** price --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
@@ -63,6 +64,10 @@ begin
     update sysdevices set outdated_ts = current_timestamp
 	where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
 
+-- **** comment --> thumbnail_stream
+    insert into thumbnail_stream(photo)
+	select photo from t_price where doc_id='%doc_id_sys%' and photo is not null;
+
 -- **** price --> content_stream
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
     perform content_add('a_list', '%user_id_sys%', f_date, f_date);
@@ -73,18 +78,18 @@ begin
     /* removes obsolete entires */
     delete from dyn_prices where account_id = '%account_id%' and fix_date = f_date;
     /* recompiles data */
-    for p_id, f_dt, u_id, d_id, v, k, p, a1, r, s, w in
+    for p_id, f_dt, u_id, d_id, v, k, p, a1, a2, r, s, w in
 	select 
-	    t.prod_id, h.fix_dt, h.user_id, h.doc_id, t.price, t.promo, t.discount, t.note, t.rrp, t.scratch, h.inserted_ts 
+	    t.prod_id, h.fix_dt, h.user_id, h.doc_id, t.price, t.promo, t.discount, t.note, t.photo, t.rrp, t.scratch, h.inserted_ts 
 	from t_price t, h_price h
 	    where t.doc_id = h.doc_id and h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
 	order by h.fix_dt
     loop
 	if( (select count(*) from dyn_prices where account_id='%account_id%' and prod_id=p_id and fix_date=f_date) = 0 ) then
-	    insert into dyn_prices(fix_date, account_id, prod_id, price, promo, discount, note, rrp, fix_dt, user_id, doc_id, scratch, inserted_ts)
-		values(f_date, '%account_id%', p_id, v, k, p, a1, r, f_dt, u_id, d_id, s, w);
+	    insert into dyn_prices(fix_date, account_id, prod_id, price, promo, discount, note, photo, rrp, fix_dt, user_id, doc_id, scratch, inserted_ts)
+		values(f_date, '%account_id%', p_id, v, k, p, a1, a2, r, f_dt, u_id, d_id, s, w);
 	else
-	    update dyn_prices set price = v, promo = k, discount = p, note = a1, rrp = r, fix_dt = f_dt, user_id = u_id, doc_id = d_id, scratch = s, updated_ts = current_timestamp
+	    update dyn_prices set price = v, promo = k, discount = p, note = a1, photo = a2, rrp = r, fix_dt = f_dt, user_id = u_id, doc_id = d_id, scratch = s, updated_ts = current_timestamp
 		where account_id = '%account_id%' and prod_id = p_id and fix_date = f_date;
 	end if;
     end loop;

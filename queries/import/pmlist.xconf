@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pmlist templ="%account_id%;%prod_id%;">
+<pmlist templ="%account_id%;%prod_id%;%strict%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -14,8 +14,8 @@ delete from pmlist
 </begin>
 <insert>
   <![CDATA[
-insert into pmlist (db_id, account_id, prod_id)
-    values ('%ErpCode%', '%account_id%', '%prod_id%')
+insert into pmlist (db_id, account_id, prod_id, strict)
+    values ('%ErpCode%', '%account_id%', '%prod_id%', NIL(%strict%))
 on conflict do nothing
   ]]>
 </insert>

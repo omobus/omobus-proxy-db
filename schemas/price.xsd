@@ -47,14 +47,18 @@
 	    <xs:sequence minOccurs="1" maxOccurs="unbounded">
 		<xs:element name="row">
 		    <xs:complexType>
-			<xs:attribute name="row_no" use="required" type="xs:integer" />
-			<xs:attribute name="prod_id" use="required" type="uid_t" />
-			<xs:attribute name="price" use="optional" type="currency_t" default="" />
-			<xs:attribute name="promo" use="optional" type="currency_t" default="" />
-			<xs:attribute name="discount" use="required" type="bool_t" />
-			<xs:attribute name="note" use="optional" type="xs:string" default="" />
-			<xs:attribute name="rrp" use="optional" type="currency_t" default="" />
-			<xs:attribute name="scratch" use="optional" type="date_t" default="" />
+			<xs:simpleContent>
+			    <xs:extension base="xs:base64Binary">
+				<xs:attribute name="row_no" use="required" type="xs:integer" />
+				<xs:attribute name="prod_id" use="required" type="uid_t" />
+				<xs:attribute name="price" use="optional" type="currency_t" default="" />
+				<xs:attribute name="promo" use="optional" type="currency_t" default="" />
+				<xs:attribute name="discount" use="required" type="bool_t" />
+				<xs:attribute name="note" use="optional" type="xs:string" default="" />
+				<xs:attribute name="rrp" use="optional" type="currency_t" default="" />
+				<xs:attribute name="scratch" use="optional" type="date_t" default="" />
+			    </xs:extension>
+			</xs:simpleContent>
 		    </xs:complexType>
 		</xs:element>
 	    </xs:sequence>
