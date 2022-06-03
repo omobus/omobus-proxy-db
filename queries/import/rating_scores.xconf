@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rating_scores templ="%rating_score_id%;%descr%;%score%;%wf%;%row_no%;">
+<rating_scores templ="%rating_score_id%;%descr%;%score%;%wf%;%extra_info%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from rating_scores
 </check_exist>
 <update>
   <![CDATA[
-update rating_scores set descr=trim(both from '%descr%'), score=0%score%, wf=0%wf%, row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update rating_scores set descr=trim(both from '%descr%'), score=0%score%, wf=0%wf%, extra_info=NIL(trim(both from '%extra_info%')), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where rating_score_id = '%rating_score_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into rating_scores (rating_score_id, descr, score, wf, row_no, hidden, db_ids)
-    values ('%rating_score_id%', trim(both from '%descr%'), 0%score%, 0%wf%, NIL(%row_no%), 0, array['%ErpCode%'])
+insert into rating_scores (rating_score_id, descr, score, wf, extra_info, row_no, hidden, db_ids)
+    values ('%rating_score_id%', trim(both from '%descr%'), 0%score%, 0%wf%, NIL(trim(both from '%extra_info%')), NIL(%row_no%), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>
