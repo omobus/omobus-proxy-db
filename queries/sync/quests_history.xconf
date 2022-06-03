@@ -11,6 +11,6 @@ select
     "_isRecentData" latest 
 from dyn_quests
 where fix_date >= (current_date - "paramInteger"('quests_history:depth'))::date_t
-order by 2, 3, 4, 1 desc
+order by 3, 4, 5, 2 desc
   ]]>
 </quests_history>
