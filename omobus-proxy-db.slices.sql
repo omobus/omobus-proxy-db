@@ -10,12 +10,11 @@ create table slices.agreements1 (
     strict 		bool_t 		not null default 1,
     cookie 		uid_t 		null,
     inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
     primary key (slice_date, account_id, placement_id, posm_id)
 );
 
 create index i_exist_agreements1 on slices.agreements1(slice_date, account_id);
-create trigger trig_updated_ts before update on slices.agreements1 for each row execute procedure tf_updated_ts();
+create trigger trig_lock_update before update on slices.agreements1 for each row execute procedure tf_lock_update();
 
 create table slices.agreements2 (
     slice_date 		date_t 		not null,
@@ -24,12 +23,11 @@ create table slices.agreements2 (
     facing 		int32_t 	not null check(facing > 0),
     strict 		bool_t 		not null default 1,
     inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
     primary key (slice_date, account_id, prod_id)
 );
 
 create index i_exist_agreements2 on slices.agreements2(slice_date, account_id);
-create trigger trig_updated_ts before update on slices.agreements2 for each row execute procedure tf_updated_ts();
+create trigger trig_lock_update before update on slices.agreements2 for each row execute procedure tf_lock_update();
 
 create table slices.agreements3 (
     slice_date 		date_t 		not null,
@@ -38,12 +36,11 @@ create table slices.agreements3 (
     stock 		int32_t 	not null check(stock > 0),
     strict 		bool_t 		not null default 1,
     inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
     primary key (slice_date, account_id, prod_id)
 );
 
 create index i_exist_agreements3 on slices.agreements3(slice_date, account_id);
-create trigger trig_updated_ts before update on slices.agreements3 for each row execute procedure tf_updated_ts();
+create trigger trig_lock_update before update on slices.agreements3 for each row execute procedure tf_lock_update();
 
 create table slices.matrices(
     slice_date 		date_t 		not null,
@@ -56,7 +53,7 @@ create table slices.matrices(
 );
 
 create index i_exist_matrices on slices.matrices(slice_date, account_id);
-create trigger trig_updated_ts before update on slices.matrices for each row execute procedure tf_updated_ts();
+create trigger trig_lock_update before update on slices.matrices for each row execute procedure tf_lock_update();
 
 create table slices.my_accounts (
     slice_date 		date_t 		not null,
@@ -69,5 +66,5 @@ create table slices.my_accounts (
 
 create index i_exist_my_accounts on slices.my_accounts(slice_date, user_id);
 create index i_slice_date_my_accounts on slices.my_accounts(slice_date);
-create trigger trig_updated_ts before update on slices.my_accounts for each row execute procedure tf_updated_ts();
+create trigger trig_lock_update before update on slices.my_accounts for each row execute procedure tf_lock_update();
 
