@@ -2,7 +2,7 @@
 <agreements2 templ="%slice_date%;%account_id%;%prod_id%;%facing%;%strict%;">
   <![CDATA[
 select slice_date, account_id, prod_id, facing, strict from slices.agreements2
-    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
+    where "LTS_aging_L"() <= inserted_ts and inserted_ts <= "LTS_aging_R"()
 order by 1, 2, 3
   ]]>
 </agreements2>

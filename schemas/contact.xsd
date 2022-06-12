@@ -25,9 +25,11 @@
 	</xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="int_t">
+    <xs:simpleType name="status_t">
 	<xs:restriction base="xs:string">
-	    <xs:pattern value="(|[0-9]*)" />
+	    <xs:enumeration value="" />
+	    <xs:enumeration value="collecting" />
+	    <xs:enumeration value="collecting_and_informing" />
 	</xs:restriction>
     </xs:simpleType>
 
@@ -37,43 +39,56 @@
 	</xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="uint_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="(|[0-9]*)" />
+	</xs:restriction>
+    </xs:simpleType>
+
     <xs:element name="contact">
 	<xs:complexType>
-	    <xs:attribute name="vstamp" use="required" type="xs:string" />
-	    <xs:attribute name="dev_pack" use="required" type="xs:integer" />
-	    <xs:attribute name="dev_id" use="required" type="xs:string" />
-	    <xs:attribute name="fix_dt" use="required" type="datetime_t" />
-	    <xs:attribute name="doc_id" use="required" type="xs:string" />
-	    <xs:attribute name="doc_note" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="user_id" use="required" type="xs:string" />
-	    <xs:attribute name="w_cookie" use="required" type="xs:string" />
-	    <xs:attribute name="a_cookie" use="required" type="xs:string" />
-	    <xs:attribute name="activity_type_id" use="required" type="uid_t" />
-	    <xs:attribute name="account_id" use="required" type="uid_t" />
-	    <xs:attribute name="created_dt" use="required" type="datetime_t" />
-	    <xs:attribute name="created_gps_la" use="optional" type="decimal_t" default="" />
-	    <xs:attribute name="created_gps_lo" use="optional" type="decimal_t" default="" />
-	    <xs:attribute name="created_gps_dt" use="optional" type="datetime2_t" default="" />
-	    <xs:attribute name="closed_dt" use="required" type="datetime_t" />
-	    <xs:attribute name="closed_gps_la" use="optional" type="decimal_t" default="" />
-	    <xs:attribute name="closed_gps_lo" use="optional" type="decimal_t" default="" />
-	    <xs:attribute name="closed_gps_dt" use="optional" type="datetime2_t" default="" />
-	    <xs:attribute name="contact_id" use="required" type="uid_t" />
-	    <xs:attribute name="name" use="required" type="xs:string" />
-	    <xs:attribute name="surname" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="patronymic" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="job_title_id" use="required" type="uid_t" />
-	    <xs:attribute name="mobile" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="email" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="spec_id" use="optional" type="uid_t" default="" />
-	    <xs:attribute name="cohort_id" use="optional" type="uid_t" default="" />
-	    <xs:attribute name="loyalty_level_id" use="optional" type="uid_t" default="" />
-	    <xs:attribute name="influence_level_id" use="optional" type="uid_t" default="" />
-	    <xs:attribute name="intensity_level_id" use="optional" type="uid_t" default="" />
-	    <xs:attribute name="start_year" use="optional" type="int_t" default="" />
-	    <xs:attribute name="locked" use="required" type="bool_t" />
-	    <xs:attribute name="deleted" use="required" type="bool_t" />
-	    <xs:attribute name="exist" use="required" type="bool_t" />
+	    <xs:simpleContent>
+		<xs:extension base="xs:base64Binary">
+		    <xs:attribute name="vstamp" use="required" type="xs:string" />
+		    <xs:attribute name="dev_pack" use="required" type="xs:integer" />
+		    <xs:attribute name="dev_id" use="required" type="xs:string" />
+		    <xs:attribute name="fix_dt" use="required" type="datetime_t" />
+		    <xs:attribute name="doc_id" use="required" type="xs:string" />
+		    <xs:attribute name="doc_note" use="optional" type="xs:string" default="" />
+		    <xs:attribute name="user_id" use="required" type="xs:string" />
+		    <xs:attribute name="w_cookie" use="required" type="xs:string" />
+		    <xs:attribute name="a_cookie" use="required" type="xs:string" />
+		    <xs:attribute name="activity_type_id" use="required" type="uid_t" />
+		    <xs:attribute name="account_id" use="required" type="uid_t" />
+		    <xs:attribute name="created_dt" use="required" type="datetime_t" />
+		    <xs:attribute name="created_gps_la" use="optional" type="decimal_t" default="" />
+		    <xs:attribute name="created_gps_lo" use="optional" type="decimal_t" default="" />
+		    <xs:attribute name="created_gps_dt" use="optional" type="datetime2_t" default="" />
+		    <xs:attribute name="closed_dt" use="required" type="datetime_t" />
+		    <xs:attribute name="closed_gps_la" use="optional" type="decimal_t" default="" />
+		    <xs:attribute name="closed_gps_lo" use="optional" type="decimal_t" default="" />
+		    <xs:attribute name="closed_gps_dt" use="optional" type="datetime2_t" default="" />
+		    <xs:attribute name="contact_id" use="required" type="uid_t" />
+		    <xs:attribute name="name" use="required" type="xs:string" />
+		    <xs:attribute name="surname" use="optional" type="xs:string" default="" />
+		    <xs:attribute name="patronymic" use="optional" type="xs:string" default="" />
+		    <xs:attribute name="job_title_id" use="required" type="uid_t" />
+		    <xs:attribute name="mobile" use="optional" type="xs:string" default="" />
+		    <xs:attribute name="email" use="optional" type="xs:string" default="" />
+		    <xs:attribute name="spec_id" use="optional" type="uid_t" default="" />
+		    <xs:attribute name="cohort_id" use="optional" type="uid_t" default="" />
+		    <xs:attribute name="loyalty_level_id" use="optional" type="uid_t" default="" />
+		    <xs:attribute name="influence_level_id" use="optional" type="uid_t" default="" />
+		    <xs:attribute name="intensity_level_id" use="optional" type="uid_t" default="" />
+		    <xs:attribute name="start_year" use="optional" type="uint_t" default="" />
+		    <xs:attribute name="consent_type" use="optional" type="xs:string" default="" />
+		    <xs:attribute name="consent_size" use="optional" type="uint_t" default="" />
+		    <xs:attribute name="consent_status" use="optional" type="status_t" default="" />
+		    <xs:attribute name="locked" use="required" type="bool_t" />
+		    <xs:attribute name="deleted" use="required" type="bool_t" />
+		    <xs:attribute name="exist" use="required" type="bool_t" />
+		</xs:extension>
+	    </xs:simpleContent>
 	</xs:complexType>
     </xs:element>
 </xs:schema>
