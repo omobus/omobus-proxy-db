@@ -8,9 +8,9 @@ create table logs.consents (
     log_id 		int64_t 	not null primary key default nextval('logs.seq_consents'),
     contact_id 		uid_t 		null,
     consent_dt 		datetime_t 	not null,
-    consent_data 	blob_t 		not null,
-    consent_type 	varchar(32) 	not null check(consent_type in ('application/pdf')),
-    consent_status 	varchar(24) 	not null check(consent_status in ('collecting','collecting_and_informing')),
+    consent_data 	blob_t 		null,
+    consent_type 	varchar(32) 	null check(consent_type in ('application/pdf')),
+    consent_status 	varchar(24) 	null check(consent_status in ('collecting','collecting_and_informing')),
     author_id 		uid_t 		null,
     inserted_ts 	ts_auto_t 	not null
 );
@@ -23,7 +23,7 @@ declare
     f int = 0;
 begin
     if( TG_OP = 'UPDATE') then
-	if new.consent_data is not null and (old.consent_data is null or new.consent_data <> old.consent_data) then
+	if coalesce(new.consent_data,0/*InvalidOid*/) <> coalesce(old.consent_data,0/*InvalidOid*/) then
 	    f := 1;
 	end if;
     elsif( TG_OP = 'INSERT') then
