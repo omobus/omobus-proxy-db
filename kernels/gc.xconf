@@ -17,6 +17,7 @@ begin
     delete from slices.agreements2 where slice_date < gc_date;
     delete from slices.agreements3 where slice_date < gc_date;
     delete from slices.matrices where slice_date < gc_date;
+    delete from slices.my_accounts where slice_date < gc_date;
 
     delete from account_hints where updated_ts::date_t < gc_date;
     for i in select cycle_id from route_cycles where e_date < gc_date loop
