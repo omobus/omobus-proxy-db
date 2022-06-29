@@ -5777,39 +5777,43 @@ as $BODY$
 declare
     c int;
     x address_t;
+    o address_t;
 begin
-    x := (select array_to_string(array_agg(trim(z)),', ') from unnest(string_to_array(trim((string_to_array(trim(new.address),'('))[1]), ',')) z where trim(z)<>'');
+    /* x <== NULL if string is empty */
+    x := (select array_to_string(array_agg(trim(z)),' ') from unnest(string_to_array(trim((string_to_array(trim(new.address),'('))[1]), ' ')) z where trim(z)<>'');
 
-    if( new.latitude is null or new.longitude is null or (new.latitude = 0 and new.longitude = 0) ) then
+    if new.account_id is not null and new.ftype = 0 then
 	if( TG_OP = 'UPDATE') then
+	    o := (select array_to_string(array_agg(trim(z)),' ') from unnest(string_to_array(trim((string_to_array(trim(old.address),'('))[1]), ' ')) z where trim(z)<>'');
 	    /* geocode changed address: */
-	    if( ltrim(rtrim(old.address)) <> ltrim(rtrim(new.address)) and new.ftype = 0 ) then 
+	    if x is not null and (o is null or x <> o) then
 		delete from geocode_stream where account_id=new.account_id;
-		if( new.address is not null and ltrim(rtrim(new.address)) <> '' and x <> '' ) then
-		    insert into geocode_stream (account_id, reverse, address) 
-			values (new.account_id, 0, x);
-		end if;
-		update accounts set latitude = null, longitude = null where account_id=new.account_id;
+		insert into geocode_stream (account_id, reverse, address) 
+		    values (new.account_id, 0, x);
+
+		new.latitude = null;
+		new.longitude = null;
 	    end if;
 	else
-	    delete from geocode_stream where account_id=new.account_id;
+	    delete from geocode_stream where account_id = new.account_id;
 	    /* geocode new address: */
-	    if( new.account_id is not null and new.ftype = 0 and new.address is not null and ltrim(rtrim(new.address))<>'' and x <> '' ) then
-		if( new.latitude is null or new.longitude is null or (new.latitude=0 and new.longitude=0) ) then
+	    if( new.latitude is null or new.longitude is null or (new.latitude=0 and new.longitude=0) ) then
+		if x is not null then
 		    insert into geocode_stream (account_id, reverse, address) 
 			values (new.account_id, 0, x);
-		else
-		    insert into geocode_stream (account_id, reverse, latitude, longitude, address) 
-			values (new.account_id, 1, new.latitude, new.longitude, x);
 		end if;
+	    else
+		insert into geocode_stream (account_id, reverse, latitude, longitude, address) 
+		    values (new.account_id, 1, new.latitude, new.longitude, x);
 	    end if;
 	end if;
     end if;
-    return null;
+
+    return new;
 end;
 $BODY$ language plpgsql;
 
-create trigger trig_geocode after insert or update on accounts for each row 
+create trigger trig_geocode before insert or update on accounts for each row 
     execute procedure tf_forward_geocoding();
 
 create table health_stream (
