@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<contacts templ="%contact_id%;%account_id%;%name%;%surname%;%patronymic%;%job_title_id%;%spec_id%;%cohort_id%;%loyalty_level_id%;%influence_level_id%;%intensity_level_id%;%start_year%;%mobile%;%email%;%locked%;%extra_info%;%consent_status%;%consent_data%;%consent_type%;%consent_dt%;%author_id%;%hidden%;%cookie%;">
+<contacts templ="%contact_id%;%account_id%;%name%;%surname%;%patronymic%;%job_title_id%;%spec_id%;%cohort_id%;%loyalty_level_id%;%influence_level_id%;%intensity_level_id%;%start_year%;%mobile%;%email%;%locked%;%extra_info%;%consent_status%;%consent_data%;%consent_type%;%consent_dt%;%consent_country%;%author_id%;%hidden%;%cookie%;">
   <![CDATA[
 select 
     contact_id, 
@@ -22,6 +22,7 @@ select
     consent_data, 
     consent_type, 
     consent_dt, 
+    consent_country,
     author_id, 
     hidden, 
     cookie

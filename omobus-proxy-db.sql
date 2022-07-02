@@ -1422,6 +1422,7 @@ create table contacts (
     consent_type 	varchar(32) 	null check(consent_type in ('application/pdf')),
     consent_status 	varchar(24)	null check(consent_status in ('collecting','collecting_and_informing')),
     consent_dt 		datetime_t 	null,
+    consent_country 	country_t 	null,
     locked 		bool_t 		not null default 0,
     extra_info 		note_t 		null,
     author_id 		uid_t 		null,
@@ -3964,6 +3965,7 @@ create table h_contact (
     consent_size 	int64_t 	null,
     consent_type 	varchar(32) 	null check(consent_type in ('application/pdf')),
     consent_status 	varchar(24)	null check(consent_status in ('collecting','collecting_and_informing')),
+    consent_country 	country_t 	null,
     locked 		bool_t 		not null default 0,
     deleted 		bool_t 		not null default 0,
     exist 		bool_t 		not null default 1

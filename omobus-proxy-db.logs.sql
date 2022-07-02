@@ -11,6 +11,7 @@ create table logs.consents (
     consent_data 	blob_t 		null,
     consent_type 	varchar(32) 	null check(consent_type in ('application/pdf')),
     consent_status 	varchar(24) 	null check(consent_status in ('collecting','collecting_and_informing')),
+    consent_country 	country_t 	null,
     author_id 		uid_t 		null,
     inserted_ts 	ts_auto_t 	not null
 );
@@ -33,8 +34,8 @@ begin
     end if;
 
     if f then
-	insert into logs.consents(contact_id, consent_dt, consent_data, consent_type, consent_status, author_id)
-	    values(new.contact_id, new.consent_dt, new.consent_data, new.consent_type, new.consent_status, new.author_id);
+	insert into logs.consents(contact_id, consent_dt, consent_data, consent_type, consent_status, consent_country, author_id)
+	    values(new.contact_id, new.consent_dt, new.consent_data, new.consent_type, new.consent_status, new.consent_country, new.author_id);
     end if;
 
     return new;

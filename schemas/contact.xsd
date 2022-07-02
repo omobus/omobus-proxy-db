@@ -84,6 +84,7 @@
 		    <xs:attribute name="consent_type" use="optional" type="xs:string" default="" />
 		    <xs:attribute name="consent_size" use="optional" type="uint_t" default="" />
 		    <xs:attribute name="consent_status" use="optional" type="status_t" default="" />
+		    <xs:attribute name="consent_country" use="optional" type="xs:string" default="" />
 		    <xs:attribute name="locked" use="required" type="bool_t" />
 		    <xs:attribute name="deleted" use="required" type="bool_t" />
 		    <xs:attribute name="exist" use="required" type="bool_t" />

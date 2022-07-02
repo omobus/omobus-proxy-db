@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<contacts templ="%account_id%;%contact_id%;%name%;%surname%;%patronymic%;%job_title_id%;%mobile%;%email%;%spec_id%;%cohort_id%;%loyalty_level_id%;%influence_level_id%;%intensity_level_id%;%start_year%;%locked%;%extra_info%;%consent_status%;" empty="no">
+<contacts templ="%account_id%;%contact_id%;%name%;%surname%;%patronymic%;%job_title_id%;%mobile%;%email%;%spec_id%;%cohort_id%;%loyalty_level_id%;%influence_level_id%;%intensity_level_id%;%start_year%;%locked%;%hidden%;%extra_info%;%consent_status%;" empty="no">
   <![CDATA[ 
 select 
     account_id, 
@@ -17,10 +17,11 @@ select
     intensity_level_id, 
     start_year, 
     locked, 
+    hidden,
     extra_info,
     consent_status
 from contacts
-    where hidden = 0
+    where hidden = 0 or (hidden = 1 and (current_date - updated_ts::date) <= 2)
 order by account_id, locked, surname, name
   ]]>
 </contacts>
