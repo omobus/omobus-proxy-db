@@ -87,7 +87,7 @@
 		    <xs:attribute name="consent_country" use="optional" type="xs:string" default="" />
 		    <xs:attribute name="locked" use="required" type="bool_t" />
 		    <xs:attribute name="deleted" use="required" type="bool_t" />
-		    <xs:attribute name="exist" use="required" type="bool_t" />
+<!--obsolete: --> <xs:attribute name="exist" use="optional" type="xs:string" default="" />
 		</xs:extension>
 	    </xs:simpleContent>
 	</xs:complexType>

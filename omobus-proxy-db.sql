@@ -3967,8 +3967,7 @@ create table h_contact (
     consent_status 	varchar(24)	null check(consent_status in ('collecting','collecting_and_informing')),
     consent_country 	country_t 	null,
     locked 		bool_t 		not null default 0,
-    deleted 		bool_t 		not null default 0,
-    exist 		bool_t 		not null default 1
+    deleted 		bool_t 		not null default 0
 );
 
 create index i_fix_date_h_contact on h_contact (left(fix_dt,10));
