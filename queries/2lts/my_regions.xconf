@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<my_regions templ="%user_id%;%region_id%;%chan_id%;" empty="no">
+<my_regions templ="%user_id%;%region_id%;%chan_id%;">
   <![CDATA[
 select user_id, region_id, chan_id from my_regions
     order by 1, 2, 3

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<my_cities templ="%user_id%;%city_id%;%chan_id%;" empty="no">
+<my_cities templ="%user_id%;%city_id%;%chan_id%;">
   <![CDATA[
 select user_id, city_id, chan_id from my_cities
     order by 1, 2, 3
