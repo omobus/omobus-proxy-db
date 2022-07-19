@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addition_types templ="%addition_type_id%;%descr%;%hidden%;">
+<addition_types templ="%addition_type_id%;%descr%;%hidden%;" empty="no">
   <![CDATA[
 select 
     addition_type_id, 

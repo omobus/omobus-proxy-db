@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<order_params templ="%distr_id%;%order_param_id%;%descr%;%hidden%;">
+<order_params templ="%distr_id%;%order_param_id%;%descr%;%hidden%;" empty="no">
   <![CDATA[
 select 
     distr_id, 

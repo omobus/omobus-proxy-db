@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<quest_items templ="%qname_id%;%qrow_id%;%qitem_id%;%descr%;%row_no%;%hidden%;">
+<quest_items templ="%qname_id%;%qrow_id%;%qitem_id%;%descr%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     qname_id, 

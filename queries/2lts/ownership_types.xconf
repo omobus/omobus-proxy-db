@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ownership_types templ="%ownership_type_id%;%descr%;%row_no%;%hidden%;">
+<ownership_types templ="%ownership_type_id%;%descr%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     ownership_type_id, 

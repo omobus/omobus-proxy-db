@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<user_works templ="%user_id%;%w_cookie%;%fix_date%;%b_dt%;%b_la%;%b_lo%;%b_sat_dt%;%e_dt%;%e_la%;%e_lo%;%e_sat_dt%;">
+<user_works templ="%user_id%;%w_cookie%;%fix_date%;%b_dt%;%b_la%;%b_lo%;%b_sat_dt%;%e_dt%;%e_la%;%e_lo%;%e_sat_dt%;" empty="no">
   <![CDATA[
 select user_id, w_cookie, fix_date, b_dt, b_la, b_lo, b_sat_dt, e_dt, e_la, e_lo, e_sat_dt from j_user_works
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"() and fix_date is not null

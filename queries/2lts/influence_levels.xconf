@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<influence_levels templ="%influence_level_id%;%descr%;%row_no%;%hidden%;">
+<influence_levels templ="%influence_level_id%;%descr%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     influence_level_id, 

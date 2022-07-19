@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<reclamations templ="%doc_id%;%fix_dt%;%distr_id%;%user_id%;%account_id%;%return_date%;%doc_note%;%rows%;%prod_id%;%row_no%;%reclamation_type_id%;%pack_id%;%pack%;%qty%;%unit_price%;%amount%;%weight%;%volume%;">
+<reclamations templ="%doc_id%;%fix_dt%;%distr_id%;%user_id%;%account_id%;%return_date%;%doc_note%;%rows%;%prod_id%;%row_no%;%reclamation_type_id%;%pack_id%;%pack%;%qty%;%unit_price%;%amount%;%weight%;%volume%;" empty="no">
   <![CDATA[
 select 
     h.doc_id, 

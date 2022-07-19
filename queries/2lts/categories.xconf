@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<categories templ="%categ_id%;%descr%;%row_no%;%hidden%;">
+<categories templ="%categ_id%;%descr%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     categ_id, 

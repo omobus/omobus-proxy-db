@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<user_reports templ="%act_id%;%user_id%;%w_cookie%;%fix_date%;%doc_type%;%duration%;%fix_dt%;%latitude%;%longitude%;%satellite_dt%;%a_cookie%;%account_id%;%activity_type_id%;%employee_id%;">
+<user_reports templ="%act_id%;%user_id%;%w_cookie%;%fix_date%;%doc_type%;%duration%;%fix_dt%;%latitude%;%longitude%;%satellite_dt%;%a_cookie%;%account_id%;%activity_type_id%;%employee_id%;" empty="no">
   <![CDATA[
 select act_id, user_id, w_cookie, left(fix_dt,10) fix_date, doc_type, duration, fix_dt, latitude, longitude, satellite_dt, a_cookie, account_id, activity_type_id, employee_id from a_user_report
     where "LTS_aging_L"() <= inserted_ts and inserted_ts <= "LTS_aging_R"()

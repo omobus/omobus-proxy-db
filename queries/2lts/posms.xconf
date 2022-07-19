@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<posms templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%placement_id%;%posm_id%;%photo%;%doc_note%;">
+<posms templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%placement_id%;%posm_id%;%photo%;%doc_note%;" empty="no">
   <![CDATA[
 select 
     x.doc_id, 

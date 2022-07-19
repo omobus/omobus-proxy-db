@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<equipments templ="%equipment_id%;%account_id%;%serial_number%;%equipment_type_id%;%ownership_type_id%;%extra_info%;%author_id%;%hidden%;">
+<equipments templ="%equipment_id%;%account_id%;%serial_number%;%equipment_type_id%;%ownership_type_id%;%extra_info%;%author_id%;%hidden%;" empty="no">
   <![CDATA[
 select 
     equipment_id, 

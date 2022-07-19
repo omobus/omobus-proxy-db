@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<user_documents templ="%act_id%;%user_id%;%w_cookie%;%fix_date%;%doc_type%;%doc_id%;%doc_no%;%duration%;%rows%;%fix_dt%;%latitude%;%longitude%;%satellite_dt%;%a_cookie%;%account_id%;%activity_type_id%;%employee_id%;">
+<user_documents templ="%act_id%;%user_id%;%w_cookie%;%fix_date%;%doc_type%;%doc_id%;%doc_no%;%duration%;%rows%;%fix_dt%;%latitude%;%longitude%;%satellite_dt%;%a_cookie%;%account_id%;%activity_type_id%;%employee_id%;" empty="no">
   <![CDATA[
 select
     a.act_id, a.user_id, a.w_cookie, left(a.fix_dt,10) fix_date, a.doc_type, a.doc_no, a.duration, a.rows, a.fix_dt, a.latitude, a.longitude, a.satellite_dt, a.a_cookie, a.account_id, a.activity_type_id, a.employee_id, j.doc_id

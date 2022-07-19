@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<products templ="%prod_id%;%pid%;%ftype%;%code%;%descr%;%kind_id%;%brand_id%;%categ_id%;%shelf_life_id%;%obsolete%;%novelty%;%promo%;%barcodes%;%units%;%country_ids%;%dep_ids%;%row_no%;%hidden%;">
+<products templ="%prod_id%;%pid%;%ftype%;%code%;%descr%;%kind_id%;%brand_id%;%categ_id%;%shelf_life_id%;%obsolete%;%novelty%;%promo%;%barcodes%;%units%;%country_ids%;%dep_ids%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     prod_id, 

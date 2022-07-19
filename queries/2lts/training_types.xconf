@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<training_types templ="%training_type_id%;%descr%;%row_no%;%hidden%;">
+<training_types templ="%training_type_id%;%descr%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     training_type_id, 

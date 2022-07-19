@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<intensity_levels templ="%intensity_level_id%;%descr%;%row_no%;%hidden%;">
+<intensity_levels templ="%intensity_level_id%;%descr%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     intensity_level_id, 

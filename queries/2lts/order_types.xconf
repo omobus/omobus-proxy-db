@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<order_types templ="%order_type_id%;%descr%;%hidden%;">
+<order_types templ="%order_type_id%;%descr%;%hidden%;" empty="no">
   <![CDATA[
 select 
     order_type_id, 

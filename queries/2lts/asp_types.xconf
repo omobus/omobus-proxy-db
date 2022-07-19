@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<asp_types templ="%asp_type_id%;%descr%;%row_no%;%props%;%hidden%;">
+<asp_types templ="%asp_type_id%;%descr%;%row_no%;%props%;%hidden%;" empty="no">
   <![CDATA[ 
 select 
     asp_type_id, 

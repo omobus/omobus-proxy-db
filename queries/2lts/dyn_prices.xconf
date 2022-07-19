@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dyn_prices templ="%fix_date%;%account_id%;%prod_id%;%price%;%promo%;%discount%;%note%;%photo%;%rrp%;%fix_dt%;%user_id%;%doc_id%;%_isrecentdata%;">
+<dyn_prices templ="%fix_date%;%account_id%;%prod_id%;%price%;%promo%;%discount%;%note%;%photo%;%rrp%;%fix_dt%;%user_id%;%doc_id%;%_isrecentdata%;" empty="no">
   <![CDATA[
 select 
     d.fix_date, 

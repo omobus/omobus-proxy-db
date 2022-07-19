@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rating_scores templ="%rating_score_id%;%descr%;%score%;%row_no%;%hidden%;">
+<rating_scores templ="%rating_score_id%;%descr%;%score%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     rating_score_id, 

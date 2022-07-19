@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<channels templ="%chan_id%;%descr%;%hidden%;">
+<channels templ="%chan_id%;%descr%;%hidden%;" empty="no">
   <![CDATA[
 select 
     chan_id, 

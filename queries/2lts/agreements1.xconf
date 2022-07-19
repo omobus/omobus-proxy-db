@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<agreements1 templ="%slice_date%;%account_id%;%placement_id%;%posm_id%;%strict%;%cookie%;">
+<agreements1 templ="%slice_date%;%account_id%;%placement_id%;%posm_id%;%strict%;%cookie%;" empty="no">
   <![CDATA[
 select slice_date, account_id, placement_id, posm_id, strict, cookie from slices.agreements1
     where "LTS_aging_L"() <= inserted_ts and inserted_ts <= "LTS_aging_R"()

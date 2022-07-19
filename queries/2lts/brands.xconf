@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<brands templ="%brand_id%;%descr%;%manuf_id%;%row_no%;%hidden%;">
+<brands templ="%brand_id%;%descr%;%manuf_id%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     brand_id, 

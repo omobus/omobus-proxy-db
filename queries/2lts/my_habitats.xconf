@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<my_habitats templ="%user_id%;%account_id%;">
+<my_habitats templ="%user_id%;%account_id%;" empty="no">
   <![CDATA[
 select user_id, account_id from my_habitats
     order by 1, 2

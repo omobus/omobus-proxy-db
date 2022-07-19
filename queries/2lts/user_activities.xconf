@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<user_activities templ="%user_id%;%account_id%;%w_cookie%;%a_cookie%;%activity_type_id%;%fix_date%;%route_date%;%b_dt%;%b_la%;%b_lo%;%b_sat_dt%;%e_dt%;%e_la%;%e_lo%;%e_sat_dt%;%employee_id%;%extra_info%;%docs%;%mileage%;%zstatus%;%znote%;%zauthor_id%;%zreq_dt%;">
+<user_activities templ="%user_id%;%account_id%;%w_cookie%;%a_cookie%;%activity_type_id%;%fix_date%;%route_date%;%b_dt%;%b_la%;%b_lo%;%b_sat_dt%;%e_dt%;%e_la%;%e_lo%;%e_sat_dt%;%employee_id%;%extra_info%;%docs%;%mileage%;%zstatus%;%znote%;%zauthor_id%;%zreq_dt%;" empty="no">
   <![CDATA[
 select 
     j.user_id, 

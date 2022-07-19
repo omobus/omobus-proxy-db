@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cohorts templ="%cohort_id%;%descr%;%row_no%;%hidden%;">
+<cohorts templ="%cohort_id%;%descr%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     cohort_id, 

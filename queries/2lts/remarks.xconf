@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<remarks templ="%doc_id%;%status%;%remark_type_id%;%note%;">
+<remarks templ="%doc_id%;%status%;%remark_type_id%;%note%;" empty="no">
   <![CDATA[
 select 
     doc_id, 

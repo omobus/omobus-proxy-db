@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<users templ="%user_id%;%pids%;%descr%;%role%;%country_id%;%dep_ids%;%distr_ids%;%agency_id%;%mobile%;%email%;%area%;%executivehead_id%;%props%;%rules:wd_begin%;%rules:wd_end%;%hidden%;">
+<users templ="%user_id%;%pids%;%descr%;%role%;%country_id%;%dep_ids%;%distr_ids%;%agency_id%;%mobile%;%email%;%area%;%executivehead_id%;%props%;%rules:wd_begin%;%rules:wd_end%;%hidden%;" empty="no">
   <![CDATA[
 select 
     user_id, 

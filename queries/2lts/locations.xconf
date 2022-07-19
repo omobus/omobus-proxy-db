@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<locations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%latitude%;%longitude%;%accuracy%;%dist%;">
+<locations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%latitude%;%longitude%;%accuracy%;%dist%;" empty="no">
   <![CDATA[
 select 
     doc_id, fix_dt, user_id, account_id, latitude, longitude, accuracy, dist

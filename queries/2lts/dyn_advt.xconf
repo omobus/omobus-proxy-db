@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dyn_advt templ="%fix_date%;%account_id%;%placement_id%;%posm_id%;%qty%;%fix_dt%;%user_id%;%doc_id%;%_isrecentdata%;">
+<dyn_advt templ="%fix_date%;%account_id%;%placement_id%;%posm_id%;%qty%;%fix_dt%;%user_id%;%doc_id%;%_isrecentdata%;" empty="no">
   <![CDATA[
 select fix_date, account_id, placement_id, posm_id, qty, fix_dt, user_id, doc_id, "_isRecentData" from dyn_advt
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<discards templ="%account_id%;%user_id%;%fix_dt%;%activity_type_id%;%route_date%;%discard_type_id%;%note%;%validator_id%;%validated%;%hidden%;">
+<discards templ="%account_id%;%user_id%;%fix_dt%;%activity_type_id%;%route_date%;%discard_type_id%;%note%;%validator_id%;%validated%;%hidden%;" empty="no">
   <![CDATA[
 select account_id, user_id, fix_dt, activity_type_id, route_date, discard_type_id, note, validator_id, validated, hidden from j_discards
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()

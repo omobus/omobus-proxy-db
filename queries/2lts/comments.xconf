@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<comments templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%comment_type_id%;%doc_note%;%photo%;">
+<comments templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%comment_type_id%;%doc_note%;%photo%;" empty="no">
   <![CDATA[
 select 
     x.doc_id, x.fix_dt, x.user_id, x.account_id, x.comment_type_id, x.doc_note, ts.guid photo 

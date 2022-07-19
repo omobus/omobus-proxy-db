@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<unsched_types templ="%unsched_type_id%;%descr%;%row_no%;%hidden%;">
+<unsched_types templ="%unsched_type_id%;%descr%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     unsched_type_id, 

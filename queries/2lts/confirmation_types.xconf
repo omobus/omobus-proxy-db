@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<confirmation_types templ="%confirmation_type_id%;%descr%;%succeeded%;%row_no%;%props%;%hidden%;">
+<confirmation_types templ="%confirmation_type_id%;%descr%;%succeeded%;%row_no%;%props%;%hidden%;" empty="no">
   <![CDATA[ 
 select 
     confirmation_type_id, 

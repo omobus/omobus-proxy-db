@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<target_types templ="%target_type_id%;%descr%;%row_no%;%hidden%;">
+<target_types templ="%target_type_id%;%descr%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     target_type_id, 

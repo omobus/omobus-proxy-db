@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<training_materials templ="%tm_id%;%descr%;%brand_ids%;%country_id%;%dep_ids%;%b_date%;%e_date%;%author_id%;%hidden%;">
+<training_materials templ="%tm_id%;%descr%;%brand_ids%;%country_id%;%dep_ids%;%b_date%;%e_date%;%author_id%;%hidden%;" empty="no">
   <![CDATA[
 select 
     tm_id, 

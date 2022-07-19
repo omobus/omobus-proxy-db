@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<canceling_types templ="%canceling_type_id%;%descr%;%hidden%;">
+<canceling_types templ="%canceling_type_id%;%descr%;%hidden%;" empty="no">
   <![CDATA[
 select 
     canceling_type_id, 

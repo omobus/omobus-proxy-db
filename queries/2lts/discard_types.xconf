@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<discard_types templ="%discard_type_id%;%descr%;%row_no%;%hidden%;">
+<discard_types templ="%discard_type_id%;%descr%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     discard_type_id, 

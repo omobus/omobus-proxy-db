@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<profiles templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%chan_id%;%poten_id%;%phone%;%workplaces%;%team%;%interaction_type_id%;%attr_ids%;">
+<profiles templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%chan_id%;%poten_id%;%phone%;%workplaces%;%team%;%interaction_type_id%;%attr_ids%;" empty="no">
   <![CDATA[
 select 
     doc_id,

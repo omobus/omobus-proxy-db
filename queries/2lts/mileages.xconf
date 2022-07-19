@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mileages templ="%user_id%;%fix_date%;%total%;%route%;">
+<mileages templ="%user_id%;%fix_date%;%total%;%route%;" empty="no">
   <![CDATA[
 select
     user_id, 

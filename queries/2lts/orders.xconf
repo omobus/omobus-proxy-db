@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<orders templ="%doc_id%;%fix_dt%;%distr_id%;%user_id%;%account_id%;%order_type_id%;%group_price_id%;%wareh_id%;%delivery_date%;%delivery_type_id%;%delivery_note%;%doc_note%;%payment_method_id%;%payment_delay%;%bonus%;%encashment%;%order_param_ids%;%rows%;%prod_id%;%row_no%;%pack_id%;%pack%;%qty%;%unit_price%;%discount%;%amount%;%weight%;%volume%;">
+<orders templ="%doc_id%;%fix_dt%;%distr_id%;%user_id%;%account_id%;%order_type_id%;%group_price_id%;%wareh_id%;%delivery_date%;%delivery_type_id%;%delivery_note%;%doc_note%;%payment_method_id%;%payment_delay%;%bonus%;%encashment%;%order_param_ids%;%rows%;%prod_id%;%row_no%;%pack_id%;%pack%;%qty%;%unit_price%;%discount%;%amount%;%weight%;%volume%;" empty="no">
   <![CDATA[
 select 
     h.doc_id, h.fix_dt, h.user_id, h.account_id, h.distr_id, h.order_type_id, h.group_price_id, h.wareh_id, h.delivery_date, h.delivery_type_id, h.delivery_note, h.doc_note, h.payment_method_id, h.payment_delay, h.bonus, h.encashment, h.order_param_ids, h.rows, t.prod_id, t.row_no, t.pack_id, t.pack, t.qty, t.unit_price, t.discount, t.amount, t.weight, t.volume 

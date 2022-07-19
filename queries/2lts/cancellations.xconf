@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cancellations templ="%user_id%;%route_date%;%canceling_type_id%;%note%;%hidden%;">
+<cancellations templ="%user_id%;%route_date%;%canceling_type_id%;%note%;%hidden%;" empty="no">
   <![CDATA[
 select 
     user_id, route_date, canceling_type_id, note, hidden

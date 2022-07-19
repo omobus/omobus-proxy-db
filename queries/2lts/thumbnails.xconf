@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<thumbnails templ="%ref_id%;%photo%;%thumb%;%thumb_width%;%thumb_height%;">
+<thumbnails templ="%ref_id%;%photo%;%thumb%;%thumb_width%;%thumb_height%;" empty="no">
   <![CDATA[
 select guid ref_id, photo, thumb, thumb_width, thumb_height from thumbnail_stream
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()

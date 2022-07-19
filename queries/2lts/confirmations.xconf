@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<confirmations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%target_id%;%confirmation_type_id%;%doc_note%;%photos%;">
+<confirmations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%target_id%;%confirmation_type_id%;%doc_note%;%photos%;" empty="no">
   <![CDATA[
 select 
     x.doc_id, x.fix_dt, x.user_id, x.account_id, x.target_id, x.confirmation_type_id, x.doc_note, 

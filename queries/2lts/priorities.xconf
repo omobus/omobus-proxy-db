@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<priorities templ="%brand_id%;%b_date%;%e_date%;%country_id%;">
+<priorities templ="%brand_id%;%b_date%;%e_date%;%country_id%;" empty="no">
   <![CDATA[
 select brand_id, b_date, e_date, country_id from priorities
     where e_date >= "LTS_aging_L"()::date_t

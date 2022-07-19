@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<presentations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%participants%;%tm_ids%;%doc_note%;%photos%;">
+<presentations templ="%doc_id%;%fix_dt%;%user_id%;%account_id%;%participants%;%tm_ids%;%doc_note%;%photos%;" empty="no">
   <![CDATA[
 select 
     x.doc_id, 

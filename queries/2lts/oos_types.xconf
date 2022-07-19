@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<oos_types templ="%oos_type_id%;%descr%;%row_no%;%hidden%;">
+<oos_types templ="%oos_type_id%;%descr%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     oos_type_id, 

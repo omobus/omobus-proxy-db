@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<specializations templ="%spec_id%;%descr%;%hidden%;">
+<specializations templ="%spec_id%;%descr%;%hidden%;" empty="no">
   <![CDATA[
 select 
     spec_id, 

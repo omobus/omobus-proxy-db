@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wishes templ="%account_id%;%user_id%;%fix_dt%;%weeks%;%days%;%note%;%validator_id%;%validated%;%hidden%;">
+<wishes templ="%account_id%;%user_id%;%fix_dt%;%weeks%;%days%;%note%;%validator_id%;%validated%;%hidden%;" empty="no">
   <![CDATA[
 select 
     account_id, 

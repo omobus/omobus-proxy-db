@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manufacturers templ="%manuf_id%;%descr%;%competitor%;%hidden%;">
+<manufacturers templ="%manuf_id%;%descr%;%competitor%;%hidden%;" empty="no">
   <![CDATA[
 select 
     manuf_id, 

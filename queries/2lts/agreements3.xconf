@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<agreements3 templ="%slice_date%;%account_id%;%prod_id%;%stock%;%strict%;">
+<agreements3 templ="%slice_date%;%account_id%;%prod_id%;%stock%;%strict%;" empty="no">
   <![CDATA[
 select slice_date, account_id, prod_id, stock, strict from slices.agreements3
     where "LTS_aging_L"() <= inserted_ts and inserted_ts <= "LTS_aging_R"()

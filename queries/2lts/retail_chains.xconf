@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<retail_chains templ="%rc_id%;%descr%;%ka_type%;%country_id%;%hidden%;">
+<retail_chains templ="%rc_id%;%descr%;%ka_type%;%country_id%;%hidden%;" empty="no">
   <![CDATA[
 select 
     rc_id, 
