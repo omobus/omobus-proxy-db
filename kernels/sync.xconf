@@ -545,11 +545,6 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<quest_items key="qrow_pkey" strict="yes" />
 	<quest_names key="qname_id" strict="yes" />
     </quest_rows>
-    <vf_accounts personalize="ErpId" />
-    <vf_names>
-	<vf_accounts key="vf_id" strict="yes" />
-	<vf_products key="vf_id" strict="yes" />
-    </vf_names>
     <orders_history>
 	<orders_history_products key="doc_id" strict="yes" />
 	<!--<orders_history_products key="erp_id" />-->
@@ -558,6 +553,14 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<reclamations_history_products key="doc_id" strict="yes" />
 	<!--<reclamations_history_products key="erp_id" />-->
     </reclamations_history>
+    <rating_criterias>
+	<ratings_history key="rating_criteria_id" />
+    </rating_criterias>
+    <vf_accounts personalize="ErpId" />
+    <vf_names>
+	<vf_accounts key="vf_id" strict="yes" />
+	<vf_products key="vf_id" strict="yes" />
+    </vf_names>
     <zztop />
 </pack>
 </kernel>
