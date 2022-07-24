@@ -20,10 +20,7 @@ fi
 psql -d postgres -c \
     "CREATE DATABASE \"$dbname\" WITH OWNER = omobus ENCODING = 'UTF8' TABLESPACE = pg_default CONNECTION LIMIT = 30"
 
-psql -d $dbname -c \
-    "CREATE LANGUAGE plpgsql"
-
-psql -d $dbname -f ./omobus-proxy-db.sql
+psql -d $dbname -f ./omobus-proxy-db.core.sql
 psql -d $dbname -f ./omobus-proxy-db.console.sql
 psql -d $dbname -f ./omobus-proxy-db.shadows.sql
 psql -d $dbname -f ./omobus-proxy-db.slices.sql
