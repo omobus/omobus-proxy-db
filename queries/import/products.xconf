@@ -22,7 +22,7 @@ select count(*) from products
 </check_exist>
 <update>
   <![CDATA[
-update products set pid=NIL('%pid%'), ftype=0%ftype%, code=NIL(trim(both from '%code%')), descr=trim(both from '%descr%'), shelf_life_id=NIL('%shelf_life_id%'), kind_id=NIL('%kind_id%'), brand_id=NIL('%brand_id%'), categ_id=NIL('%categ_id%'), obsolete=0%obsolete%, novelty=0%novelty%, promo=0%promo%, barcodes=ean13_in(string_to_array(NIL('%barcodes%'),',')), units=greatest(1,0%units%), country_ids=string_to_array(NIL('%country_ids%'),','), dep_ids=string_to_array(NIL('%dep_ids%'),','), image=resolve_blob_stream('//%uid%/%image%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update products set pid=NIL('%pid%'), ftype=0%ftype%, code=NIL(trim(both from '%code%')), descr=trim(both from '%descr%'), shelf_life_id=NIL('%shelf_life_id%'), kind_id=NIL('%kind_id%'), brand_id=NIL('%brand_id%'), categ_id=NIL('%categ_id%'), obsolete=0%obsolete%, novelty=0%novelty%, promo=0%promo%, barcodes=ean13_in(string_to_array(NIL('%barcodes%'),',')), units=greatest(1,0%units%), country_ids=string_to_array(NIL('%country_ids%'),','), dep_ids=string_to_array(NIL('%dep_ids%'),','), image=coalesce(resolve_blob_stream('//%uid%/%image%'),image), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where prod_id = '%prod_id%'
   ]]>
 </update>
