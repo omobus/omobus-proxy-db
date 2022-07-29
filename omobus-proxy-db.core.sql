@@ -2611,7 +2611,7 @@ create trigger trig_updated_ts before update on routes for each row execute proc
 create table rules (
     doc_type 		doctype_t 	not null,
     role 		code_t 		not null,
-    frequency 		code_t 		not null check(frequency in ('everytime','once_a_week','once_a_month','once_a_quarter')),
+    frequency 		code_t 		not null check(frequency in ('everytime','once_a_week','once_a_month','once_a_month_l2w','once_a_quarter')),
 /* extra attributes for the my_jobs stream (accounts filter) BEGIN */
     account_ids 	uids_t 		null,
     region_ids 		uids_t		null,
