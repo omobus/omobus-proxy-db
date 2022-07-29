@@ -59,7 +59,7 @@
 		    <xs:attribute name="equipment_type_id" use="required" type="uid_t" />
 		    <xs:attribute name="ownership_type_id" use="optional" type="uid_t" default="" />
 		    <xs:attribute name="deleted" use="required" type="bool_t" />
-		    <xs:attribute name="exist" use="required" type="bool_t" />
+<!--obsolete: --> <xs:attribute name="exist" use="optional" type="xs:string" default="" />
 		</xs:extension>
 	    </xs:simpleContent>
 	</xs:complexType>
