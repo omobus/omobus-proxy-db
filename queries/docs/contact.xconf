@@ -53,11 +53,11 @@ begin
     elsif( (select count(*) from contacts where contact_id='%contact_id%' and ("_dataTimestamp" is null or "_dataTimestamp" < '%fix_dt%')) > 0 ) then
 	if( (select count(consent_data) from h_contact where doc_id='%doc_id_sys%' and consent_data is not null) > 0 ) then
 	    update contacts set (/*account_id,*/ name, patronymic, surname, job_title_id, mobile, email, spec_id, cohort_id, loyalty_level_id, influence_level_id, intensity_level_id, start_year, extra_info, consent_status, consent_type, consent_dt, consent_data, consent_country, author_id, locked, hidden, "_dataTimestamp", "_isAlienData", db_ids) = 
-		(select /*account_id,*/ name, patronymic, surname, job_title_id, mobile, email, spec_id, cohort_id, loyalty_level_id, influence_level_id, intensity_level_id, start_year, doc_note, consent_status, consent_type, fix_dt, consent_data, consent_country, user_id, "toBoolean"('%locked%'), "toBoolean"('%deleted%'), fix_dt, 0, null::uids_t from h_contact where doc_id = '%doc_id_sys%')
+		(select /*account_id,*/ name, patronymic, surname, job_title_id, mobile, email, spec_id, cohort_id, loyalty_level_id, influence_level_id, intensity_level_id, start_year, doc_note, consent_status, consent_type, fix_dt, consent_data, consent_country, user_id, locked, deleted, fix_dt, 0, null::uids_t from h_contact where doc_id = '%doc_id_sys%')
 	    where contact_id='%contact_id%';
 	else
 	    update contacts set (/*account_id,*/ name, patronymic, surname, job_title_id, mobile, email, spec_id, cohort_id, loyalty_level_id, influence_level_id, intensity_level_id, start_year, extra_info, author_id, locked, hidden, "_dataTimestamp", "_isAlienData", db_ids) = 
-		(select /*account_id,*/ name, patronymic, surname, job_title_id, mobile, email, spec_id, cohort_id, loyalty_level_id, influence_level_id, intensity_level_id, start_year, doc_note, user_id, "toBoolean"('%locked%'), "toBoolean"('%deleted%'), fix_dt, 0, null::uids_t from h_contact where doc_id = '%doc_id_sys%')
+		(select /*account_id,*/ name, patronymic, surname, job_title_id, mobile, email, spec_id, cohort_id, loyalty_level_id, influence_level_id, intensity_level_id, start_year, doc_note, user_id, locked, deleted, fix_dt, 0, null::uids_t from h_contact where doc_id = '%doc_id_sys%')
 	    where contact_id='%contact_id%';
 	end if;
     else
@@ -67,7 +67,7 @@ begin
 	    select consent_status, consent_type, fix_dt, consent_data, consent_country from h_contact 
 		where contact_id='%contact_id%' and consent_data is not null order by fix_dt desc limit 1
 	    into rec;
-	    if b = rec.consent_data then
+	    if rec is null or b = rec.consent_data then
 		update contacts set (consent_status, consent_type, consent_dt, consent_data, consent_country) = 
 		    (rec.consent_status, rec.consent_type, rec.fix_dt, rec.consent_data, rec.consent_country)
 		where contact_id='%contact_id%';
