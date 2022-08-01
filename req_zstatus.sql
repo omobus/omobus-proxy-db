@@ -4,18 +4,17 @@ create or replace function console.req_zstatus(_login uid_t, _reqdt datetime_t, 
     returns int
 as $BODY$
 declare
-    stack text; fcesig text;
+    stack text;
+    fcesig text;
     zrows int;
     hs hstore;
-    author_name descr_t;
+    reqId uid_t;
     u_id uid_t;
-    u_name descr_t;
-    head_id uid_t;
-    a_name descr_t;
-    a_address address_t;
-    a_type descr_t;
+    h_id uid_t;
+    e_id uid_t;
     p_date date_t;
     f_date date_t;
+    locked bool_t;
 begin
     GET DIAGNOSTICS stack = PG_CONTEXT;
     fcesig := substring(stack from 'function console\.(.*?)\(');
@@ -39,71 +38,53 @@ begin
 	GET DIAGNOSTICS zrows = ROW_COUNT;
     end if;
 
-    if( zrows > 0 ) then
-	select j.user_id, a.descr, a.address, t.descr, j.route_date, j.fix_date from j_user_activities j, activity_types t, accounts a
-	    where j.guid = _cookie and j.account_id = a.account_id and j.activity_type_id = t.activity_type_id
-	into u_id, a_name, a_address, a_type, p_date, f_date;
-
-	select descr from users where user_id = _login
-	    into author_name;
-
-	if( f_date is not null ) then
-	    perform content_add('tech_route', u_id, f_date, f_date);
-	    perform content_add('route_compliance', '', f_date, f_date);
-	    perform content_add('time', '', "monthDate_First"(f_date), "monthDate_Last"(f_date));
-	end if;
-	if( p_date is not null and (f_date is null or f_date <> p_date) ) then
-	    perform content_add('tech_route', u_id, p_date, p_date);
-	    perform content_add('route_compliance', '', p_date, p_date);
-	    perform content_add('time', '', "monthDate_First"(p_date), "monthDate_Last"(p_date));
-	end if;
-
-	perform evmail_add(
-	    u_id, 
-	    format('zstatus/caption:%s', _cmd), 
-	    format('zstatus/body:staff:%s', case when _cmd = 'reject' then _cmd else _cmd || (case when _note is null then '1' else '0' end) end), 
-	    case when _cmd = 'reject' then 2::smallint /*high*/ else 3::smallint /*normal*/ end, 
-	    array[
-		'a_name', a_name,
-		'address', a_address,
-		'fix_date', "L"(f_date),
-		'u_name', case when author_name is null then lower(_login) else author_name end,
-		'a_type', lower(a_type),
-		'note', _note
-	    ]
-	);
-
-	if( _cmd = 'reject' ) then
-	    select executivehead_id, descr from users where user_id = u_id
-		into head_id, u_name;
-	    if( head_id <> _login ) then
-		perform evmail_add(
-		    head_id, 
-		    'zstatus/caption:reject', 
-		    'zstatus/body:head:reject',
-		    3::smallint /*normal*/, 
-		    array[
-			'a_name', a_name,
-			'address', a_address,
-			'fix_date', "L"(f_date),
-			'performer_name', u_name,
-			'u_name', case when author_name is null then lower(_login) else author_name end,
-			'a_type', lower(a_type),
-			'note',_note
-		    ]
-		);
-	    end if;
-	end if;
-    end if;
-
     hs := hstore(array['guid',_cookie::varchar]);
     hs := hs || hstore(array['zrows',zrows::varchar]);
     if _note is not null then
 	hs := hs || hstore(array['note',_note]);
     end if;
 
-    insert into console.requests(req_login, req_type, req_dt, status, attrs)
-	values(_login, fcesig, _reqdt, _cmd, hs);
+    reqId := nextval('console.seq_requests');
+    insert into console.requests(req_id, req_login, req_type, req_dt, status, attrs)
+	values(reqId, _login, fcesig, _reqdt, _cmd, hs);
+
+    if( zrows > 0 ) then
+	select user_id, route_date, fix_date from j_user_activities where guid = _cookie
+	    into u_id, p_date, f_date;
+	select hidden from users where user_id = u_id
+	    into locked;
+
+	if( u_id is not null and f_date is not null ) then
+	    perform content_add('tech_route', u_id, f_date, f_date);
+	    perform content_add('route_compliance', '', f_date, f_date);
+	    perform content_add('time', '', "monthDate_First"(f_date), "monthDate_Last"(f_date));
+	end if;
+	if( u_id is not null and p_date is not null and (f_date is null or f_date <> p_date) ) then
+	    perform content_add('tech_route', u_id, p_date, p_date);
+	    perform content_add('route_compliance', '', p_date, p_date);
+	    perform content_add('time', '', "monthDate_First"(p_date), "monthDate_Last"(p_date));
+	end if;
+	if( u_id is not null and locked = 0 ) then
+	    hs := hstore('guid', _cookie::text);
+	    hs := hs || hstore('req_id', reqId);
+	    if( _cmd = 'accept' ) then
+		perform streams.spam_add('zstatus_accepted', hs);
+	    elsif( _cmd = 'reject' ) then
+		select executivehead_id from users where user_id = u_id and hidden = 0
+		    into e_id;
+		select pids[1] from users where user_id = u_id and hidden = 0
+		    into h_id;
+
+		if( e_id is not null and e_id <> _login ) then
+		    perform streams.spam_add('zstatus_notice', hs || hstore('dst_id', e_id));
+		end if;
+		if( h_id is not null and h_id <> _login and (e_id is null or h_id <> e_id) ) then
+		    perform streams.spam_add('zstatus_notice', hs || hstore('dst_id', h_id));
+		end if;
+		perform streams.spam_add('zstatus_rejected', hs);
+	    end if;
+	end if;
+    end if;
 
     return zrows;
 end;

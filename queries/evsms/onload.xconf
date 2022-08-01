@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <onload>
   <![CDATA[ 
-select cast(ev_id as varchar(16)) ev_id, rcpt_to, sms_from, msg from sms_stream
+select cast(ev_id as varchar(16)) ev_id, rcpt_to, sms_from, msg from streams.sms_stream
     where sent_ts is null and step < 60
   ]]>
 </onload>

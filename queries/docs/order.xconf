@@ -74,7 +74,7 @@ begin
 
 -- **** order --> spam_stream
     if NIL('%mailboxes%') is not null then
-	perform spam_add('order_summary', '%user_id_sys%', hstore('doc_id','%doc_id_sys%'));
+	perform streams.spam_add('order_summary', hstore('doc_id','%doc_id_sys%'));
     end if;
 end;
 $$;

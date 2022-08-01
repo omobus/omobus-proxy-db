@@ -16,7 +16,7 @@ select
     h.doc_note, 
     u.descr u_name,
     array_to_string(h.mailboxes,',') mailboxes
-from spam_stream j
+from streams.spam_stream j
     left join h_order h on h.doc_id = j.attrs->'doc_id'
     left join users u on u.user_id = h.user_id
     left join accounts a on a.account_id = h.account_id
@@ -35,7 +35,7 @@ select
     x.descr pack, 
     t.unit_price, 
     t.amount
-from spam_stream j
+from streams.spam_stream j
     left join t_order t on t.doc_id = j.attrs->'doc_id'
     left join products p on p.prod_id = t.prod_id
     left join packs x on x.prod_id = t.prod_id and x.pack_id = t.pack_id

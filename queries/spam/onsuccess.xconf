@@ -2,9 +2,9 @@
 <onsuccess>
   <![CDATA[
 insert into mail_stream (rcpt_to, cap, msg, content, priority, attachment, filename)
-    values (string_to_array('%rcpt_to%', ','), '%msg_cap%', '%msg_body%', '%msg_content%', %priority%::smallint, $1:blob, '%filename%');
+    values (string_to_array('%rcpt_to%', ','), '%msg_cap%', '%msg_body%', '%msg_content%', %priority%::smallint, $1:blob, NIL('%filename%'));
 
-update spam_stream set spam_ts = current_timestamp 
+update streams.spam_stream set spam_ts = current_timestamp 
     where spam_id = '%spam_id%';
   ]]>
 </onsuccess>

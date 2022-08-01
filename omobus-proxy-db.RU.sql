@@ -479,12 +479,6 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/body:reject','<html><body>$(u_name) отклонил(-а) включение <i>$(a_name) $(address)</i> в маршрут.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/caption:validate','Включение в маршрут (подтверждение): $(a_name)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/body:validate','<html><body>$(u_name) подвердил(-а) включение <i>$(a_name) $(address)</i> в маршрут.</body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/caption:accept','Посещение принято');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/caption:reject','Посещение отклонено');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/body:staff:accept0','<html><body>$(u_name) принял(-а) $(a_type) <i>$(a_name) $(address)</i> от <i>$(fix_date)</i>. Дополнительная информация:<br/><br/><b>$(note)</b><br/></body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/body:staff:accept1','<html><body>$(u_name) принял(-а) $(a_type) <i>$(a_name) $(address)</i> от <i>$(fix_date)</i>.</body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/body:staff:reject','<html><body>$(u_name) отклонил(-а) $(a_type) <i>$(a_name) $(address)</i> от <i>$(fix_date)</i>. Указана следующая причина:<br/><br/><b>$(note)</b><br/></body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','zstatus/body:head:reject','<html><body>$(u_name) отклонил(-а) $(a_type) <i>$(a_name) $(address)</i>, которое выполнил(-а) $(performer_name) <i>$(fix_date)</i>. Указана следующая причина:<br/><br/><b>$(note)</b><br/></body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','TTD/caption:order','Заказ продукции $(doc_no) (доставлен)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','TTD/caption:reclamation','Возврат продукции $(doc_no) (доставлен)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','TTD/body:accepted','<html><body>Дистрибьютор подтвердил получение документа $(doc_no). Номер(-а) документа(-ов) в учетной системе дистрибьютора: <b>$(erp_no)</b>.</body></html>');

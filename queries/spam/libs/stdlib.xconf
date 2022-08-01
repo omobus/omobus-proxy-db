@@ -3,10 +3,6 @@
   <![CDATA[
 local M = {}
 
-function M.strrepl(s, f, t)
-    return s:replace(string.format("$%s", f), t ~= nil and t or '')
-end
-
 function M.split(str, pat, func)
     local t = {}  -- NOTE: use {n = 0} in Lua-5.0
     local fpat = "(.-)" .. pat
@@ -24,6 +20,10 @@ function M.split(str, pat, func)
 	table.insert(t, (func ~= nil and type(func) == 'function') and func(cap) or cap)
     end
     return t
+end
+
+function M.strrepl(s, f, t) 
+    return string.replace(s, string.format("$(%s)", f), t ~= nil and t or '')
 end
 
 return M

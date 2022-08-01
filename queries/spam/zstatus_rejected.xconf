@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<zstatus_rejected type="text/html">
+    <queries>
+	<Q>
+  <![CDATA[
+select 
+    array_to_string(u.evaddrs,',') rcpt_to,
+    a.descr a_name, 
+    a.address, 
+    lower(t.descr) a_type, 
+    "L"(j.fix_date) fix_date__L,
+    coalesce(k.descr,lower(j.zauthor_id)) author_name,
+    j.znote
+from streams.spam_stream y
+    left join j_user_activities j on (y.attrs->'guid')::uuid = j.guid
+    left join activity_types t on j.activity_type_id = t.activity_type_id
+    left join accounts a on j.account_id = a.account_id
+    left join users u on j.user_id = u.user_id
+    left join users k on j.zauthor_id = k.user_id
+where y.spam_id = '%spam_id%'
+  ]]>
+	</Q>
+    </queries>
+    <templates> <!-- Localized resources (L7d) -->
+	<caption>Посещение отклонено</caption>
+	<body><![CDATA[<html><body>$(u_name) отклонил(-а) $(a_type) <i>$(a_name) $(address)</i> от <i>$(fix_date)</i>. Указана следующая причина:<br/><br/><b>$(note)</b><br/></body></html>]]></body>
+    </templates>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+
+local function get(n) return rowset_value(_Q, 0, rowset_colid(_Q, n)); end
+local function set(s, f, t) return std.strrepl(s, f, get(t)); end
+
+local function body()
+    local a = _body
+    a = set(a, "u_name", "author_name")
+    a = set(a, "a_type", "a_type")
+    a = set(a, "a_name", "a_name")
+    a = set(a, "address", "address")
+    a = set(a, "fix_date", "fix_date__l")
+    a = set(a, "note", "znote")
+    return a
+end
+
+set_param(_content, "rcpt_to", get("rcpt_to"))
+set_param(_content, "msg_cap", _caption)
+set_param(_content, "msg_body", body(), false)
+set_param(_content, "msg_content", "text/html")
+set_param(_content, "priority", "2" --[[ high ]])
+set_param(_content, "filename", "")
+  ]]>
+    </generator>
+</zstatus_rejected>

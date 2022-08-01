@@ -4,9 +4,8 @@
 select 
     spam_code content_code, 
     spam_id,
-    user_id,
     inserted_ts
-from spam_stream
+from streams.spam_stream
     where spam_ts is null
   ]]>
 </onload>
