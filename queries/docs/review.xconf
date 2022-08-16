@@ -24,8 +24,8 @@ select * from doc_id()
 </create>
 <write_body>
   <![CDATA[
-insert into h_review(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, /*doc_note,*/ user_id, w_cookie, c_cookie, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, employee_id, sla, assessment, note0, note1, note2)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', /*'%doc_note%',*/ '%user_id_sys%', '%w_cookie%', '%c_cookie%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), NIL('%employee_id%'), %sla%, %assessment%, '%note0%', '%note1%', '%note2%')
+insert into h_review(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, /*doc_note,*/ user_id, w_cookie, c_cookie, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, employee_id, sla, assessment, note0, note1, note2, unmarked)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', /*'%doc_note%',*/ '%user_id_sys%', '%w_cookie%', '%c_cookie%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), NIL('%employee_id%'), %sla%, %assessment%, NIL('%note0%'), NIL('%note1%'), NIL('%note2%'), string_to_array(NIL('%unmarked%'),','))
   ]]>
 </write_body>
 <close>
@@ -62,8 +62,8 @@ begin
 	/* removes obsolete entires */
 	delete from dyn_reviews where employee_id = '%employee_id%' and fix_date = f_date;
 	/* recompiles data */
-	insert into dyn_reviews(fix_date, employee_id, sla, assessment, note0, note1, note2, fix_dt, user_id, doc_id)
-	    values(f_date, '%employee_id%', %sla%, %assessment%, '%note0%', '%note1%', '%note2%', '%fix_dt%', '%user_id_sys%', '%doc_id_sys%');
+	insert into dyn_reviews(fix_date, employee_id, sla, assessment, note0, note1, note2, unmarked, fix_dt, user_id, doc_id)
+	    select f_date, employee_id, sla, assessment, note0, note1, note2, unmarked, fix_dt, user_id, doc_id from h_review where doc_id = '%doc_id_sys%';
 	
 	if( f_date >= (select max(fix_dt::date_t) from h_review where employee_id='%employee_id%' group by employee_id) ) then
 	    update dyn_reviews set "_isRecentData" = null where employee_id='%employee_id%' and "_isRecentData" = 1;

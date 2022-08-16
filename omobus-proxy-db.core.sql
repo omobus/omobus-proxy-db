@@ -4770,7 +4770,8 @@ create table h_review (
     assessment 		numeric(5,3) 	not null check(assessment >= 0),
     note0 		note_t 		null,
     note1 		note_t 		null,
-    note2 		note_t 		null
+    note2 		note_t 		null,
+    unmarked 		uids_t 		null
 );
 
 create index i_fix_date_h_review on h_review (left(fix_dt,10));
@@ -5243,6 +5244,7 @@ create table dyn_reviews (
     note0 		note_t 		null,
     note1 		note_t 		null,
     note2 		note_t 		null,
+    unmarked 		uids_t 		null,
     fix_dt		datetime_t 	not null,
     user_id 		uid_t 		not null,
     doc_id 		uid_t 		not null,

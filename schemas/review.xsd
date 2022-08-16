@@ -24,6 +24,12 @@
 	</xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="uids_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="[^%]*" />
+	</xs:restriction>
+    </xs:simpleType>
+
     <xs:element name="review">
 	<xs:complexType>
 	    <xs:attribute name="vstamp" use="required" type="xs:string" />
@@ -49,6 +55,7 @@
 	    <xs:attribute name="note0" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="note1" use="optional" type="xs:string" default="" />
 	    <xs:attribute name="note2" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="unmarked" use="optional" type="uids_t" default="" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>
