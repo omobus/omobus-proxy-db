@@ -7,8 +7,10 @@ select
     format('%s:%s', left(h.fix_dt,10), h.employee_id) row_id,
     x.fix_date, 
     h.fix_dt, 
-    h.employee_id, e.descr employee,
-    h.user_id author_id, u.descr author, 
+    h.employee_id, 
+    e.descr employee,
+    h.user_id author_id, 
+    u.descr author, 
     round(100*h.sla,1) sla, 
     round(h.assessment,2) assessment, 
     h.note0, h.note1, h.note2, 
@@ -21,8 +23,14 @@ select
 from dyn_reviews h
     left join (
 	select 
-	    user_id, employee_id, fix_date, min(b_dt) jr_begin, max(e_dt) jr_end, to_char(max(e_dt)::timestamp - min(b_dt)::timestamp, 'HH24:MI') jr_duration,
-	    to_char(sum(e_dt::timestamp - b_dt::timestamp), 'HH24:MI') duration, count(*) closed
+	    user_id, 
+	    employee_id, 
+	    fix_date, 
+	    min(b_dt) jr_begin, 
+	    max(e_dt) jr_end, 
+	    to_char(max(e_dt)::timestamp - min(b_dt)::timestamp, 'HH24:MI') jr_duration,
+	    to_char(sum(e_dt::timestamp - b_dt::timestamp), 'HH24:MI') duration, 
+	    count(*) closed
 	from j_user_activities j, activity_types t 
 	where j.activity_type_id=t.activity_type_id and t.joint=1 and fix_date is not null and e_dt is not null and fix_date=left(e_dt,10)
 	    and '%b_date%'<=fix_date and fix_date<='%e_date%'
@@ -37,7 +45,14 @@ order by h.fix_dt desc, u.descr
 	<L1>
   <![CDATA[
 select
-    format('%s:%s', j.fix_date, j.employee_id) row_id, a.account_id, a.code a_code, a.descr a_name, a.address, j.b_dt, j.e_dt, datediff(j.b_dt, j.e_dt) duration
+    format('%s:%s', j.fix_date, j.employee_id) row_id, 
+    a.account_id, 
+    a.code a_code, 
+    a.descr a_name, 
+    a.address, 
+    j.b_dt, 
+    j.e_dt, 
+    datediff(j.b_dt, j.e_dt) duration
 from j_user_activities j, activity_types t, accounts a
 where j.activity_type_id=t.activity_type_id and t.joint=1 and j.fix_date is not null and j.e_dt is not null and j.fix_date=left(j.e_dt,10)
     and j.account_id=a.account_id and '%b_date%'<=fix_date and fix_date<='%e_date%'
@@ -47,7 +62,11 @@ order by j.fix_date, j.employee_id, j.b_dt
 	<L2>
   <![CDATA[
 select
-    format('%s:%s', d.fix_date, d.employee_id) row_id, d.rating_criteria_id, min(x.descr) descr, round(avg(score),1) score, max(d.fix_dt) fix_dt
+    format('%s:%s', d.fix_date, d.employee_id) row_id, 
+    d.rating_criteria_id, 
+    min(x.descr) descr, 
+    round(avg(score),1) score, 
+    max(d.fix_dt) fix_dt
 from dyn_ratings d
     left join rating_criterias x on x.rating_criteria_id = d.rating_criteria_id
 where '%b_date%' <= d.fix_date and d.fix_date <= '%e_date%' and d.score is not null
@@ -58,7 +77,11 @@ order by d.fix_date, d.employee_id, min(x.row_no), min(x.descr)
 	<L3>
   <![CDATA[
 select
-    format('%s:%s', fix_date, employee_id) row_id, rating_criteria_id, account_id, score, note
+    format('%s:%s', fix_date, employee_id) row_id, 
+    rating_criteria_id, 
+    account_id, 
+    score, 
+    note
 from dyn_ratings d
 where '%b_date%' <= fix_date and fix_date <= '%e_date%' and d.score is not null
 order by fix_date, employee_id, rating_criteria_id, account_id
