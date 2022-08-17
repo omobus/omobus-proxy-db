@@ -119,7 +119,7 @@ begin
 	    delete from account_hints where account_id='%account_id%' and join_code='%doc_code_sys%';
 	    insert into account_hints(account_id, join_code, descr0, descr1, row_no)
 		values('%account_id%', '%doc_code_sys%', 
-		    "L10n_format_a"(u_lang,'aKPI','','audit',array['fix_date',"L"(f_date)]),
+		    "L10n_format_a"(u_lang,'aKPI','audit','',array['fix_date',"L"(f_date)]),
 		    '<b>'||(
 			select round(sum(sla*wf)*100/sum(wf), 1) from dyn_audits where account_id='%account_id%' and "_isRecentData"=1 group by account_id
 		    )||'%</b>', 0);
