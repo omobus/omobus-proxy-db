@@ -32,11 +32,11 @@ where
     hidden = 0 
     /* deleted accounts: */
     or (hidden = 1 and account_id in (
-	    select distinct account_id from j_user_activities where fix_date >= "route_history_L"()
+	    select distinct account_id from j_user_activities where fix_date >= "routes_history_L"()
 		union
-	    select distinct account_id from my_routes where p_date >= "route_history_L"()
+	    select distinct account_id from my_routes where p_date >= "routes_history_L"()
 		union
-	    select distinct account_id from h_pending where left(fix_dt,10) >= "route_history_L"()
+	    select distinct account_id from h_pending where left(fix_dt,10) >= "routes_history_L"()
 	    )
 	)
     )

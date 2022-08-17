@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<route_history templ="%route_date%;%account_id%;%activity_type_id%;%user_id%;%a_cookie%;%b_dt%;%e_dt%;%dist%;%status%;%alert%;%extra_info%;" empty="no">
+<routes_history templ="%route_date%;%account_id%;%activity_type_id%;%user_id%;%a_cookie%;%b_dt%;%e_dt%;%dist%;%status%;%alert%;%extra_info%;" empty="no">
   <![CDATA[
 select 
     r.user_id,
@@ -22,13 +22,13 @@ select
 	else null
     end status,
     case
-	when r.closed=1    then null
-	when r.discarded=1 then format_a('$(2) [$(1)]',array['1',lower(d.descr),'2',NIL(r.discard_note)])
-	when r.canceled=1  then format_a('$(2) [$(1)]',array['1',lower(c.descr),'2',NIL(r.canceling_note)])
-	when r.pending=1   then format_a('$(2) [$(1)]',array['1',lower(p.descr),'2',NIL(r.pending_note)])
+	when r.closed=1    then NIL(trim(r.extra_info))
+	when r.discarded=1 then format_t(array[NIL(trim(r.discard_note)),NIL(trim(d.descr))])
+	when r.canceled=1  then format_t(array[NIL(trim(r.canceling_note)),NIL(trim(c.descr))])
+	when r.pending=1   then format_t(array[NIL(trim(r.pending_note)),NIL(trim(p.descr))])
 	else null
     end extra_info
-from user_routes(null, "route_history_L"(), "route_history_R"(), 0::bool_t) r
+from user_routes(null, "routes_history_L"(), "routes_history_R"(), 0::bool_t) r
     left join canceling_types c on c.canceling_type_id = r.canceling_type_id
     left join discard_types d on d.discard_type_id = r.discard_type_id
     left join pending_types p on p.pending_type_id = r.pending_type_id 
@@ -37,4 +37,4 @@ from user_routes(null, "route_history_L"(), "route_history_R"(), 0::bool_t) r
 where u.hidden = 0
 order by 4 desc, u.descr, r.row_no, r.b_dt, a.descr, a.address
   ]]>
-</route_history>
+</routes_history>

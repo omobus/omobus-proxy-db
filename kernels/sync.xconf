@@ -127,8 +127,8 @@
 <xi:include href="../queries/sync/reminders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/restrictions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/retail_chains.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/route_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/sync/route_history_extra.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/routes_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/routes_history_extra.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/sales.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/sales_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/shelf_lifes.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -243,7 +243,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
     <unsched_types />
     <L10n personalize="ErpId">
 	<orders_history key="lang_id" />
-	<route_history_extra key="lang_id" />
+	<routes_history_extra key="lang_id" />
     </L10n>
     <my_accounts personalize="ErpId" />
     <my_jobs personalize="ErpId" />
@@ -406,9 +406,9 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<orders_history key="user_id" strict="yes" />
 	<ratings_history key="user_id" strict="yes" />
 	<reclamations_history key="user_id" strict="yes" />
-	<route_history key="user_id" strict="yes">
-	    <route_history_extra key="a_cookie" strict="yes" />
-	</route_history>
+	<routes_history key="user_id" strict="yes">
+	    <routes_history_extra key="a_cookie" strict="yes" />
+	</routes_history>
     </users>
     <accounts hierarchy="account_id" index="account_id">
 	<account_hints key="account_id" />
@@ -471,8 +471,8 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	    <info_materials key="rc_id" />
 	    <planograms key="rc_id" />
 	</retail_chains>
-	<route_history key="account_id" />
-	<route_history_extra key="account_id" />
+	<routes_history key="account_id" />
+	<routes_history_extra key="account_id" />
 	<sales key="account_id" strict="yes" />
 	<sales_history key="account_id" strict="yes" />
 	<shipments key="account_id" strict="yes" />

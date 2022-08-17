@@ -6454,10 +6454,10 @@ end;
 $$
 language plpgsql;
 
-create or replace function "route_history_L"() returns date_t
+create or replace function "routes_history_L"() returns date_t
 as $body$
 declare
-    def text = "paramText"('route_history:depth');
+    def text = "paramText"('routes_history:depth');
 begin
     if lower(trim(def)) = 'auto' then
 	if extract(day from current_date) < 10 then
@@ -6471,10 +6471,10 @@ begin
 end;
 $body$ language plpgsql STABLE;
 
-create function "route_history_R"() returns date_t
+create or replace function "routes_history_R"() returns date_t
 as $body$
 declare
-    def text = "paramText"('route_history:offset');
+    def text = "paramText"('routes_history:offset');
 begin
     return (current_date + def::int)::date_t;
 end;
@@ -6697,8 +6697,8 @@ insert into sysparams values('quests_history:depth', '60', 'The maximum depth of
 insert into sysparams values('reclamations_history:depth', '10', 'The maximum depth of the reclamations_history in days.');
 insert into sysparams values('reclamations_history:alert:color', '13107200', 'reclamations_history alert text color as rgb integer.');
 insert into sysparams values('reclamations_history:alert:bgcolor', '16116715', 'reclamations_history alert bgcolor as rgb integer.');
-insert into sysparams values('route_history:depth', 'auto', 'The maximum depth of the route_history in days or [auto] for default period.');
-insert into sysparams values('route_history:offset', '5', 'The maximum offset to the future for the route_history in days.');
+insert into sysparams values('routes_history:depth', 'auto', 'The maximum depth of the routes_history in days or [auto] for default period.');
+insert into sysparams values('routes_history:offset', '5', 'The maximum offset to the future for the routes_history in days.');
 insert into sysparams values('rules:wdays', '{1,1,1,1,1,0,0}', 'The woking day list as array of flags for each week day starting monday.');
 insert into sysparams values('rules:min_duration', '5', 'The minimum duration of the activity (in minutes).');
 insert into sysparams values('rules:max_duration', '90', 'The maximum duration of the activity (in minutes).');

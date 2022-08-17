@@ -348,6 +348,9 @@ insert into unsched_types(unsched_type_id, descr) values('0', 'Собрание 
 insert into unsched_types(unsched_type_id, descr) values('1', 'Посещение склада дистрибьютора');
 
 delete from "L10n";
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','aKPI','audit','','Результаты аудита от $(fix_date):');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','KPI','vc','','План посещений/$(month_name) (<i>$(completed) из $(total)</i>):');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','KPI','vc','alert', 'Сомнительных посещений (менее $(min_duration) мин.):');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','abbr','documents','','док.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','abbr','people','','чел.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','abbr','points','','бал.');
@@ -396,11 +399,6 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','10','genitive','октября');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','11','genitive','ноября');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','12','genitive','декабря');
-
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','aKPI','','audit','Результаты аудита от $(fix_date):');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','KPI','','vc','План посещений/$(month_name) (<i>$(completed) из $(total)</i>):');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','KPI','','vc:alert', 'Сомнительных посещений (менее $(min_duration) мин.):');
-
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','addition/caption:new','Новый клиент (заявка): $(a_name)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','addition/body:notice','<html><body>$(u_name), $(fix_dt) создал(-а) заявку на регистрацию нового клиента <i>$(a_name) $(address)</i>. Вам необходимо подтвердить или отклонить данную заявку через web-console OMOBUS.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','addition/caption:reject','Новый клиент (отмена): $(a_name)');

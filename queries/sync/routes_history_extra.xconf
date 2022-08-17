@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<route_history_extra templ="%user_id%;%account_id%;%a_cookie%;%extra_info%;" empty="no">
+<routes_history_extra templ="%user_id%;%account_id%;%a_cookie%;%extra_info%;" empty="no">
   <![CDATA[
 select lang_id, user_id, account_id, a_cookie, extra_info from (
 
@@ -14,7 +14,7 @@ select
 from h_audit h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='audit'
     left join categories t on t.categ_id=h.categ_id
-where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
 
 /* checkups */ union 
 select
@@ -32,7 +32,7 @@ from (
 	min(fix_dt) sorting,
 	count(*) docs
     from h_checkup
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+	where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='checkup'
@@ -49,7 +49,7 @@ select
 from h_comment h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='comment'
     left join comment_types t on t.comment_type_id=h.comment_type_id
-where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
 
 /* confirmations */ union
 select
@@ -63,7 +63,7 @@ from h_confirmation h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='confirmation'
     left join targets t on t.target_id=h.target_id
     left join confirmation_types c on c.confirmation_type_id=h.confirmation_type_id
-where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
 
 /* contacts */ union
 select
@@ -81,7 +81,7 @@ from (
 	min(fix_dt) sorting, 
 	count(*) docs 
     from h_contact
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+	where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='contact'
@@ -97,7 +97,7 @@ select
     format_t(array[format('<i>%s</i>',z.str),NIL(trim(h.doc_note))]) extra_info
 from h_deletion h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='deletion'
-where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
 
 /* equipments */ union
 select
@@ -115,7 +115,7 @@ from (
 	min(fix_dt) sorting, 
 	count(*) docs 
     from h_equipment
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+	where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='equipment'
@@ -137,7 +137,7 @@ from (
 	min(fix_dt) sorting,
 	count(*) docs
     from h_oos
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+	where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='oos'
@@ -161,7 +161,7 @@ from (
 	sum(rows) "rows", 
 	count(*) docs 
     from h_order
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+	where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='order'
@@ -187,7 +187,7 @@ from (
 	count(f.placement_id) docs 
     from h_photo f
 	left join j_revocations r on r.doc_id = f.doc_id
-	where r.doc_id is null and "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+	where r.doc_id is null and "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
     group by user_id, account_id, a_cookie, placement_id, brand_id
 ) h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='photo'
@@ -211,7 +211,7 @@ from (
 	min(fix_dt) sorting,
 	count(*) docs
     from h_presence
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+	where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='presence'
@@ -228,7 +228,7 @@ select
 from h_presentation h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='presentation'
     left join "L10n" k on k.obj_code='abbr' and k.obj_id='people'
-where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
 
 /* prices */ union 
 select
@@ -246,7 +246,7 @@ from (
 	min(fix_dt) sorting,
 	count(*) docs
     from h_price
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+	where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='price'
@@ -264,7 +264,7 @@ from h_rating h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='rating'
     left join "L10n" k on k.obj_code='abbr' and k.obj_id='points'
     left join users u on u.user_id=h.user_id
-where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
 
 /* reclamations */ union
 select
@@ -284,7 +284,7 @@ from (
 	sum(rows) "rows",
 	count(*) docs
     from h_reclamation
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+	where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='reclamation'
@@ -302,7 +302,7 @@ select
 from h_shelf h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='shelf'
     left join categories t on t.categ_id=h.categ_id
-where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
 
 /* stocks */ union 
 select
@@ -320,7 +320,7 @@ from (
 	min(fix_dt) sorting,
 	count(*) docs
     from h_stock
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+	where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
     group by user_id, account_id, a_cookie
 ) h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='stock'
@@ -337,7 +337,7 @@ select
 from h_target h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='target'
     left join target_types t on t.target_type_id=h.target_type_id
-where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
 
 /* trainings */ union 
 select
@@ -357,7 +357,7 @@ from (
 	count(training_type_id) docs,
 	sum(cardinality(contact_ids)) participants
     from h_training
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+	where "routes_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "routes_history_R"()
     group by user_id, account_id, a_cookie, training_type_id
 ) h
     left join "L10n" z on z.obj_code='doctype' and z.obj_id='training'
@@ -368,4 +368,4 @@ from (
 ) q
 order by 1, 2, 3, sorting
   ]]>
-</route_history_extra>
+</routes_history_extra>
