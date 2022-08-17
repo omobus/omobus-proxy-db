@@ -3,186 +3,367 @@
   <![CDATA[
 select lang_id, user_id, account_id, a_cookie, extra_info from (
 
-/* advt */
+/* audits */
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
-from (
-    select user_id, account_id, a_cookie, min(fix_dt) sorting from h_advt
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
-    group by user_id, account_id, a_cookie
-) h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='advt'
-
-/* audits */ union
-select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['categ',lower(t.descr),'sla',round(100.0*h.sla,1)::varchar]) extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    fix_dt sorting,
+    format_t(array[format('<i>%s</i>',z.str),NIL(trim(t.descr)),'<b>'||round(100.0*h.sla,1)||'%</b>']) extra_info
 from h_audit h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='audit'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='audit'
     left join categories t on t.categ_id=h.categ_id
 where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* checkups */ union 
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    sorting,
+    format_t(array[format('<i>%s</i>',z.str),h.docs||' '||k.str]) extra_info
 from (
-    select user_id, account_id, a_cookie, min(fix_dt) sorting from h_checkup
+    select 
+	user_id, 
+	account_id, 
+	a_cookie, 
+	min(fix_dt) sorting,
+	count(*) docs
+    from h_checkup
 	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='checkups'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='checkup'
+    left join "L10n" k on k.obj_code='abbr' and k.obj_id='documents'
 
 /* comments */ union 
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['doc_note',NIL(trim(h.doc_note)),'comment_type',lower(t.descr)]) extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    fix_dt sorting,
+    format_t(array[format('<i>%s</i>',z.str),NIL(trim(h.doc_note)),NIL(trim(t.descr))]) extra_info
 from h_comment h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='comment'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='comment'
     left join comment_types t on t.comment_type_id=h.comment_type_id
 where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* confirmations */ union
 select
-    null lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting,
-	case when t.target_id is not null then t.subject else '?' end || ' -> ' || c.descr || 
-	case when h.doc_note is null or h.doc_note = '' then '' else ' [' || h.doc_note || ']' end
-    extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    fix_dt sorting,
+    format_t(array[format('<i>%s</i>',z.str),NIL(trim(t.subject)),NIL(trim(c.descr)),NIL(trim(h.doc_note))]) extra_info
 from h_confirmation h
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='confirmation'
     left join targets t on t.target_id=h.target_id
     left join confirmation_types c on c.confirmation_type_id=h.confirmation_type_id
 where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* contacts */ union
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['name',NIL(trim(h.name)),'surname',NIL(trim(h.surname))]) extra_info
-from h_contact h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='contact'
-where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    sorting,
+    format_t(array[format('<i>%s</i>',z.str),h.docs||' '||k.str]) extra_info
+from (
+    select 
+	user_id, 
+	account_id, 
+	a_cookie, 
+	min(fix_dt) sorting, 
+	count(*) docs 
+    from h_contact
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+    group by user_id, account_id, a_cookie
+) h
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='contact'
+    left join "L10n" k on k.obj_code='abbr' and k.obj_id='documents'
 
 /* deletions */ union
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['doc_note',NIL(lower(trim(h.doc_note)))]) extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    fix_dt sorting,
+    format_t(array[format('<i>%s</i>',z.str),NIL(trim(h.doc_note))]) extra_info
 from h_deletion h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='deletion'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='deletion'
 where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* equipments */ union
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['equipment_type',lower(t.descr),'serial_number',NIL(trim(h.serial_number))]) extra_info
-from h_equipment h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='equipment'
-    left join equipment_types t on t.equipment_type_id=h.equipment_type_id
-where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    sorting,
+    format_t(array[format('<i>%s</i>',z.str),h.docs||' '||k.str]) extra_info
+from (
+    select 
+	user_id, 
+	account_id, 
+	a_cookie, 
+	min(fix_dt) sorting, 
+	count(*) docs 
+    from h_equipment
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+    group by user_id, account_id, a_cookie
+) h
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='equipment'
+    left join "L10n" k on k.obj_code='abbr' and k.obj_id='documents'
 
 /* oos */ union 
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    sorting,
+    format_t(array[format('<i>%s</i>',z.str),h.docs||' '||k.str]) extra_info
 from (
-    select user_id, account_id, a_cookie, min(fix_dt) sorting from h_oos
+    select 
+	user_id, 
+	account_id, 
+	a_cookie, 
+	min(fix_dt) sorting,
+	count(*) docs
+    from h_oos
 	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='oos'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='oos'
+    left join "L10n" k on k.obj_code='abbr' and k.obj_id='documents'
 
 /* orders */ union
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, format_a(z.str,array['amount',round(h.amount,2)::varchar,'rows',h.rows::varchar]) extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    sorting,
+    format_t(array[format('<i>%s</i>',z.str),h.docs||' '||k1.str,h.rows||' '||k2.str,'<b>'||trim(to_char(h.amount, 'L999G999G999D99'))||'</b>']) extra_info
 from (
-    select user_id, account_id, a_cookie, min(fix_dt) sorting, sum(amount) "amount", sum(rows) "rows" from h_order
+    select 
+	user_id, 
+	account_id, 
+	a_cookie, 
+	min(fix_dt) sorting, 
+	sum(amount) "amount", 
+	sum(rows) "rows", 
+	count(*) docs 
+    from h_order
 	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='orders'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='order'
+    left join "L10n" k1 on k1.obj_code='abbr' and k1.obj_id='documents'
+    left join "L10n" k2 on k2.obj_code='abbr' and k2.obj_id='rows'
 
 /* photos */ union
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, format_a(z.str,array['placement',NIL(trim(p.descr)),'brand',NIL(trim(b.descr)),'photo_type',NIL(trim(t.descr)),'rows',h.rows::varchar]) extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    sorting,
+    format_t(array[format('<i>%s</i>',z.str),NIL(trim(p.descr)),NIL(trim(b.descr)),h.docs||' '||k.str]) extra_info
 from (
-    select user_id, account_id, a_cookie, max(fix_dt) sorting, placement_id, brand_id, photo_type_id, count(placement_id) "rows" from h_photo
-	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
-    group by user_id, account_id, a_cookie, placement_id, brand_id, photo_type_id
+    select 
+	f.user_id, 
+	f.account_id, 
+	f.a_cookie, 
+	max(f.fix_dt) sorting, 
+	f.placement_id, 
+	f.brand_id, 
+	count(f.placement_id) docs 
+    from h_photo f
+	left join j_revocations r on r.doc_id = f.doc_id
+	where r.doc_id is null and "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+    group by user_id, account_id, a_cookie, placement_id, brand_id
 ) h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='photo'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='photo'
+    left join "L10n" k on k.obj_code='abbr' and k.obj_id='units'
     left join placements p on p.placement_id=h.placement_id
     left join brands b on b.brand_id=h.brand_id
-    left join photo_types t on t.photo_type_id=h.photo_type_id
 
 /* presences */ union 
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    sorting,
+    format_t(array[format('<i>%s</i>',z.str),h.docs||' '||k.str]) extra_info
 from (
-    select user_id, account_id, a_cookie, min(fix_dt) sorting from h_presence
+    select
+	user_id,
+	account_id,
+	a_cookie,
+	min(fix_dt) sorting,
+	count(*) docs
+    from h_presence
 	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='presences'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='presence'
+    left join "L10n" k on k.obj_code='abbr' and k.obj_id='documents'
 
 /* presentations */ union
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['participants',h.participants::varchar]) extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    fix_dt sorting,
+    format_t(array[format('<i>%s</i>',z.str),h.participants||' '||k.str]) extra_info
 from h_presentation h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='presentation'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='presentation'
+    left join "L10n" k on k.obj_code='abbr' and k.obj_id='people'
 where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* prices */ union 
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    sorting,
+    format_t(array[format('<i>%s</i>',z.str),h.docs||' '||k.str]) extra_info
 from (
-    select user_id, account_id, a_cookie, min(fix_dt) sorting from h_price
+    select
+	user_id,
+	account_id,
+	a_cookie,
+	min(fix_dt) sorting,
+	count(*) docs
+    from h_price
 	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='prices'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='price'
+    left join "L10n" k on k.obj_code='abbr' and k.obj_id='documents'
 
 /* ratings */ union 
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, h.fix_dt sorting, format_a(z.str,array['u_name',u.descr,'sla',round(100.0*h.sla,1)::varchar,'assessment',round(h.assessment,2)::varchar]) extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    fix_dt sorting,
+    format_t(array[format('<i>%s</i>',z.str),NIL(trim(u.descr)),h.assessment ||' '||k.str,round(100.0*h.sla,1)||'%']) extra_info
 from h_rating h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='rating'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='rating'
+    left join "L10n" k on k.obj_code='abbr' and k.obj_id='points'
     left join users u on u.user_id=h.user_id
 where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* reclamations */ union
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, format_a(z.str,array['amount',round(h.amount,2)::varchar,'rows',h.rows::varchar]) extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    sorting,
+    format_t(array[format('<i>%s</i>',z.str),h.docs||' '||k1.str,h.rows||' '||k2.str,'<b>'||trim(to_char(h.amount, 'L999G999G999D99'))||'</b>']) extra_info
 from (
-    select user_id, account_id, a_cookie, min(fix_dt) sorting, sum(amount) "amount", sum(rows) "rows" from h_reclamation
+    select
+	user_id,
+	account_id,
+	a_cookie,
+	min(fix_dt) sorting,
+	sum(amount) "amount",
+	sum(rows) "rows",
+	count(*) docs
+    from h_reclamation
 	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='reclamations'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='reclamation'
+    left join "L10n" k1 on k1.obj_code='abbr' and k1.obj_id='documents'
+    left join "L10n" k2 on k2.obj_code='abbr' and k2.obj_id='rows'
 
 /* shelfs */ union
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['categ',lower(t.descr),'sos',round(100.0*h.sos,1)::varchar,'soa',round(100.0*h.soa,1)::varchar]) extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    fix_dt sorting,
+    format_t(array[format('<i>%s</i>',z.str),NIL(trim(t.descr)),'SoS: '||round(100.0*h.sos,1)||'%','SoA: '||round(100.0*h.soa,1)||'%']) extra_info
 from h_shelf h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='shelf'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='shelf'
     left join categories t on t.categ_id=h.categ_id
 where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* stocks */ union 
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, h.sorting, z.str extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    sorting,
+    format_t(array[format('<i>%s</i>',z.str),h.docs||' '||k.str]) extra_info
 from (
-    select user_id, account_id, a_cookie, min(fix_dt) sorting from h_stock
+    select
+	user_id,
+	account_id,
+	a_cookie,
+	min(fix_dt) sorting,
+	count(*) docs
+    from h_stock
 	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
     group by user_id, account_id, a_cookie
 ) h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='stocks'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='stock'
+    left join "L10n" k on k.obj_code='abbr' and k.obj_id='documents'
 
 /* targets */ union
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['subject',NIL(trim(h.subject)),'target_type',lower(t.descr)]) extra_info
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    fix_dt sorting,
+    format_t(array[format('<i>%s</i>',z.str),NIL(trim(h.subject)),NIL(trim(t.descr))]) extra_info
 from h_target h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='target'
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='target'
     left join target_types t on t.target_type_id=h.target_type_id
 where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 /* trainings */ union 
 select
-    z.lang_id, h.user_id, h.account_id, h.a_cookie, fix_dt sorting, format_a(z.str,array['doc_note',NIL(trim(h.doc_note)),'training_type',lower(t.descr)]) extra_info
-from h_training h
-    left join "L10n" z on z.obj_code='route_history' and z.obj_attr='training'
+    z.lang_id,
+    h.user_id,
+    h.account_id,
+    h.a_cookie,
+    sorting,
+    format_t(array[format('<i>%s</i>',z.str),NIL(trim(t.descr)),h.docs||' '||k1.str,h.participants||' '||k2.str]) extra_info
+from (
+    select
+	user_id,
+	account_id,
+	a_cookie,
+	training_type_id,
+	min(fix_dt) sorting,
+	count(training_type_id) docs,
+	sum(cardinality(contact_ids)) participants
+    from h_training
+	where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
+    group by user_id, account_id, a_cookie, training_type_id
+) h
+    left join "L10n" z on z.obj_code='doctype' and z.obj_id='training'
+    left join "L10n" k1 on k1.obj_code='abbr' and k1.obj_id='units'
+    left join "L10n" k2 on k2.obj_code='abbr' and k2.obj_id='people'
     left join training_types t on t.training_type_id=h.training_type_id
-where "route_history_L"() <= left(fix_dt,10) and left(fix_dt,10) <= "route_history_R"()
 
 ) q
 order by 1, 2, 3, sorting

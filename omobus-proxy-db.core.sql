@@ -140,6 +140,13 @@ begin
 end;
 $body$ language plpgsql;
 
+create or replace function array_strip_nulls(in array_in anyarray) returns anyarray 
+as
+$body$
+    select array_agg(a) from unnest(array_in) a where a is not null;
+$body$
+language sql STABLE;
+
 create or replace function blob_length(bid blob_t) returns int32_t as
 $body$
 declare
@@ -364,6 +371,13 @@ begin
 end;
 $body$
 language plpgsql IMMUTABLE;
+
+create or replace function format_t(in array_in anyarray) returns text 
+as
+$body$
+    select array_to_string(array_strip_nulls(array_in),' ▪ ');
+$body$
+language sql STABLE;
 
 create or replace function man_id(out doc_id_sys uid_t)
 as $body$

@@ -348,6 +348,30 @@ insert into unsched_types(unsched_type_id, descr) values('0', 'Собрание 
 insert into unsched_types(unsched_type_id, descr) values('1', 'Посещение склада дистрибьютора');
 
 delete from "L10n";
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','abbr','documents','','док.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','abbr','people','','чел.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','abbr','points','','бал.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','abbr','rows','','стр.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','abbr','units','','шт.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','audit','','Аудит размещения продукции');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','checkup','','Осмотр т/зала');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','comment','','Комментарий');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','confirmation','','Выполнение задачи');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','contact','','Регистрация или редактирование контакт');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','deletion','', 'Заявка на удаление клиента');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','equipment','','Регистрация или редактирование т/оборудования');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','order','', 'Заказ продукции');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','oos','', 'Выявление причин Out-of-Stock');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','photo','', 'Фото т/места');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','presence','', 'Представленность продукции');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','presentation','', 'Презентация продукции');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','price','', 'Мониторинг цен');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','rating','', 'Оценка работы');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','reclamation','', 'Возврат продукции');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','shelf','', 'Доля полки / доля в ассортименте');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','stock','', 'Ревизия складских остатков');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','target','','Новая задача');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','training','', 'Обучение контакта');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','1','','Январь');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','2','','Февраль');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','3','','Март');
@@ -372,9 +396,11 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','10','genitive','октября');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','11','genitive','ноября');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','12','genitive','декабря');
+
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','aKPI','','audit','Результаты аудита от $(fix_date):');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','KPI','','vc','План посещений/$(month_name) (<i>$(completed) из $(total)</i>):');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','KPI','','vc:alert', 'Сомнительных посещений (менее $(min_duration) мин.):');
+
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','addition/caption:new','Новый клиент (заявка): $(a_name)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','addition/body:notice','<html><body>$(u_name), $(fix_dt) создал(-а) заявку на регистрацию нового клиента <i>$(a_name) $(address)</i>. Вам необходимо подтвердить или отклонить данную заявку через web-console OMOBUS.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','addition/caption:reject','Новый клиент (отмена): $(a_name)');
@@ -497,25 +523,6 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder',
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','sched/coaching:staff:tomorrow','Завтра, $(date) $(u_name) запланировал(-а) провести с Вами <b>полевое обучение</b>. В случае невозможности участия в полевом обучении, не забудьте проинформировать руководителя об этом.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','sched/coaching:staff:today','Сегодня, $(date) $(u_name) запланировал(-а) провести с Вами <b>полевое обучение</b>. В случае невозможности участия в полевом обучении, не забудьте проинформировать руководителя об этом.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','reminder','','target','$(u_name) затребовал приоритетное выполнение задач, поставленных $(fix_date) в $(a_name) $(address).');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','advt','Наличие рекламных материалов.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','audit','Аудит категории $(categ): $(sla)%.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','checkups','Осмотр т/зала или склада.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','comment','Комментарий: $(doc_note) [$(comment_type)].');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','contact','Новый контакт: $(surname) $(name).');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','deletion', 'Заявка на удаление: $(doc_note).');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','equipment','Новое т/оборудование: $(equipment_type), serial: $(serial_number).');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','orders', 'Заказано продуктов: $(rows) на сумму <b>$(amount)</b>.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','oos', 'Выявление причин Out-of-Stock.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','photo', 'Фото $(placement) $(brand) $(photo_type) ($(rows) шт.).');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','presences', 'Представленность продукции.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','presentation', 'Презентация кон/потребителям: $(participants) чел.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','prices', 'Мониторинг цен.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','rating', 'Оценка работы [$(u_name)]: $(assessment) / $(sla)%.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','reclamations', 'Возвращено продуктов: $(rows) на сумму <b>$(amount)</b>.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','shelf', 'Доля полки / доля в ассортименте в категории $(categ): $(sos)% / $(soa)%.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','stocks', 'Ревизия складских остатков.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','target', 'Задача: $(subject).');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','route_history','','training', 'Обучение персонала: $(training_type).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','audit','В ходе выполнения аудита размещения продукции от <i>$(fix_date)</i> обнаружены следующие <b><i>нарушения</i></b>:<br/><br/>$(violations)<br/><br/>Итоговый SLA: <b>$(sla)%</b>.<br/>Автор: <b>$(u_name)</b>.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','audit/positive','В ходе выполнения аудита размещения продукции от <i>$(fix_date)</i> нарушений <b><i>НЕ выявлено</i></b>:<br/><br/>$(violations)<br/><br/>Автор: <b>$(u_name)</b>.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','confirmation','На основе подтверждения выполнения задачи, <i>$(fix_date)</i> была поставлена новая задача:<br/><br/>$(msg)<br/><br/>Автор: <b>$(u_name)</b>.');
