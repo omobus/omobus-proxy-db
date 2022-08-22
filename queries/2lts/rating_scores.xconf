@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rating_scores templ="%rating_score_id%;%descr%;%score%;%row_no%;%hidden%;" empty="no">
+<rating_scores templ="%rating_score_id%;%descr%;%score%;%rating_criteria_id%;%row_no%;%hidden%;" empty="no">
   <![CDATA[
 select 
     rating_score_id, 
     descr, 
     score, 
+    rating_criteria_id,
     row_no, 
     hidden
 from rating_scores

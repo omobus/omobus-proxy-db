@@ -2401,14 +2401,16 @@ create trigger trig_updated_ts before update on rating_criterias for each row ex
 create table rating_scores (
     rating_score_id 	uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
-    score 		int32_t 	not null check(score >= 0),
-    wf 			wf_t 		not null check(wf between 0.00 and 1.00),
+    score 		int32_t 	null check(score >= 0),
+    wf 			wf_t 		null check(wf between 0.00 and 1.00),
     extra_info 		note_t 		null,
+    rating_criteria_id 	uid_t 		null,
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
+    db_ids 		uids_t 		null,
+    check((score is not null and wf is not null) or (score is null and wf is null))
 );
 
 create index i_db_ids_rating_scores on rating_scores using GIN (db_ids);
