@@ -52,7 +52,8 @@ select
     a.address, 
     j.b_dt, 
     j.e_dt, 
-    datediff(j.b_dt, j.e_dt) duration
+    datediff(j.b_dt, j.e_dt) duration,
+    j.extra_info
 from j_user_activities j, activity_types t, accounts a
 where j.activity_type_id=t.activity_type_id and t.joint=1 and j.fix_date is not null and j.e_dt is not null and j.fix_date=left(j.e_dt,10)
     and j.account_id=a.account_id and '%b_date%'<=fix_date and fix_date<='%e_date%'
@@ -64,27 +65,58 @@ order by j.fix_date, j.employee_id, j.b_dt
 select
     format('%s:%s', d.fix_date, d.employee_id) row_id, 
     d.rating_criteria_id, 
-    min(x.descr) descr, 
-    round(avg(score),1) score, 
-    max(d.fix_dt) fix_dt
-from dyn_ratings d
+    x.descr, 
+    case 
+	when d.score is null then null
+	else d.wf
+    end wf,
+    d.score, 
+    d.sla, 
+    fix_dt
+from (
+    select
+	fix_date, 
+	employee_id,
+	rating_criteria_id, 
+	min(criteria_wf) wf,
+	round(avg(score),1) score, 
+	round(100*avg(score_wf),1) sla, 
+	max(fix_dt) fix_dt
+    from dyn_ratings
+    where '%b_date%' <= fix_date and fix_date <= '%e_date%' and rating_score_id is not null
+    group by fix_date, employee_id, rating_criteria_id
+	union
+    select
+	r.fix_date,
+	r.employee_id,
+	t rating_criteria_id,
+	null wf,
+	null score,
+	null sla,
+	r.fix_dt
+    from dyn_reviews r, unnest(unmarked) t
+    where '%b_date%' <= r.fix_date and r.fix_date <= '%e_date%' and r.unmarked is not null and cardinality(r.unmarked) > 0
+	and t not in (
+	    select distinct rating_criteria_id from dyn_ratings k
+		where k.fix_date = r.fix_date and k.employee_id = r.employee_id and k.rating_score_id is not null
+	)
+) d
     left join rating_criterias x on x.rating_criteria_id = d.rating_criteria_id
-where '%b_date%' <= d.fix_date and d.fix_date <= '%e_date%' and d.score is not null
-group by d.fix_date, d.employee_id, d.rating_criteria_id
-order by d.fix_date, d.employee_id, min(x.row_no), min(x.descr)
+order by d.fix_date, d.employee_id, x.row_no, x.descr
   ]]>
 	</L2>
 	<L3>
   <![CDATA[
 select
-    format('%s:%s', fix_date, employee_id) row_id, 
-    rating_criteria_id, 
-    account_id, 
-    score, 
-    note
+    format('%s:%s', d.fix_date, d.employee_id) row_id, 
+    d.rating_criteria_id, 
+    d.account_id, 
+    d.score, 
+    format_t(array[s.descr, d.note]) note
 from dyn_ratings d
-where '%b_date%' <= fix_date and fix_date <= '%e_date%' and d.score is not null
-order by fix_date, employee_id, rating_criteria_id, account_id
+    left join rating_scores s on s.rating_score_id = d.rating_score_id and d.score is null
+where '%b_date%' <= d.fix_date and d.fix_date <= '%e_date%' and d.rating_score_id is not null
+order by d.fix_date, d.employee_id, d.rating_criteria_id, d.account_id
   ]]>
 	</L3>
     </queries>
@@ -144,7 +176,7 @@ rt.foreach(_L2, function(q, i, cols)
 	    local n = rowset_colname(q, j)
 	    local a = rowset_value(q, i, j)
 	    if a ~= nil and n ~= "row_id" then
-		if std.contains({'score'}, n) then
+		if std.contains({'wf','score','sla'}, n) then
 		    x[n] = tonumber(a)
 		else
 		    x[n] = a
