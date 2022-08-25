@@ -375,6 +375,7 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','stock','', 'Ревизия складских остатков');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','target','','Новая задача');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','training','', 'Обучение контакта');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','doctype','zstatus','', 'Статус активности');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','1','','Январь');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','2','','Февраль');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','month_name','3','','Март');
@@ -469,8 +470,8 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','sched/body','Не забудьте запланировать своё рабочее время на $(date).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/caption','Новая задача: $(subject)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/body:new','<html><body>$(u_name) $(fix_dt) в рамках выполнения активности $(activity_type) в <i>$(a_name) $(address)</i> поставил(-а) следующую задачу:<br/><br/>$(body)<br/><br/>Срок действия с <b>$(b_date)</b> по <b>$(e_date)</b>.</body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/body:photo','<html><body>$(u_name) $(fix_dt) на основе фотографии т/места поставил(-а) в <i>$(a_name) $(address)</i> следующую задачу:<br/><br/>$(body)<br/><br/>Срок действия с <b>$(b_date)</b> по <b>$(e_date)</b>.</body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/body:posm','<html><body>$(u_name) $(fix_dt) на основе фотографии PoS/PoP материала поставил(-а) в <i>$(a_name) $(address)</i> следующую задачу:<br/><br/>$(body)<br/><br/>Срок действия с <b>$(b_date)</b> по <b>$(e_date)</b>.</body></html>');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/body:photo','<html><body>$(u_name) $(fix_dt) на основании фотографии т/места поставил(-а) в <i>$(a_name) $(address)</i> следующую задачу:<br/><br/>$(body)<br/><br/>Срок действия с <b>$(b_date)</b> по <b>$(e_date)</b>.</body></html>');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','target/body:posm','<html><body>$(u_name) $(fix_dt) на основании фотографии PoS/PoP материала поставил(-а) в <i>$(a_name) $(address)</i> следующую задачу:<br/><br/>$(body)<br/><br/>Срок действия с <b>$(b_date)</b> по <b>$(e_date)</b>.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','ticket/caption','Заявка #$(ticket_id)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','ticket/caption:closed','Заявка #$(ticket_id) (ЗАКРЫТА)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','ticket/body','<html><body>ВНИМАНИЕ. Результаты решения данной проблемы будут высланы отдельным уведомлением (резолюцией).<br/><br/>Зарегистрировано: $(inserted_ts).<br/>Проблема: $(issue).<br/>$(doc_note)</body></html>');
@@ -525,9 +526,10 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','audit/positive','В ходе выполнения аудита размещения продукции от <i>$(fix_date)</i> нарушений <b><i>НЕ выявлено</i></b>:<br/><br/>$(violations)<br/><br/>Автор: <b>$(u_name)</b>.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','confirmation','На основе подтверждения выполнения задачи, <i>$(fix_date)</i> была поставлена новая задача:<br/><br/>$(msg)<br/><br/>Автор: <b>$(u_name)</b>.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','new','В рамках выполнения активности $(activity_type), <i>$(fix_date)</i> была поставлена следующая задача:<br/><br/>$(body)<br/><br/>Автор: <b>$(u_name)</b>.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','photo','На основе фотографии т/места, <i>$(fix_date)</i> была поставлена задача:<br/><br/>$(msg)<br/><br/>Автор: <b>$(u_name)</b>.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','posm','На основе фотографии PoS/PoP материала, <i>$(fix_date)</i> была поставлена задача:<br/><br/>$(msg)<br/><br/>Автор: <b>$(u_name)</b>.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','photo','На основаии фотографии т/места, <i>$(fix_date)</i> была поставлена задача:<br/><br/>$(msg)<br/><br/>Автор: <b>$(u_name)</b>.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','posm','На основании фотографии PoS/PoP материала, <i>$(fix_date)</i> была поставлена задача:<br/><br/>$(msg)<br/><br/>Автор: <b>$(u_name)</b>.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','','shelf','Текущее выполнение цели по SOS (доля полки) - <b>$(sos)%</b>, необходимо увеличить представленность на полке.<br/><br/>Дата: $(fix_date).<br/>Автор: <b>$(u_name)</b>.');
+insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','targets','zstatus','rejected','$(a_type) от $(fix_date) <b>оклонено</b>. Указана следующая причина:<br/><br/>$(note)<br/><br/>Автор: <b>$(u_name)</b>.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','urgent','','audit','Устранение замечаний, выявленных в ходе аудита размещения продукции от $(fix_date) (автор: $(u_name)).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','urgent','','photo','Устранение замечаний, выявленных в ходе контроля фотографии т/места от $(fix_date) (автор: $(u_name)).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','urgent','','posm','Устранение замечаний, выявленных в ходе контроля фотографии PoS/PoP материала от $(fix_date) (автор: $(u_name)).');

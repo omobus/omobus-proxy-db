@@ -426,6 +426,14 @@ end;
 $body$
 language plpgsql STABLE;
 
+create or replace function "L10n_text"(f_lang_id lang_t, f_obj_code code_t, f_obj_id uid_t, f_obj_attr uid_t) returns text as
+$body$
+begin
+    return (select str from "L10n" where lang_id=f_lang_id and obj_code=f_obj_code and obj_id=f_obj_id and obj_attr=f_obj_attr and hidden=0);
+end;
+$body$
+language plpgsql STABLE;
+
 create or replace function "L"(arg timestamp with time zone) returns datetimetz_t
 as $body$
 begin

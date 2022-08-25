@@ -10,11 +10,16 @@ declare
     hs hstore;
     reqId uid_t;
     u_id uid_t;
+    a_id uid_t;
+    a_type uid_t;
     h_id uid_t;
     e_id uid_t;
     p_date date_t;
     f_date date_t;
     locked bool_t;
+    u_lang lang_t;
+    t1 text;
+    t2 text;
 begin
     GET DIAGNOSTICS stack = PG_CONTEXT;
     fcesig := substring(stack from 'function console\.(.*?)\(');
@@ -27,6 +32,9 @@ begin
     if( _cookie is null or (_cmd = 'reject' and _note is null)) then
 	raise exception '% invalid input attribute.', fcesig;
     end if;
+
+    update targets set hidden = 1 
+	where pid = _cookie::text;
 
     if( _cmd = 'accept' ) then
 	update j_user_activities set zstatus = 'accepted', znote = _note, zauthor_id = _login, zreq_dt = _reqdt
@@ -49,10 +57,10 @@ begin
 	values(reqId, _login, fcesig, _reqdt, _cmd, hs);
 
     if( zrows > 0 ) then
-	select user_id, route_date, fix_date from j_user_activities where guid = _cookie
-	    into u_id, p_date, f_date;
-	select hidden from users where user_id = u_id
-	    into locked;
+	select user_id, route_date, fix_date, account_id, activity_type_id from j_user_activities where guid = _cookie
+	    into u_id, p_date, f_date, a_id, a_type;
+	select hidden, lang_id from users where user_id = u_id
+	    into locked, u_lang;
 
 	if( u_id is not null and f_date is not null ) then
 	    perform content_add('tech_route', u_id, f_date, f_date);
@@ -82,6 +90,20 @@ begin
 		    perform streams.spam_add('zstatus_notice', hs || hstore('dst_id', h_id));
 		end if;
 		perform streams.spam_add('zstatus_rejected', hs);
+
+		t1 := "L10n_text"(u_lang,'doctype','zstatus','');
+		t2 := "L10n_format_a"(u_lang,'targets','zstatus','rejected',array[
+			'fix_date',"L"(f_date),
+			'note',coalesce(_note,'-'),
+			'u_name',coalesce((select descr from users where user_id=_login),_login),
+			'a_type',(select descr from activity_types where activity_type_id=a_type)
+		    ]);
+		update targets set hidden = 1 
+		    where pid = _cookie::text;
+		if( t1 is not null and t2 is not null ) then
+		    insert into targets (target_type_id, subject, body, b_date, e_date, author_id, account_ids, "immutable", pid) 
+			values('notice', t1, t2, current_date, current_date + "paramInteger"('target:offset'), _login, array[a_id::varchar], 1, _cookie::varchar);
+		end if;
 	    end if;
 	end if;
     end if;
