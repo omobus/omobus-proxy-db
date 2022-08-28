@@ -48,9 +48,12 @@ begin
 	    values (string_to_array("paramText"('srv:push'),','), format('OMOBUS: LTS storage (%s: %s)', "paramUID"('db:id'), '%ErpCode%'),
 		format('LTS database health has been restored (Last data at %s).', '%timestamp%'));
 	raise notice 'LTS database health has been restored (db_id = %, health = %).', '%ErpCode%', '%timestamp%';
-    else
+    elsif (select count(*) from health_stream where db_id = '%ErpCode%') > 0 then
 	update health_stream set health = '%timestamp%'
 	    where db_id = '%ErpCode%';
+    else
+	insert into health_stream(db_id, health)
+	    values('%ErpCode%', '%timestamp%');
     end if;
 end;
 $$
