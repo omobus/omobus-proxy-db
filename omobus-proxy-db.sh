@@ -22,8 +22,10 @@ psql -d postgres -c \
 
 psql -d $dbname -f ./omobus-proxy-db.core.sql
 psql -d $dbname -f ./omobus-proxy-db.console.sql
+psql -d $dbname -f ./omobus-proxy-db.logs.sql
 psql -d $dbname -f ./omobus-proxy-db.shadows.sql
 psql -d $dbname -f ./omobus-proxy-db.slices.sql
+psql -d $dbname -f ./omobus-proxy-db.streams.sql
 psql -d $dbname -f ./omobus-proxy-db.RU.sql
 psql -d $dbname -f ./version.sql
 
