@@ -19,7 +19,7 @@ from (
     group by user_id
 ) r
     left join users u on u.user_id=r.user_id
-    left join "L10n" z on z.lang_id=u.lang_id and z.obj_code='KPI' and z.obj_attr='vc'
+    left join "L10n" z on z.lang_id=u.lang_id and z.obj_code='KPI' and z.obj_id='vc' and z.obj_attr=''
     left join "L10n" m on m.lang_id=u.lang_id and m.obj_code='month_name' and m.obj_id=extract(month from current_date - interval '1' month)::uid_t and m.obj_attr=''
 where r.total > 0 and extract(day from current_date) < 10
 
