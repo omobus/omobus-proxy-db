@@ -2909,6 +2909,7 @@ create table users (
     "rules:wdays" 	smallint[] 	null check (array_length("rules:wdays",1)=7),
     "rules:wd_begin" 	time_t 		null,
     "rules:wd_end" 	time_t 		null,
+    "rules:wd_duration" time_t 		null,
     "rules:timing" 	time_t 		null,
     "rules:gps_off" 	bool_t 		not null default 0,
     "rules:tm_change" 	bool_t 		not null default 0,
@@ -6715,7 +6716,8 @@ insert into sysparams values('rules:max_duration', '90', 'The maximum duration o
 insert into sysparams values('rules:max_distance', '200', 'The maximum allowable distance to the account at the start of the activity (in meters).');
 insert into sysparams values('rules:wd_begin', '09:30', 'Show warning if the working day begins later than rules:wd_begin.');
 insert into sysparams values('rules:wd_end', '17:30', 'Show warning if the working day ends early than rules:wd_end.');
-insert into sysparams values('rules:timing', '06:00', 'Minimal route day duration.');
+insert into sysparams values('rules:wd_duration', '08:00', 'The minimum working day duration.');
+insert into sysparams values('rules:timing', '06:00', 'The minimum allowable time spent working at the accounts.');
 insert into sysparams values('rules:power', '90', 'The minimum power (battery life percentage) at the working day begin.');
 insert into sysparams values('srv:domain', 'omobus.local', 'Server domain name.');
 insert into sysparams values('srv:push', '<3874a923-189a-4b95-b65c-b55a3809e35e@push.omobus.net>', 'Server alert notification address.');

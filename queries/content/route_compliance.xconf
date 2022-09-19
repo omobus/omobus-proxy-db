@@ -9,6 +9,8 @@ select
     "paramInteger"('rules:max_distance') max_distance,
     "paramUID"('rules:wd_begin')::time_t wd_begin,
     "paramUID"('rules:wd_end')::time_t wd_end,
+    "paramUID"('rules:wd_duration')::time_t wd_duration,
+    "paramUID"('rules:timing')::time_t timing,
     "paramInteger"('rules:power') power
   ]]>
 	</R>
@@ -68,7 +70,9 @@ select
 	else null end chargings,
     /* personal rules: */
     u."rules:wd_begin", 
-    u."rules:wd_end"
+    u."rules:wd_end",
+    u."rules:wd_duration",
+    u."rules:timing"
 from users u
     left join users e on e.user_id=u.executivehead_id
     left join sysstats s on s.fix_date='%b_date%' and s.user_id=u.user_id
@@ -185,6 +189,10 @@ tb.rows = rt.rows(_L, false, function(r, n, a)
 	    r.rules.wd["begin"] = a
 	elseif n == "rules:wd_end" then
 	    r.rules.wd["end"] = a
+	elseif n == "rules:wd_duration" then
+	    r.rules.wd["duration"] = a
+	elseif n == "rules:timing" then
+	    r.rules.timing = a
 	elseif std.contains({'alive','scheduled','closed','canceled','other','pending','discarded','accepted','rejected',
 		'warn_min_duration','warn_max_duration','warn_max_distance','route_duration','instore_duration','mileage'}, n) then 
 	    r[n] = tonumber(a)
@@ -200,6 +208,8 @@ tb.rules.duration["max"] = tonumber(rowset_value(_R, 0, rowset_colid(_R, "max_du
 tb.rules.distance["max"] = tonumber(rowset_value(_R, 0, rowset_colid(_R, "max_distance")));
 tb.rules.wd["begin"] = rowset_value(_R, 0, rowset_colid(_R, "wd_begin"));
 tb.rules.wd["end"] = rowset_value(_R, 0, rowset_colid(_R, "wd_end"));
+tb.rules.wd["duration"] = rowset_value(_R, 0, rowset_colid(_R, "wd_duration"));
+tb.rules.timing = rowset_value(_R, 0, rowset_colid(_R, "timing"));
 tb.rules.power = tonumber(rowset_value(_R, 0, rowset_colid(_R, "power")));
 
 set_param(_content, "rows", rowset_rows(_L))

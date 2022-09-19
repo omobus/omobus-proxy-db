@@ -10,6 +10,7 @@ select
     "paramInteger"('rules:max_distance') max_distance,
     "paramUID"('rules:wd_begin')::time_t wd_begin,
     "paramUID"('rules:wd_end')::time_t wd_end,
+    "paramUID"('rules:wd_duration')::time_t wd_duration,
     "paramUID"('rules:timing')::time_t timing
   ]]>
 	</rules>
@@ -201,6 +202,7 @@ select
     array_to_string(u."rules:wdays",',') "rules:wdays",
     u."rules:wd_begin",
     u."rules:wd_end",
+    u."rules:wd_duration",
     u."rules:timing"
 from users u
     left join users e on e.user_id = u.executivehead_id
@@ -287,6 +289,13 @@ tb.rows = rt.rows(_users, false, function(r, n, a)
 	    r.rules.wd = {}
 	end
 	r.rules.wd["end"] = a
+    elseif n == "rules:wd_duration" then
+	if r.rules == nil then
+	    r.rules = { wd = {} }
+	elseif r.rules.wd == nil then
+	    r.rules.wd = {}
+	end
+	r.rules.wd["duration"] = a
     elseif n == "rules:timing" then
 	if r.rules == nil then
 	    r.rules = { wd = {} }
@@ -305,6 +314,7 @@ tb.rules.duration["max"] = tonumber(rowset_value(_rules, 0, rowset_colid(_rules,
 tb.rules.distance["max"] = tonumber(rowset_value(_rules, 0, rowset_colid(_rules, "max_distance")))
 tb.rules.wd["begin"] = rowset_value(_rules, 0, rowset_colid(_rules, "wd_begin"))
 tb.rules.wd["end"] = rowset_value(_rules, 0, rowset_colid(_rules, "wd_end"))
+tb.rules.wd["duration"] = rowset_value(_rules, 0, rowset_colid(_rules, "wd_duration"))
 tb.rules.wd["timing"] = rowset_value(_rules, 0, rowset_colid(_rules, "timing"))
 
 set_param(_content, "rows", rowset_rows(_users))
