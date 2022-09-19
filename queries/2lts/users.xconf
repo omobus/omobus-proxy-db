@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<users templ="%user_id%;%pids%;%descr%;%role%;%country_id%;%dep_ids%;%distr_ids%;%agency_id%;%mobile%;%email%;%area%;%executivehead_id%;%props%;%rules:wd_begin%;%rules:wd_end%;%hidden%;" empty="no">
+<users templ="%user_id%;%pids%;%descr%;%role%;%country_id%;%dep_ids%;%distr_ids%;%agency_id%;%mobile%;%email%;%area%;%executivehead_id%;%props%;%rules:wd_begin%;%rules:wd_end%;%rules:wd_duration%;%rules:timing%;%hidden%;" empty="no">
   <![CDATA[
 select 
     user_id, 
@@ -17,9 +17,15 @@ select
     props, 
     case when "rules:wd_begin" is null then "paramUID"('rules:wd_begin')::time_t else "rules:wd_begin" end "rules:wd_begin", 
     case when "rules:wd_end" is null then "paramUID"('rules:wd_end')::time_t else "rules:wd_end" end "rules:wd_end",
+    case when "rules:wd_duration" is null then "paramUID"('rules:wd_duration')::time_t else "rules:wd_duration" end "rules:wd_duration",
+    case when "rules:timing" is null then "paramUID"('rules:timing')::time_t else "rules:timing" end "rules:timing",
     hidden
 from users
-    where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
+    where ("LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"())
+	or (hidden = 0 and (select count(*) from sysparams where param_id = 'rules:wd_begin' and  "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()) != 0)
+	or (hidden = 0 and (select count(*) from sysparams where param_id = 'rules:wd_end' and  "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()) != 0)
+	or (hidden = 0 and (select count(*) from sysparams where param_id = 'rules:wd_duration' and  "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()) != 0)
+	or (hidden = 0 and (select count(*) from sysparams where param_id = 'rules:timing' and  "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()) != 0)
 order by 1
   ]]>
 </users>
