@@ -126,7 +126,7 @@ begin
 		'fix_dt',"L"(f_dt),
 		'u_name',coalesce(author_name,_login),
 		'sub',sub,
-		'note',array_to_string(ar,'<br/>')
+		'note',coalesce(_note::text,'-')
 	    ]
 	);
 
