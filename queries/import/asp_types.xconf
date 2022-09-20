@@ -9,9 +9,9 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 update asp_types set db_ids=array_remove(db_ids,'%ErpCode%')
-    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+    where hidden=0 and "_isAlienData"=1 and db_ids @> (array['%ErpCode%'])::uids_t;
 update asp_types set hidden=1, db_ids=null
-    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+    where hidden=0 and "_isAlienData"=1 and (db_ids is null or cardinality(db_ids)=0);
   ]]>
 </begin>
 <check_exist>
@@ -23,13 +23,13 @@ select count(*) from asp_types
 <update>
   <![CDATA[
 update asp_types set descr=trim(both from '%descr%'), extra_info=NIL('%extra_info%'), placement_ids=string_to_array(NIL('%placement_ids%'),','), country_ids=string_to_array(NIL('%country_ids%'),','), dep_ids=string_to_array(NIL('%dep_ids%'),','), row_no=NIL(%row_no%), props=NIL('%props%')::hstore, hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
-    where asp_type_id = '%asp_type_id%'
+    where asp_type_id = '%asp_type_id%' and "_isAlienData"=1
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into asp_types (asp_type_id, descr, extra_info, placement_ids, country_ids, dep_ids, row_no, props, hidden, db_ids)
-    values ('%asp_type_id%', trim(both from '%descr%'), NIL('%extra_info%'), string_to_array(NIL('%placement_ids%'),','), string_to_array(NIL('%country_ids%'),','), string_to_array(NIL('%dep_ids%'),','), NIL(%row_no%), NIL('%props%')::hstore, 0, array['%ErpCode%'])
+insert into asp_types (asp_type_id, descr, extra_info, placement_ids, country_ids, dep_ids, row_no, props, hidden, db_ids, "_isAlienData")
+    values ('%asp_type_id%', trim(both from '%descr%'), NIL('%extra_info%'), string_to_array(NIL('%placement_ids%'),','), string_to_array(NIL('%country_ids%'),','), string_to_array(NIL('%dep_ids%'),','), NIL(%row_no%), NIL('%props%')::hstore, 0, array['%ErpCode%'], 1)
   ]]>
 </insert>
 <end>

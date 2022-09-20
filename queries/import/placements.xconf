@@ -9,9 +9,9 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 update placements set db_ids=array_remove(db_ids,'%ErpCode%')
-    where hidden=0 and db_ids @> (array['%ErpCode%'])::uids_t;
+    where hidden=0 and "_isAlienData"=1 and db_ids @> (array['%ErpCode%'])::uids_t;
 update placements set hidden=1, db_ids=null
-    where hidden=0 and (db_ids is null or cardinality(db_ids)=0);
+    where hidden=0 and "_isAlienData"=1 and (db_ids is null or cardinality(db_ids)=0);
   ]]>
 </begin>
 <check_exist>
@@ -23,13 +23,13 @@ select count(*) from placements
 <update>
   <![CDATA[
 update placements set descr=trim(both from '%descr%'), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
-    where placement_id = '%placement_id%'
+    where placement_id = '%placement_id%' and "_isAlienData"=1
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into placements (placement_id, descr, row_no, hidden, db_ids)
-    values ('%placement_id%', trim(both from '%descr%'), NIL(%row_no%), 0, array['%ErpCode%'])
+insert into placements (placement_id, descr, row_no, hidden, db_ids, "_isAlienData")
+    values ('%placement_id%', trim(both from '%descr%'), NIL(%row_no%), 0, array['%ErpCode%'], 1)
   ]]>
 </insert>
 <end>

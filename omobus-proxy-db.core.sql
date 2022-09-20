@@ -1226,7 +1226,8 @@ create table asp_types ( /* Additional-Sales-Places */
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null /* row from the external sources */
 );
 
 create index i_db_ids_asp_types on asp_types using GIN (db_ids);
@@ -2141,7 +2142,8 @@ create table photo_params (
     hidden		bool_t		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null /* row from the external sources */
 );
 
 create index i_db_ids_photo_params on photo_params using GIN (db_ids);
@@ -2172,7 +2174,8 @@ create table placements (
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null /* row from the external sources */
 );
 
 create index i_db_ids_placements on placements using GIN (db_ids);
