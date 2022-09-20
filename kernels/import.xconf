@@ -112,7 +112,6 @@
 <xi:include href="../queries/import/refunds_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/refunds.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/regions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/import/remark_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/restrictions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/retail_chains.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/rules.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

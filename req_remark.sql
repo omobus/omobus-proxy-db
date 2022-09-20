@@ -1,6 +1,6 @@
 /* Copyright (c) 2006 - 2022 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
-create or replace function console.req_remark(_login uid_t, _reqdt datetime_t, _cmd code_t, _doc_id uid_t, _remark_type_id uid_t, _note note_t) returns int
+create or replace function console.req_remark(_login uid_t, _reqdt datetime_t, _cmd code_t, _doc_id uid_t, _note note_t) returns int
 as $BODY$
 declare
     stack text; fcesig text;
@@ -21,18 +21,16 @@ declare
     blob_id blob_t;
     target_created int = 0;
     rcpt_to emails_t;
-    ar text array;
 begin
     GET DIAGNOSTICS stack = PG_CONTEXT;
     fcesig := substring(stack from 'function console\.(.*?)\(');
     _cmd := lower(_cmd);
-    _remark_type_id := NIL(_remark_type_id);
     _note := NIL(trim(_note));
 
     if( _cmd not in ('accept','reject') ) then
 	raise exception '% doesn''t support [%] command! Accepted commands are [accept|reject].', fcesig, _cmd;
     end if;
-    if( _doc_id is null or (_cmd = 'reject' and _remark_type_id is null and _note is null)) then
+    if( _doc_id is null or (_cmd = 'reject' and _note is null)) then
 	raise exception '% invalid input attribute.', fcesig;
     end if;
     if( (select count(doc_id) from h_confirmation where doc_id = _doc_id) = 0 ) then
@@ -41,19 +39,19 @@ begin
 
     if( _cmd = 'accept' ) then
 	if( (select count(doc_id) from j_remarks where doc_id = _doc_id) = 0 ) then
-	    insert into j_remarks(doc_id, status, remark_type_id, note)
-		values(_doc_id, 'accepted', _remark_type_id, _note);
+	    insert into j_remarks(doc_id, status, note)
+		values(_doc_id, 'accepted', _note);
 	else
-	    update j_remarks set status = 'accepted', remark_type_id = _remark_type_id, note = _note
+	    update j_remarks set status = 'accepted', note = _note
 		where doc_id = _doc_id and status <> 'accepted';
 	end if;
 	GET DIAGNOSTICS rows = ROW_COUNT;
     elsif( _cmd = 'reject' ) then
 	if( (select count(doc_id) from j_remarks where doc_id = _doc_id) = 0 ) then
-	    insert into j_remarks(doc_id, status, remark_type_id, note)
-		values(_doc_id, 'rejected', _remark_type_id, _note);
+	    insert into j_remarks(doc_id, status, note)
+		values(_doc_id, 'rejected', _note);
 	else
-	    update j_remarks set status = 'rejected', remark_type_id = _remark_type_id, note = _note
+	    update j_remarks set status = 'rejected', note = _note
 		where doc_id = _doc_id and status <> 'rejected';
 	end if;
 	GET DIAGNOSTICS rows = ROW_COUNT;
@@ -77,13 +75,6 @@ begin
 	update targets set e_date = current_date, hidden = 1 
 	    where pid = _doc_id and e_date > current_date::date_t and hidden = 0;
 
-	if( _remark_type_id is not null ) then
-	    ar := array_append(ar, coalesce((select descr from remark_types where remark_type_id = _remark_type_id)::text,'-'));
-	end if;
-	if( _note is not null ) then
-	    ar := array_append(ar, coalesce(_note::text,'-'));
-	end if;
-
 	if( _cmd = 'reject' and x > current_date and done = 1 ) then
 	    insert into targets (
 		target_type_id, 
@@ -99,7 +90,7 @@ begin
 		pid
 	    ) values(
 		case when strict = 1 then 'target:strict' else 'target:normal' end, format('RE: %s',sub),
-		"L10n_format_a"(u_lang,'targets','','confirmation',array['fix_date',"L"(current_date),'msg',array_to_string(ar,'<br/>'),
+		"L10n_format_a"(u_lang,'targets','','confirmation',array['fix_date',"L"(current_date),'msg',coalesce(_note::text,'-'),
 		    'u_name',coalesce(author_name,_login)],_note),
 		current_date, 
 		case when re = 1 then current_date + "paramInteger"('target:offset') else x end, 
@@ -126,7 +117,7 @@ begin
 	    format('remark/body:%s', 
 	    case 
 		when _cmd = 'reject' then _cmd || (case when target_created = 1 then '1' else '0' end) 
-		else _cmd || (case when ar is null then '1' else '0' end) 
+		else _cmd || (case when _note is null then '1' else '0' end) 
 	    end),
 	    case when _cmd = 'reject' then 2::smallint /*high*/ else 3::smallint /*normal*/ end, 
 	    array[
@@ -147,9 +138,6 @@ begin
     hs := hs || hstore(array['rows',rows::varchar]);
     if _note is not null then
 	hs := hs || hstore(array['note',_note]);
-    end if;
-    if _remark_type_id is not null then
-	hs := hs || hstore(array['remark_type_id',_remark_type_id]);
     end if;
 
     insert into console.requests(req_login, req_type, req_dt, status, attrs)

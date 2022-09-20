@@ -184,7 +184,7 @@ delete from placements;
 insert into placements(placement_id, descr, row_no) values('0', 'ПОЛКА (основная выкладка)', 0);
 insert into placements(placement_id, descr, row_no) values('1', 'Полка на торце', 1);
 insert into placements(placement_id, descr, row_no) values('2', 'Бренд-полка', 2);
-insert into placements(placement_id, descr, row_no) values('3', 'ДМП', 3);
+insert into placements(placement_id, descr, row_no) values('3', 'Палетта', 3);
 insert into placements(placement_id, descr) values('4', 'Прикассовая зона');
 insert into placements(placement_id, descr) values('5', 'Торговый зал');
 
@@ -198,9 +198,6 @@ insert into reclamation_types(reclamation_type_id, descr) values('0', 'Повр�
 insert into reclamation_types(reclamation_type_id, descr) values('1', 'Нарушение комплектации');
 insert into reclamation_types(reclamation_type_id, descr) values('2', 'Брак');
 insert into reclamation_types(reclamation_type_id, descr) values('3', 'Истек срок годности');
-
-delete from remark_types;
-insert into remark_types(remark_type_id, descr) values('0', 'Приложенное фото не соответствует поставленной задаче');
 
 delete from support;
 insert into support(sup_id, descr, email) 
