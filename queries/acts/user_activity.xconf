@@ -81,8 +81,8 @@ begin
 	    select f_date, account_id, prod_id, facing, "strict", inserted_ts from agreements2 where account_id='%account_id%';
     end if;
     if( (select count(*) from slices.agreements3 where slice_date=f_date and account_id='%account_id%') = 0 ) then
-	insert into slices.agreements3(slice_date, account_id, prod_id, stock, "strict", inserted_ts)
-	    select f_date, account_id, prod_id, stock, "strict", inserted_ts from agreements3 where account_id='%account_id%';
+	insert into slices.agreements3(slice_date, account_id, prod_id, stock, "strict", cookie, inserted_ts)
+	    select f_date, account_id, prod_id, stock, "strict", cookie, inserted_ts from agreements3 where account_id='%account_id%';
     end if;
     if( (select count(*) from slices.matrices where slice_date=f_date and account_id='%account_id%') = 0 ) then
 	insert into slices.matrices(slice_date, account_id, prod_id, row_no, inserted_ts)

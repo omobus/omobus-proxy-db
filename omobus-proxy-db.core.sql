@@ -1204,6 +1204,7 @@ create table agreements3 (
     prod_id 		uid_t 		not null,
     stock 		int32_t 	not null check(stock > 0),
     strict 		bool_t 		not null default 1,
+    cookie 		uid_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
@@ -2375,6 +2376,7 @@ create table quest_rows (
     ftype 		ftype_t 	not null,
     descr 		descr_t 	not null,
     qtype 		varchar(10) 	null check(ftype=0 and qtype in ('boolean','triboolean','integer','float','text','selector') or (ftype<>0 and qtype is null)),
+    mandatory 		bool_t 		null check((ftype=0) or (ftype<>0 and mandatory is null)),
     extra_info 		note_t 		null,
     country_ids 	countries_t 	null,
     dep_ids		uids_t		null,
@@ -2397,7 +2399,7 @@ create table rating_criterias (
     descr 		descr_t 	not null,
     dep_ids 		uids_t		null,
     wf 			wf_t 		null check((ftype=0 and wf is not null and wf between 0.01 and 1.00) or (ftype<>0 and wf is null)),
-    mandatory 		bool_t 		null check((ftype=0 and mandatory is not null) or (ftype<>0 and mandatory is null)),
+    mandatory 		bool_t 		null check((ftype=0 /*and mandatory is not null*/) or (ftype<>0 and mandatory is null)),
     extra_info 		note_t 		null,
     row_no 		int32_t 	null, -- ordering
     hidden 		bool_t 		not null default 0,
@@ -2843,6 +2845,8 @@ create trigger trig_updated_ts before update on training_materials for each row 
 create table training_types (
     training_type_id	uid_t		not null primary key default man_id(),
     descr		descr_t		not null,
+    min_contacts 	int32_t 	null check(min_contacts is null or min_contacts > 0),
+    max_contacts 	int32_t 	null check(max_contacts is null or max_contacts > 0),
     dep_ids 		uids_t		null,
     row_no 		int32_t 	null, -- ordering
     hidden		bool_t		not null default 0,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<quest_rows templ="%qname_id%;%qrow_id%;%descr%;%qtype%;%extra_info%;%delim%;" empty="no">
+<quest_rows templ="%qname_id%;%qrow_id%;%descr%;%qtype%;%mandatory%;%extra_info%;%delim%;" empty="no">
   <![CDATA[ 
 select 
     format('%s+%s',qname_id,qrow_id) qrow_pkey, 
@@ -9,6 +9,7 @@ select
     ftype, 
     descr, 
     qtype, 
+    mandatory,
     extra_info, 
     case when ftype=0 then null else 1 end delim 
 from quest_rows

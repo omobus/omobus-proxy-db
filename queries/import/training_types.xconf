@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<training_types templ="%training_type_id%;%descr%;%dep_ids%;%row_no%;">
+<training_types templ="%training_type_id%;%descr%;%min_contacts%;%max_contacts%;%dep_ids%;%row_no%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -22,14 +22,14 @@ select count(*) from training_types
 </check_exist>
 <update>
   <![CDATA[
-update training_types set descr=trim(both from '%descr%'), dep_ids=string_to_array(NIL('%dep_ids%'),','), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
+update training_types set descr=trim(both from '%descr%'), min_contacts=NIL(%min_contacts%), max_contacts=NIL(%max_contacts%), dep_ids=string_to_array(NIL('%dep_ids%'),','), row_no=NIL(%row_no%), hidden=0, db_ids=array_append(db_ids,'%ErpCode%')
     where training_type_id = '%training_type_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into training_types (training_type_id, descr, dep_ids, row_no, hidden, db_ids)
-    values ('%training_type_id%', trim(both from '%descr%'), string_to_array(NIL('%dep_ids%'),','), NIL(%row_no%), 0, array['%ErpCode%'])
+insert into training_types (training_type_id, descr, min_contacts, max_contacts, dep_ids, row_no, hidden, db_ids)
+    values ('%training_type_id%', trim(both from '%descr%'), NIL(%min_contacts%), NIL(%max_contacts%), string_to_array(NIL('%dep_ids%'),','), NIL(%row_no%), 0, array['%ErpCode%'])
   ]]>
 </insert>
 <end>

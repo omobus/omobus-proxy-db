@@ -337,8 +337,8 @@ insert into target_types(target_type_id, descr, row_no) values('target:permanent
 insert into target_types(target_type_id, descr, row_no, selectable) values('yes:no', 'Анкетирование (ответ Да или Нет)', 90, 0);
 
 delete from training_types;
-insert into training_types(training_type_id, descr) values('0', 'Индивидуальное');
-insert into training_types(training_type_id, descr) values('1', 'Фармкружок');
+insert into training_types(training_type_id, descr, min_contacts, max_contacts) values('0', 'Индивидуальное', 1, 1);
+insert into training_types(training_type_id, descr, min_contacts) values('1', 'Фармкружок', 2);
 
 delete from unsched_types;
 insert into unsched_types(unsched_type_id, descr) values('0', 'Собрание в офисе');
