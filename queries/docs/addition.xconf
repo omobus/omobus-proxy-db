@@ -57,8 +57,8 @@ begin
     if( (select count(*) from accounts where account_id='%guid%') > 0 ) then
 	raise notice 'ATTENTION: new account with GUID=%guid% already exist.';
     else
-	insert into accounts(account_id, descr, address, chan_id, phone, workplaces, team, interaction_type_id, attr_ids, extra_info, latitude, longitude, approved, hidden)
-	    values('%guid%', '%account%', '%address%', NIL('%chan_id%'), NIL('%phone%'), NIL(%workplaces%), NIL(%team%), NIL('%interaction_type_id%'), string_to_array(NIL('%attr_ids%'),','), NIL('%doc_note%'), NIL(%created_gps_la%), NIL(%created_gps_lo%), 0, 0);
+	insert into accounts(account_id, descr, address, chan_id, phone, workplaces, team, interaction_type_id, attr_ids, extra_info, /*latitude, longitude,*/ approved, hidden)
+	    values('%guid%', '%account%', '%address%', NIL('%chan_id%'), NIL('%phone%'), NIL(%workplaces%), NIL(%team%), NIL('%interaction_type_id%'), string_to_array(NIL('%attr_ids%'),','), NIL('%doc_note%'), /*NIL(%created_gps_la%), NIL(%created_gps_lo%),*/ 0, 0);
 	x := 1;
     end if;
 
