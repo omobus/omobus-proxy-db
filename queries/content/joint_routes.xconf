@@ -50,13 +50,30 @@ select
     a.code a_code, 
     a.descr a_name, 
     a.address, 
+    reg.descr region,
+    c.descr city,
+    a.rc_id,
+    r.descr rc,
+    r.ka_type,
+    p.descr poten,
+    a.chan_id,
+    ch.descr chan,
     j.b_dt, 
     j.e_dt, 
     datediff(j.b_dt, j.e_dt) duration,
     j.extra_info
-from j_user_activities j, activity_types t, accounts a
-where j.activity_type_id=t.activity_type_id and t.joint=1 and j.fix_date is not null and j.e_dt is not null and j.fix_date=left(j.e_dt,10)
-    and j.account_id=a.account_id and '%b_date%'<=fix_date and fix_date<='%e_date%'
+from j_user_activities j
+    left join activity_types t on j.activity_type_id = t.activity_type_id
+    left join accounts a on j.account_id = a.account_id
+    left join potentials p on a.poten_id = p.poten_id
+    left join channels ch on a.chan_id = ch.chan_id
+    left join retail_chains r on a.rc_id = r.rc_id
+    left join regions reg on a.region_id = reg.region_id
+    left join cities c on a.city_id = c.city_id
+where 
+    t.joint = 1 
+    and j.fix_date is not null and j.e_dt is not null and j.fix_date = left(j.e_dt,10)
+    and '%b_date%' <= fix_date and fix_date <= '%e_date%'
 order by j.fix_date, j.employee_id, j.b_dt
   ]]>
 	</L1>
