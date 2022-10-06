@@ -18,7 +18,7 @@ delete from agreements3
 </begin>
 <insert>
   <![CDATA[
-insert into agreements3(account_id, prod_id, stock, "strict", db_ids)
+insert into agreements3(account_id, prod_id, stock, "strict", cookie, db_ids)
     values('%account_id%', '%prod_id%', %stock%, case when '%strict%'='1' then 1 else 0 end, NIL('%cookie%'), array['%ErpCode%'])
 on conflict do nothing
   ]]>
