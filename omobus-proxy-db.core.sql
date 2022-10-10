@@ -3699,50 +3699,6 @@ create index i_exist_h_addition on h_addition (user_id, dev_pack, dev_id, fix_dt
 create trigger trig_lock_update before update on h_addition for each row 
     when (not (old.blobs > 0 and (old.photos is null or old.blobs <> array_length(old.photos, 1)))) execute procedure tf_lock_update();
 
-create table h_advt ( /* advertisement in the outlet */
-    doc_id		uid_t 		not null primary key default doc_id(),
-    inserted_ts		ts_auto_t 	not null,
-    inserted_node	hostname_t 	not null,
-    dev_pack		int32_t 	not null,
-    doc_no		uid_t 		not null,
-    dev_id		devid_t 	not null,
-    dev_login		uid_t 		not null,
-    user_id		uid_t 		not null,
-    account_id		uid_t 		not null,
-    fix_dt		datetime_t 	not null,
-    created_dt 		datetime_t 	not null,
-    created_gps_dt	datetime_t 	null,
-    created_gps_la	gps_t 		null,
-    created_gps_lo	gps_t 		null,
-    closed_dt		datetime_t 	not null,
-    closed_gps_dt	datetime_t 	null,
-    closed_gps_la	gps_t 		null,
-    closed_gps_lo	gps_t 		null,
-    w_cookie		uid_t 		not null,
-    a_cookie		uid_t 		not null,
-    activity_type_id	uid_t 		not null,
-    rows		int32_t 	not null
-);
-
-create table t_advt (
-    doc_id		uid_t 		not null,
-    row_no		int32_t 	not null check (row_no >= 0),
-    placement_id 	uid_t 		not null,
-    posm_id		uid_t 		not null,
-    qty 		int32_t 	not null check (qty >= 0),
-    scratch 		date_t 		null,
-    primary key (doc_id, placement_id, posm_id)
-);
-
-create index i_fix_date_h_advt on h_advt (left(fix_dt,10));
-create index i_doc_no_h_advt on h_advt (doc_no);
-create index i_account_id_h_advt on h_advt (account_id);
-create index i_user_id_h_advt on h_advt (user_id);
-create index i_exist_h_advt on h_advt (user_id, dev_pack, dev_id, fix_dt);
-
-create trigger trig_lock_update before update on h_advt for each row execute procedure tf_lock_update();
-create trigger trig_lock_update before update on t_advt for each row execute procedure tf_lock_update();
-
 create table h_audit (
     doc_id 		uid_t 		not null primary key default doc_id(),
     inserted_ts 	ts_auto_t 	not null,
@@ -5078,26 +5034,6 @@ create trigger trig_lock_update before update on h_wish for each row execute pro
 
 
 -- *** Journals & different representation of the collected data ****
-
-create table dyn_advt (
-    fix_date		date_t 		not null,
-    account_id 		uid_t 		not null,
-    placement_id 	uid_t 		not null,
-    posm_id 		uid_t 		not null,
-    qty 		int32_t 	not null check (qty >= 0),
-    fix_dt		datetime_t 	not null,
-    user_id 		uid_t 		not null,
-    doc_id 		uid_t 		not null,
-    scratch 		date_t 		null,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts		ts_auto_t 	not null,
-    "_isRecentData"	bool_t 		null,
-    primary key(fix_date, account_id, placement_id, posm_id)
-);
-
-create index i_2lts_dyn_advt on dyn_advt (updated_ts);
-
-create trigger trig_updated_ts before update on dyn_advt for each row execute procedure tf_updated_ts();
 
 create table dyn_audits (
     fix_date		date_t 		not null,
@@ -6672,7 +6608,6 @@ $body$ language sql STABLE;
 
 -- default system parameters
 
-insert into sysparams values('advt_history:depth', '60', 'The maximum depth of the advt_history in days.');
 insert into sysparams values('checkups:depth', '30', 'How long (in days) empty data from the dyn_checkups is used.');
 insert into sysparams values('checkups_history:depth', '60', 'The maximum depth of the checkups_history in days.');
 insert into sysparams values('db:created_ts', current_timestamp, 'Database creation datetime.');

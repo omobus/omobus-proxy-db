@@ -51,7 +51,6 @@ begin
     delete from j_user_works where b_dt < gc_date;
     delete from j_wishes where left(fix_dt,10) < gc_date;
 
-    delete from dyn_advt where fix_date < gc_date;
     delete from dyn_audits where fix_date < gc_date;
     delete from dyn_checkups where fix_date < gc_date;
     delete from dyn_oos where fix_date < gc_date;
@@ -90,10 +89,6 @@ begin
     delete from a_wifi where left(fix_dt,10) < gc_date;
 
     delete from h_addition where left(fix_dt,10) < gc_date;
-    for i in select doc_id from h_advt where left(fix_dt,10) < gc_date loop
-	delete from t_advt where doc_id = i;
-	delete from h_advt where doc_id = i;
-    end loop;
     for i in select doc_id from h_audit where left(fix_dt,10) < gc_date loop
 	delete from t_audit where doc_id = i;
 	delete from h_audit where doc_id = i;

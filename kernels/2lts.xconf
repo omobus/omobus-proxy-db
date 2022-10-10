@@ -56,7 +56,6 @@
 <xi:include href="../queries/2lts/discard_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/discards.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/distributors.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/2lts/dyn_advt.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/dyn_audits.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/dyn_checkups.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2lts/dyn_oos.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -168,7 +167,6 @@
     <discard_types />
     <discards />
     <distributors />
-    <dyn_advt />
     <dyn_audits />
     <dyn_checkups />
     <dyn_oos />

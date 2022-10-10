@@ -186,27 +186,6 @@ from slices.matrices m, products p
 order by m.account_id, m.row_no, p.descr, m.prod_id
   ]]>
 	</matrices>
-	<advt_L0>
-  <![CDATA[
-select 
-    doc_id, doc_no, account_id, a_cookie, fix_dt, datediff('second', created_dt, closed_dt) duration
-from h_advt
-    where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*'%e_date%'*/
-order by fix_dt
-  ]]>
-	</advt_L0>
-	<advt_L1>
-  <![CDATA[
-select t.doc_id, t.row_no, p.descr posm, g.descr placement, t.qty, t.scratch, format('%s!%s',t.placement_id,t.posm_id) _pkey from (
-	select doc_id, row_no, placement_id, posm_id, qty, scratch from t_advt where doc_id in (
-	    select doc_id from h_advt where user_id='%user_id%' and left(fix_dt, 10)='%b_date%' /*%e_date%*/
-	)
-    ) t
-    left join placements g on g.placement_id = t.placement_id
-    left join pos_materials p on p.posm_id = t.posm_id
-order by t.doc_id, t.row_no
-  ]]>
-	</advt_L1>
 	<audits_L0>
   <![CDATA[
 select 
@@ -830,33 +809,6 @@ end
 
 tb.matrices = rt.groups(_matrices, "account_id")
 
-idx = {}; tb.advt = rt.groups(_advt_L0, "account_id", function(r, n, a)
-    if n == "doc_id" then
-	r.rows = {}; idx[a] = r.rows; r[n] = a
-    elseif n == 'duration' then
-	r[n] = tonumber(a)
-    else
-	r[n] = a
-    end
-end)
-rt.foreach(_advt_L1, function(q, i, cols)
-    local r = idx[rowset_value(q, i, rowset_colid(q, "doc_id"))]
-    if r ~= nil then
-	local x = {}
-	for j = 0, cols-1 do
-	    local n = rowset_colname(q, j)
-	    local a = rowset_value(q, i, j)
-	    if a ~= nil and n ~= "doc_id" then
-		if std.contains({'row_no','qty'}, n) then
-		    x[n] = tonumber(a)
-		else
-		    x[n] = a
-		end
-	    end
-	end
-	table.insert(r, x)
-    end
-end)
 idx = {}; tb.audits = rt.groups(_audits_L0, "account_id", function(r, n, a)
     if n == "doc_id" then
 	r.rows = {}; idx[a] = r.rows; r[n] = a
