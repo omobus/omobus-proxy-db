@@ -22,7 +22,7 @@ select count(*) from accounts
 </check_exist>
 <update>
   <![CDATA[
-update accounts set pid=NIL('%pid%'), code=trim(both from '%code%'), ftype=0%ftype%, descr=trim(both from '%descr%'), address=trim(both from '%address%'), rc_id=NIL('%rc_id%'), chan_id=NIL('%chan_id%'), poten_id=NIL('%poten_id%'), region_id=NIL('%region_id%'), city_id=NIL('%city_id%'), props=NIL('%props%')::hstore, approved=1, hidden=0, db_ids=array_append(db_ids,'%ErpCode%'), "_isAlienData"=1
+update accounts set pid=NIL('%pid%'), code=NIL(trim(both from '%code%'),code), ftype=0%ftype%, descr=trim(both from '%descr%'), address=trim(both from '%address%'), rc_id=NIL('%rc_id%'), chan_id=NIL('%chan_id%'), poten_id=NIL('%poten_id%'), region_id=NIL('%region_id%'), city_id=NIL('%city_id%'), props=NIL('%props%')::hstore, approved=1, hidden=0, db_ids=array_append(db_ids,'%ErpCode%'), "_isAlienData"=1
     where account_id = '%account_id%'
   ]]>
 </update>
