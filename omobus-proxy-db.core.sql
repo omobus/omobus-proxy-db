@@ -1691,7 +1691,7 @@ create table info_materials (
     infom_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
     "blob" 		blob_t 		not null,
-    content_type 	varchar(32) 	not null default 'application/pdf',
+    content_type 	varchar(32) 	not null check(content_type in ('application/pdf','video/mp4','image/jpeg','application/zip')),
     rc_id 		uid_t 		null,
     chan_ids 		uids_t 		null,
     country_id 		country_t 	not null,
