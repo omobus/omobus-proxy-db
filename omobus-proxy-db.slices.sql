@@ -22,6 +22,7 @@ create table slices.agreements2 (
     prod_id 		uid_t 		not null,
     facing 		int32_t 	not null check(facing > 0),
     strict 		bool_t 		not null default 1,
+    cookie 		uid_t 		null,
     inserted_ts 	ts_auto_t 	not null,
     primary key (slice_date, account_id, prod_id)
 );

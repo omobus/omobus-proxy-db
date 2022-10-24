@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<agreements2 templ="%account_id%;%prod_id%;%facing%;%strict%;" empty="no">
+<agreements2 templ="%account_id%;%prod_id%;%facing%;%strict%;%cookie%;" empty="no">
   <![CDATA[ 
-select account_id, prod_id, facing, strict from agreements2
+select account_id, prod_id, facing, strict, cookie from agreements2
     order by 1, 2, 4
   ]]>
 </agreements2>
