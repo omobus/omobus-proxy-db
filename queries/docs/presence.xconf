@@ -31,7 +31,7 @@ insert into h_presence(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_logi
 <write_row>
   <![CDATA[ 
 insert into t_presence(doc_id, prod_id, row_no, facing, stock, scratch)
-    values('%doc_id_sys%', '%prod_id%', %row_no%, %facing%, %stock%, NIL('%scratch%'))
+    values('%doc_id_sys%', '%prod_id%', %row_no%, %facing%, NIL(%stock%), NIL('%scratch%'))
   ]]>
 </write_row>
 <close>

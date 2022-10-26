@@ -24,6 +24,12 @@
 	</xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="int_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="(|[0-9]*)" />
+	</xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="uid_t">
 	<xs:restriction base="xs:string">
 	    <xs:pattern value="[^%]*" />
@@ -38,7 +44,7 @@
 			<xs:attribute name="row_no" use="required" type="xs:integer" />
 			<xs:attribute name="prod_id" use="required" type="uid_t" />
 			<xs:attribute name="facing" use="required" type="xs:integer" />
-			<xs:attribute name="stock" use="required" type="xs:integer" />
+			<xs:attribute name="stock" use="optional" type="int_t" default="" />
 			<xs:attribute name="scratch" use="optional" type="date_t" default="" />
 		    </xs:complexType>
 		</xs:element>
