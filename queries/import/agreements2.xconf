@@ -19,7 +19,7 @@ delete from agreements2
 <insert>
   <![CDATA[
 insert into agreements2(account_id, prod_id, facing, "strict", cookie, db_ids)
-    values('%account_id%', '%prod_id%', 0%facing%, case when '%strict%'='1' then 1 else 0 end, cookie, array['%ErpCode%'])
+    values('%account_id%', '%prod_id%', NIL(%facing%), case when '%strict%'='1' then 1 else 0 end, cookie, array['%ErpCode%'])
 on conflict do nothing
   ]]>
 </insert>

@@ -20,7 +20,7 @@ create table slices.agreements2 (
     slice_date 		date_t 		not null,
     account_id		uid_t		not null,
     prod_id 		uid_t 		not null,
-    facing 		int32_t 	not null check(facing > 0),
+    facing 		int32_t 	null check(facing > 0),
     strict 		bool_t 		not null default 1,
     cookie 		uid_t 		null,
     inserted_ts 	ts_auto_t 	not null,
