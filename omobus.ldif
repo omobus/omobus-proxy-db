@@ -40,13 +40,6 @@ ou: system-users
 description:: 0KHQuNGB0YLQtdC80L3Ri9C1INGD0YfQtdGC0L3Ri9C1INC30LDQv9C40YHQuA
  ==
 
-dn: ou=whereis-users,dc=omobus,dc=local
-objectClass: organizationalUnit
-objectClass: top
-ou: whereis-users
-description:: 0KHQuNGB0YLQtdC80L3Ri9C1INGD0YfQtdGC0L3Ri9C1INC30LDQv9C40YHQuA
- ==
-
 dn: ou=lts,ou=data,dc=omobus,dc=local
 objectClass: organizationalUnit
 objectClass: top
@@ -240,7 +233,7 @@ objectClass: omobusUser
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn: MR:1
+cn:: 0J/QsNC90YTQtdGA0L7QstCwINCY0LvQvtC90LA=
 gidNumber: 905
 homeDirectory: /var/ftp/users/mr/xz_mr_1
 uid: xz_mr_1
@@ -261,7 +254,7 @@ objectClass: omobusUser
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn: SR:1
+cn:: 0J/Rg9C/0LrQuNC9INCk0LXQtNC+0YAg0J/QtdGC0YDQvtCy0LjRhw==
 gidNumber: 905
 homeDirectory: /var/ftp/users/sr/xz_sr_1
 uid: xz_sr_1
@@ -283,7 +276,7 @@ objectClass: omobusUser
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn: SR:2
+cn:: 0JrQuNGA0LjQu9C+0LIg0JjQs9C+0YDRjCDQktC40LrRgtC+0YDQvtCy0LjRhw==
 gidNumber: 905
 homeDirectory: /var/ftp/users/sr/xz_sr_2
 uid: xz_sr_2
@@ -303,7 +296,7 @@ objectClass: omobusUser
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn: SR:3
+cn:: 0JLRjNGO0LPQuNC90LAg0J3QsNGC0LDQu9GM0Y8g0JvQtdC+0L3QuNC00L7QstC90LA=
 gidNumber: 905
 homeDirectory: /var/ftp/users/sr/xz_sr_3
 uid: xz_sr_3
@@ -323,7 +316,7 @@ objectClass: omobusUser
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn: SV:1
+cn:: 0J3QuNC60LjRhNC+0YDQvtCy0LAg0JXQu9C10L3QsA==
 gidNumber: 905
 homeDirectory: /var/ftp/users/sv/xz_sv_1
 uid: xz_sv_1
@@ -342,7 +335,7 @@ objectClass: omobusUser
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn: ASM:1
+cn:: 0KDQsNC30LPRg9C70Y/QtdCyINCU0LzQuNGC0YDQuNC5
 gidNumber: 905
 homeDirectory: /var/ftp/users/asm/xz_asm_1
 uid: xz_asm_1
@@ -362,7 +355,7 @@ objectClass: omobusUser
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn: CDM:1
+cn:: 0J3QuNC60YLQviDQndC40LrQsNC6INCd0LjQutCw0LrQvtCy0LjRhw==
 gidNumber: 905
 homeDirectory: /var/ftp/users/cdm/xz_cdm_1
 uid: xz_cdm_1
@@ -370,7 +363,7 @@ uidNumber: 902
 userPassword:: MQ==
 consoleStatus: enabled
 ErpId: cdm01
-exchangeStatus: enabled
+exchangeStatus: disabled
 FTPStatus: enabled
 groupName: cdm
 mailStatus: enabled
@@ -382,7 +375,7 @@ objectClass: omobusUser
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn: ISE:1
+cn:: 0KTQtdC00L7RgNC+0LLQsCDQndCw0LTQtdC20LTQsA==
 gidNumber: 905
 homeDirectory: /var/ftp/users/ise/xz_ise_1
 uid: xz_ise_1
@@ -420,7 +413,8 @@ objectClass: omobusUser
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn: KAM:1
+cn:: 0KHQuNC00LjQsdC1INCQ0LvQtdC60YHQsNC90LTRgCDQnOKAmNCR0LDQvdC40LXQstC40Yc
+ =
 gidNumber: 905
 homeDirectory: /var/ftp/users/kam/xz_kam_1
 uid: xz_kam_1
@@ -458,7 +452,7 @@ objectClass: omobusUser
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn: TM:1
+cn:: 0JrQsNGA0LDQtNGD0LEg0JXQstCz0LXQvdC40Y8=
 gidNumber: 905
 homeDirectory: /var/ftp/users/tme/xz_tme_1
 uid: xz_tme_1
@@ -496,7 +490,7 @@ objectClass: omobusUser
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn: Merch:1
+cn:: 0J/RgNC+0YXQvtGA0L7QstCwINCi0LDRgtGM0Y/QvdCw
 gidNumber: 905
 homeDirectory: /var/ftp/users/merch/xz_m_1
 uid: xz_m_1
@@ -607,14 +601,4 @@ uid: noreply
 userPassword:: MA==
 cn: Mailbox for sending notifications
 mailStatus: enabled
-
-dn: uid=wheris1,ou=whereis-users,dc=omobus,dc=local
-objectClass: account
-objectClass: omobusWhereIs
-objectClass: top
-uid: wheris1
-whereisAcceptedHost: 178.159.51.7
-whereisStatus: enabled
-whereisToken: 111
-cn: trttr etrteert
 
