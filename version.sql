@@ -1,3 +1,3 @@
 /* Copyright (c) 2006 - 2022 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
-insert into sysparams values('db:vstamp', '3.5.37', 'Database version number.');
+insert into sysparams values('db:vstamp', '3.5.38', 'Database version number.');
