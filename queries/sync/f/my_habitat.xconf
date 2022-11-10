@@ -15,7 +15,7 @@ select c.user_id, a.account_id fid from (select user_id, expand_cities(city_id) 
     union
 select r.user_id, a.account_id fid from my_retail_chains r, accounts a where r.rc_id=a.rc_id and (r.region_id='' or r.region_id=a.region_id) and a.hidden = 0
     union
-select user_id, guid fid from j_additions where hidden = 0
+select j.user_id, j.guid fid from j_additions j, accounts a where a.account_id = j.guid and j.hidden = 0 and a.approved = 0
 order by 1, 2
     ]]>
 </my_habitat>
