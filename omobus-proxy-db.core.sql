@@ -2,6 +2,7 @@
 
 alter schema public rename to core;
 alter database "omobus-proxy-db" SET search_path TO "core";
+SET search_path TO "core";
 
 create extension hstore;
 create extension isn;
