@@ -14,7 +14,7 @@ begin
 
 /* normalize [role] only if user exist in the LDAP: */
     update users set role='%role%'
-	where user_id='%user_id%' and coalesce(role,'') <> '%role%';
+	where user_id='%user_id%' and coalesce(role,'') <> '%role%' and dev_login is not null;
     GET DIAGNOSTICS x = ROW_COUNT;
     if x > 0 then
 	insert into ".sesparams" values('%user_id%') on conflict do nothing;
