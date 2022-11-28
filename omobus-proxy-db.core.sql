@@ -2831,6 +2831,7 @@ create table training_materials (
     "blob" 		blob_t 		not null,
     content_type 	varchar(32) 	not null check(content_type in ('application/pdf','video/mp4','image/jpeg','application/zip')),
     brand_ids 		uids_t 		null,
+    training_type_ids 	uids_t 		null,
     country_id		country_t 	not null,
     dep_ids 		uids_t		null,
     b_date 		date_t 		null,

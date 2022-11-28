@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<training_materials templ="%tm_id%;%descr%;%brand_ids%;%blob%;%content_type%;%b_date%;%e_date%;%shared%;" empty="no">
+<training_materials templ="%tm_id%;%descr%;%brand_ids%;%blob%;%training_type_ids%;%content_type%;%b_date%;%e_date%;%shared%;" empty="no">
   <![CDATA[ 
 select 
     tm_id, 
     descr, 
     array_to_string(brand_ids,',') brand_ids, 
+    array_to_string(training_type_ids,',') training_type_ids, 
     b_date, 
     e_date, 
     blob, 
