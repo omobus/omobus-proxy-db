@@ -3,6 +3,7 @@
 create type console.training_material_t as (
     descr descr_t,
     brand_ids uids_t,
+    training_type_ids uids_t,
     country_id uid_t,
     dep_ids uids_t,
     b_date date_t,
@@ -36,6 +37,7 @@ begin
 	update training_materials set 
 	    descr = (_opt).descr, 
 	    brand_ids = (_opt).brand_ids, 
+	    training_type_ids = (_opt).training_type_ids, 
 	    country_id = (_opt).country_id, 
 	    dep_ids = (_opt).dep_ids,
 	    b_date = (_opt).b_date, 
@@ -54,6 +56,9 @@ begin
 	hs := hs || hstore(array['shared',(_opt).shared::text]);
 	if( (_opt).brand_ids is not null ) then
 	    hs := hs || hstore(array['brand_ids',array_to_string((_opt).brand_ids,',')]);
+	end if;
+	if( (_opt).training_type_ids is not null ) then
+	    hs := hs || hstore(array['training_type_ids',array_to_string((_opt).training_type_ids,',')]);
 	end if;
 	hs := hs || hstore(array['country_id',(_opt).country_id]);
 	if( (_opt).dep_ids is not null ) then
