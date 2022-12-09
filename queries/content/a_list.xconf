@@ -68,6 +68,14 @@ select
 			case when system=1 then 'yes' when system=0 then 'no' else '-' end,
 			case when debuggable=1 then 'yes' when debuggable=0 then 'no' else '-' end)
 		from a_package where j.act_id=act_id)
+	when 'playback' then
+	    (select 
+		case when args is null then
+		    format('%s from %s (oid: %s) -> %s', container, launcher, oid, operation)
+		else
+		    format('%s from %s (oid: %s) -> %s (args: %s)', container, launcher, oid, operation, args)
+		end
+	    from a_playback where j.act_id=act_id)
 	when 'power' then
 	    (select state || ' (' || case when battery_life=255 then '-' else (battery_life||'%') end || case when voltage>0 then (', '||voltage||' V') else '' end || 
 		    case when temperature>0 then (', '||temperature||' °C') else '' end || case when tech is not null and tech<>'' then (', '||tech) else '' end || ')' || 

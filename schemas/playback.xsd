@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="datetime_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="[0-9]{4}\-[0-9]{2}\-[0-9]{2}( |T){1}[0-9]{2}:[0-9]{2}:[0-9]{2}" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="datetime2_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="(|[0-9]{4}\-[0-9]{2}\-[0-9]{2}( |T){1}[0-9]{2}:[0-9]{2}:[0-9]{2})" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="decimal_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="(|[\-+]?[0-9]*[.][0-9]*)" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="uid_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="[^%]*" />
+	</xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="playback">
+	<xs:complexType>
+	    <xs:attribute name="vstamp" use="required" type="xs:string" />
+	    <xs:attribute name="dev_pack" use="required" type="xs:integer" />
+	    <xs:attribute name="dev_id" use="required" type="xs:string" />
+	    <xs:attribute name="user_id" use="required" type="xs:string" />
+	    <xs:attribute name="fix_dt" use="required" type="datetime_t" />
+	    <xs:attribute name="satellite_dt" use="optional" type="datetime2_t" default="" />
+	    <xs:attribute name="latitude" use="optional" type="decimal_t" default="" />
+	    <xs:attribute name="longitude" use="optional" type="decimal_t" default="" />
+	    <xs:attribute name="operation" use="required" type="xs:string" />
+	    <xs:attribute name="container" use="required" type="xs:string" />
+	    <xs:attribute name="args" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="launcher" use="required" type="xs:string" />
+	    <xs:attribute name="oid" use="required" type="uid_t" />
+	</xs:complexType>
+    </xs:element>
+</xs:schema>

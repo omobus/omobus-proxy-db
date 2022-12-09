@@ -33,6 +33,7 @@
 <xi:include href="../queries/acts/lifecycle.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/network.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/package.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/acts/playback.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/power.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/sms.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/acts/statfs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

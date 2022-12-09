@@ -3360,6 +3360,31 @@ create index i_exist_a_package on a_package (user_id, dev_pack, dev_id, fix_dt);
 
 create trigger trig_lock_update before update on a_package for each row execute procedure tf_lock_update();
 
+create table a_playback (
+    act_id 		uid_t 		not null primary key default act_id(),
+    inserted_ts 	ts_auto_t 	not null,
+    inserted_node 	hostname_t 	not null,
+    dev_pack 		int32_t 	not null,
+    dev_id 		devid_t 	not null,
+    dev_login 		uid_t 		not null,
+    user_id 		uid_t 		not null,
+    fix_dt 		datetime_t 	not null,
+    satellite_dt 	datetime_t 	null,
+    latitude 		gps_t 		null,
+    longitude 		gps_t 		null,
+    operation 		code_t 		not null,
+    container 		code_t 		not null,
+    args 		text 		null,
+    launcher 		doctype_t 	not null,
+    oid 		uid_t 		not null
+);
+
+create index i_user_id_a_playback on a_playback (user_id);
+create index i_fix_date_a_playback on a_playback (left(fix_dt,10));
+create index i_exist_a_playback on a_playback (user_id, dev_pack, dev_id, fix_dt);
+
+create trigger trig_lock_update before update on a_playback for each row execute procedure tf_lock_update();
+
 create table a_power (
     act_id		uid_t 		not null primary key default act_id(),
     inserted_ts		ts_auto_t 	not null,

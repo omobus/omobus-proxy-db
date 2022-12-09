@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<playback>
+<check_user>
+  <![CDATA[
+select user_id as user_id_sys from users 
+    where user_id='%ErpId%' /*%user_id%*/
+  ]]>
+</check_user>
+<check_exist>
+  <![CDATA[
+select count(*) from a_playback 
+    where user_id='%user_id_sys%' and dev_pack=%dev_pack% and dev_id='%dev_id%' and fix_dt='%fix_dt%'
+  ]]>
+</check_exist>
+<check_date>
+  <![CDATA[
+select (current_date - '%fix_dt%'::date) not between -1 and "paramInteger"('gc:keep_alive'::uid_t) banned
+  ]]>
+</check_date>
+<create>
+  <![CDATA[
+select * from act_id()
+  ]]>
+</create>
+<write_body>
+  <![CDATA[
+insert into a_playback (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, operation, container, args, launcher, oid)
+    values ('%doc_id_sys%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%operation%', '%container%', NIL('%args%'), '%launcher%', '%oid%')
+  ]]>
+</write_body>
+<close>
+  <![CDATA[
+do $$
+declare
+    f_date date_t default left('%fix_dt%',10);
+    f_time time_t default substring('%fix_dt%', 12, 5);
+begin
+-- **** playback --> j_acts
+    insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
+	values('%doc_id_sys%', '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%server_hostname%', '%dev_pack%', '%doc_code_sys%');
+
+-- **** playback --> sysstats
+    perform sysstat_add('%user_id_sys%', f_date, f_time);
+
+-- **** playback --> sysdevices
+    update sysdevices set outdated_ts = current_timestamp
+	where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
+
+-- **** playback --> content_stream
+    perform content_add('tech', '', f_date, f_date);
+    perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
+    perform content_add('a_list', '%user_id_sys%', f_date, f_date);
+end;
+$$;
+  ]]>
+</close>
+<log>
+  <![CDATA[
+insert into pack_stream (pack_code, pack_name, pack_size, inserted_node, inserted_svc, vstamp, dev_pack, dev_id, dev_login, user_id, fix_dt, status, obj_id)
+    values('%doc_code_sys%', '%doc_name_sys%', %doc_size_sys%, '%server_hostname%', 'acts', '%vstamp%', %dev_pack%, '%dev_id%', '%user_id%', NIL('%user_id_sys%'), '%fix_dt%', '%doc_status_sys%', NIL('%doc_id_sys%'))
+  ]]>
+</log>
+</playback>
