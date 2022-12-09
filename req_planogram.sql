@@ -91,6 +91,7 @@ declare
     hs hstore;
     rv int = 0;
     xid uid_t;
+    cid uid_t;
 begin
     GET DIAGNOSTICS stack = PG_CONTEXT;
     fcesig := substring(stack from 'function console\.(.*?)\(');
@@ -99,8 +100,16 @@ begin
 	raise exception '% invalid input attribute!', fcesig;
     end if;
 
+    select country_id from users where user_id = _login
+	into cid;
+
+    if cid is null and (select count(*) from countries where hidden = 0) = 1 then
+	select country_id from countries where hidden = 0
+	    into cid;
+    end if;
+
     insert into planograms(descr, country_id, brand_ids, "blob", content_type, author_id)
-	values(_name, '', '{}'::uids_t, _data, _content_type, _login)
+	values(_name, coalesce(cid,''), '{}'::uids_t, _data, _content_type, _login)
     returning pl_id
     into xid;
     GET DIAGNOSTICS rv = ROW_COUNT;
