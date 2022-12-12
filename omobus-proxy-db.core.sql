@@ -6651,7 +6651,7 @@ insert into sysparams values('my_routes:pending:color', '1704061', 'my_routes pe
 insert into sysparams values('my_routes:pending:bgcolor', '15395583', 'my_routes pending bgcolor as rgb integer value.');
 insert into sysparams values('my_routes:important:depth', '3', 'my_routes important depth in days.');
 insert into sysparams values('my_routes:important:bgcolor', '16773360', 'my_routes important bgcolor as rgb integer value.');
-insert into sysparams values('my_routes:discard', 'false', 'allows discarding of the route.');
+insert into sysparams values('my_routes:discard', 'true', 'Allows discarding of the route (true|false).');
 insert into sysparams values('oos_history:depth', '60', 'The maximum depth of the oos_history in days.');
 insert into sysparams values('orders_history:depth', '10', 'The maximum depth of the orders_history in days.');
 insert into sysparams values('orders_history:alert:color', '13107200', 'orders_history alert text color as rgb integer.');
