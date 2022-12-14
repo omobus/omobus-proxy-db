@@ -159,7 +159,7 @@ end;
 $body$
 language plpgsql STABLE;
 
-create or replace function demasquerading(xid uid_t) returns uid_t as
+/*create or replace function demasquerading(xid uid_t) returns uid_t as
 $body$
 begin
     return split_part(xid, '!', 2);
@@ -182,7 +182,7 @@ begin
     end if;
 end;
 $body$
-language plpgsql IMMUTABLE;
+language plpgsql IMMUTABLE;*/
 
 create or replace function DateDiff(units varchar(30), start_ts timestamp, end_ts timestamp) returns int32_t 
 as $BODY$
@@ -390,13 +390,13 @@ begin
 end;
 $body$ language plpgsql;
 
-create or replace function masquerading(uid uid_t, erp uid_t) returns uid_t as
+/*create or replace function masquerading(uid uid_t, erp uid_t) returns uid_t as
 $body$
 begin
     return case when uid is null then null when erp is null then uid else format('%1$s!%2$s', erp, uid)::uid_t end;
 end;
 $body$
-language plpgsql IMMUTABLE;
+language plpgsql IMMUTABLE;*/
 
 create or replace function "L10n_format_a"(f_lang_id lang_t, f_obj_code code_t, f_obj_id uid_t, f_obj_attr uid_t, ar text array, def text) returns text as
 $body$
