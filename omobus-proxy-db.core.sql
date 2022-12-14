@@ -47,6 +47,7 @@ create domain numeric_t as numeric(16,4);
 create domain lang_t as varchar(2) check (value is null or (value = lower(value))); -- Language code, as described in the ISO 639-1 alpha-2.
 create domain phone_t as varchar(32); -- E.164 defines maximum phone number as 16 symbols (+ and 15 numbers)
 create domain time_t as char(5);
+create domain timesec_t as char(8);
 create domain ts_auto_t as timestamp with time zone default current_timestamp not null;
 create domain ts_t as timestamp with time zone;
 create domain uid_t as varchar(48);
