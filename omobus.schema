@@ -222,13 +222,11 @@ objectclass ( 1.3.6.1.4.1.33158.11.2.3 NAME 'omobusMail'
 
 objectclass ( 1.3.6.1.4.1.33158.11.2.5 NAME 'omobusArk'
 	SUP top AUXILIARY
-	MUST ( ErpCode )
-	MAY ( cn $ description $ arkStatus $ arkToken $ arkAcceptedHost ) )
+	MAY ( ErpCode $ cn $ description $ arkStatus $ arkToken $ arkAcceptedHost ) )
 
 objectclass ( 1.3.6.1.4.1.33158.11.2.6 NAME 'omobusBridge'
 	SUP top AUXILIARY
-	MUST ( ErpCode )
-	MAY ( cn $ description $ groupName $ bridgeStatus $ bridgeToken $ bridgeAcceptedHost ) )
+	MAY ( ErpCode $ cn $ description $ groupName $ bridgeStatus $ bridgeToken $ bridgeAcceptedHost ) )
 
 objectclass ( 1.3.6.1.4.1.33158.11.2.7 NAME 'omobusWhereIs'
 	SUP top AUXILIARY
