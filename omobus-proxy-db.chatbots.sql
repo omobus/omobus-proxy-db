@@ -24,7 +24,7 @@ create table chatbots.chats (
     primary key(bot_type, bot_id, chat_id)
 );
 
-create trigger trig_updated_ts before update on chatbots.chats for each row execute function tf_updated_ts();
+create trigger trig_updated_ts before update on chatbots.chats for each row execute procedure tf_updated_ts();
 
 create table chatbots.feedbacks (
     fb_id 		int64_t 	not null primary key default nextval('chatbots.seq_feedbacks'),
