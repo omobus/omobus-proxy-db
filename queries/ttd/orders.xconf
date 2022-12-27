@@ -19,6 +19,7 @@ declare
     u_id uid_t;
     d_no uid_t;
     f_date date_t;
+    k int;
 begin
     select doc_no, left(fix_dt,10), user_id from j_docs where doc_id='%doc_id%'
 	into d_no, f_date, u_id;
@@ -31,12 +32,15 @@ begin
 -- **** TTD -> j_ttd
     insert into j_ttd(doc_id, status) values('%doc_id%', 'delivered')
 	on conflict do nothing;
+    GET DIAGNOSTICS k = ROW_COUNT;
 
+    if k > 0 then
 -- *** TTD -> content_stream
-    perform content_add('stat_orders', '', "monthDate_First"(f_date)::date_t, "monthDate_Last"(f_date)::date_t);
+	perform content_add('stat_orders', '', "monthDate_First"(f_date)::date_t, "monthDate_Last"(f_date)::date_t);
 
 -- *** TTD -> mail_stream
-    perform evmail_add(u_id,'TTD/caption:order','TTD/body:delivered',3::smallint /*normal*/,array['doc_no','%doc_id%']);
+	perform evmail_add(u_id,'TTD/caption:order','TTD/body:delivered',3::smallint /*normal*/,array['doc_no','%doc_id%']);
+    end if;
 end;
 $$
   ]]>
