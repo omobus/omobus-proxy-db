@@ -23,13 +23,11 @@
     cache="shadow/"
     >
 <xi:include href="../queries/import/trig_before.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/shadow/TTD.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/account_params.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/account_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/blacklist.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/debts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/shadow/discounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/erp_docs.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/erp_products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/floating_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -43,10 +41,8 @@
 <xi:include href="../queries/shadow/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/rdd.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/restrictions.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/shadow/sales_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/std_prices.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/shipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/shadow/symlinks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/users.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/warehouses.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/wareh_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

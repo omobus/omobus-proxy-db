@@ -9,19 +9,19 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 update shadow.packs set hidden = 1
-    where distr_id='%ErpCode%' and hidden=0
+    where distr_id = '%ErpCode%' and hidden = 0
   ]]>
 </begin>
 <check_exist>
   <![CDATA[
 select count(*) from shadow.packs 
-    where pack_id = '%pack_id%' and prod_id = '%prod_id%' and distr_id='%ErpCode%'
+    where pack_id = '%pack_id%' and prod_id = '%prod_id%' and distr_id = '%ErpCode%'
   ]]>
 </check_exist>
 <update>
   <![CDATA[
-update shadow.packs set descr=trim(both from '%descr%'), pack=%pack%, weight=NIL(%weight%), volume=NIL(%volume%), precision=NIL(%precision%), hidden=0
-    where pack_id = '%pack_id%' and prod_id = '%prod_id%' and distr_id='%ErpCode%'
+update shadow.packs set descr=trim(both from '%descr%'), pack=%pack%, weight=NIL(%weight%), volume=NIL(%volume%), precision=NIL(%precision%), hidden = 0
+    where pack_id = '%pack_id%' and prod_id = '%prod_id%' and distr_id = '%ErpCode%'
   ]]>
 </update>
 <insert>

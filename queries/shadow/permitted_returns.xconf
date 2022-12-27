@@ -9,7 +9,7 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 delete from shadow.permitted_returns
-    where distr_id='%ErpCode%'
+    where distr_id = '%ErpCode%'
   ]]>
 </begin>
 <insert>

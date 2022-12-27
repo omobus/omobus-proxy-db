@@ -9,19 +9,19 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 update order_params set hidden=1, db_ids=null
-    where distr_id='%ErpCode%' and hidden=0
+    where distr_id = '%ErpCode%' and hidden = 0
   ]]>
 </begin>
 <check_exist>
   <![CDATA[
 select count(*) from order_params
-    where order_param_id = '%order_param_id%' and distr_id='%ErpCode%'
+    where order_param_id = '%order_param_id%' and distr_id = '%ErpCode%'
   ]]>
 </check_exist>
 <update>
   <![CDATA[
-update order_params set descr=trim(both from '%descr%'), hidden=0, db_ids=array_append(db_ids, array['$shadow'])
-    where order_param_id = '%order_param_id%' and distr_id='%ErpCode%'
+update order_params set descr=trim(both from '%descr%'), hidden = 0, db_ids=array_append(db_ids, array['$shadow'])
+    where order_param_id = '%order_param_id%' and distr_id = '%ErpCode%'
   ]]>
 </update>
 <insert>

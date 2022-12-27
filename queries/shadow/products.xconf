@@ -9,19 +9,19 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 update shadow.products set hidden=1
-    where distr_id='%ErpCode%' and hidden=0
+    where distr_id = '%ErpCode%' and hidden = 0
   ]]>
 </begin>
 <check_exist>
   <![CDATA[
 select count(*) from shadow.products 
-    where prod_id = '%prod_id%' and distr_id='%ErpCode%'
+    where prod_id = '%prod_id%' and distr_id = '%ErpCode%'
   ]]>
 </check_exist>
 <update>
   <![CDATA[
-update shadow.products set code=trim(both from '%code%'), descr=trim(both from '%descr%'), hidden=0
-    where prod_id = '%prod_id%' and distr_id='%ErpCode%'
+update shadow.products set code=trim(both from '%code%'), descr=trim(both from '%descr%'), hidden = 0
+    where prod_id = '%prod_id%' and distr_id = '%ErpCode%'
   ]]>
 </update>
 <insert>

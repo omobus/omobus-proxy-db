@@ -9,13 +9,13 @@ select count(*) from data_stream
 <check_exist>
   <![CDATA[
 select count(*) from shadow.erp_docs 
-    where erp_id='%erp_id%' and distr_id='%ErpCode%'
+    where erp_id='%erp_id%' and distr_id = '%ErpCode%'
   ]]>
 </check_exist>
 <update>
   <![CDATA[
 update shadow.erp_docs set doc_id=NIL('%doc_id%'), amount=%amount%, status=%status%
-    where erp_id='%erp_id%' and distr_id='%ErpCode%'
+    where erp_id='%erp_id%' and distr_id = '%ErpCode%'
   ]]>
 </update>
 <insert>
@@ -35,13 +35,13 @@ declare
     ttd j_ttd.status%TYPE;
 begin
 -- **** shadow.erp_docs --> erp_docs
-    delete from erp_docs where doc_id in (select doc_id from shadow.erp_docs where distr_id='%ErpCode%' and doc_id is not null);
+    delete from erp_docs where doc_id in (select doc_id from shadow.erp_docs where distr_id = '%ErpCode%' and doc_id is not null);
     insert into erp_docs(doc_id, erp_id, pid, erp_no, erp_dt, amount, status, doc_type, inserted_ts, updated_ts, db_ids)
-	select doc_id, erp_id, pid, erp_no, erp_dt, amount, status, doc_type, inserted_ts, updated_ts, array['$shadow'] from shadow.erp_docs where distr_id='%ErpCode%' and doc_id is not null;
+	select doc_id, erp_id, pid, erp_no, erp_dt, amount, status, doc_type, inserted_ts, updated_ts, array['$shadow'] from shadow.erp_docs where distr_id = '%ErpCode%' and doc_id is not null;
 
 -- **** erp_docs --> content_stream
     for d_code, f_date, u_id in
-	select doc_code, left(fix_dt,10), user_id from j_docs where doc_id in (select doc_id from shadow.erp_docs where distr_id='%ErpCode%' and doc_id is not null and updated_ts=current_timestamp)
+	select doc_code, left(fix_dt,10), user_id from j_docs where doc_id in (select doc_id from shadow.erp_docs where distr_id = '%ErpCode%' and doc_id is not null and updated_ts=current_timestamp)
 	    group by doc_code, left(fix_dt,10), user_id
     loop
 	if( d_code = 'h_order' ) then
@@ -59,7 +59,7 @@ begin
     for d_code, d_id, ttd in
 	select j.doc_code, j.doc_id, t.status from j_docs j
 	    left join j_ttd t on t.doc_id=j.doc_id
-	where j.doc_id in (select doc_id from shadow.erp_docs where distr_id='%ErpCode%' and doc_id is not null and updated_ts=current_timestamp)
+	where j.doc_id in (select doc_id from shadow.erp_docs where distr_id = '%ErpCode%' and doc_id is not null and updated_ts=current_timestamp)
 	    and (t.status is null or t.status = 'delivered')
     loop
 	if( ttd is null ) then

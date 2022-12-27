@@ -9,7 +9,7 @@ select count(*) from data_stream
 <begin>
   <![CDATA[
 delete from shadow.shipments 
-    where distr_id='%ErpCode%'
+    where distr_id = '%ErpCode%'
   ]]>
 </begin>
 <check_exist>

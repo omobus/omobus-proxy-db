@@ -6,20 +6,6 @@ create schema shadow;
  * Everyone IDs (execept distr_id and symlinks.f_id) are in the distributor notation. 
  */
 
-create table shadow.accounts (
-    distr_id 		uid_t 		not null,
-    account_id 		uid_t 		not null,
-    code 		code_t 		null,
-    descr 		descr_t 	not null,
-    address 		address_t 	not null,
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    primary key (distr_id, account_id)
-);
-
-create trigger trig_updated_ts before update on shadow.accounts for each row execute procedure tf_updated_ts();
-
 create table shadow.account_params (
     distr_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
@@ -70,20 +56,6 @@ create table shadow.debts (
 );
 
 create trigger trig_updated_ts before update on shadow.debts for each row execute procedure tf_updated_ts();
-
-create table shadow.discounts (
-    distr_id 		uid_t 		not null,
-    account_id 		uid_t 		not null,
-    prod_id 		uid_t 		not null,
-    discount 		discount_t 	not null default 0,
-    min_discount 	discount_t 	not null default -100,
-    max_discount 	discount_t 	not null default 100,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    primary key (distr_id, account_id, prod_id)
-);
-
-create trigger trig_updated_ts before update on shadow.discounts for each row execute procedure tf_updated_ts();
 
 create table shadow.erp_docs (
     distr_id 		uid_t 		not null,
@@ -189,23 +161,6 @@ create table shadow.mutuals_history_products (
 
 create trigger trig_updated_ts before update on shadow.mutuals_history_products for each row execute procedure tf_updated_ts();
 
-create table shadow.packs (
-    distr_id 		uid_t 		not null,
-    pack_id 		uid_t 		not null,
-    prod_id 		uid_t 		not null,
-    descr 		descr_t 	not null,
-    pack 		numeric_t 	not null default 1.0 check (pack >= 0.01),
-    weight 		weight_t 	null,
-    volume 		volume_t 	null,
-    precision 		int32_t 	null check (precision is null or (precision >= 0)),
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    primary key (distr_id, pack_id, prod_id)
-);
-
-create trigger trig_updated_ts before update on shadow.packs for each row execute procedure tf_updated_ts();
-
 create table shadow.permitted_returns (
     distr_id   		uid_t  		not null,
     account_id 		uid_t  		not null,
@@ -220,19 +175,6 @@ create table shadow.permitted_returns (
 );
 
 create trigger trig_updated_ts before update on shadow.permitted_returns for each row execute procedure tf_updated_ts();
-
-create table shadow.products (
-    distr_id 		uid_t 		not null,
-    prod_id 		uid_t 		not null,
-    code 		code_t 		null,
-    descr 		descr_t 	not null,
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    primary key (distr_id, prod_id)
-);
-
-create trigger trig_updated_ts before update on shadow.products for each row execute procedure tf_updated_ts();
 
 create table shadow.restrictions (
     distr_id 		uid_t 		not null,
@@ -261,24 +203,6 @@ create table shadow.std_prices (
 
 create trigger trig_updated_ts before update on shadow.std_prices for each row execute procedure tf_updated_ts();
 
-create table shadow.sales_history (
-    distr_id 		uid_t 		not null,
-    account_id 		uid_t 		not null,
-    prod_id 		uid_t 		not null,
-    s_date 		date_t 		not null,
-    amount_c 		currency_t 	null,
-    pack_c_id 		uid_t 		null,
-    qty_c 		numeric_t 	null,
-    amount_r 		currency_t 	null,
-    pack_r_id 		uid_t 		null,
-    qty_r 		numeric_t 	null,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    primary key (distr_id, account_id, prod_id, s_date)
-);
-
-create trigger trig_updated_ts before update on shadow.sales_history for each row execute procedure tf_updated_ts();
-
 create table shadow.shipments (
     distr_id 		uid_t 		not null,
     account_id 		uid_t 		not null,
@@ -289,30 +213,6 @@ create table shadow.shipments (
 );
 
 create trigger trig_updated_ts before update on shadow.shipments for each row execute procedure tf_updated_ts();
-
-create table shadow.symlinks (
-    distr_id 		uid_t 		not null,
-    obj_code 		code_t 		not null, -- (product|account|user|...)
-    f_id 		uid_t 		not null,
-    t_id 		uid_t 		not null,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    primary key(distr_id, obj_code, f_id)
-);
-
-create trigger trig_updated_ts before update on shadow.symlinks for each row execute procedure tf_updated_ts();
-
-create table shadow.users (
-    distr_id 		uid_t 		not null,
-    user_id		uid_t		not null,
-    descr		descr_t		not null,
-    hidden		bool_t		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    primary key (distr_id, user_id)
-);
-
-create trigger trig_updated_ts before update on shadow.users for each row execute procedure tf_updated_ts();
 
 create table shadow.warehouses (
     distr_id 		uid_t 		not null,
