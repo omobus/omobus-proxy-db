@@ -31,7 +31,6 @@
 <xi:include href="../queries/2agent/payment_methods.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/reclamation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/2agent/symlinks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 </queries>
 <pack>
     <delivery_types />
@@ -40,6 +39,5 @@
     <payment_methods />
     <reclamation_types />
     <reclamations personalize="ErpCode" />
-    <symlinks personalize="ErpCode" />
 </pack>
 </kernel>
