@@ -1530,22 +1530,6 @@ create table discard_types (
 create index i_db_ids_discard_types on discard_types using GIN (db_ids);
 create trigger trig_updated_ts before update on discard_types for each row execute procedure tf_updated_ts();
 
-create table discounts (
-    distr_id 		uid_t 		not null,
-    account_id 		uid_t 		not null,
-    prod_id 		uid_t 		not null,
-    discount 		discount_t 	not null default 0,
-    min_discount 	discount_t 	not null default -100,
-    max_discount 	discount_t 	not null default 100,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    db_ids 		uids_t 		null,
-    primary key (distr_id, account_id, prod_id)
-);
-
-create index i_db_ids_discounts on discounts using GIN (db_ids);
-create trigger trig_updated_ts before update on discounts for each row execute procedure tf_updated_ts();
-
 create table distributors (
     distr_id 		uid_t 		not null primary key default man_id(),
     descr 		descr_t 	not null,
