@@ -4,7 +4,7 @@
 local port = 443
 local connect_timeout = 10
 local params = {rcvtimeo = 30, sndtimeo = 15}
-local tlsconfig = { noverifycert = true, noverifyname = true, ciphers = "compat", ca_file = "/etc/ssl/certs/Certum_Root_CA.pem" }
+local tlsconfig = { noverifycert = true, noverifyname = true, ciphers = "compat", ca_file = "/etc/ssl/certs/ca-certificates.crt" }
 
 local M = {}
 
