@@ -52,7 +52,6 @@
 <xi:include href="../queries/import/delivery_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/departments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/discard_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<xi:include href="../queries/import/discounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/distributors.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/equipment_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/equipments.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
