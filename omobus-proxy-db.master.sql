@@ -1,8 +1,8 @@
 /* Copyright (c) 2006 - 2022 omobus-proxy-db authors, see the included COPYRIGHT file. */
 
-alter schema public rename to core;
-alter database "omobus-proxy-db" SET search_path TO "core";
-SET search_path TO "core";
+alter schema public rename to master;
+alter database "omobus-proxy-db" SET search_path TO "master";
+SET search_path TO "master";
 
 create extension hstore;
 create extension isn;
