@@ -72,6 +72,10 @@ begin
     end if;
 
 -- **** user_activity --> slices.*
+    if( (select count(*) from slices.accounts where slice_date=f_date and account_id='%account_id%') = 0 ) then
+	insert into slices.accounts(slice_date, account_id, code, descr, address, region_id, city_id, rc_id, chan_id, poten_id, latitude, longitude)
+	    select f_date, account_id, code, descr, address, region_id, city_id, rc_id, chan_id, poten_id, latitude, longitude from accounts where account_id='%account_id%';
+    end if;
     if( (select count(*) from slices.agreements1 where slice_date=f_date and account_id='%account_id%') = 0 ) then
 	insert into slices.agreements1(slice_date, account_id, placement_id, posm_id, "strict", cookie)
 	    select f_date, account_id, placement_id, posm_id, "strict", cookie from agreements1 where account_id='%account_id%';

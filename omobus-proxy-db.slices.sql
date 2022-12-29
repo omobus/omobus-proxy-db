@@ -2,6 +2,25 @@
 
 create schema slices;
 
+create table slices.accounts (
+    slice_date 		date_t 		not null,
+    account_id 		uid_t 		not null,
+    code 		code_t 		null,
+    descr 		descr_t 	not null,
+    address 		address_t 	not null,
+    region_id 		uid_t		null,
+    city_id 		uid_t		null,
+    rc_id 		uid_t		null,
+    chan_id 		uid_t 		null,
+    poten_id 		uid_t 		null,
+    latitude 		gps_t 		null,
+    longitude 		gps_t 		null,
+    inserted_ts 	ts_auto_t 	not null,
+    primary key (slice_date, account_id)
+);
+
+create trigger trig_lock_update before update on slices.accounts for each row execute procedure tf_lock_update();
+
 create table slices.agreements1 (
     slice_date 		date_t 		not null,
     account_id		uid_t		not null,
