@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<orders templ="%doc_id%;%fix_dt%;%doc_no%;%user_id%;%dev_login%;%account_id%;%order_type_id%;%group_price_id%;%wareh_id%;%delivery_date%;%delivery_type_id%;%delivery_note%;%doc_note%;%payment_method_id%;%payment_delay%;%bonus%;%encashment%;%order_param_ids%;%rows%;%prod_id%;%row_no%;%pack_id%;%pack%;%qty%;%unit_price%;%discount%;%amount%;%weight%;%volume%;">
+<orders templ="%doc_id%;%fix_dt%;%doc_no%;%user_id%;%dev_login%;%account_id%;%order_type_id%;%group_price_id%;%wareh_id%;%delivery_date%;%delivery_type_id%;%delivery_note%;%doc_note%;%payment_method_id%;%payment_delay%;%bonus%;%encashment%;%order_param_ids%;%rows%;%prod_id%;%row_no%;%pack%;%qty%;%unit_price%;%discount%;%amount%;%weight%;%volume%;">
   <![CDATA[
-select h.distr_id person_id,
-    h.doc_id, h.fix_dt, h.doc_no, coalesce(s2.t_id, h.user_id) user_id, h.dev_login, s0.t_id account_id, h.doc_note, h.delivery_date, h.delivery_type_id, h.delivery_note, 
-    h.wareh_id, h.group_price_id, h.payment_method_id, h.payment_delay, h.order_type_id, h.bonus, h.encashment, array_to_string(h.order_param_ids,',') order_param_ids, 
-    h.rows, t.row_no, s1.t_id prod_id, t.pack_id, t.pack, t.qty, t.unit_price, t.discount, t.amount, t.weight, t.volume
+select 
+    h.distr_id person_id,
+    h.doc_id, 
+    h.fix_dt, 
+    h.doc_no, 
+    coalesce(s2.t_id, h.user_id) user_id, 
+    h.dev_login, 
+    s0.t_id account_id, 
+    h.doc_note, 
+    h.delivery_date, 
+    h.delivery_type_id, 
+    h.delivery_note, 
+    h.wareh_id, 
+    h.group_price_id, 
+    h.payment_method_id, 
+    h.payment_delay, 
+    h.order_type_id, 
+    h.bonus, 
+    h.encashment, 
+    array_to_string(h.order_param_ids,',') order_param_ids, 
+    h.rows, 
+    t.row_no, 
+    s1.t_id prod_id, 
+    t.pack, 
+    t.qty, 
+    t.unit_price, 
+    t.discount, 
+    t.amount, 
+    t.weight, 
+    t.volume
 from t_order t
     left join h_order h on h.doc_id = t.doc_id
     left join symlinks s0 on h.distr_id = s0.distr_id and h.account_id = s0.f_id and s0.obj_code = 'account'

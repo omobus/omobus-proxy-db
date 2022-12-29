@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<reclamations templ="%doc_id%;%fix_dt%;%doc_no%;%user_id%;%dev_login%;%account_id%;%return_date%;%doc_note%;%rows%;%prod_id%;%row_no%;%reclamation_type_id%;%pack_id%;%pack%;%qty%;%unit_price%;%amount%;%weight%;%volume%;">
+<reclamations templ="%doc_id%;%fix_dt%;%doc_no%;%user_id%;%dev_login%;%account_id%;%return_date%;%doc_note%;%rows%;%prod_id%;%row_no%;%reclamation_type_id%;%pack%;%qty%;%unit_price%;%amount%;%weight%;%volume%;">
   <![CDATA[
-select h.distr_id person_id,
-    h.doc_id, h.fix_dt, h.doc_no, coalesce(s2.t_id, h.user_id) user_id, h.dev_login, s0.t_id account_id, h.doc_note, h.return_date, h.rows,
-    t.row_no, s1.t_id prod_id, t.reclamation_type_id, t.pack_id, t.pack, t.qty, t.unit_price, t.amount, t.weight, t.volume
+select 
+    h.distr_id person_id,
+    h.doc_id, 
+    h.fix_dt, 
+    h.doc_no, 
+    coalesce(s2.t_id, h.user_id) user_id, 
+    h.dev_login, 
+    s0.t_id account_id, 
+    h.doc_note, 
+    h.return_date, 
+    h.rows,
+    t.row_no, 
+    s1.t_id prod_id, 
+    t.reclamation_type_id, 
+    t.pack, t.qty, 
+    t.unit_price, 
+    t.amount, 
+    t.weight, 
+    t.volume
 from t_reclamation t
     left join h_reclamation h on h.doc_id = t.doc_id
     left join symlinks s0 on h.distr_id = s0.distr_id and h.account_id = s0.f_id and s0.obj_code = 'account'
