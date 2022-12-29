@@ -843,7 +843,7 @@ create trigger trig_updated_ts before update on "L10n" for each row execute proc
 
 create table symlinks (
     distr_id 		uid_t 		not null,
-    obj_code 		code_t 		not null, -- (product|account|user|...)
+    obj_code 		code_t 		not null, -- (product|account|user)
     f_id 		uid_t 		not null,
     t_id 		uid_t 		not null,
     inserted_ts 	ts_auto_t 	not null,
@@ -2074,6 +2074,7 @@ create table packs (
 );
 
 create index i_db_ids_packs on packs using GIN (db_ids);
+create index i_pack_packs on packs (prod_id, pack);
 create trigger trig_updated_ts before update on packs for each row execute procedure tf_updated_ts();
 
 create table payment_methods (

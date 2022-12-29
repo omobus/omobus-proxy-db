@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<account_prices templ="%account_id%;%prod_id%;%pack_id%;%price%;">
+<account_prices templ="%account_id%;%prod_id%;%price%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -14,8 +14,8 @@ delete from shadow.account_prices
 </begin>
 <insert>
   <![CDATA[
-insert into shadow.account_prices (distr_id, account_id, prod_id, pack_id, price)
-    values ('%ErpCode%', '%account_id%', '%prod_id%', '%pack_id%', %price%)
+insert into shadow.account_prices (distr_id, account_id, prod_id, price)
+    values ('%ErpCode%', '%account_id%', '%prod_id%', %price%)
 on conflict do nothing
   ]]>
 </insert>

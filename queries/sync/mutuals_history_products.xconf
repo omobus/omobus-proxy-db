@@ -3,10 +3,12 @@
   <![CDATA[ 
 select distr_id, erp_id, prod_id, pack_id, qty, amount, discount from mutuals_history_products
     union
-select x.distr_id, x.erp_id, prod.f_id, pack.f_id, x.qty, x.discount, x.amount from shadow.mutuals_history_products x
-    left join symlinks prod on prod.obj_code='product' and prod.distr_id=x.distr_id and prod.t_id=x.prod_id
-    left join symlinks pack on pack.obj_code='pack' and pack.distr_id=x.distr_id and pack.t_id=x.pack_id
-where prod.f_id is not null and pack.f_id is not null
+select 
+    x.distr_id, x.erp_id, prod.f_id, z.pack_id, x.qty, x.discount, x.amount 
+from shadow.mutuals_history_products x
+    left join symlinks prod on prod.obj_code = 'product' and prod.distr_id = x.distr_id and prod.t_id = x.prod_id
+    left join packs z on z.prod_id = prod.f_id and z.pack = 1
+where prod.f_id is not null and z.pack_id is not null
 order by 1, 2
   ]]>
 </mutuals_history_products>

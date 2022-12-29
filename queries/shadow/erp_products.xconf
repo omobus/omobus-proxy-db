@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<erp_products templ="%doc_id%;%erp_id%;%prod_id%;%pack_id%;%qty%;%discount%;%amount%;">
+<erp_products templ="%doc_id%;%erp_id%;%prod_id%;%pack%;%qty%;%discount%;%amount%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -9,29 +9,35 @@ select count(*) from data_stream
 <check_exist>
   <![CDATA[
 select count(*) from shadow.erp_products
-    where erp_id='%erp_id%' and prod_id='%prod_id%' and distr_id = '%ErpCode%'
+    where distr_id='%ErpCode%' and erp_id='%erp_id%' and prod_id='%prod_id%'
   ]]>
 </check_exist>
 <update>
   <![CDATA[
-update shadow.erp_products set doc_id=NIL('%doc_id%'), pack_id='%pack_id%', qty=0%qty%, discount=0%discount%, amount=0%amount%
-    where erp_id='%erp_id%' and prod_id='%prod_id%' and distr_id = '%ErpCode%'
+update shadow.erp_products set doc_id=NIL('%doc_id%'), pack=0%pack%, qty=0%qty%, discount=0%discount%, amount=0%amount%
+    where distr_id='%ErpCode%' and erp_id='%erp_id%' and prod_id='%prod_id%'
   ]]>
 </update>
 <insert>
   <![CDATA[
-insert into shadow.erp_products (distr_id, doc_id, erp_id, prod_id, pack_id, qty, discount, amount)
-    values ('%ErpCode%', NIL('%doc_id%'), '%erp_id%', '%prod_id%', '%pack_id%', 0%qty%, 0%discount%, 0%amount%)
+insert into shadow.erp_products (distr_id, doc_id, erp_id, prod_id, pack, qty, discount, amount)
+    values ('%ErpCode%', NIL('%doc_id%'), '%erp_id%', '%prod_id%', 0%pack%, 0%qty%, 0%discount%, 0%amount%)
   ]]>
 </insert>
 <end>
   <![CDATA[
-delete from erp_products where doc_id in (select doc_id from shadow.erp_products where distr_id = '%ErpCode%');
+delete from erp_products where doc_id in (select doc_id from shadow.erp_products 
+    where distr_id = '%ErpCode%');
+
 insert into erp_products(doc_id, erp_id, prod_id, pack_id, qty, discount, amount, inserted_ts, updated_ts, db_ids)
-    select x.doc_id, x.erp_id, prod.f_id, pack.f_id, x.qty, x.discount, x.amount, x.inserted_ts, x.updated_ts, array['$shadow'] from shadow.erp_products x
-	left join symlinks prod on prod.distr_id = '%ErpCode%' and prod.obj_code='product' and prod.distr_id=x.distr_id and prod.t_id=x.prod_id
-	left join symlinks pack on pack.distr_id = '%ErpCode%' and pack.obj_code='pack' and pack.distr_id=x.distr_id and pack.t_id=x.pack_id
-    where x.distr_id = '%ErpCode%' and prod.f_id is not null and pack.f_id is not null;
+    select 
+	x.doc_id, x.erp_id, prod.f_id, coalesce(pack1.pack_id,pack2.pack_id), x.qty, x.discount, x.amount, x.inserted_ts, x.updated_ts, array['$shadow']
+    from shadow.erp_products x
+	left join symlinks prod on prod.distr_id = '%ErpCode%' and prod.obj_code = 'product' and prod.distr_id = x.distr_id and prod.t_id = x.prod_id
+	left join packs pack1 on pack1.prod_id = prod.f_id and pack1.pack = x.pack
+	left join packs pack2 on pack1.prod_id = prod.f_id and 1 = x.pack /* base pack */
+    where x.distr_id = '%ErpCode%' and prod.f_id is not null and (pack1.pack_id is not null or pack2.pack_id is not null)
+on conflict do nothing;
 
 select stor_data_stream('//shadow/%uid%/%pack_code%', '%pack_digest%', '%server_hostname%');
   ]]>
