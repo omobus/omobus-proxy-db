@@ -2,6 +2,7 @@
 <distributors templ="%distr_id%;%descr%;" empty="no">
   <![CDATA[ 
 select distr_id, descr from distributors
-    order by descr
+    where hidden = 0
+order by descr
   ]]>
 </distributors>
