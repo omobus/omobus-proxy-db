@@ -7,7 +7,7 @@
     ldap.base="ou=distributors,ou=data,dc=omobus,dc=local"
     ldap.filter="(&amp;(objectClass=omobusMaintainPoint)(exchangeStatus=enabled))"
     Xldap.tls="yes"
-    ftp.host="gateway.omobus.net"
+    ftp.host="127.0.0.1"
     ftp.port="21021"
     ftp.path="data/"
     ftp.connect_timeout="30"
@@ -43,4 +43,4 @@
 <xi:include href="../queries/shadow/warehouses.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/shadow/wareh_stocks.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/import/trig_after.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
-<</kernel>
+</kernel>
