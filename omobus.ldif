@@ -108,6 +108,7 @@ FTPStatus: enabled
 
 dn: uid=d1,ou=distributors,ou=data,dc=omobus,dc=local
 objectClass: account
+objectClass: omobusBridge
 objectClass: omobusMaintainPoint
 objectClass: posixAccount
 objectClass: PureFTPdUser
@@ -117,28 +118,35 @@ gidNumber: 905
 homeDirectory: /var/ftp/distributors/1
 uid: d1
 uidNumber: 902
-userPassword:: MA==
-ErpCode: 0
+userPassword:: MDE=
+bridgeAcceptedHost: 178.159.51.7
+bridgeStatus: enabled
+bridgeToken: 90
+ErpCode: CODE-ERP-D1
 exchangeStatus: enabled
 FTPStatus: enabled
-syncEncoding: utf-8
+groupName: distributorData
 
 dn: uid=d2,ou=distributors,ou=data,dc=omobus,dc=local
 objectClass: account
+objectClass: omobusBridge
 objectClass: omobusMaintainPoint
 objectClass: posixAccount
 objectClass: PureFTPdUser
 objectClass: top
-cn:: 0JTQuNGB0YLRgNC40LHRg9GC0L7RgDE=
+cn:: 0JTQuNGB0YLRgNC40LHRg9GC0L7RgDI=
 gidNumber: 905
 homeDirectory: /var/ftp/distributors/2
 uid: d2
 uidNumber: 902
 userPassword:: MA==
-ErpCode: CODE-ERP-01
+bridgeAcceptedHost: 0.0.0.0
+bridgeStatus: enabled
+bridgeToken: 1
+ErpCode: CODE-ERP-D2
 exchangeStatus: enabled
 FTPStatus: enabled
-groupName: agent
+groupName: distributorData
 
 dn: ou=mr,ou=users,dc=omobus,dc=local
 objectClass: organizationalUnit
@@ -247,6 +255,7 @@ exchangeStatus: enabled
 FTPStatus: enabled
 groupName: mr
 mailStatus: enabled
+presenceStock: no
 
 dn: uid=xz_sr_1,ou=sr,ou=users,dc=omobus,dc=local
 objectClass: account
@@ -363,7 +372,7 @@ uidNumber: 902
 userPassword:: MQ==
 consoleStatus: enabled
 ErpId: cdm01
-exchangeStatus: disabled
+exchangeStatus: enabled
 FTPStatus: enabled
 groupName: cdm
 mailStatus: enabled
@@ -499,7 +508,7 @@ userPassword:: MQ==
 consoleStatus: enabled
 dumpsStatus: enabled
 ErpId: m01
-exchangeStatus: disabled
+exchangeStatus: enabled
 FTPStatus: enabled
 groupName: merch
 mailStatus: enabled
