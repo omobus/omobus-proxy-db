@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<orders templ="%doc_id%;%fix_dt%;%doc_no%;%user_id%;%dev_login%;%account_id%;%order_type_id%;%group_price_id%;%wareh_id%;%delivery_date%;%delivery_type_id%;%delivery_note%;%doc_note%;%payment_method_id%;%payment_delay%;%bonus%;%encashment%;%order_param_ids%;%rows%;%prod_id%;%row_no%;%pack%;%qty%;%unit_price%;%discount%;%amount%;%weight%;%volume%;">
+<orders templ="%doc_id%;%fix_dt%;%doc_no%;%user_id%;%dev_login%;%account_id%;%order_type_id%;%group_price_id%;%wareh_id%;%delivery_date%;%delivery_type_id%;%delivery_note%;%doc_note%;%payment_method_id%;%payment_delay%;%bonus%;%encashment%;%order_param_ids%;%rows%;%prod_id%;%row_no%;%pack%;%qty%;%unit_price%;%discount%;%amount%;%weight%;%volume%;" empty="no">
   <![CDATA[
 select 
     h.distr_id person_id,
@@ -36,9 +36,11 @@ from t_order t
     left join symlinks s0 on h.distr_id = s0.distr_id and h.account_id = s0.f_id and s0.obj_code = 'account'
     left join symlinks s1 on h.distr_id = s1.distr_id and t.prod_id = s1.f_id and s1.obj_code = 'product'
     left join symlinks s2 on h.distr_id = s2.distr_id and h.user_id = s2.f_id and s2.obj_code = 'user'
-where h.inserted_ts::date >= current_date - 5
-    and s0.t_id is not null and s1.t_id is not null
-    and (select count(*) from j_docs where doc_id=h.doc_id and (ttd is null or ttd='delivered')) > 0
+    left join j_ttd j on h.doc_id = j.doc_id
+where h.inserted_ts >= current_timestamp - '5 days 00:00:00'::interval
+    and s0.t_id is not null 
+    and s1.t_id is not null
+    and (j.status is null or j.status = 'delivered')
 order by h.distr_id, h.doc_id, t.row_no
   ]]>
 </orders>

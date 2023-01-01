@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<delivery_types templ="%delivery_type_id%;%descr%;">
+<delivery_types templ="%delivery_type_id%;%descr%;" empty="no">
   <![CDATA[
 select delivery_type_id, descr from delivery_types
     where hidden = 0
