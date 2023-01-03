@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<reclamation_created type="text/html">
+    <queries>
+	<Q>
+  <![CDATA[
+select 
+    array_to_string(u.evaddrs,',') rcpt_to,
+    y.attrs->'doc_id' doc_no,
+    "L"(h.return_date) return_date,
+    h.amount,
+    a.descr a_name,
+    a.address,
+    d.descr d_name
+from streams.spam_stream y
+    left join h_reclamation h on h.doc_id = y.attrs->'doc_id'
+    left join accounts a on a.account_id = h.account_id
+    left join distributors d on d.distr_id = h.distr_id
+    left join users u on u.user_id = h.user_id
+where y.spam_id = '%spam_id%'
+  ]]>
+	</Q>
+    </queries>
+    <templates> <!-- Localized resources (L7d) -->
+	<caption>Заказ продукции $(doc_no) (принят)</caption>
+	<body><![CDATA[<html><body>Получен возврат продукции $(doc_no) на сумму <b>$(amount)</b> (дата возврата: <b>$(return_date)</b>) от <i>$(a_name) $(address)</i>. Возврат будет осуществляться дистрибьютору <i>$(d_name)</i>.</body></html>]]></body>
+    </templates>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+
+local function get(n) return rowset_value(_Q, 0, rowset_colid(_Q, n)); end
+local function set(s, x) return std.strrepl(s, x, get(x)); end
+local doc_no = get("doc_no")
+local caption = std.strrepl(_caption, "doc_no", doc_no)
+local body = std.strrepl(_body, "doc_no", doc_no)
+body = set(body, "a_name")
+body = set(body, "address")
+body = set(body, "return_date")
+body = set(body, "amount")
+body = set(body, "d_name")
+
+set_param(_content, "rcpt_to", get("rcpt_to"))
+set_param(_content, "msg_cap", caption)
+set_param(_content, "msg_body", body, false)
+set_param(_content, "msg_content", "text/html")
+set_param(_content, "priority", "3" --[[ normal ]])
+set_param(_content, "filename", "")
+  ]]>
+    </generator>
+</reclamation_created>

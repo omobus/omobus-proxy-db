@@ -40,8 +40,6 @@ do $$
 declare
     f_date date_t default left('%fix_dt%', 10);
     f_time time_t default substring('%fix_dt%', 12, 5);
-    a_name descr_t;
-    a_address address_t;
 begin
 -- **** order --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
@@ -60,19 +58,8 @@ begin
     perform content_add('tech_orders', '%user_id_sys%', f_date, f_date);
     perform content_add('stat_orders', '', "monthDate_First"(f_date)::date_t, "monthDate_Last"(f_date)::date_t);
 
--- **** order --> mail_stream
-    select descr, address from accounts where account_id = '%account_id%' 
-	into a_name, a_address;
-    perform evmail_add('%user_id_sys%','order/caption','order/body',3::smallint /*normal*/,array[
-	'doc_no','%doc_id_sys%',
-	'a_name',a_name,'address',a_address,
-	'delivery_date',"L"('%delivery_date%'::date_t),
-	'amount', round(%amount%, 2)::varchar,
-	'w_name',coalesce((select descr from warehouses where distr_id = '%distr_id%' and wareh_id = NIL('%wareh_id%')),'-'),
-	'd_name',(select descr from distributors where distr_id = '%distr_id%'),
-	'order_type',coalesce((select descr from order_types where order_type_id='%order_type_id%'),'-')]);
-
 -- **** order --> spam_stream
+    perform streams.spam_add('order_created', hstore('doc_id','%doc_id_sys%'));
     if NIL('%mailboxes%') is not null then
 	perform streams.spam_add('order_summary', hstore('doc_id','%doc_id_sys%'));
     end if;

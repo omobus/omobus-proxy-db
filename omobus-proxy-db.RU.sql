@@ -381,10 +381,6 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
     '</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','oom_violation/caption','Недостаточно свободного места ($(dev_login))');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','oom_violation/body','$(fix_dt) на устройстве $(dev_login) (сотрудник: $(u_name)) выявлено отсутствие свободного места на внутреннем накопителе.');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','order/caption','Заказ продукции $(doc_no) (принят)');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','order/body','<html><body>В обработку принят заказ продукции $(doc_no) на сумму <b>$(amount)</b> (доставка: <b>$(delivery_date)</b>, тип: $(order_type)) от <i>$(a_name) $(address)</i>. Отгрузка будет осуществляться со склада <i>$(d_name) [$(w_name)]</i>.</body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','reclamation/caption','Возврат продукции $(doc_no) (принят)');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','reclamation/body','<html><body>В обработку принят возврат продукции $(doc_no) на сумму <b>$(amount)</b> (дата возврата: <b>$(return_date)</b>) от <i>$(a_name) $(address)</i>. Возврат будет осуществляться на склад $(d_name).</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','remark/caption:accept','Подтверждение задачи принято');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','remark/caption:reject','Подтверждение задачи отклонено');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','remark/body:accept0','<html><body>$(u_name) принял(-а) подтверждение выполнения задачи <i>$(sub)</i> в <i>$(a_name) $(address)</i> сформированное <i>$(fix_dt)</i>. Дополнительная информация:<br/><br/><b>$(note)</b><br/></body></html>');
@@ -431,10 +427,6 @@ insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail',''
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/body:reject','<html><body>$(u_name) отклонил(-а) включение <i>$(a_name) $(address)</i> в маршрут.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/caption:validate','Включение в маршрут (подтверждение): $(a_name)');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','wish/body:validate','<html><body>$(u_name) подвердил(-а) включение <i>$(a_name) $(address)</i> в маршрут.</body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','TTD/caption:order','Заказ продукции $(doc_no) (доставлен)');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','TTD/caption:reclamation','Возврат продукции $(doc_no) (доставлен)');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','TTD/body:accepted','<html><body>Дистрибьютор подтвердил получение документа $(doc_no). Номер(-а) документа(-ов) в учетной системе дистрибьютора: <b>$(erp_no)</b>.</body></html>');
-insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','evmail','','TTD/body:delivered','<html><body>Документ $(doc_no) успешно доставлен дистрибьютору.<br/><br/>ВНИМАНИЕ. Дальнейшее состояние документа уточняйте у сотрудников дистрибьютора.</body></html>');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','my_routes','','pending','Необходимо выполнить до $(e_date) (включительно).');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','my_routes','','pending/today','Сегодня <b>последний день</b> действия отложенного посещения. Не забудьте посетить данного клиента и зафиксировать все требуемые данные.');
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','orders_history','','extra','Тип: $(type). Склад: $(wareh). Доставка: <b>$(delivery_date)</b>$(delivery_note). $(note).');

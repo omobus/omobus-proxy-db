@@ -3,7 +3,13 @@
 <xi:include href="../queries/spam/onload.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/spam/onsuccess.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <content>
+<xi:include href="../queries/spam/order_accepted.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/spam/order_created.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/spam/order_delivered.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/spam/order_summary.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/spam/reclamation_accepted.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/spam/reclamation_created.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/spam/reclamation_delivered.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/spam/zstatus_accepted.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/spam/zstatus_notice.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/spam/zstatus_rejected.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />

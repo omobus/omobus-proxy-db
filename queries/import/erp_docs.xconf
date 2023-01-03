@@ -63,11 +63,15 @@ begin
 	    update j_ttd set status = 'accepted' where doc_id = d_id;
 	end if;
 	if( d_code = 'order' ) then
-	    perform evmail_add(u_id,'TTD/caption:order','TTD/body:accepted',3::smallint /*normal*/,array['doc_no',d_id,
-		'erp_no',(select array_to_string(array_agg(erp_no::varchar),', ') from erp_docs where doc_id=d_id)]);
+	    perform streams.spam_add('order_accepted', hstore(array[
+		'doc_id', d_id,
+		'erp_no', (select array_to_string(array_agg(erp_no::varchar),', ') from erp_docs where doc_id = d_id)
+	    ]));
 	elsif( d_code = 'reclamation' ) then
-	    perform evmail_add(u_id,'TTD/caption:reclamation','TTD/body:accepted',3::smallint /*normal*/,array['doc_no',d_id,
-		'erp_no',(select array_to_string(array_agg(erp_no::varchar),', ') from erp_docs where doc_id=d_id)]);
+	    perform streams.spam_add('reclamation_accepted', hstore(array[
+		'doc_id', d_id,
+		'erp_no', (select array_to_string(array_agg(erp_no::varchar),', ') from erp_docs where doc_id = d_id)
+	    ]));
 	end if;
 	raise notice '(%ErpCode%) erp_docs: doc_id=% accepted', d_id;
     end loop;

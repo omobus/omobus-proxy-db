@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<order_delivered type="text/html">
+    <queries>
+	<Q>
+  <![CDATA[
+select 
+    array_to_string(u.evaddrs,',') rcpt_to,
+    y.attrs->'doc_id' doc_no,
+    d.descr d_name
+from streams.spam_stream y
+    left join h_order h on h.doc_id = y.attrs->'doc_id'
+    left join distributors d on d.distr_id = h.distr_id
+    left join users u on u.user_id = h.user_id
+where y.spam_id = '%spam_id%'
+  ]]>
+	</Q>
+    </queries>
+    <templates> <!-- Localized resources (L7d) -->
+	<caption>Заказ продукции $(doc_no) (доставлен)</caption>
+	<body><![CDATA[<html><body>Документ <b>$(doc_no)</b> успешно доставлен дистрибьютору <i>$(d_name)</i>.<br/><br/>ВНИМАНИЕ. Дальнейшее состояние документа уточняйте у сотрудников дистрибьютора.</body></html>]]></body>
+    </templates>
+    <generator>
+  <![CDATA[
+local std = require('stdlib')
+
+local function get(n) return rowset_value(_Q, 0, rowset_colid(_Q, n)); end
+local function set(s, x) return std.strrepl(s, x, get(x)); end
+local doc_no = get("doc_no")
+local caption = std.strrepl(_caption, "doc_no", doc_no)
+local body = std.strrepl(_body, "doc_no", doc_no)
+body = set(body, "d_name")
+
+set_param(_content, "rcpt_to", get("rcpt_to"))
+set_param(_content, "msg_cap", caption)
+set_param(_content, "msg_body", body, false)
+set_param(_content, "msg_content", "text/html")
+set_param(_content, "priority", "3" --[[ normal ]])
+set_param(_content, "filename", "")
+  ]]>
+    </generator>
+</order_delivered>
