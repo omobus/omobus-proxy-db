@@ -21,7 +21,7 @@ where y.spam_id = '%spam_id%'
 	</Q>
     </queries>
     <templates> <!-- Localized resources (L7d) -->
-	<caption>Заказ продукции $(doc_no) (принят)</caption>
+	<caption>Возврат продукции $(doc_no) (принят)</caption>
 	<body><![CDATA[<html><body>Получен возврат продукции $(doc_no) на сумму <b>$(amount)</b> (дата возврата: <b>$(return_date)</b>) от <i>$(a_name) $(address)</i>. Возврат будет осуществляться дистрибьютору <i>$(d_name)</i>.</body></html>]]></body>
     </templates>
     <generator>
