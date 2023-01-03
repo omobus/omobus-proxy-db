@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<permitted_returns templ="%account_id%;%prod_id%;%price%;%locked%;">
+<permitted_returns templ="%account_id%;%prod_id%;%price%;%max_qty%;%locked%;">
 <verification>
   <![CDATA[
 select count(*) from data_stream
@@ -14,8 +14,8 @@ delete from shadow.permitted_returns
 </begin>
 <insert>
   <![CDATA[
-insert into shadow.permitted_returns (distr_id, account_id, prod_id, price, locked)
-    values ('%ErpCode%', '%account_id%', '%prod_id%', %price%, 0%locked%)
+insert into shadow.permitted_returns (distr_id, account_id, prod_id, price, max_qty, locked)
+    values ('%ErpCode%', '%account_id%', '%prod_id%', NIL(%price%), NIL(%max_qty%), 0%locked%)
 on conflict do nothing
   ]]>
 </insert>
