@@ -24,11 +24,22 @@ declare
     aid uid_t = act_id();
 begin
 -- **** package --> a_package
-    insert into a_package (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, status, package, enabled, name, system, debuggable)
-	values (aid, '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%status%', '%package%', "toBoolean"('%enabled%'), NIL('%name%'), "toBoolean"('%system%'), "toBoolean"('%debuggable%'));
+    insert into a_package (act_id, inserted_node, dev_pack, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, status, package, enabled, name, system, debuggable, game, granted, revoked)
+	values (aid, '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%status%', '%package%', "toBoolean"('%enabled%'), NIL('%name%'), "toBoolean"('%system%'), "toBoolean"('%debuggable%'), "toBoolean"(NIL('%game%')), string_to_array(NIL('%granted%'),','), string_to_array(NIL('%revoked%'),','));
 -- **** package --> j_acts
     insert into j_acts(act_id, dev_id, dev_login, user_id, fix_dt, satellite_dt, latitude, longitude, inserted_node, dev_pack, act_code)
 	values(aid, '%dev_id%', '%user_id%', '%user_id_sys%', '%fix_dt%', NIL('%satellite_dt%'), NIL(%latitude%), NIL(%longitude%), '%server_hostname%', '%dev_pack%', '%doc_code_sys%');
+-- **** package --> sysapps
+    if '%status%' = 'removed' then
+	update sysapps set hidden = 1
+	    where dev_id = '%dev_id%' and user_id = '%user_id_sys%' and dev_login = '%user_id%' and package = '%package%';
+    elseif (select count(*) from sysapps where dev_id = '%dev_id%' and user_id = '%user_id_sys%' and dev_login = '%user_id%' and package = '%package%') > 0 then
+	update sysapps set user_id = '%user_id_sys%', dev_login = '%user_id%', package = '%package%', enabled = "toBoolean"('%enabled%'), name = NIL('%name%'), system = "toBoolean"('%system%'), debuggable = "toBoolean"('%debuggable%'), game = "toBoolean"(NIL('%game%')), granted = string_to_array(NIL('%granted%'),','), revoked = string_to_array(NIL('%revoked%'),','), fix_dt = '%fix_dt%', hidden = 0
+	    where dev_id = '%dev_id%' and user_id = '%user_id_sys%' and dev_login = '%user_id%' and package = '%package%';
+    else
+	insert into sysapps(dev_id, user_id, dev_login, package, enabled, name, system, debuggable, game, granted, revoked, fix_dt)
+	    values('%dev_id%', '%user_id_sys%', '%user_id%', '%package%', "toBoolean"('%enabled%'), NIL('%name%'), "toBoolean"('%system%'), "toBoolean"('%debuggable%'), "toBoolean"(NIL('%game%')), string_to_array(NIL('%granted%'),','), string_to_array(NIL('%revoked%'),','), '%fix_dt%');
+    end if;
 end;
 $$;
   ]]>

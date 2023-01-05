@@ -869,6 +869,27 @@ create trigger trig_updated_ts before update on sysparams for each row execute p
 
 -- **** System statistics ****
 
+create table sysapps(
+    dev_id 		devid_t 	not null,
+    user_id 		uid_t 		not null,
+    dev_login 		uid_t 		not null,
+    package 		varchar(256) 	not null,
+    enabled 		bool_t 		not null,
+    name 		varchar(512) 	null,
+    system 		bool_t 		not null,
+    debuggable 		bool_t 		not null,
+    game 		bool_t 		null,
+    granted 		text array 	null,
+    revoked 		text array	null,
+    hidden 		bool_t 		not null default 0,
+    fix_dt 		datetime_t	not null,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    primary key(dev_id, user_id, dev_login, package)
+);
+
+create trigger trig_updated_ts before update on sysapps for each row execute procedure tf_updated_ts();
+
 create table sysdevices(
     dev_id 		devid_t 	not null,
     user_id 		uid_t 		not null,
@@ -895,6 +916,8 @@ create table sysdevices(
     outdated_ts 	ts_auto_t 	not null,
     primary key(dev_id, user_id, dev_login)
 );
+
+create trigger trig_updated_ts before update on sysdevices for each row execute procedure tf_updated_ts();
 
 create type counter_t as (fix_time time_t, count int32_t);
 
@@ -3335,8 +3358,11 @@ create table a_package (
     package 		varchar(256) 	not null,
     enabled 		bool_t 		not null,
     name 		varchar(512) 	null,
-    system 		bool_t 		null,
-    debuggable 		bool_t 		null
+    system 		bool_t 		not null,
+    debuggable 		bool_t 		not null,
+    game 		bool_t 		null,
+    granted 		text array 	null,
+    revoked 		text array	null
 );
 
 create index i_user_id_a_package on a_package (user_id);

@@ -48,8 +48,11 @@
 			<xs:attribute name="package" use="required" type="xs:string" />
 			<xs:attribute name="enabled" use="required" type="strict_bool_t" />
 			<xs:attribute name="name" use="optional" type="xs:string" default="" />
-			<xs:attribute name="system" use="optional" type="bool_t" default="" />
-			<xs:attribute name="debuggable" use="optional" type="bool_t" default="" />
+			<xs:attribute name="system" use="required" type="strict_bool_t" />
+			<xs:attribute name="debuggable" use="required" type="strict_bool_t" />
+			<xs:attribute name="game" use="optional" type="bool_t" default="" />
+			<xs:attribute name="granted" use="optional" type="xs:string" default="" />
+			<xs:attribute name="revoked" use="optional" type="xs:string" default="" />
 		    </xs:complexType>
 		</xs:element>
 	    </xs:sequence>
