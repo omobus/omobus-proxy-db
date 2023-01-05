@@ -13,6 +13,7 @@ begin
     delete from console.sessions where inserted_ts::date_t < gc_date;
     delete from console.requests where inserted_ts::date_t < gc_date;
 
+    delete from slices.accounts where slice_date < gc_date;
     delete from slices.agreements1 where slice_date < gc_date;
     delete from slices.agreements2 where slice_date < gc_date;
     delete from slices.agreements3 where slice_date < gc_date;
