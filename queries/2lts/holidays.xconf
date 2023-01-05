@@ -6,7 +6,7 @@ select
     country_id, 
     descr note,
     hidden 
-from sysholidays
+from holidays
     where "LTS_aging_L"() <= updated_ts and updated_ts <= "LTS_aging_R"()
 order by 1, 2
   ]]>

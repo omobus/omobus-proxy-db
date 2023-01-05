@@ -112,6 +112,52 @@ insert into discard_types(discard_type_id, descr) values('3', 'Дебиторс�
 delete from distributors;
 insert into distributors(distr_id, descr, country_id) values('0', 'Рогов и Копытин, ЗАО', 'RU');
 
+delete from holidays;
+insert into holidays(h_date, country_id, descr) values('2023-01-01', 'RU', 'Новогодние каникулы');
+insert into holidays(h_date, country_id, descr) values('2023-01-02', 'RU', 'Новогодние каникулы');
+insert into holidays(h_date, country_id, descr) values('2023-01-03', 'RU', 'Новогодние каникулы');
+insert into holidays(h_date, country_id, descr) values('2023-01-04', 'RU', 'Новогодние каникулы');
+insert into holidays(h_date, country_id, descr) values('2023-01-05', 'RU', 'Новогодние каникулы');
+insert into holidays(h_date, country_id, descr) values('2023-01-06', 'RU', 'Новогодние каникулы');
+insert into holidays(h_date, country_id, descr) values('2023-01-07', 'RU', 'Рождество Христово');
+insert into holidays(h_date, country_id, descr) values('2023-01-08', 'RU', 'Новогодние каникулы');
+insert into holidays(h_date, country_id, descr) values('2023-02-23', 'RU', 'День защитника Отечества');
+insert into holidays(h_date, country_id, descr) values('2023-02-24', 'RU', 'День защитника Отечества (перенос с 1 января)');
+insert into holidays(h_date, country_id, descr) values('2023-03-08', 'RU', 'Международный женский день');
+insert into holidays(h_date, country_id, descr) values('2023-05-01', 'RU', 'Праздник Весны и Труда');
+insert into holidays(h_date, country_id, descr) values('2023-05-08', 'RU', 'Новогодние каникулы (перенос с 8 января)');
+insert into holidays(h_date, country_id, descr) values('2023-05-09', 'RU', 'День Победы');
+insert into holidays(h_date, country_id, descr) values('2023-06-12', 'RU', 'День России');
+insert into holidays(h_date, country_id, descr) values('2023-11-04', 'RU', 'День народного единства');
+--insert into holidays(h_date, country_id, descr) values('2023-12-31', 'RU', 'Новогодние каникулы');
+
+insert into holidays(h_date, country_id, descr) values('2023-01-01', 'KZ', 'Новый год');
+insert into holidays(h_date, country_id, descr) values('2023-01-02', 'KZ', 'Новый год');
+insert into holidays(h_date, country_id, descr) values('2023-01-03', 'KZ', 'Новый год');
+--insert into holidays(h_date, country_id, descr) values('2023-01-07', 'KZ', 'Рождество Христово');
+insert into holidays(h_date, country_id, descr) values('2023-03-08', 'KZ', 'Международный женский день');
+insert into holidays(h_date, country_id, descr) values('2023-03-21', 'KZ', 'Наурыз мейрамы');
+insert into holidays(h_date, country_id, descr) values('2023-03-22', 'KZ', 'Наурыз мейрамы');
+insert into holidays(h_date, country_id, descr) values('2023-03-23', 'KZ', 'Наурыз мейрамы');
+insert into holidays(h_date, country_id, descr) values('2023-05-01', 'KZ', 'Праздник единства народа Казахстана');
+insert into holidays(h_date, country_id, descr) values('2023-05-08', 'KZ', 'День защитника Отечества (воскресенье 7 мая переносится на понедельник 8 мая)');
+insert into holidays(h_date, country_id, descr) values('2023-05-09', 'KZ', 'День Победы');
+insert into holidays(h_date, country_id, descr) values('2023-07-06', 'KZ', 'День столицы');
+insert into holidays(h_date, country_id, descr) values('2023-08-30', 'KZ', 'День Конституции');
+insert into holidays(h_date, country_id, descr) values('2023-10-25', 'KZ', 'День Республики');
+insert into holidays(h_date, country_id, descr) values('2023-12-18', 'KZ', 'День Независимости (суббота 16 декабря переносится на понедельник 18 декабря)');
+
+insert into holidays(h_date, country_id, descr) values('2023-01-01', 'BY', 'Новый год');
+insert into holidays(h_date, country_id, descr) values('2023-01-02', 'BY', 'Новый год');
+insert into holidays(h_date, country_id, descr) values('2023-01-07', 'BY', 'Рождество Христово (православное)');
+insert into holidays(h_date, country_id, descr) values('2023-03-08', 'BY', 'День женщин');
+insert into holidays(h_date, country_id, descr) values('2023-04-25', 'BY', 'Радуница (по календарю православной конфессии)');
+insert into holidays(h_date, country_id, descr) values('2023-05-01', 'BY', 'Праздник труда');
+insert into holidays(h_date, country_id, descr) values('2023-05-09', 'BY', 'День Победы');
+insert into holidays(h_date, country_id, descr) values('2023-07-03', 'BY', 'День Независимости Республики Беларусь');
+insert into holidays(h_date, country_id, descr) values('2023-11-07', 'BY', 'День Октябрьской революции');
+insert into holidays(h_date, country_id, descr) values('2023-12-25', 'BY', 'Рождество Христово (католическое)');
+
 delete from issues;
 insert into issues(descr, extra_info, row_no) values('Установка мобильного приложения на планшет',
     'На планшете: <br/>1. Открыть браузер и в адресной строке ввести <b>omobus.net</b>.<br/>'||
@@ -209,55 +255,6 @@ insert into support(sup_id, descr, phone, email, country_id, row_no)
 insert into support(sup_id, descr, phone, email, country_id, row_no) 
     values('3', 'Поддержка пользователей', '8-8-200-073-00-31', 'hd@omobus.net', 'BY', 3);
 
-delete from sysholidays;
-insert into sysholidays(h_date, country_id, descr) values('2023-01-01', 'RU', 'Новогодние каникулы');
-insert into sysholidays(h_date, country_id, descr) values('2023-01-02', 'RU', 'Новогодние каникулы');
-insert into sysholidays(h_date, country_id, descr) values('2023-01-03', 'RU', 'Новогодние каникулы');
-insert into sysholidays(h_date, country_id, descr) values('2023-01-04', 'RU', 'Новогодние каникулы');
-insert into sysholidays(h_date, country_id, descr) values('2023-01-05', 'RU', 'Новогодние каникулы');
-insert into sysholidays(h_date, country_id, descr) values('2023-01-06', 'RU', 'Новогодние каникулы');
-insert into sysholidays(h_date, country_id, descr) values('2023-01-07', 'RU', 'Рождество Христово');
-insert into sysholidays(h_date, country_id, descr) values('2023-01-08', 'RU', 'Новогодние каникулы');
-insert into sysholidays(h_date, country_id, descr) values('2023-02-23', 'RU', 'День защитника Отечества');
-insert into sysholidays(h_date, country_id, descr) values('2023-02-24', 'RU', 'День защитника Отечества (перенос с 1 января)');
-insert into sysholidays(h_date, country_id, descr) values('2023-03-08', 'RU', 'Международный женский день');
-insert into sysholidays(h_date, country_id, descr) values('2023-05-01', 'RU', 'Праздник Весны и Труда');
-insert into sysholidays(h_date, country_id, descr) values('2023-05-08', 'RU', 'Новогодние каникулы (перенос с 8 января)');
-insert into sysholidays(h_date, country_id, descr) values('2023-05-09', 'RU', 'День Победы');
-insert into sysholidays(h_date, country_id, descr) values('2023-06-12', 'RU', 'День России');
-insert into sysholidays(h_date, country_id, descr) values('2023-11-04', 'RU', 'День народного единства');
---insert into sysholidays(h_date, country_id, descr) values('2023-12-31', 'RU', 'Новогодние каникулы');
-
-insert into sysholidays(h_date, country_id, descr) values('2023-01-01', 'KZ', 'Новый год');
-insert into sysholidays(h_date, country_id, descr) values('2023-01-02', 'KZ', 'Новый год');
-insert into sysholidays(h_date, country_id, descr) values('2023-01-03', 'KZ', 'Новый год');
---insert into sysholidays(h_date, country_id, descr) values('2023-01-07', 'KZ', 'Рождество Христово');
-insert into sysholidays(h_date, country_id, descr) values('2023-03-08', 'KZ', 'Международный женский день');
-insert into sysholidays(h_date, country_id, descr) values('2023-03-21', 'KZ', 'Наурыз мейрамы');
-insert into sysholidays(h_date, country_id, descr) values('2023-03-22', 'KZ', 'Наурыз мейрамы');
-insert into sysholidays(h_date, country_id, descr) values('2023-03-23', 'KZ', 'Наурыз мейрамы');
-insert into sysholidays(h_date, country_id, descr) values('2023-05-01', 'KZ', 'Праздник единства народа Казахстана');
-insert into sysholidays(h_date, country_id, descr) values('2023-05-08', 'KZ', 'День защитника Отечества (воскресенье 7 мая переносится на понедельник 8 мая)');
-insert into sysholidays(h_date, country_id, descr) values('2023-05-09', 'KZ', 'День Победы');
-insert into sysholidays(h_date, country_id, descr) values('2023-07-06', 'KZ', 'День столицы');
-insert into sysholidays(h_date, country_id, descr) values('2023-08-30', 'KZ', 'День Конституции');
-insert into sysholidays(h_date, country_id, descr) values('2023-10-25', 'KZ', 'День Республики');
-insert into sysholidays(h_date, country_id, descr) values('2023-12-18', 'KZ', 'День Независимости (суббота 16 декабря переносится на понедельник 18 декабря)');
-
-insert into sysholidays(h_date, country_id, descr) values('2023-01-01', 'BY', 'Новый год');
-insert into sysholidays(h_date, country_id, descr) values('2023-01-02', 'BY', 'Новый год');
-insert into sysholidays(h_date, country_id, descr) values('2023-01-07', 'BY', 'Рождество Христово (православное)');
-insert into sysholidays(h_date, country_id, descr) values('2023-03-08', 'BY', 'День женщин');
-insert into sysholidays(h_date, country_id, descr) values('2023-04-25', 'BY', 'Радуница (по календарю православной конфессии)');
-insert into sysholidays(h_date, country_id, descr) values('2023-05-01', 'BY', 'Праздник труда');
-insert into sysholidays(h_date, country_id, descr) values('2023-05-09', 'BY', 'День Победы');
-insert into sysholidays(h_date, country_id, descr) values('2023-07-03', 'BY', 'День Независимости Республики Беларусь');
-insert into sysholidays(h_date, country_id, descr) values('2023-11-07', 'BY', 'День Октябрьской революции');
-insert into sysholidays(h_date, country_id, descr) values('2023-12-25', 'BY', 'Рождество Христово (католическое)');
-
-delete from syswdmv;
---insert into syswdmv(f_date, t_date, country_id, descr) values('2023-03-07', '2023-03-05', 'RU', 'Перенос рабочего дня с 7 марата на 5 марта');
-
 delete from target_types;
 insert into target_types(target_type_id, descr, row_no) values('notice', 'Напоминание', 4);
 insert into target_types(target_type_id, descr, row_no) values('reminder', 'Напоминание на каждом посещении', 3);
@@ -273,6 +270,9 @@ insert into training_types(training_type_id, descr, min_contacts) values('1', '�
 delete from unsched_types;
 insert into unsched_types(unsched_type_id, descr) values('0', 'Собрание в офисе');
 insert into unsched_types(unsched_type_id, descr) values('1', 'Посещение склада дистрибьютора');
+
+delete from wdmv;
+--insert into wdmv(f_date, t_date, country_id, descr) values('2023-03-07', '2023-03-05', 'RU', 'Перенос рабочего дня с 7 марата на 5 марта');
 
 delete from "L10n";
 insert into "L10n"(lang_id,obj_code,obj_id,obj_attr,str) values('ru','aKPI','audit','','Результаты аудита от $(fix_date):');

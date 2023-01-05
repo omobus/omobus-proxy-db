@@ -855,35 +855,6 @@ create table symlinks (
 create index i_db_ids_symlinks on symlinks using GIN (db_ids);
 create trigger trig_updated_ts before update on symlinks for each row execute procedure tf_updated_ts();
 
-create table sysholidays (
-    h_date 		date_t 		not null,
-    country_id 		country_t 	not null,
-    descr 		descr_t 	not null,
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    primary key(h_date, country_id)
-);
-
-create trigger trig_updated_ts before update on sysholidays for each row execute procedure tf_updated_ts();
-
-create or replace function tf_sysholidays() returns trigger as
-$body$
-begin
-    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'tech_route' and user_id in (
-	    select user_id from users where country_id = new.country_id
-	) and b_date = new.h_date and e_date = new.h_date;
-    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'route_compliance' 
-	and b_date = new.h_date and e_date = new.h_date;
-    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'time' 
-	and b_date = "monthDate_First"(new.h_date)::date_t and e_date = "monthDate_Last"(new.h_date)::date_t;
-    return null;
-end;
-$body$
-language 'plpgsql';
-
-create trigger trig_update_content after insert or update on sysholidays for each row execute procedure tf_sysholidays();
-
 create table sysparams (
     param_id 		uid_t 		not null primary key,
     param_value 	text 		null,
@@ -894,36 +865,6 @@ create table sysparams (
 );
 
 create trigger trig_updated_ts before update on sysparams for each row execute procedure tf_updated_ts();
-
-create table syswdmv (
-    f_date 		date_t 		not null,
-    t_date 		date_t 		not null,
-    country_id 		country_t 	not null,
-    descr 		descr_t 	not null,
-    hidden 		bool_t 		not null default 0,
-    inserted_ts 	ts_auto_t 	not null,
-    updated_ts 		ts_auto_t 	not null,
-    primary key(f_date, country_id)
-);
-
-create trigger trig_updated_ts before update on syswdmv for each row execute procedure tf_updated_ts();
-
-create or replace function tf_syswdmv() returns trigger as
-$body$
-begin
-    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'tech_route' and user_id in (
-	    select user_id from users where country_id = new.country_id
-	) and ((b_date = new.f_date and e_date = new.f_date) or (b_date = new.t_date and e_date = new.t_date));
-    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'route_compliance' 
-	and ((b_date = new.f_date and e_date = new.f_date) or (b_date = new.t_date and e_date = new.t_date));
-    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'time' 
-	and ((b_date <= new.f_date and new.f_date <= e_date) or (b_date <= new.t_date and new.t_date <= e_date));
-    return null;
-end;
-$body$
-language 'plpgsql';
-
-create trigger trig_update_content after insert or update on syswdmv for each row execute procedure tf_syswdmv();
 
 
 -- **** System statistics ****
@@ -954,7 +895,6 @@ create table sysdevices(
     outdated_ts 	ts_auto_t 	not null,
     primary key(dev_id, user_id, dev_login)
 );
-
 
 create type counter_t as (fix_time time_t, count int32_t);
 
@@ -1658,6 +1598,35 @@ create table highlights (
 
 create index i_db_id_highlights on highlights (db_id);
 create trigger trig_updated_ts before update on highlights for each row execute procedure tf_updated_ts();
+
+create table holidays (
+    h_date 		date_t 		not null,
+    country_id 		country_t 	not null,
+    descr 		descr_t 	not null,
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    primary key(h_date, country_id)
+);
+
+create trigger trig_updated_ts before update on holidays for each row execute procedure tf_updated_ts();
+
+create or replace function tf_holidays() returns trigger as
+$body$
+begin
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'tech_route' and user_id in (
+	    select user_id from users where country_id = new.country_id
+	) and b_date = new.h_date and e_date = new.h_date;
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'route_compliance' 
+	and b_date = new.h_date and e_date = new.h_date;
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'time' 
+	and b_date = "monthDate_First"(new.h_date)::date_t and e_date = "monthDate_Last"(new.h_date)::date_t;
+    return null;
+end;
+$body$
+language 'plpgsql';
+
+create trigger trig_update_content after insert or update on holidays for each row execute procedure tf_holidays();
 
 create table influence_levels (
     influence_level_id 	uid_t		not null primary key default man_id(),
@@ -2976,6 +2945,36 @@ create table wareh_stocks (
 
 create index i_db_ids_wareh_stocks on wareh_stocks using GIN (db_ids);
 create trigger trig_updated_ts before update on wareh_stocks for each row execute procedure tf_updated_ts();
+
+create table wdmv (
+    f_date 		date_t 		not null,
+    t_date 		date_t 		not null,
+    country_id 		country_t 	not null,
+    descr 		descr_t 	not null,
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    primary key(f_date, country_id)
+);
+
+create trigger trig_updated_ts before update on wdmv for each row execute procedure tf_updated_ts();
+
+create or replace function tf_wdmv() returns trigger as
+$body$
+begin
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'tech_route' and user_id in (
+	    select user_id from users where country_id = new.country_id
+	) and ((b_date = new.f_date and e_date = new.f_date) or (b_date = new.t_date and e_date = new.t_date));
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'route_compliance' 
+	and ((b_date = new.f_date and e_date = new.f_date) or (b_date = new.t_date and e_date = new.t_date));
+    update "content_stream.ghost" set data_ts = current_timestamp where content_code = 'time' 
+	and ((b_date <= new.f_date and new.f_date <= e_date) or (b_date <= new.t_date and new.t_date <= e_date));
+    return null;
+end;
+$body$
+language 'plpgsql';
+
+create trigger trig_update_content after insert or update on wdmv for each row execute procedure tf_wdmv();
 
 
 -- **** Activities ****
@@ -6312,7 +6311,7 @@ begin
 	r.user_id, r.account_id, r.activity_type_id, mv.t_date p_date, 0 allow_discard, 0 allow_pending, r.p_date pending_date, null color, null bgcolor, 
 	null extra_info, r.row_no, r.duration, 8 "z-index"
     from my_routes r
-	left join syswdmv mv on mv.f_date = r.p_date and (select count(*) from users u where u.user_id=r.user_id and mv.country_id = u.country_id) > 0
+	left join wdmv mv on mv.f_date = r.p_date and (select count(*) from users u where u.user_id=r.user_id and mv.country_id = u.country_id) > 0
     where start_date - offsetL <= mv.t_date::date and mv.t_date::date <= start_date + offsetR
 	and (select count(*) from j_user_activities j where j.user_id=r.user_id and j.account_id=r.account_id and j.route_date=mv.f_date and j.b_dt is not null and j.e_dt is not null and j.fix_date/*left(j.b_dt, 10)*/ <> mv.t_date)=0
     loop
@@ -6578,7 +6577,7 @@ union
 	left join j_discards d on d.user_id = r.user_id and d.account_id = r.account_id and d.activity_type_id = r.activity_type_id and d.route_date = r.p_date and d.hidden = 0 and d.validated = 1
 	left join j_pending p on p.user_id = r.user_id and p.account_id = r.account_id and p.activity_type_id = r.activity_type_id and p.route_date = r.p_date and p.hidden = 0
 	left join users u on u.user_id = r.user_id
-	left join sysholidays s on s.h_date = r.p_date and s.country_id = u.country_id and s.hidden = 0
+	left join holidays s on s.h_date = r.p_date and s.country_id = u.country_id and s.hidden = 0
     where r.p_date>=f_b_date and r.p_date<=f_e_date and (f_user_id is null or r.user_id=f_user_id)
 union /* orphaned routes: */
     select

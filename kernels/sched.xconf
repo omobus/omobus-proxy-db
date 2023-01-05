@@ -53,7 +53,7 @@ begin
 	from schedules x
 	    left join j_cancellations c on c.route_date = x.p_date and c.user_id = x.user_id and c.hidden = 0
 	    left join users u on u.user_id = x.user_id
-	    left join sysholidays s on s.h_date = x.p_date and s.country_id = u.country_id and s.hidden = 0
+	    left join holidays s on s.h_date = x.p_date and s.country_id = u.country_id and s.hidden = 0
 	where 
 	    x.p_date = d::date_t and
 	    (x.jobs[1]->'type' is null or x.jobs[2]->'type' is null or x.jobs[3]->'type' is null or x.jobs[4]->'type' is null) and

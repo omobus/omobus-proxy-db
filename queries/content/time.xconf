@@ -121,8 +121,8 @@ from (
     group by user_id, route_date
 ) z
     left join users u on u.user_id = z.user_id
-    left join syswdmv mvf on mvf.country_id = u.country_id and mvf.f_date = z.route_date
-    left join syswdmv mvt on mvt.country_id = u.country_id and mvt.t_date = z.route_date
+    left join wdmv mvf on mvf.country_id = u.country_id and mvf.f_date = z.route_date
+    left join wdmv mvt on mvt.country_id = u.country_id and mvt.t_date = z.route_date
     left join sysstats s on s.fix_date = z.route_date and s.user_id = z.user_id
 order by z.user_id, z.route_date
   ]]>
