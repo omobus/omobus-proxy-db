@@ -44,7 +44,7 @@ from dyn_oos x
     left join products z on z.prod_id = x.prod_id
     left join categories f on f.categ_id = z.categ_id
     left join brands b on b.brand_id = z.brand_id
-    left join plu_codes y on y.account_id = x.account_id and y.prod_id = x.prod_id
+    left join plu_codes y on y.rc_id = a.rc_id and y.prod_id = x.prod_id
     left join oos_types k on k.oos_type_id = x.oos_type_id
     left join users u on u.user_id = x.user_id
     left join users ex on ex.user_id = u.executivehead_id
