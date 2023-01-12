@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<kernel module="kern_thumb" threads="2" height="800" quality="90">
+<kernel module="kern_thumb" threads="2" height="800" width="1064" quality="60">
 <get>
   <![CDATA[
 select photo::uid_t blob_id, photo from thumbnail_stream 
@@ -9,7 +9,7 @@ limit 500
 </get>
 <set>
   <![CDATA[
-update thumbnail_stream set thumb800=$1:blob, thumb800_width=%thumb_width%, thumb800_height=%thumb_height%
+update thumbnail_stream set thumb800=$1:blob, thumb800_width=%thumb_width%, thumb800_height=%thumb_height%, thumb800_quality=%thumb_quality%
     where photo=%blob_id%
   ]]>
 </set>
