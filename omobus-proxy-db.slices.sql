@@ -89,3 +89,16 @@ create index i_exist_my_accounts on slices.my_accounts(slice_date, user_id);
 create index i_slice_date_my_accounts on slices.my_accounts(slice_date);
 create trigger trig_lock_update before update on slices.my_accounts for each row execute procedure tf_lock_update();
 
+create table slices.outlet_stocks (
+    slice_date 		date_t 		not null,
+    account_id 		uid_t 		not null,
+    prod_id 		uid_t 		not null,
+    s_date 		date_t 		not null,
+    stock 		int32_t 	not null check(stock > 0),
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    primary key(slice_date, account_id, prod_id)
+);
+
+create index i_exist_outlet_stocks on slices.outlet_stocks(slice_date, account_id);
+create trigger trig_lock_update before update on slices.outlet_stocks for each row execute procedure tf_lock_update();

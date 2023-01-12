@@ -96,6 +96,10 @@ begin
 	insert into slices.my_accounts(slice_date, user_id, account_id)
 	    select f_date, user_id, account_id from my_accounts where user_id = '%user_id_sys%';
     end if;
+    if( (select count(*) from slices.outlet_stocks where slice_date=f_date and account_id='%account_id%') = 0 ) then
+	insert into slices.outlet_stocks(slice_date, account_id, prod_id, s_date, stock)
+	    select f_date, account_id, prod_id, s_date, stock from outlet_stocks where account_id='%account_id%';
+    end if;
 
 -- **** user_activity --> j_cancellations
     if( '%route_date%' != '' and (select hidden from j_cancellations where user_id = '%user_id_sys%' and route_date = '%route_date%') = 0 ) then
