@@ -2183,14 +2183,14 @@ create table planograms (
 
 create trigger trig_updated_ts before update on planograms for each row execute procedure tf_updated_ts();
 
-create table plu_codes ( /* Price Look-Up codes (in the outlet) */
-    account_id 		uid_t 		not null,
+create table plu_codes ( /* Retail chain products Price Look-Up (PLU) codes */
+    rc_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,
     plu_code 		code_t 		not null,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
     db_ids 		uids_t 		null,
-    primary key(account_id, prod_id)
+    primary key(rc_id, prod_id)
 );
 
 create index i_db_ids_plu_codes on plu_codes using GIN (db_ids);
@@ -6082,9 +6082,11 @@ create table thumbnail_stream (
     thumb 		blob_t 		null,
     thumb_width 	int32_t 	null check(thumb_width > 0),
     thumb_height 	int32_t 	null check(thumb_height > 0),
+    thumb_quality	int32_t 	null check(thumb_quality > 30 and thumb_quality < 100),
     thumb800 		blob_t 		null,
     thumb800_width 	int32_t 	null check(thumb_width > 0),
     thumb800_height 	int32_t 	null check(thumb_height > 0),
+    thumb800_quality	int32_t 	null check(thumb800_quality > 30 and thumb800_quality < 100),
     guid 		uuid 		not null default uuid_generate_v4(),
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null
