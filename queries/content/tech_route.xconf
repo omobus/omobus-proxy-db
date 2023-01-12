@@ -186,6 +186,22 @@ from slices.matrices m, products p
 order by m.account_id, m.row_no, p.descr, m.prod_id
   ]]>
 	</matrices>
+	<outlet_stocks>
+  <![CDATA[
+select 
+    m.account_id, 
+    p.code p_code, 
+    p.descr prod,
+    m.s_date,
+    m.stock,
+    m.prod_id _pkey 
+from slices.outlet_stocks m, products p
+    where m.slice_date='%b_date%' /*'%e_date%'*/ and m.account_id in (
+	select distinct account_id from j_user_activities where user_id='%user_id%' and fix_date='%b_date%' /*%e_date%*/
+    ) and m.prod_id = p.prod_id
+order by m.account_id, p.descr, m.prod_id
+  ]]>
+	</outlet_stocks>
 	<audits_L0>
   <![CDATA[
 select 
@@ -808,6 +824,7 @@ if tb.map == nil and tb.my_accounts ~= nil then
 end
 
 tb.matrices = rt.groups(_matrices, "account_id")
+tb.outlet_stocks = rt.groups(_outlet_stocks, "account_id")
 
 idx = {}; tb.audits = rt.groups(_audits_L0, "account_id", function(r, n, a)
     if n == "doc_id" then
