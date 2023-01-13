@@ -24,6 +24,12 @@
 	</xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="type_t">
+	<xs:restriction base="xs:string">
+	    <xs:pattern value="none|GSM|CDMA|SIP" />
+	</xs:restriction>
+    </xs:simpleType>
+
     <xs:element name="gsm_state">
 	<xs:complexType>
 	    <xs:attribute name="vstamp" use="required" type="xs:string" />
@@ -34,8 +40,11 @@
 	    <xs:attribute name="satellite_dt" use="optional" type="datetime2_t" default="" />
 	    <xs:attribute name="latitude" use="optional" type="decimal_t" default="" />
 	    <xs:attribute name="longitude" use="optional" type="decimal_t" default="" />
+	    <xs:attribute name="phone_type" use="required" type="type_t" />
 	    <xs:attribute name="sim0_state" use="required" type="state_t" />
 	    <xs:attribute name="sim1_state" use="required" type="state_t" />
+	    <xs:attribute name="sim0_mcc" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="sim1_mcc" use="optional" type="xs:string" default="" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>

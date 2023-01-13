@@ -51,7 +51,7 @@ select
 	    (select 'state: ' || state || ', provider: ' || provider || case when msg is null or msg = '' then '' else ' [' || msg || ']' end
 		from a_gps_state where j.act_id=act_id)
 	when 'gsm_state' then
-	    (select format('SIM#0: %s SIM#1: %s', sim0_state, sim1_state)
+	    (select format('%s at the slot#1 [SIM: %s, MCC: %s] and slot#2 [SIM: %s, MCC: %s]', coalesce(phone_type,'???'), sim0_state, coalesce(sim0_mcc,'??'), sim1_state, coalesce(sim1_mcc,'??'))
 		from a_gsm_state where j.act_id=act_id)
 	when 'lifecycle' then
 	    (select case when facility='os' then format('%s system (reason: %s)', state, coalesce(extra,'-'))

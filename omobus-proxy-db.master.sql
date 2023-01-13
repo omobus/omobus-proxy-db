@@ -3223,10 +3223,12 @@ create table a_gsm_state (
     dev_login 		uid_t 		not null,
     user_id 		uid_t 		not null,
     fix_dt 		datetime_t 	not null,
+    phone_type 		varchar(4) 	not null check (phone_type in ('none','GSM','CDMA','SIP')),
     sim0_state		varchar(12)	not null check (sim0_state in ('absent','locked','pin_required','puk_required','ready','unknown') and sim0_state = lower(sim0_state)),
-    sim1_state		varchar(12)	not null check (sim1_state in ('absent','locked','pin_required','puk_required','ready','unknown') and sim1_state = lower(sim1_state))
+    sim1_state		varchar(12)	not null check (sim1_state in ('absent','locked','pin_required','puk_required','ready','unknown') and sim1_state = lower(sim1_state)),
+    sim0_mcc 		country_t 	null,
+    sim1_mcc 		country_t 	null
 );
-
 
 create index i_user_id_a_gsm_state on a_gsm_state (user_id);
 create index i_fix_date_a_gsm_state on a_gsm_state (left(fix_dt,10));
