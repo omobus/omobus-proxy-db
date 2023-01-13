@@ -6084,11 +6084,11 @@ create table thumbnail_stream (
     thumb 		blob_t 		null,
     thumb_width 	int32_t 	null check(thumb_width > 0),
     thumb_height 	int32_t 	null check(thumb_height > 0),
-    thumb_quality	int32_t 	null check(thumb_quality > 30 and thumb_quality < 100),
+    thumb_quality	int32_t 	null check(thumb_quality > 0 and thumb_quality < 100),
     thumb800 		blob_t 		null,
     thumb800_width 	int32_t 	null check(thumb_width > 0),
     thumb800_height 	int32_t 	null check(thumb_height > 0),
-    thumb800_quality	int32_t 	null check(thumb800_quality > 30 and thumb800_quality < 100),
+    thumb800_quality	int32_t 	null check(thumb800_quality > 0 and thumb800_quality < 100),
     guid 		uuid 		not null default uuid_generate_v4(),
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null
