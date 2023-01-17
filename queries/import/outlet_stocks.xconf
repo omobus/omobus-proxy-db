@@ -20,6 +20,7 @@ delete from outlet_stocks
   <![CDATA[
 insert into outlet_stocks (account_id, prod_id, s_date, stock, db_ids)
     values ('%account_id%', '%prod_id%', '%s_date%', %stock%, array['%ErpCode%'])
+on conflict do nothing
   ]]>
 </insert>
 <end>
