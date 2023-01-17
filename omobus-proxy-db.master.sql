@@ -2701,6 +2701,18 @@ create table specializations (
 create index i_db_ids_specializations on specializations using GIN (db_ids);
 create trigger trig_updated_ts before update on specializations for each row execute procedure tf_updated_ts();
 
+create table speclist ( /* Specification List - allowed products for the [checkup], [presence] and [stock] documents */
+    db_id 		uid_t 		not null,
+    account_id 		uid_t 		not null,
+    prod_id 		uid_t 		not null,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    primary key (db_id, account_id, prod_id)
+);
+
+create index i_db_id_speclist on speclist (db_id);
+create trigger trig_updated_ts before update on speclist for each row execute procedure tf_updated_ts();
+
 create table std_prices (
     distr_id 		uid_t 		not null,
     prod_id 		uid_t 		not null,

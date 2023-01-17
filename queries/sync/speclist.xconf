@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<speclist templ="%account_id%;%prod_id%;" empty="no">
+  <![CDATA[
+select db_id, account_id, prod_id from speclist
+    order by 1, 2, 3
+  ]]>
+</speclist>
