@@ -2412,7 +2412,7 @@ create trigger trig_updated_ts before update on rating_scores for each row execu
 create table rdd (
     distr_id 		uid_t 		not null,
     obj_code 		code_t 		not null,
-    r_date 		datetimetz_t 	not null,
+    r_date 		date_t 		not null,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
