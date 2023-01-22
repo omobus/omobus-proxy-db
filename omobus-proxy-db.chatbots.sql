@@ -5,6 +5,21 @@ create schema chatbots;
 create sequence chatbots.seq_feedbacks;
 create sequence chatbots.seq_photos;
 
+create or replace function chatbots.tf_pinned_ts() returns trigger as
+$body$
+begin
+    if old.pinned_id is null and new.pinned_id is not null then
+	new.pinned_ts = current_timestamp;
+    elsif old.pinned_id is not null and new.pinned_id is null then
+	new.pinned_ts = null;
+    elsif old.pinned_id is not null and new.pinned_id is not null and old.pinned_id != new.pinned_id then
+	new.pinned_ts = current_timestamp;
+    end if;
+    return new;
+end;
+$body$
+language 'plpgsql';
+
 create table chatbots.chats (
     bot_type 		code_t 		not null,
     bot_id 		uid_t 		not null,
@@ -21,10 +36,13 @@ create table chatbots.chats (
     outbound_ts 	ts_t 		null,
     inprogress_command 	text 		null,
     attrs 		hstore		null,
+    pinned_id 		uid_t 		null,
+    pinned_ts 		ts_t 		null,
     primary key(bot_type, bot_id, chat_id)
 );
 
 create trigger trig_updated_ts before update on chatbots.chats for each row execute procedure tf_updated_ts();
+create trigger trig_pinned_ts before update on chatbots.chats for each row execute procedure chatbots.tf_pinned_ts();
 
 create table chatbots.feedbacks (
     fb_id 		int64_t 	not null primary key default nextval('chatbots.seq_feedbacks'),
@@ -55,9 +73,12 @@ create table chatbots.photos (
     photo 		blob_t 		not null,
     width 		int32_t 	not null,
     height 		int32_t 	not null,
+    length 		int32_t 	not null,
     caption 		text 		null,
     message_id 		uid_t 		not null,
+    hashsum 		uid_t 		not null,
     inserted_ts 	ts_auto_t 	not null
 );
 
 create trigger trig_lock_update before update on chatbots.photos for each row execute procedure tf_lock_update();
+create unique index i_hashsum_photos on chatbots.photos (hashsum);
