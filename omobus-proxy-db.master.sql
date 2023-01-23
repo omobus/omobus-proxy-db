@@ -2553,6 +2553,7 @@ create table retail_chains (
     descr 		descr_t 	not null,
     ka_type		code_t		null,	/* Key Account: NKA, KA, ... */
     country_id 		uid_t 		not null,
+    uniform_pricing 	bool_t 		not null default 0,
     hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts 		ts_auto_t 	not null,
