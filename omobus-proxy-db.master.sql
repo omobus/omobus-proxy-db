@@ -2757,6 +2757,7 @@ create table targets (
     rc_ids 		uids_t		null, /* -> retail_chains */
     chan_ids		uids_t 		null,
     poten_ids 		uids_t 		null,
+    awaiting 		int32_t 	null, /* in days */
     props 		hstore 		null,
     myself 		bool_t 		not null default 0,
     rows		int32_t 	null,
