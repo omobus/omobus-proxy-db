@@ -35,6 +35,7 @@ insert into users(user_id, pids, descr, role, country_id, dep_ids, distr_ids, ag
 <end>
   <![CDATA[
 delete from users where trim(user_id)='' and hidden = 0;
+update users set descr='[John Doe]' where NIL(trim(descr)) is null and hidden = 0;
 update users set pids=array_remove(pids, user_id::varchar) where pids is not null and pids @> array[user_id::varchar] and hidden = 0; /* fixed invalid hiererchy */
 update users set pids=null where (pids is not null and cardinality(pids) = 0 and hidden = 0) or (hidden = 1 and pids is not null);
 update users set executivehead_id=my_executivehead(user_id) where hidden = 0;
