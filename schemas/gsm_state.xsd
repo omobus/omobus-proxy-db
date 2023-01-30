@@ -18,12 +18,6 @@
 	</xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="state_t">
-	<xs:restriction base="xs:string">
-	    <xs:pattern value="absent|locked|pin_required|puk_required|ready|unknown" />
-	</xs:restriction>
-    </xs:simpleType>
-
     <xs:simpleType name="type_t">
 	<xs:restriction base="xs:string">
 	    <xs:pattern value="none|GSM|CDMA|SIP" />
@@ -41,10 +35,10 @@
 	    <xs:attribute name="latitude" use="optional" type="decimal_t" default="" />
 	    <xs:attribute name="longitude" use="optional" type="decimal_t" default="" />
 	    <xs:attribute name="phone_type" use="required" type="type_t" />
-	    <xs:attribute name="sim0_state" use="required" type="state_t" />
-	    <xs:attribute name="sim1_state" use="required" type="state_t" />
-	    <xs:attribute name="sim0_mcc" use="optional" type="xs:string" default="" />
-	    <xs:attribute name="sim1_mcc" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="slots" use="required" type="xs:integer" />
+	    <!-- array of "absent|locked|pin_required|puk_required|ready|unknown" values with comma delemiter -->
+	    <xs:attribute name="sim_states" use="optional" type="xs:string" default="" />
+	    <xs:attribute name="mcc" use="optional" type="xs:string" default="" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>

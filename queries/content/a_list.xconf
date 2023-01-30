@@ -51,7 +51,7 @@ select
 	    (select 'state: ' || state || ', provider: ' || provider || case when msg is null or msg = '' then '' else ' [' || msg || ']' end
 		from a_gps_state where j.act_id=act_id)
 	when 'gsm_state' then
-	    (select format('%s at the slot#1 [SIM: %s, MCC: %s] and slot#2 [SIM: %s, MCC: %s]', coalesce(phone_type,'???'), sim0_state, coalesce(sim0_mcc,'??'), sim1_state, coalesce(sim1_mcc,'??'))
+	    (select case when phone_type = 'none' then 'without cell service' else format('%s device with %s slot(-s), MCC: %s, SIM(-s): %s', coalesce(phone_type,'?'), slots::varchar, coalesce(mcc,'??'), array_to_string(sim_states,', ')) end
 		from a_gsm_state where j.act_id=act_id)
 	when 'lifecycle' then
 	    (select case when facility='os' then format('%s system (reason: %s)', state, coalesce(extra,'-'))
