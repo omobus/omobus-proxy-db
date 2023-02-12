@@ -10,7 +10,7 @@ select
     value, 
     "_isRecentData" latest 
 from dyn_quests
-where fix_date >= (current_date - "paramInteger"('quests_history:depth'))::date_t
+where (fix_date >= (current_date - "paramInteger"('quests_history:depth'))::date_t or "_isRecentData" = 1) and hidden = 0
 order by 3, 4, 5, 2 desc
   ]]>
 </quests_history>

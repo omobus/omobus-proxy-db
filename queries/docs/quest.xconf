@@ -40,13 +40,8 @@ do $$
 declare
     f_date date_t default left('%fix_dt%', 10);
     f_time time_t default substring('%fix_dt%', 12, 5);
-    qn_id uid_t;
-    qr_id uid_t;
-    u_id uid_t;
-    d_id uid_t;
-    f_dt datetime_t;
-    v note_t;
-    w ts_t;
+    r1 record;
+    r2 record;
 begin
 -- **** quest --> j_docs
     insert into j_docs(doc_id, doc_no, dev_id, dev_login, user_id, account_id, fix_dt, created_dt, created_gps_dt, created_gps_la, created_gps_lo, closed_dt, closed_gps_dt, closed_gps_la, closed_gps_lo, w_cookie, a_cookie, activity_type_id, inserted_node, dev_pack, doc_code)
@@ -69,17 +64,19 @@ begin
     /* removes obsolete entires */
     delete from dyn_quests where account_id = '%account_id%' and fix_date = f_date;
     /* recompiles data */
-    for qn_id, qr_id, v, u_id, d_id, f_dt, w in
+    for r1 in
 	select t.qname_id, t.qrow_id, t.value, h.user_id, h.doc_id, h.fix_dt, h.inserted_ts from t_quest t, h_quest h 
 	    where t.doc_id = h.doc_id and h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
 	order by h.fix_dt
     loop
-	if( (select count(*) from dyn_quests where account_id='%account_id%' and qname_id=qn_id and qrow_id=qr_id and fix_date=f_date) = 0 ) then
-	    insert into dyn_quests(fix_date, account_id, qname_id, qrow_id, value, fix_dt, user_id, doc_id, inserted_ts)
-		values(f_date, '%account_id%', qn_id, qr_id, v, f_dt, u_id, d_id, w);
+	if( (select count(*) from dyn_quests where account_id = '%account_id%' and qname_id = r1.qname_id and qrow_id = r1.qrow_id and fix_date = f_date) = 0 ) then
+	    select founder_id, founded_dt from dyn_quests where account_id = '%account_id%' and qname_id = r1.qname_id order by fix_date limit 1 
+		into r2;
+	    insert into dyn_quests(fix_date, account_id, qname_id, qrow_id, value, fix_dt, user_id, doc_id, inserted_ts, founder_id, founded_dt)
+		values(f_date, '%account_id%', r1.qname_id, r1.qrow_id, r1.value, r1.fix_dt, r1.user_id, r1.doc_id, r1.inserted_ts, coalesce(r2.founder_id,r1.user_id), coalesce(r2.founded_dt,r1.fix_dt));
 	else
-	    update dyn_quests set value = v, fix_dt = f_dt, user_id = u_id, doc_id = d_id, updated_ts = current_timestamp
-		where account_id = '%account_id%' and qname_id = qn_id and qrow_id = qr_id and fix_date = f_date;
+	    update dyn_quests set value = r1.value, fix_dt = r1.fix_dt, user_id = r1.user_id, doc_id = r1.doc_id, updated_ts = current_timestamp
+		where account_id = '%account_id%' and qname_id = r1.qname_id and qrow_id = r1.qrow_id and fix_date = f_date;
 	end if;
     end loop;
 

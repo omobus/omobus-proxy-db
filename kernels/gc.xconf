@@ -58,7 +58,7 @@ begin
     delete from dyn_oos where fix_date < gc_date;
     delete from dyn_presences where fix_date < gc_date;
     delete from dyn_prices where fix_date < gc_date;
-    delete from dyn_quests where fix_date < gc_date;
+    delete from dyn_quests where fix_date < gc_date and ("_isRecentData" is null or "_isRecentData" = 0);
     delete from dyn_ratings where fix_date < gc_date;
     delete from dyn_reviews where fix_date < gc_date;
     delete from dyn_shelfs where fix_date < gc_date;

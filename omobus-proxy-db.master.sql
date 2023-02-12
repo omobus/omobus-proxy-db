@@ -5212,6 +5212,11 @@ create table dyn_quests (
     fix_dt		datetime_t 	not null,
     user_id 		uid_t 		not null,
     doc_id 		uid_t 		not null,
+    founded_dt 		datetime_t 	not null,
+    founder_id 		uid_t 		not null,
+    altered_dt 		datetime_t 	null,
+    censor_id 		uid_t 		null,
+    hidden 		bool_t 		not null default 0,
     inserted_ts 	ts_auto_t 	not null,
     updated_ts		ts_auto_t 	not null,
     "_isRecentData"	bool_t 		null,
@@ -5221,6 +5226,7 @@ create table dyn_quests (
 create index i_2lts_dyn_quests on dyn_quests (updated_ts);
 
 create trigger trig_updated_ts before update on dyn_quests for each row execute procedure tf_updated_ts();
+create trigger trig_lock_founder before update of founder_id, founded_dt on dyn_quests for each row execute procedure tf_lock_update();
 
 create table dyn_ratings (
     fix_date		date_t 		not null,
