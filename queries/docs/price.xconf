@@ -64,7 +64,7 @@ begin
     update sysdevices set outdated_ts = current_timestamp
 	where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
 
--- **** comment --> thumbnail_stream
+-- **** price --> thumbnail_stream
     insert into thumbnail_stream(photo)
 	select photo from t_price where doc_id='%doc_id_sys%' and photo is not null;
 
