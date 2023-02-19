@@ -94,7 +94,8 @@ begin
 	update targets set 
 	    target_type_id=(_opt).target_type_id, 
 	    subject=(_opt).sub, 
-	    body=(_opt).msg, b_date=(_opt).b_date, 
+	    body=(_opt).msg,
+	    b_date=(_opt).b_date, 
 	    e_date=(_opt).e_date, 
 	    dep_id=(_opt).dep_id, 
 	    account_ids=(_opt).account_ids, 
