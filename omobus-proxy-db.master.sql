@@ -2318,6 +2318,22 @@ create table promo_values (
 create index i_db_ids_promo_values on promo_values using GIN (db_ids);
 create trigger trig_updated_ts before update on promo_values for each row execute procedure tf_updated_ts();
 
+create table quest_entities (
+    qname_id 		uid_t 		not null,
+    qentity_id 		uid_t 		not null default man_id(),
+    descr 		descr_t 	not null,
+    row_no 		int32_t 	null, -- ordering
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts 		ts_auto_t 	not null,
+    db_ids 		uids_t 		null,
+    "_isAlienData" 	bool_t 		null, /* row from the external sources */
+    primary key(qname_id, qentity_id)
+);
+
+create index i_db_ids_quest_entities on quest_entities using GIN (db_ids);
+create trigger trig_updated_ts before update on quest_entities for each row execute procedure tf_updated_ts();
+
 create table quest_items (
     qname_id 		uid_t 		not null,
     qrow_id 		uid_t 		not null,
@@ -4646,7 +4662,8 @@ create table h_quest (
     w_cookie 		uid_t 		not null,
     a_cookie 		uid_t 		not null,
     activity_type_id 	uid_t 		not null,
-    rows 		int32_t 	not null
+    rows 		int32_t 	not null,
+    blobs 		int32_t 	not null
 );
 
 create table t_quest (
@@ -4658,6 +4675,15 @@ create table t_quest (
     primary key (doc_id, qname_id, qrow_id)
 );
 
+create table t_quest2 (
+    doc_id 		uid_t 		not null,
+    qname_id 		uid_t 		not null,
+    guid 		uuid 		not null default uuid_generate_v4(),
+    qentity_id 		uid_t 		not null,
+    photo 		blob_t 		null,
+    primary key (doc_id, qname_id, guid)
+);
+
 create index i_fix_date_h_quest on h_quest (left(fix_dt,10));
 create index i_doc_no_h_quest on h_quest (doc_no);
 create index i_account_id_h_quest on h_quest (account_id);
@@ -4666,6 +4692,7 @@ create index i_exist_h_quest on h_quest (user_id, dev_pack, dev_id, fix_dt);
 
 create trigger trig_lock_update before update on h_quest for each row execute procedure tf_lock_update();
 create trigger trig_lock_update before update on t_quest for each row execute procedure tf_lock_update();
+create trigger trig_lock_update before update on t_quest2 for each row execute procedure tf_lock_update();
 
 create table h_rating (
     doc_id 		uid_t 		not null primary key default doc_id(),
@@ -5227,6 +5254,32 @@ create index i_2lts_dyn_quests on dyn_quests (updated_ts);
 
 create trigger trig_updated_ts before update on dyn_quests for each row execute procedure tf_updated_ts();
 create trigger trig_lock_founder before update of founder_id, founded_dt on dyn_quests for each row execute procedure tf_lock_update();
+
+create table dyn_quests2 (
+    fix_date		date_t 		not null,
+    account_id 		uid_t 		not null,
+    qname_id 		uid_t 		not null,
+    guid 		uuid 		not null,
+    qentity_id 		uid_t 		not null,
+    photo 		blob_t 		null,
+    fix_dt		datetime_t 	not null,
+    user_id 		uid_t 		not null,
+    doc_id 		uid_t 		not null,
+    founded_dt 		datetime_t 	not null,
+    founder_id 		uid_t 		not null,
+    altered_dt 		datetime_t 	null,
+    censor_id 		uid_t 		null,
+    hidden 		bool_t 		not null default 0,
+    inserted_ts 	ts_auto_t 	not null,
+    updated_ts		ts_auto_t 	not null,
+    "_isRecentData"	bool_t 		null,
+    primary key(fix_date, account_id, qname_id, guid)
+);
+
+create index i_2lts_dyn_quests2 on dyn_quests2 (updated_ts);
+
+create trigger trig_updated_ts before update on dyn_quests2 for each row execute procedure tf_updated_ts();
+create trigger trig_lock_founder before update of founder_id, founded_dt on dyn_quests2 for each row execute procedure tf_lock_update();
 
 create table dyn_ratings (
     fix_date		date_t 		not null,

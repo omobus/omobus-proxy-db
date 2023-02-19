@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<quest_entitiesL0>
+     <![CDATA[
+select unnest(db_ids) db_id, format('%s+%s',qname_id,qentity_id) qentity_pkey from quest_entities where db_ids is not null and hidden = 0
+    union
+select null db_id, format('%s+%s',qname_id,qentity_id) qentity_pkey from quest_entities where db_ids is null and hidden = 0
+    order by 1, 2
+    ]]>
+</quest_entitiesL0>

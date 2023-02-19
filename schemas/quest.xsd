@@ -26,7 +26,7 @@
 
     <xs:element name="quest">
 	<xs:complexType>
-	    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+	    <xs:choice minOccurs="1" maxOccurs="unbounded">
 		<xs:element name="row">
 		    <xs:complexType>
 			<xs:attribute name="row_no" use="required" type="xs:integer" />
@@ -35,7 +35,19 @@
 			<xs:attribute name="value" use="optional" type="xs:string" default="" />
 		    </xs:complexType>
 		</xs:element>
-	    </xs:sequence>
+		<xs:element name="blob">
+		    <xs:complexType>
+			<xs:simpleContent>
+			    <xs:extension base="xs:base64Binary">
+				<xs:attribute name="qname_id" use="required" type="uid_t" />
+				<xs:attribute name="qentity_id" use="required" type="uid_t" />
+				<xs:attribute name="guid" use="required" type="xs:string" />
+				<xs:attribute name="_nil" use="optional" type="xs:boolean" default="false" /> <!-- allow empty content -->
+			    </xs:extension>
+			</xs:simpleContent>
+		    </xs:complexType>
+		</xs:element>
+	    </xs:choice>
 	    <xs:attribute name="vstamp" use="required" type="xs:string" />
 	    <xs:attribute name="dev_pack" use="required" type="xs:integer" />
 	    <xs:attribute name="dev_id" use="required" type="xs:string" />
@@ -55,6 +67,7 @@
 	    <xs:attribute name="closed_gps_lo" use="optional" type="decimal_t" default="" />
 	    <xs:attribute name="closed_gps_dt" use="optional" type="datetime2_t" default="" />
 	    <xs:attribute name="rows" use="required" type="xs:integer" />
+	    <xs:attribute name="blobs" use="optional" type="xs:integer" default="0" />
 	</xs:complexType>
     </xs:element>
 </xs:schema>

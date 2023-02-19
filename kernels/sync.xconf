@@ -106,10 +106,12 @@
 <xi:include href="../queries/sync/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/promo_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/promo_values.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/quest_entities.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/quest_items.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/quest_names.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/quest_rows.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/quests_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/quests2_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/rating_criterias.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/rating_scores.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/ratings_history.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -193,6 +195,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 <xi:include href="../queries/sync/f/products.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/products.L1.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/products.L2.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/sync/f/quest_entities.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/quest_items.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/quest_names.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/sync/f/quest_rows.L0.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
@@ -351,6 +354,9 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<productsL0 key="db_id">
 	    <products key="fid" />
 	</productsL0>
+	<quest_entitiesL0 key="db_id">
+	    <quest_entities key="qentity_pkey" />
+	</quest_entitiesL0>
 	<quest_itemsL0 key="db_id">
 	    <quest_items key="qitem_pkey" />
 	</quest_itemsL0>
@@ -456,6 +462,7 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<presences_history key="account_id" strict="yes" />
 	<prices_history key="account_id" strict="yes" />
 	<quests_history key="account_id" strict="yes" />
+	<quests2_history key="account_id" strict="yes" />
 	<reclamations_history key="account_id" strict="yes" />
 	<recom_orders key="account_id" />
 	<recom_retail_prices key="account_id" />
@@ -533,9 +540,14 @@ select date_trunc('second', current_timestamp) "timestamp", date_trunc('second',
 	<posms_history key="posm_id" strict="yes" />
     </pos_materials>
     <quest_names>
-	<quests_history key="qname_id" Xstrict="yes" />
-	<quest_rows key="qname_id" Xstrict="yes" />
+	<quest_entities key="qname_id" strict="yes" />
+	<quests_history key="qname_id" strict="yes" />
+	<quests2_history key="qname_id" strict="yes" />
+	<quest_rows key="qname_id" strict="yes" />
     </quest_names>
+    <quest_entities>
+	<quests2_history key="qentity_pkey" strict="yes" />
+    </quest_entities>
     <quest_rows hierarchy="qrow_pkey">
 	<quests_history key="qrow_pkey" strict="yes" />
 	<quest_items key="qrow_pkey" strict="yes" />

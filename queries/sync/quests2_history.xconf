@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<quests2_history templ="%fix_date%;%account_id%;%qname_id%;%qentity_id%;%guid%;%photo%;%latest%;" empty="no">
+  <![CDATA[ 
+select 
+    format('%s+%s',qname_id,qentity_id) qentity_pkey,
+    fix_date, 
+    account_id, 
+    qname_id, 
+    qentity_id, 
+    guid,
+    photo, 
+    "_isRecentData" latest 
+from dyn_quests2
+where "_isRecentData" = 1 and hidden = 0 and photo is not null
+order by 3, 4, 5, 2 desc
+  ]]>
+</quests2_history>

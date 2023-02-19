@@ -24,8 +24,8 @@ select * from doc_id()
 </create>
 <write_body>
   <![CDATA[ 
-insert into h_quest(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, rows)
-    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), %rows%)
+insert into h_quest(doc_id, doc_no, inserted_node, dev_pack, dev_id, dev_login, fix_dt, user_id, w_cookie, a_cookie, activity_type_id, account_id, created_dt, created_gps_la, created_gps_lo, created_gps_dt, closed_dt, closed_gps_la, closed_gps_lo, closed_gps_dt, rows, blobs)
+    values('%doc_id_sys%', '%doc_id%', '%server_hostname%', %dev_pack%, '%dev_id%', '%user_id%', '%fix_dt%', '%user_id_sys%', '%w_cookie%', '%a_cookie%', '%activity_type_id%', '%account_id%', '%created_dt%', NIL(%created_gps_la%), NIL(%created_gps_lo%), NIL('%created_gps_dt%'), '%closed_dt%', NIL(%closed_gps_la%), NIL(%closed_gps_lo%), NIL('%closed_gps_dt%'), %rows%, %blobs%)
   ]]>
 </write_body>
 <write_row>
@@ -34,6 +34,12 @@ insert into t_quest(doc_id, row_no, qname_id, qrow_id, value)
     values('%doc_id_sys%', %row_no%, '%qname_id%', '%qrow_id%', '%value%')
   ]]>
 </write_row>
+<write_blob>
+  <![CDATA[ 
+insert into t_quest2(doc_id, guid, qname_id, qentity_id, photo)
+    values('%doc_id_sys%', '%guid%', '%qname_id%', '%qentity_id%', $1:blob::OID)
+  ]]>
+</write_blob>
 <close>
   <![CDATA[
 do $$
@@ -53,6 +59,10 @@ begin
 -- **** quest --> sysdevices
     update sysdevices set outdated_ts = current_timestamp
 	where dev_id = '%dev_id%' and dev_login = '%user_id%' and user_id = '%user_id_sys%';
+
+-- **** quest --> thumbnail_stream
+    insert into thumbnail_stream(photo)
+	select photo from t_quest2 where doc_id = '%doc_id_sys%' and photo is not null;
 
 -- **** quest --> content_stream
     perform content_add('tech_route', '%user_id_sys%', f_date, f_date);
@@ -80,11 +90,35 @@ begin
 	end if;
     end loop;
 
+-- **** quest --> dyn_quests2
+    /* removes obsolete entires */
+    delete from dyn_quests2 where account_id = '%account_id%' and fix_date = f_date;
+    /* recompiles data */
+    for r1 in
+	select t.guid, t.qname_id, t.qentity_id, t.photo, h.user_id, h.doc_id, h.fix_dt, h.inserted_ts from t_quest2 t, h_quest h 
+	    where t.doc_id = h.doc_id and h.account_id = '%account_id%' and left(h.fix_dt,10) = f_date
+	order by h.fix_dt
+    loop
+	if( (select count(*) from dyn_quests2 where account_id = '%account_id%' and qname_id = r1.qname_id and guid = r1.guid and fix_date = f_date) = 0 ) then
+	    select founder_id, founded_dt from dyn_quests/*2*/ where account_id = '%account_id%' and qname_id = r1.qname_id order by fix_date limit 1 
+		into r2;
+	    insert into dyn_quests2(fix_date, account_id, qname_id, qentity_id, guid, photo, fix_dt, user_id, doc_id, inserted_ts, founder_id, founded_dt)
+		values(f_date, '%account_id%', r1.qname_id, r1.qentity_id, r1.guid, r1.photo, r1.fix_dt, r1.user_id, r1.doc_id, r1.inserted_ts, coalesce(r2.founder_id,r1.user_id), coalesce(r2.founded_dt,r1.fix_dt));
+	else
+	    update dyn_quests2 set photo = r1.photo, fix_dt = r1.fix_dt, user_id = r1.user_id, doc_id = r1.doc_id, updated_ts = current_timestamp
+		where account_id = '%account_id%' and qname_id = r1.qname_id and guid = r1.guid and fix_date = f_date;
+	end if;
+    end loop;
+
+-- **** fix [_isRecentData] flag
     if( f_date >= (select max(fix_dt::date_t) from h_quest where account_id='%account_id%' group by account_id) ) then
 	update dyn_quests set "_isRecentData" = null where account_id='%account_id%' and "_isRecentData" = 1;
 	update dyn_quests set "_isRecentData" = 1 where account_id='%account_id%' and fix_date=f_date;
+	update dyn_quests2 set "_isRecentData" = null where account_id='%account_id%' and "_isRecentData" = 1;
+	update dyn_quests2 set "_isRecentData" = 1 where account_id='%account_id%' and fix_date=f_date;
     end if;
 end;
+
 $$;
   ]]>
 </close>

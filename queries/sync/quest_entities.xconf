@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<quest_entities templ="%qname_id%;%qentity_id%;%descr%;" empty="no">
+  <![CDATA[ 
+select 
+    format('%s+%s',qname_id,qentity_id) qentity_pkey,
+    qname_id, 
+    qentity_id,
+    descr 
+from quest_entities
+    where hidden = 0
+order by row_no, descr
+  ]]>
+</quest_entities>
