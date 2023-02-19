@@ -23,18 +23,22 @@
     diff="yes"
     >
 <queries>
+<xi:include href="../queries/2agent/accounts.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/delivery_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/orders.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/order_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/payment_methods.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
+<xi:include href="../queries/2agent/products.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/reclamation_types.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 <xi:include href="../queries/2agent/reclamations.xconf" xmlns:xi="http://www.w3.org/2003/XInclude" />
 </queries>
 <pack>
+    <accounts personalize="ErpCode" />
     <delivery_types />
     <order_types />
     <orders personalize="ErpCode" />
     <payment_methods />
+    <products personalize="ErpCode" />
     <reclamation_types />
     <reclamations personalize="ErpCode" />
 </pack>

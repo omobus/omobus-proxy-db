@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<products templ="%prod_id%;%descr%;%barcodes%;" empty="no">
+  <![CDATA[
+select
+    s.distr_id person_id,
+    s.t_id prod_id,
+    p.descr,
+    array_to_string(ean13_out(barcodes),',') barcodes
+from symlinks s, products p
+    where s.obj_code = 'product' and s.f_id = p.prod_id and p.hidden = 0
+order by 1, 2
+  ]]>
+</products>r

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<accounts templ="%account_id%;%descr%;%address%;" empty="no">
+  <![CDATA[
+select
+    s.distr_id person_id,
+    s.t_id account_id,
+    a.descr,
+    a.address
+from symlinks s, accounts a
+    where s.obj_code = 'account' and s.f_id = a.account_id and a.hidden = 0
+order by 1, 2
+  ]]>
+</accounts>
