@@ -10,4 +10,4 @@ from symlinks s, products p
     where s.obj_code = 'product' and s.f_id = p.prod_id and p.hidden = 0
 order by 1, 2
   ]]>
-</products>r
+</products>
